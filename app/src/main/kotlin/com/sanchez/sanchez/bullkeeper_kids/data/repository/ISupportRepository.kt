@@ -13,9 +13,19 @@ interface ISupportRepository<T: Serializable> {
     fun save(model: T)
 
     /**
+     * Delete
+     */
+    fun delete(model: T)
+
+    /**
      * Save
      */
     fun save(modelList: List<T>)
+
+    /**
+     * Delete
+     */
+    fun delete(modelList: List<T>)
 
     /**
      * List

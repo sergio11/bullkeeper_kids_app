@@ -1,4 +1,4 @@
-package com.sanchez.sanchez.bullkeeper_kids.domain.interactors
+package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages
 
 import android.content.Context
 import android.util.Log

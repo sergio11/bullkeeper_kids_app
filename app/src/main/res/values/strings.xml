@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Movies Kotlin</string>
+    <string name="app_name">BullKeeper Kids</string>
 
     <string name="action_refresh">Refresh</string>
 
@@ -9,4 +9,11 @@
     <string name="failure_movie_non_existent">Movie Not Existent.</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Notification Channel -->
+    <string name="important_notification_channel_id">important_channel</string>
+    <string name="important_notification_channel_title">Important notifications</string>
+    <string name="important_notification_channel_content">Alerts and important notices</string>
+    <string name="default_notification_channel_id">@string/important_notification_channel_id</string>
+
 </resources>

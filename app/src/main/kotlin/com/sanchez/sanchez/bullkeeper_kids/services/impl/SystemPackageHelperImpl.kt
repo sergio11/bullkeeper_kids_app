@@ -43,4 +43,17 @@ class SystemPackageHelperImpl: ISystemPackageHelper {
         }
         return apps
     }
+
+    /**
+     * Get Package Info
+     */
+    override fun getPackageInfo(pm: PackageManager, packageName: String):
+            SystemPackageInfo? {
+
+        val packageList = getPackages(pm)
+        return packageList.find {
+            it.packageName == packageName
+        }
+    }
+
 }

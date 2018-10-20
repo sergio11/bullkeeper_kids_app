@@ -18,5 +18,7 @@ open class PackageInstalledEntity(
         // Version Code
         var versionCode: String = "",
         // App Name
-        var appName: String = ""
+        var appName: String = "",
+        // Is Blocked
+        var isBlocked: Boolean = true
 ) : RealmObject()

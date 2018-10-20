@@ -13,6 +13,11 @@ interface ISystemPackageHelper {
      */
     fun getPackages(pm: PackageManager): ArrayList<SystemPackageInfo>
 
+    /**
+     * Get Pacakage Info
+     */
+    fun getPackageInfo(pm: PackageManager, packageName: String): SystemPackageInfo?
+
 
     /**
      * Get Installed Apps

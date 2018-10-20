@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.models
 import android.graphics.drawable.Drawable
 import android.util.Log
 import java.io.Serializable
+import java.util.*
 
 /**
  * System Package Info
@@ -21,7 +22,9 @@ data class SystemPackageInfo (
         // App Name
         var appName: String = "",
         // App Icon
-        var icon: Drawable? = null
+        var icon: Drawable? = null,
+        // Is Blocked
+        var isBlocked: Boolean = false
 ) : Serializable {
 
     val TAG = "SYSTEM_PACKAGE_INFO"
@@ -35,6 +38,14 @@ data class SystemPackageInfo (
         Log.d(TAG, "Last Update Time: $lastUpdateTime")
         Log.d(TAG, "Version: $versionName - $versionCode")
         Log.d(TAG, "Application Name: $appName")
+    }
+
+    override fun equals(other: Any?): Boolean{
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as SystemPackageInfo
+        return this.packageName == other.packageName
     }
 
 }

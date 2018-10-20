@@ -1,10 +1,7 @@
-package com.sanchez.sanchez.bullkeeper_kids.core.di
+package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
-import android.content.Context
-import com.sanchez.sanchez.bullkeeper_kids.BuildConfig
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
-import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
-import com.sanchez.sanchez.bullkeeper_kids.services.impl.SystemPackageHelperImpl
+import com.sanchez.sanchez.bullkeeper_kids.BuildConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -13,12 +10,19 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+/**
+ * Net Module
+ */
 @Module
-class ApplicationModule(private val application: AndroidApplication) {
+class NetModule(private val application: AndroidApplication) {
 
-    @Provides @Singleton fun provideApplicationContext(): Context = application
 
-    @Provides @Singleton fun provideRetrofit(): Retrofit {
+    /**
+     * Provide Retrofit
+     */
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
                 .baseUrl("https://raw.githubusercontent.com/android10/Sample-Data/master/Android-CleanArchitecture-Kotlin/")
                 .client(createClient())
@@ -26,6 +30,9 @@ class ApplicationModule(private val application: AndroidApplication) {
                 .build()
     }
 
+    /**
+     * Create Client
+     */
     private fun createClient(): OkHttpClient {
         val okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
         if (BuildConfig.DEBUG) {
@@ -33,13 +40,6 @@ class ApplicationModule(private val application: AndroidApplication) {
             okHttpClientBuilder.addInterceptor(loggingInterceptor)
         }
         return okHttpClientBuilder.build()
-    }
-
-    /**
-     * Provide System Package Helper
-     */
-    @Provides @Singleton fun provideSystemPackageHelper(): ISystemPackageHelper {
-        return SystemPackageHelperImpl()
     }
 
 }

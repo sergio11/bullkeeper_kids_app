@@ -8,10 +8,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
-import com.sanchez.sanchez.bullkeeper_kids.core.di.ApplicationComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.SynchronizeInstalledPackagesInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
@@ -34,23 +34,6 @@ class HomeActivity : AppCompatActivity() {
         (application as AndroidApplication).appComponent
     }
 
-    /**
-     * System Package Helper Impl
-     */
-    @Inject
-    internal lateinit var synchronizeInstalledPackagesInteract: SynchronizeInstalledPackagesInteract
-
-
-    /**
-     * Handle Failure
-     */
-    protected fun handleFailure(failure: Failure) {
-        Log.d(TAG, "Handle Failure")
-    }
-
-    private fun handleSuccess(unit: Unit) {
-       Log.d(TAG, "Sync Success")
-    }
 
     /**
      * On Create
@@ -61,9 +44,6 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         appComponent.inject(this)
 
-        synchronizeInstalledPackagesInteract(UseCase.None()){
-            it.either(::handleFailure, ::handleSuccess)
-        }
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

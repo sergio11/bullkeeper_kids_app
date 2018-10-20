@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.sanchez.sanchez.bullkeeper_kids.R.color
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
-import com.sanchez.sanchez.bullkeeper_kids.core.di.ApplicationComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.appContext
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.viewContainer
 import kotlinx.android.synthetic.main.toolbar.progress
