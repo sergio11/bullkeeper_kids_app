@@ -20,29 +20,31 @@ import javax.inject.Inject
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import java.util.*
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.os.Binder
+import android.os.IBinder
+import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
+import android.support.v4.content.LocalBroadcastManager
+import android.app.ActivityManager
+
+
+
+
 
 
 /**
  * @author Sergio Sánchez Sánchez
  *
- * A bound and started service that is promoted to a foreground service when all clients unbind.
- *
- * For apps running in the background on "O" devices, location is computed only once every 10
- * minutes and delivered batched every 30 minutes. This restriction applies even to apps
- * targeting "N" or lower which are run on "O" devices.
- *
- * This sample show how to use a long-running service for location updates. When an activity is
- * bound to this service, frequent location updates are permitted. When the activity is removed
- * from the foreground, the service promotes itself to a foreground service, and location updates
- * continue. When the activity comes back to the foreground, the foreground service stops, and the
- * notification associated with that service is removed.
  */
-class MonitoringService : SupportForegroundService(){
+class MonitoringService : Service(){
 
     // Extra Started From Notification
     private val EXTRA_STARTED_FROM_NOTIFICATION = "STARTED_FROM_NOTIFICATION"
 
     private val TAG = MonitoringService::class.java.simpleName
+
+    private val NOTIFICATION_ID = 6669999;
 
     /**
      * Service Component
@@ -124,11 +126,13 @@ class MonitoringService : SupportForegroundService(){
      */
     private var appBlockList: Set<SystemPackageInfo> = HashSet()
 
+    private var currentAppLocked: String? = null;
+
 
     /**
      * Get Notification
      */
-    override fun getNotification(): Notification {
+    fun getNotification(): Notification {
 
         val intent = Intent(this, MonitoringService::class.java)
         // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
@@ -146,12 +150,25 @@ class MonitoringService : SupportForegroundService(){
     }
 
     /**
+     * Clean Resources
+     */
+    fun cleanResources() {
+        unregisterReceiver(appStatusChangedReceiver)
+        unregisterReceiver(screenStatusReceiver)
+        disableAppForegroundMonitoring()
+    }
+
+
+    /**
      * On Create
      */
     override fun onCreate() {
         super.onCreate()
+        // Inject Dependencies
+        injectDependencies()
 
         Log.d(TAG, "On Create Monitoring Service")
+        Thread.setDefaultUncaughtExceptionHandler(MonitoringServiceUncaughtExceptionHandler(this))
 
         // Register App Status Broadcast receiver
         appStatusChangedReceiver = AppStatusChangedReceiver()
@@ -166,11 +183,12 @@ class MonitoringService : SupportForegroundService(){
         filter.addAction(Intent.ACTION_USER_PRESENT)
         registerReceiver(screenStatusReceiver, filter)
 
-
         // Get All Packages Installed
         getAllPackagesInstalledInteract(UseCase.None()){
             it.either(::onGetAllPackagesInstalledFailed, ::onGetAllPackagesInstalledSuccess)
         }
+
+        startForeground(NOTIFICATION_ID, getNotification())
 
     }
 
@@ -179,10 +197,9 @@ class MonitoringService : SupportForegroundService(){
      */
     override fun onDestroy() {
         Log.d(TAG, "On Destroy Monitoring Service")
-        unregisterReceiver(appStatusChangedReceiver)
-        unregisterReceiver(screenStatusReceiver)
-
-        disableAppForegroundMonitoring()
+        cleanResources()
+        sendBroadcast(Intent(this,
+                AwakenMonitoringServiceBroadcastReceiver::class.java))
     }
 
     /**
@@ -205,7 +222,7 @@ class MonitoringService : SupportForegroundService(){
     /**
      * Inject Dependencies
      */
-    override fun injectDependencies() {
+    fun injectDependencies() {
         serviceComponent.inject(this)
     }
 
@@ -260,6 +277,7 @@ class MonitoringService : SupportForegroundService(){
 
     }
 
+
     /**
      * Enable App Foreground Monitoring
      */
@@ -270,20 +288,32 @@ class MonitoringService : SupportForegroundService(){
         checkForegroundAppTimer.scheduleAtFixedRate(object: TimerTask(){
 
             override fun run() {
+                if(appBlockList.isNotEmpty()) {
+                    // Check Usage Stats Allowed
+                    if(usageStatsService.isUsageStatsAllowed()) {
+                        // Get Current Foreground App
+                        val currentAppForeground = usageStatsService.getCurrentForegroundApp()
+                        Log.d(TAG, "Current App Foreground -> $currentAppForeground")
+                        if(!currentAppForeground.isNullOrEmpty() &&
+                                currentAppForeground != packageName &&
+                                currentAppForeground != currentAppLocked) {
 
-                // Check Usage Stats Allowed
-                if(usageStatsService.isUsageStatsAllowed()) {
-                    // Get Current Foreground App
-                    val currentAppForeground = usageStatsService.getCurrentForegroundApp()
-                    Log.d(TAG, "Current App Foreground -> $currentAppForeground")
-                    if(!currentAppForeground.isNullOrEmpty() && appBlockList.isNotEmpty()) {
-                        if(appBlockList.map { it.packageName }.contains(currentAppForeground)){
-                            Log.d(TAG, "Package $currentAppForeground not allowed")
+                            if(appBlockList.map { it.packageName }.contains(currentAppForeground)){
+                                Log.d(TAG, "Package $currentAppForeground not allowed")
+                                currentAppLocked = currentAppForeground
+                                navigator.showLockScreen(applicationContext)
+                            } else {
+                                currentAppLocked = null
+                                val localBroadcastManager = LocalBroadcastManager
+                                        .getInstance(this@MonitoringService)
+                                localBroadcastManager.sendBroadcast(Intent(
+                                        "com.sanchez.sergio.unlock"))
+                            }
                         }
-                        navigator.showLockScreen(applicationContext)
+
+                    } else {
+                        Log.d(TAG, "Usage Stats Not Allowed generate alert")
                     }
-                } else {
-                    Log.d(TAG, "Usage Stats Not Allowed generate alert")
                 }
             }
 
@@ -300,6 +330,20 @@ class MonitoringService : SupportForegroundService(){
         checkForegroundAppTimer.purge()
     }
 
+
+    /**
+     * Monitoring Service
+     */
+    inner class MonitoringServiceUncaughtExceptionHandler(private val context: Context) : Thread.UncaughtExceptionHandler {
+        override fun uncaughtException(t: Thread, e: Throwable) {
+            cleanResources()
+            val i = Intent(context, AwakenMonitoringServiceBroadcastReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(context, 0, i, 0)
+            val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
+            System.exit(2)
+        }
+    }
 
     /**
      * Screen Screen Receiver
@@ -325,4 +369,6 @@ class MonitoringService : SupportForegroundService(){
         }
     }
 
+
+    override fun onBind(intent: Intent?): IBinder  = Binder()
 }

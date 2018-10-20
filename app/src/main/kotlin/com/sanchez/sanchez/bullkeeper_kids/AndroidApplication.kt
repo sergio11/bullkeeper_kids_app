@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids
 
 import android.app.Application
 import android.content.Intent
+import android.support.v4.content.ContextCompat
 import com.facebook.stetho.Stetho
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerApplicationComponent
@@ -113,7 +114,8 @@ class AndroidApplication : Application() {
      * Initialize Services
      */
     private fun initializeServices() {
-        startService(Intent(this, MonitoringService::class.java))
+        ContextCompat.startForegroundService(this,
+                Intent(this, MonitoringService::class.java))
     }
 
 }

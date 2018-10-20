@@ -31,7 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.login.LoginActivity"
             android:label="@string/login_screen_title" />
@@ -47,7 +46,30 @@
             android:name=".presentation.lockscreen.LockScreenActivity"
             android:label="@string/title_activity_lock_screen"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+
+
+        <!-- Awaken Monitoring Service -->
+        <receiver
+            android:name=".presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="bisite.usal.es.encelocalizacion.TrackingServiceDestroyed" />
+            </intent-filter>
+        </receiver>
+
+
+        <!-- Scheduling Monitoring Broadcast Receiver -->
+        <receiver
+            android:name=".presentation.broadcast.SchedulingMonitoringServiceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
 
     </application>
 
