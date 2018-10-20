@@ -15,5 +15,6 @@
     <string name="important_notification_channel_title">Important notifications</string>
     <string name="important_notification_channel_content">Alerts and important notices</string>
     <string name="default_notification_channel_id">@string/important_notification_channel_id</string>
+    <string name="title_activity_lock_screen">LockScreenActivity</string>
 
 </resources>

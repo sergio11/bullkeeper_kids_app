@@ -3,15 +3,13 @@ package com.sanchez.sanchez.bullkeeper_kids.presentation.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
-import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
+import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
@@ -35,6 +33,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
+    @Inject
+    internal lateinit var usageStatsService: IUsageStatsService
+
     /**
      * On Create
      */
@@ -44,6 +45,8 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         appComponent.inject(this)
 
+        if(!usageStatsService.isUsageStatsAllowed())
+            startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

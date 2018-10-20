@@ -16,8 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class SynchronizeInstalledPackagesInteract
     @Inject constructor(private val systemPackageHelper: ISystemPackageHelper,
-                        private val packageInstalledRepository: IPackageInstalledRepository,
-                        private val context: Context): UseCase<Unit, UseCase.None>() {
+                        private val packageInstalledRepository: IPackageInstalledRepository): UseCase<Unit, UseCase.None>() {
 
     val TAG = "SYNC_PACKAGES"
 
@@ -26,7 +25,7 @@ class SynchronizeInstalledPackagesInteract
      */
     override suspend fun run(params: None): Either<Failure, Unit> {
         return try {
-            val packageList = systemPackageHelper.getPackages(context.packageManager)
+            val packageList = systemPackageHelper.getPackages()
             Log.d(TAG, "Packages to sync -> ${packageList.size}")
             val packageCountSaved =  packageInstalledRepository.save(packageList)
             Either.Right(packageCountSaved)

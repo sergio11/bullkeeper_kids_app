@@ -20,8 +20,8 @@ class ApplicationModule(private val application: AndroidApplication) {
     /**
      * Provide System Package Helper
      */
-    @Provides @Singleton fun provideSystemPackageHelper(): ISystemPackageHelper {
-        return SystemPackageHelperImpl()
+    @Provides @Singleton fun provideSystemPackageHelper(context: Context): ISystemPackageHelper {
+        return SystemPackageHelperImpl(context)
     }
 
 

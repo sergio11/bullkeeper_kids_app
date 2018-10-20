@@ -3,7 +3,6 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.models
 import android.graphics.drawable.Drawable
 import android.util.Log
 import java.io.Serializable
-import java.util.*
 
 /**
  * System Package Info
@@ -24,7 +23,7 @@ data class SystemPackageInfo (
         // App Icon
         var icon: Drawable? = null,
         // Is Blocked
-        var isBlocked: Boolean = false
+        var isBlocked: Boolean = true
 ) : Serializable {
 
     val TAG = "SYSTEM_PACKAGE_INFO"

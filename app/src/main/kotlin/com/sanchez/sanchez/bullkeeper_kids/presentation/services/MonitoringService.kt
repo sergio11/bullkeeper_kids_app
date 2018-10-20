@@ -1,12 +1,16 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.services
 
 import android.app.*
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ServiceComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
+import com.sanchez.sanchez.bullkeeper_kids.core.navigation.Navigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetAllPackagesInstalledInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetBlockedPackagesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
@@ -14,6 +18,8 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageInfo
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import javax.inject.Inject
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
+import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
+import java.util.*
 
 
 /**
@@ -46,6 +52,16 @@ class MonitoringService : SupportForegroundService(){
     }
 
     /**
+     * Check Foreground App Interval
+     */
+    private val CHECK_FOREGROUND_APP_INTERVAL: Long = 3000 // Every 3 seconds
+
+    /**
+     * Check Foreground App Timer
+     */
+    private var checkForegroundAppTimer = Timer()
+
+    /**
      * Dependencies
      */
 
@@ -67,6 +83,18 @@ class MonitoringService : SupportForegroundService(){
     @Inject
     internal lateinit var getAllPackagesInstalledInteract: GetAllPackagesInstalledInteract
 
+    /**
+     * Usage Stats Service
+     */
+    @Inject
+    internal lateinit var usageStatsService: IUsageStatsService
+
+    /**
+     * Navigator
+     */
+    @Inject
+    internal lateinit var navigator: Navigator
+
 
     /**
      * Synchronize Installed Packages Interact
@@ -76,13 +104,25 @@ class MonitoringService : SupportForegroundService(){
             SynchronizeInstalledPackagesInteract
 
 
+    /**
+     * Receivers
+     * =====================
+     */
+
+    /**
+     * App Status Changed Receiver
+     */
     private lateinit var appStatusChangedReceiver: AppStatusChangedReceiver
+
+    /**
+     * Screen Status Receiver
+     */
+    private lateinit var screenStatusReceiver: ScreenStatusReceiver
 
     /**
      * State
      */
-
-    private val appBlockList: Set<SystemPackageInfo> = HashSet()
+    private var appBlockList: Set<SystemPackageInfo> = HashSet()
 
 
     /**
@@ -118,6 +158,15 @@ class MonitoringService : SupportForegroundService(){
         registerReceiver(appStatusChangedReceiver,
                 AppStatusChangedReceiver.getIntentFilter())
 
+        // Register Screen Status Receiver
+        screenStatusReceiver = ScreenStatusReceiver()
+        val filter = IntentFilter()
+        filter.addAction(Intent.ACTION_SCREEN_ON)
+        filter.addAction(Intent.ACTION_SCREEN_OFF)
+        filter.addAction(Intent.ACTION_USER_PRESENT)
+        registerReceiver(screenStatusReceiver, filter)
+
+
         // Get All Packages Installed
         getAllPackagesInstalledInteract(UseCase.None()){
             it.either(::onGetAllPackagesInstalledFailed, ::onGetAllPackagesInstalledSuccess)
@@ -131,6 +180,9 @@ class MonitoringService : SupportForegroundService(){
     override fun onDestroy() {
         Log.d(TAG, "On Destroy Monitoring Service")
         unregisterReceiver(appStatusChangedReceiver)
+        unregisterReceiver(screenStatusReceiver)
+
+        disableAppForegroundMonitoring()
     }
 
     /**
@@ -170,6 +222,7 @@ class MonitoringService : SupportForegroundService(){
      */
     private fun onSyncPackagesSuccess(unit: Unit) {
         Log.d(TAG, "On Sync Packages Success")
+
     }
 
 
@@ -188,12 +241,15 @@ class MonitoringService : SupportForegroundService(){
 
         if(packagesInstalled.isNotEmpty()){
 
-            val packagesBlocked = packagesInstalled.asSequence()
+            appBlockList = packagesInstalled.asSequence()
                     .filter{ it.isBlocked }.toHashSet()
 
-            Log.d(TAG, "Packages Blocked -> ${packagesBlocked.size}")
+            Log.d(TAG, "Packages Blocked -> ${appBlockList.size}")
 
-            appBlockList.plus(packagesBlocked)
+            appBlockList.forEach{ appBlocked ->
+                Log.d(TAG, "Package Name -> ${appBlocked.packageName}, Application Name -> ${appBlocked.appName}") }
+            // Enable Foreground Monitoring
+            enableAppForegroundMonitoring()
 
         } else {
             synchronizeInstalledPackagesInteract(UseCase.None()){
@@ -202,6 +258,71 @@ class MonitoringService : SupportForegroundService(){
 
         }
 
+    }
+
+    /**
+     * Enable App Foreground Monitoring
+     */
+    fun enableAppForegroundMonitoring(){
+        Log.d(TAG, "Enable App Foreground Monitoring")
+
+        checkForegroundAppTimer = Timer()
+        checkForegroundAppTimer.scheduleAtFixedRate(object: TimerTask(){
+
+            override fun run() {
+
+                // Check Usage Stats Allowed
+                if(usageStatsService.isUsageStatsAllowed()) {
+                    // Get Current Foreground App
+                    val currentAppForeground = usageStatsService.getCurrentForegroundApp()
+                    Log.d(TAG, "Current App Foreground -> $currentAppForeground")
+                    if(!currentAppForeground.isNullOrEmpty() && appBlockList.isNotEmpty()) {
+                        if(appBlockList.map { it.packageName }.contains(currentAppForeground)){
+                            Log.d(TAG, "Package $currentAppForeground not allowed")
+                        }
+                        navigator.showLockScreen(applicationContext)
+                    }
+                } else {
+                    Log.d(TAG, "Usage Stats Not Allowed generate alert")
+                }
+            }
+
+        }, 0, CHECK_FOREGROUND_APP_INTERVAL)
+
+    }
+
+    /**
+     * Disable App Foreground Monitoring
+     */
+    fun disableAppForegroundMonitoring(){
+        Log.d(TAG, "Disable App Foreground Monitoring")
+        checkForegroundAppTimer.cancel()
+        checkForegroundAppTimer.purge()
+    }
+
+
+    /**
+     * Screen Screen Receiver
+     */
+    inner class ScreenStatusReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent?) {
+
+            if (intent != null && intent.action != null) {
+
+                when {
+
+                    intent.action == Intent.ACTION_SCREEN_ON ||
+                    intent.action == Intent.ACTION_SCREEN_OFF ->
+                        this@MonitoringService.disableAppForegroundMonitoring()
+
+                    // Screen is unlocked
+                    intent.action == Intent.ACTION_USER_PRESENT ->
+                        this@MonitoringService.enableAppForegroundMonitoring()
+
+                }
+            }
+        }
     }
 
 }

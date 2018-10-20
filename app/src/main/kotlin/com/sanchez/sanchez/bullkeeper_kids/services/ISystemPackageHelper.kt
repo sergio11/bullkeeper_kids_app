@@ -1,6 +1,5 @@
 package com.sanchez.sanchez.bullkeeper_kids.services
 
-import android.content.pm.PackageManager
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageInfo
 
 /**
@@ -11,18 +10,18 @@ interface ISystemPackageHelper {
     /**
      * Get Packages
      */
-    fun getPackages(pm: PackageManager): ArrayList<SystemPackageInfo>
+    fun getPackages(): ArrayList<SystemPackageInfo>
 
     /**
      * Get Pacakage Info
      */
-    fun getPackageInfo(pm: PackageManager, packageName: String): SystemPackageInfo?
+    fun getPackageInfo(packageName: String): SystemPackageInfo?
 
 
     /**
      * Get Installed Apps
      */
-    fun getInstalledApps(pm: PackageManager, getSysPackages: Boolean): ArrayList<SystemPackageInfo>
+    fun getInstalledApps(getSysPackages: Boolean, discardAppPackage: Boolean = true): ArrayList<SystemPackageInfo>
 
 
 }

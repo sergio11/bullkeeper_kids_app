@@ -1,6 +1,5 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages
 
-import android.content.Context
 import android.util.Log
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.functional.Either
@@ -16,8 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class SaveInstalledPackageInteract
     @Inject constructor(private val systemPackageHelper: ISystemPackageHelper,
-                        private val packageInstalledRepository: IPackageInstalledRepository,
-                        private val context: Context): UseCase<String, SaveInstalledPackageInteract.Params>() {
+                        private val packageInstalledRepository: IPackageInstalledRepository): UseCase<String, SaveInstalledPackageInteract.Params>() {
 
 
     val TAG = "SAVE_PACKAGE"
@@ -30,9 +28,8 @@ class SaveInstalledPackageInteract
 
         return try {
 
-            val packageInfo = systemPackageHelper.getPackageInfo(context.packageManager,
+            val packageInfo = systemPackageHelper.getPackageInfo(
                     params.packageName.replace("package:", ""))
-
             packageInfo?.let {
                 Log.d(TAG, "Package Info obtained")
                 it.prettyPrint()

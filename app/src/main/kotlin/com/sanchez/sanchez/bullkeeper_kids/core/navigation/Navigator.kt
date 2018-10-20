@@ -4,6 +4,7 @@ import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.services.AuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.LoginActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,6 +22,12 @@ class Navigator
             context.startActivity(LoginActivity.callingIntent(context))
 
     /**
+     * Show Home
+     */
+    private fun showHome(context: Context) =
+            context.startActivity(HomeActivity.callingIntent(context))
+
+    /**
      * Show Main
      */
     fun showMain(context: Context) {
@@ -30,11 +37,15 @@ class Navigator
         }
     }
 
+
+
     /**
-     * Show Home
+     * Show Lock Screen
      */
-    private fun showHome(context: Context) =
-            context.startActivity(HomeActivity.callingIntent(context))
+    fun showLockScreen(context: Context) =
+            context.startActivity(LockScreenActivity.callingIntent(context))
+
+
 
 }
 
