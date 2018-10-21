@@ -1,6 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.services
 
-import android.app.usage.UsageStats
+
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageUsageStats
 
 
 /**
@@ -17,7 +18,7 @@ interface IUsageStatsService {
     /**
      * Get Daily Stats From Year
      */
-    fun getDailyStatsFromAYear(): List<UsageStats>
+    fun getDailyStatsFromAYear(): List<SystemPackageUsageStats>
 
     /**
      * Get Current Foreground App

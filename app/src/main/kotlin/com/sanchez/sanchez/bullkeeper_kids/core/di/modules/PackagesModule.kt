@@ -1,13 +1,16 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPackageInstalledRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPackageUsageStatsRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetAllPackagesInstalledInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetBlockedPackagesInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynPackageUsageStatsInteract
+import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [ PersistenceModule::class ])
+@Module(includes = [ ServicesModule::class, PersistenceModule::class ])
 class PackagesModule {
 
     /**
@@ -25,5 +28,17 @@ class PackagesModule {
     @Singleton
     fun provideGetAllPackagesInstalledInteract(packageInstalledRepository: IPackageInstalledRepository):
             GetAllPackagesInstalledInteract = GetAllPackagesInstalledInteract(packageInstalledRepository)
+
+
+    /**
+     * Provide Sync Package Usage Stats Interact
+     */
+    @Provides
+    @Singleton
+    fun provideSynPackageUsageStatsInteract(usageStatsService: IUsageStatsService, packageUsageStatsRepository: IPackageUsageStatsRepository):
+            SynPackageUsageStatsInteract = SynPackageUsageStatsInteract(usageStatsService,
+                        packageUsageStatsRepository)
+
+
 
 }

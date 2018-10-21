@@ -8,6 +8,7 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION_CODES.LOLLIPOP_MR1
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageUsageStats
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import java.util.*
 import javax.inject.Inject
@@ -44,13 +45,26 @@ class UsageStatsServiceImpl
      * Get Daily Stats From A Year
      */
     @TargetApi(LOLLIPOP_MR1)
-    override fun getDailyStatsFromAYear(): List<UsageStats> {
+    override fun getDailyStatsFromAYear(): List<SystemPackageUsageStats> {
         val usm = getUsageStatsManager()
         val calendar = Calendar.getInstance()
         val endTime = calendar.timeInMillis
         calendar.add(Calendar.YEAR, -1)
         val startTime = calendar.timeInMillis
-        return usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, endTime)
+        val usageStats = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
+                startTime, endTime)
+
+        val systemPackageUsageStatsList = ArrayList<SystemPackageUsageStats>()
+        for(usageStat in usageStats) {
+            val systemPackageUsageStats = SystemPackageUsageStats()
+            systemPackageUsageStats.firstTimeStamp = usageStat.firstTimeStamp
+            systemPackageUsageStats.lastTimeStamp = usageStat.lastTimeStamp
+            systemPackageUsageStats.lastTimeUsed = usageStat.lastTimeUsed
+            systemPackageUsageStats.packageName = usageStat.packageName
+            systemPackageUsageStats.totalTimeInForeground = usageStat.totalTimeInForeground
+            systemPackageUsageStatsList.add(systemPackageUsageStats)
+        }
+        return systemPackageUsageStatsList
     }
 
     /**

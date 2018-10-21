@@ -26,11 +26,8 @@ import android.os.Binder
 import android.os.IBinder
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import android.support.v4.content.LocalBroadcastManager
-import android.app.ActivityManager
-
-
-
-
+import android.os.Handler
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynPackageUsageStatsInteract
 
 
 /**
@@ -59,9 +56,24 @@ class MonitoringService : Service(){
     private val CHECK_FOREGROUND_APP_INTERVAL: Long = 3000 // Every 3 seconds
 
     /**
-     * Check Foreground App Timer
+     * Check Applications Usage Statistics Interval
      */
-    private var checkForegroundAppTimer = Timer()
+    private val CHECK_APPLICATIONS_USAGE_STATISTICS: Long = 300000
+
+    /**
+     * Task Handler
+     */
+    private var mHandler: Handler = Handler()
+
+    /**
+     * Check Foreground App Task
+     */
+    private lateinit var checkForegroundAppTask: Runnable
+
+    /**
+     * Check Applications Usage Statistics
+     */
+    private lateinit var checkApplicationsUsageStatistics : Runnable
 
     /**
      * Dependencies
@@ -104,6 +116,12 @@ class MonitoringService : Service(){
     @Inject
     internal lateinit var synchronizeInstalledPackagesInteract:
             SynchronizeInstalledPackagesInteract
+
+    /**
+     * Sync Usage Stats Interact
+     */
+    @Inject
+    internal lateinit var syncUsageStatsInteract: SynPackageUsageStatsInteract
 
 
     /**
@@ -183,6 +201,9 @@ class MonitoringService : Service(){
         filter.addAction(Intent.ACTION_USER_PRESENT)
         registerReceiver(screenStatusReceiver, filter)
 
+        // Init Task
+        initTask()
+
         // Get All Packages Installed
         getAllPackagesInstalledInteract(UseCase.None()){
             it.either(::onGetAllPackagesInstalledFailed, ::onGetAllPackagesInstalledSuccess)
@@ -239,7 +260,24 @@ class MonitoringService : Service(){
      */
     private fun onSyncPackagesSuccess(unit: Unit) {
         Log.d(TAG, "On Sync Packages Success")
+        enableAppForegroundMonitoring()
 
+    }
+
+
+    /**
+     * On Sync Package Usage Stats Failed
+     */
+    private fun onSyncPackageUsageStatsFailed(failure: Failure) {
+        Log.d(TAG, "On Sync Package Usage Stats")
+
+    }
+
+    /**
+     * On Sync Package Usage Stats Success
+     */
+    private fun onSyncPackageUsageStatsSuccess(syncPackages: Int) {
+        Log.d(TAG, "Sync Packages count -> $syncPackages")
     }
 
 
@@ -277,48 +315,78 @@ class MonitoringService : Service(){
 
     }
 
+    /**
+     * Init Task
+     */
+    private fun initTask(){
+
+        /**
+         * Init Check Foreground App Task
+         */
+        checkForegroundAppTask = Runnable {
+
+            Log.d(TAG, "Check Foreground App Task")
+
+            if (appBlockList.isNotEmpty()) {
+                // Check Usage Stats Allowed
+                if (usageStatsService.isUsageStatsAllowed()) {
+                    // Get Current Foreground App
+                    val currentAppForeground = usageStatsService.getCurrentForegroundApp()
+                    Log.d(TAG, "Current App Foreground -> $currentAppForeground")
+                    if (!currentAppForeground.isNullOrEmpty() &&
+                            currentAppForeground != packageName &&
+                            currentAppForeground != currentAppLocked) {
+
+                        if (appBlockList.map { it.packageName }.contains(currentAppForeground)) {
+                            Log.d(TAG, "Package $currentAppForeground not allowed")
+                            currentAppLocked = currentAppForeground
+                            navigator.showLockScreen(applicationContext)
+                        } else {
+                            currentAppLocked = null
+                            val localBroadcastManager = LocalBroadcastManager
+                                    .getInstance(this@MonitoringService)
+                            localBroadcastManager.sendBroadcast(Intent(
+                                    "com.sanchez.sergio.unlock"))
+                        }
+                    }
+
+                } else {
+                    Log.d(TAG, "Usage Stats Not Allowed generate alert")
+                }
+            }
+
+            mHandler.postDelayed(checkForegroundAppTask, CHECK_FOREGROUND_APP_INTERVAL)
+        }
+
+        /**
+         * Check Applications Usage Statistics
+         */
+        checkApplicationsUsageStatistics = Runnable {
+
+            Log.d(TAG, "Check Applications Usage Statistics")
+
+            // Check Usage Stats Allowed
+            if (usageStatsService.isUsageStatsAllowed()) {
+                // Sync Usage Stats
+                syncUsageStatsInteract(UseCase.None()){
+                    it.either(::onSyncPackageUsageStatsFailed,
+                            ::onSyncPackageUsageStatsSuccess)
+                }
+            }
+
+            mHandler.postDelayed(checkApplicationsUsageStatistics, CHECK_APPLICATIONS_USAGE_STATISTICS)
+        }
+
+    }
+
 
     /**
      * Enable App Foreground Monitoring
      */
     fun enableAppForegroundMonitoring(){
         Log.d(TAG, "Enable App Foreground Monitoring")
-
-        checkForegroundAppTimer = Timer()
-        checkForegroundAppTimer.scheduleAtFixedRate(object: TimerTask(){
-
-            override fun run() {
-                if(appBlockList.isNotEmpty()) {
-                    // Check Usage Stats Allowed
-                    if(usageStatsService.isUsageStatsAllowed()) {
-                        // Get Current Foreground App
-                        val currentAppForeground = usageStatsService.getCurrentForegroundApp()
-                        Log.d(TAG, "Current App Foreground -> $currentAppForeground")
-                        if(!currentAppForeground.isNullOrEmpty() &&
-                                currentAppForeground != packageName &&
-                                currentAppForeground != currentAppLocked) {
-
-                            if(appBlockList.map { it.packageName }.contains(currentAppForeground)){
-                                Log.d(TAG, "Package $currentAppForeground not allowed")
-                                currentAppLocked = currentAppForeground
-                                navigator.showLockScreen(applicationContext)
-                            } else {
-                                currentAppLocked = null
-                                val localBroadcastManager = LocalBroadcastManager
-                                        .getInstance(this@MonitoringService)
-                                localBroadcastManager.sendBroadcast(Intent(
-                                        "com.sanchez.sergio.unlock"))
-                            }
-                        }
-
-                    } else {
-                        Log.d(TAG, "Usage Stats Not Allowed generate alert")
-                    }
-                }
-            }
-
-        }, 0, CHECK_FOREGROUND_APP_INTERVAL)
-
+        mHandler.postDelayed(checkForegroundAppTask, CHECK_FOREGROUND_APP_INTERVAL)
+        mHandler.postDelayed(checkApplicationsUsageStatistics, CHECK_APPLICATIONS_USAGE_STATISTICS)
     }
 
     /**
@@ -326,8 +394,8 @@ class MonitoringService : Service(){
      */
     fun disableAppForegroundMonitoring(){
         Log.d(TAG, "Disable App Foreground Monitoring")
-        checkForegroundAppTimer.cancel()
-        checkForegroundAppTimer.purge()
+        mHandler.removeCallbacks(checkForegroundAppTask)
+        mHandler.removeCallbacks(checkApplicationsUsageStatistics)
     }
 
 
@@ -344,6 +412,7 @@ class MonitoringService : Service(){
             System.exit(2)
         }
     }
+
 
     /**
      * Screen Screen Receiver
