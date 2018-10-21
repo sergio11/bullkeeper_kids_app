@@ -23,7 +23,7 @@ data class SystemPackageInfo (
         // App Icon
         var icon: Drawable? = null,
         // Is Blocked
-        var isBlocked: Boolean = true
+        var isBlocked: Boolean = false
 ) : Serializable {
 
     val TAG = "SYSTEM_PACKAGE_INFO"
