@@ -21,6 +21,8 @@ ext {
   okhttp_logging_interceptor_version = '3.8.1'
   stethoVersion = '1.5.0'
   stethoRealmVersion = '2.2.0'
+  calligraphyVersion = '2.3.0'
+  circleimageviewVersion = '2.2.0'
 
   //Unit Testing
   robolectric_version = '3.8'
@@ -53,7 +55,9 @@ ext {
       javaxAnnotation:            "javax.annotation:jsr250-api:$javaxAnnotations_version",
       javaxInject:                "javax.inject:javax.inject:$javaxInject_version",
       retrofit:                   "com.squareup.retrofit2:converter-gson:$retrofit_version",
-      okhttpLoggingInterceptor:   "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_interceptor_version"
+      okhttpLoggingInterceptor:   "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_interceptor_version",
+      calligraphy:                "uk.co.chrisjenx:calligraphy:${calligraphyVersion}",
+      circleimageview:            "de.hdodenhof:circleimageview:${circleimageviewVersion}"
   ]
 
   unitTesting = [

@@ -4,7 +4,148 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".bullkeeper_kids.presentation.home.HomeActivityFragment"
     tools:showIn="@layout/activity_home">
+
+    <!-- Horizontal Divisor -->
+    <View
+        android:id="@+id/verticalDivisor"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/commonWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="@dimen/common_margin"/>
+
+    <!-- Vertical Divisor -->
+    <View
+        android:id="@+id/horizontalDivisor"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/commonWhite"
+        android:layout_margin="@dimen/common_margin"/>
+
+
+    <!-- Pick Me Up -->
+    <LinearLayout
+        android:id="@+id/pickMeUpAction"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:background="@color/translucentPrimaryDarkColor"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivisor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/horizontalDivisor">
+
+        <ImageView
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:contentDescription="@string/content_not_be_loaded"
+            android:src="@drawable/car_solid" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CommonStrongText"
+            android:textColor="@color/commonWhite"
+            android:text="@string/menu_pick_me_up"/>
+
+
+    </LinearLayout>
+
+
+    <!-- Time Bank -->
+    <LinearLayout
+        android:id="@+id/timeBankAction"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/translucentPrimaryDarkColor"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/verticalDivisor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/horizontalDivisor">
+
+        <ImageView
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:contentDescription="@string/content_not_be_loaded"
+            android:src="@drawable/piggy_bank_solid" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CommonStrongText"
+            android:textColor="@color/commonWhite"
+            android:text="@string/menu_time_bank"/>
+
+    </LinearLayout>
+
+    <!-- SOS -->
+    <LinearLayout
+        android:id="@+id/sosAction"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/translucentPrimaryDarkColor"
+        app:layout_constraintTop_toBottomOf="@id/horizontalDivisor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivisor"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:contentDescription="@string/content_not_be_loaded"
+            android:src="@drawable/exclamation_circle_solid"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CommonStrongText"
+            android:textColor="@color/commonWhite"
+            android:text="@string/menu_sos"/>
+
+    </LinearLayout>
+
+    <!-- Profile -->
+    <LinearLayout
+        android:id="@+id/profileAction"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/translucentPrimaryDarkColor"
+        app:layout_constraintTop_toBottomOf="@id/horizontalDivisor"
+        app:layout_constraintStart_toEndOf="@id/verticalDivisor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:contentDescription="@string/content_not_be_loaded"
+            android:src="@drawable/user_profile"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CommonStrongText"
+            android:textColor="@color/commonWhite"
+            android:text="@string/menu_profile"/>
+
+    </LinearLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

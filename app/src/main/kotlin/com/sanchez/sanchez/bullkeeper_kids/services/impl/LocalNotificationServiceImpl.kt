@@ -60,7 +60,7 @@ class LocalNotificationServiceImpl
                 .setContentText(contentText)
                 .setContentTitle(contentTitle)
                 .setOngoing(true)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setWhen(System.currentTimeMillis())
     }
 

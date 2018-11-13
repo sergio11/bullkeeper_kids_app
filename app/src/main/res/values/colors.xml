@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--Base colors-->
-    <color name="colorPrimary">#000000</color>
-    <color name="colorAccent">#000000</color>
-    <color name="colorSecondary">#7f1a18</color>
-    <color name="colorTextPrimary">#FFFFFF</color>
-    <color name="colorTextSecondary">#7f1a18</color>
+    <color name="primaryColor">#df885d</color>
+    <color name="translucentPrimaryColor">#90df885d</color>
+    <color name="primaryLightColor">#ffb88b</color>
+    <color name="primaryDarkColor">#a95a32</color>
+    <color name="primaryTextColor">#000000</color>
 
+    <!-- Translucent Primary Dark Color -->
+    <color name="translucentPrimaryDarkColor">#90a95a32</color>
+    <!-- Translucent Background -->
     <color name="translucentBackground">#ED000000</color>
+    <!-- white -->
+    <color name="commonWhite">#FFFFFF</color>
+    <!-- Common Gray -->
+    <color name="common_gray">#D8D8D8</color>
+    <!-- Translucent white -->
+    <color name="translucentWhite">#90FFFFFF</color>
+    <!-- Green Success -->
+    <color name="greenSuccess">#4BB543</color>
+    <!-- Green Dark  -->
+    <color name="greenSuccessDark">#1E4A1B</color>
+    <!-- Translucent Green Success -->
+    <color name="translucentGreenSuccess">#904BB543</color>
+    <!-- Red Danger -->
+    <color name="redDanger">#ff2323</color>
+    <!-- Translucent Red Danger -->
+    <color name="translucentRedDanger">#90ff2323</color>
 </resources>

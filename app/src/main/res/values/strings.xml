@@ -17,4 +17,16 @@
     <string name="default_notification_channel_id">@string/important_notification_channel_id</string>
     <string name="title_activity_lock_screen">LockScreenActivity</string>
 
+
+    <string name="content_not_be_loaded">Content can not be loaded</string>
+
+    <!-- Pick Me Up -->
+    <string name="menu_pick_me_up">Pick Me Up</string>
+    <!-- Time Bank -->
+    <string name="menu_time_bank">Time Bank</string>
+    <!-- SOS -->
+    <string name="menu_sos">S.O.S</string>
+    <!-- SOS -->
+    <string name="menu_profile">Profile</string>
+
 </resources>

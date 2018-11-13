@@ -17,6 +17,8 @@ import com.squareup.leakcanary.LeakCanary
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import io.realm.Realm
 import java.util.regex.Pattern
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig
+
 
 /**
  * Android Application
@@ -65,6 +67,7 @@ class AndroidApplication : Application() {
         INSTANCE = this
 
         this.injectMembers()
+        this.initializeCalligraphy()
         this.initializeLeakDetection()
         this.initializeRealm()
         this.initializeStetho()
@@ -77,6 +80,19 @@ class AndroidApplication : Application() {
      * Inject Members
      */
     private fun injectMembers() = appComponent.inject(this)
+
+    /**
+     * Initialize Calligraphy
+     */
+    private fun initializeCalligraphy() {
+
+        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/VAGRoundedBT.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        )
+    }
+
 
     /**
      * Initializae Leak Detection

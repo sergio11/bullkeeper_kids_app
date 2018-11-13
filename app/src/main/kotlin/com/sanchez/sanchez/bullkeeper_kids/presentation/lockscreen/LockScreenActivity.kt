@@ -52,10 +52,6 @@ class LockScreenActivity : AppCompatActivity() {
         mIntentFilter.addAction("com.sanchez.sergio.unlock")
         mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
     }
 
     override fun onDestroy() {
