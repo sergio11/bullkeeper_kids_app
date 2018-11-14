@@ -15,6 +15,9 @@ import javax.inject.Singleton
 @Module
 class ApplicationModule(private val application: AndroidApplication) {
 
+    /**
+     * Provide Application Context
+     */
     @Provides @Singleton fun provideApplicationContext(): Context = application
 
     /**
@@ -23,7 +26,4 @@ class ApplicationModule(private val application: AndroidApplication) {
     @Provides @Singleton fun provideSystemPackageHelper(context: Context): ISystemPackageHelper {
         return SystemPackageHelperImpl(context)
     }
-
-
-
 }

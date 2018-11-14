@@ -8,16 +8,18 @@ import android.os.Bundle
 import android.provider.Settings
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
-import com.sanchez.sanchez.bullkeeper_kids.core.SupportActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.Navigator
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import javax.inject.Inject
 
 /**
  * Home Activity
  */
-class HomeActivity : SupportActivity() {
+class HomeActivity : BaseActivity() {
+
 
     val TAG = "HOME_ACTIVITY"
 
@@ -80,6 +82,8 @@ class HomeActivity : SupportActivity() {
      * Get Layout Resource
      */
     override fun getLayoutRes(): Int = R.layout.activity_home
+
+    override fun fragment(): BaseFragment = HomeActivityFragment()
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

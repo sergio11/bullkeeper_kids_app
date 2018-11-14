@@ -9,6 +9,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.viewmodel.ViewModelModule
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -40,4 +41,9 @@ interface ApplicationComponent {
      * Inject into App Status Changed Receiver
      */
     fun inject(appStatusChangeReceiver: AppStatusChangedReceiver)
+
+    /**
+     * Inject Into Sign In Activity
+     */
+    fun inject(signInActivity: SignInActivity)
 }

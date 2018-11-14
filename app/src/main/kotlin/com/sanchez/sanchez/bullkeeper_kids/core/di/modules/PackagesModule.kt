@@ -10,6 +10,9 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
+/**
+ * Packages Module
+ */
 @Module(includes = [ ServicesModule::class, PersistenceModule::class ])
 class PackagesModule {
 
@@ -38,7 +41,4 @@ class PackagesModule {
     fun provideSynPackageUsageStatsInteract(usageStatsService: IUsageStatsService, packageUsageStatsRepository: IPackageUsageStatsRepository):
             SynPackageUsageStatsInteract = SynPackageUsageStatsInteract(usageStatsService,
                         packageUsageStatsRepository)
-
-
-
 }

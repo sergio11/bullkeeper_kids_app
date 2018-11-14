@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
 import com.sanchez.sanchez.bullkeeper_kids.services.AuthenticatorService
-import com.sanchez.sanchez.bullkeeper_kids.presentation.login.LoginActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import javax.inject.Inject
@@ -22,13 +22,13 @@ class Navigator
     /**
      * Show Login
      */
-    private fun showLogin(context: Context) =
-            context.startActivity(LoginActivity.callingIntent(context))
+    fun showLogin(context: Context) =
+            context.startActivity(SignInActivity.callingIntent(context))
 
     /**
      * Show Home
      */
-    private fun showHome(context: Context) =
+     fun showHome(context: Context) =
             context.startActivity(HomeActivity.callingIntent(context))
 
     /**

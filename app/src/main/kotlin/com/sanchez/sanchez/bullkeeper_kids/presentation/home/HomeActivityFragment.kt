@@ -1,26 +1,22 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.home
 
-import android.support.v4.app.Fragment
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.showShortMessage
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class HomeActivityFragment : Fragment() {
+class HomeActivityFragment : BaseFragment() {
 
     /**
-     * On Create View
+     * Layout Id
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
-    }
+    override fun layoutId(): Int = R.layout.fragment_home
+
 
     /**
      * On View Created

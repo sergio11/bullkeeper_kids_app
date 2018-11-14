@@ -29,4 +29,12 @@
     <!-- SOS -->
     <string name="menu_profile">Profile</string>
 
+    <!-- Sign In -->
+    <string name="sign_in_btn">Sign In</string>
+    <!-- Intro Text -->
+    <string name="sign_in_title">Please login with the main account information</string>
+    <!-- email hint -->
+    <string name="email_address_hint">Email</string>
+    <!-- password hint -->
+    <string name="password_hint">Password</string>
 </resources>

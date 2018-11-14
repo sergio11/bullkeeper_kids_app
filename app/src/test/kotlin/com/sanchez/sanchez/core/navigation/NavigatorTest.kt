@@ -17,7 +17,7 @@ package com.sanchez.sanchez.core.navigation
 
 import com.sanchez.sanchez.AndroidTest
 import com.sanchez.sanchez.bullkeeper_kids.services.AuthenticatorService
-import com.sanchez.sanchez.bullkeeper_kids.presentation.login.LoginActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.features.movies.MoviesActivity
 import com.sanchez.sanchez.shouldNavigateTo
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
@@ -45,7 +45,7 @@ class NavigatorTest : AndroidTest() {
         navigator.showMain(activityContext())
 
         verify(authenticatorService).userLoggedIn()
-        SplashScreenActivity::class shouldNavigateTo LoginActivity::class
+        SplashScreenActivity::class shouldNavigateTo SignInActivity::class
     }
 
     @Test fun `should forward user to movies screen`() {

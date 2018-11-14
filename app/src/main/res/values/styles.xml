@@ -181,5 +181,63 @@
         <item name="android:background">@drawable/common_section_translucent_background</item>
     </style>
 
+    <!-- Text Styles Text Float Label Appearance -->
+    <style name="TextStyles.TextFloatLabelAppearance"
+        parent="TextAppearance.Design.Hint">
+        <!-- Floating label appearance here -->
+        <item name="android:textColor">@color/commonWhite</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Text Appearance Design Counter Intro -->
+    <style name="TextAppearance.Design.Counter.Intro">
+        <item name="android:textColor">@color/primaryColor</item>
+        <item name="android:textColorHighlight">@color/primaryDarkColor</item>
+        <item name="android:textColorHint">@color/primaryDarkColor</item>
+    </style>
+
+    <style name="CommonTextInputLayout"
+        parent="Widget.Design.TextInputLayout">
+
+        <item name="android:textSize">20sp</item>
+        <item name="counterTextAppearance">@style/TextAppearance.Design.Counter.Intro</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/commonWhite</item>
+        <!-- Control color on normal state -->
+        <item name="colorControlNormal">@color/commonWhite</item>
+        <!-- Control colo on activated state -->
+        <item name="colorControlActivated">@color/commonWhite</item>
+        <item name="android:textColorPrimary">@color/commonWhite</item>
+    </style>
+
+    <!-- Common Text Input Layout Inverse -->
+    <style name="CommonTextInputLayoutInverse"
+        parent="CommonTextInputLayout">
+
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/primaryColor</item>
+        <!-- Control color on normal state -->
+        <item name="colorControlNormal">@color/primaryColor</item>
+        <!-- Control colo on activated state -->
+        <item name="colorControlActivated">@color/primaryColor</item>
+        <item name="android:textColorPrimary">@color/primaryColor</item>
+    </style>
+
+    <!-- Text Styles Text Error Appearance -->
+    <style name="TextStyles.TextErrorAppearance" parent="TextAppearance.Design.Error">
+        <!-- Error message appearance here -->
+        <item name="android:textColor">@android:color/holo_red_dark</item>
+        <item name="android:textColorHint">@android:color/holo_red_dark</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Text Input Layout Appearance -->
+    <style name="Widget.Design.TextInputLayout" parent="AppTheme">
+        <item name="hintTextAppearance">@style/TextAppearance.Design.Counter.Intro</item>
+        <item name="errorTextAppearance">@style/TextStyles.TextErrorAppearance</item>
+        <item name="counterOverflowTextAppearance">@style/TextAppearance.Design.Counter.Overflow
+        </item>
+    </style>
+
 
 </resources>

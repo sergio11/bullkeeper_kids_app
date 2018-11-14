@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
-import kotlinx.android.synthetic.main.activity_layout.fragmentContainer
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) =
         beginTransaction().func().commit()
@@ -22,7 +21,5 @@ inline fun <reified T : ViewModel> Fragment.viewModel(factory: Factory, body: T.
 }
 
 fun BaseFragment.close() = fragmentManager?.popBackStack()
-
-val BaseFragment.viewContainer: View get() = (activity as BaseActivity).fragmentContainer
 
 val BaseFragment.appContext: Context get() = activity?.applicationContext!!
