@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primaryColor">
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/titleText"
+        style="@style/CommonStrongText"
+        android:layout_width="0dp"
+        android:layout_height="77dp"
+        android:layout_margin="@dimen/common_margin"
+        android:padding="@dimen/common_padding"
+        android:gravity="center"
+        android:text="@string/sign_in_title"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/contentText"/>
+
+
+    <!-- Content Text -->
+    <TextView
+        android:id="@+id/contentText"
+        style="@style/CommonStrongText"
+        android:layout_width="0dp"
+        android:layout_height="77dp"
+        android:layout_margin="@dimen/common_margin"
+        android:padding="@dimen/common_padding"
+        android:gravity="center"
+        android:text="@string/sign_in_title"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

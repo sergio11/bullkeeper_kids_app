@@ -31,12 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <activity
-            android:name=".presentation.login.SignInActivity"/>
-
-
+        <activity android:name=".presentation.login.SignInActivity" />
         <activity
             android:name=".presentation.home.HomeActivity"
             android:label="@string/title_activity_home"
@@ -72,15 +67,21 @@
         </receiver>
 
         <!-- Monitoring Device Admin Receiver -->
-        <receiver android:name=".presentation.broadcast.MonitoringDeviceAdminReceiver"
+        <receiver
+            android:name=".presentation.broadcast.MonitoringDeviceAdminReceiver"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data android:name="android.app.device_admin"
+            <meta-data
+                android:name="android.app.device_admin"
                 android:resource="@xml/policies" />
+
             <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
 
+
+        <activity
+            android:name=".presentation.tutorial.AppTutorialActivity" />
     </application>
 
 </manifest>

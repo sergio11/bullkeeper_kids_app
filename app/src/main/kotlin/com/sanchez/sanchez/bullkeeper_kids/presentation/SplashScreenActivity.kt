@@ -27,6 +27,6 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        navigator.showLogin(this)
+        navigator.showAppTutorial(this)
     }
 }

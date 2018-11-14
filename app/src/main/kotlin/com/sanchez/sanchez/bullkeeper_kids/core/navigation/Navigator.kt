@@ -9,6 +9,7 @@ import com.sanchez.sanchez.bullkeeper_kids.services.AuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,6 +19,13 @@ import javax.inject.Singleton
 @Singleton
 class Navigator
     @Inject constructor(private val authenticatorService: AuthenticatorService) {
+
+
+    /**
+     * Show App Tutorial
+     */
+    fun showAppTutorial(context: Context) =
+            context.startActivity(AppTutorialActivity.callingIntent(context))
 
     /**
      * Show Login

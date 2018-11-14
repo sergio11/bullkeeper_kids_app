@@ -23,6 +23,7 @@ ext {
   stethoRealmVersion = '2.2.0'
   calligraphyVersion = '2.3.0'
   circleimageviewVersion = '2.2.0'
+  slidingtutorialVersion = '1.0.8'
 
   //Unit Testing
   robolectric_version = '3.8'
@@ -57,7 +58,8 @@ ext {
       retrofit:                   "com.squareup.retrofit2:converter-gson:$retrofit_version",
       okhttpLoggingInterceptor:   "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_interceptor_version",
       calligraphy:                "uk.co.chrisjenx:calligraphy:${calligraphyVersion}",
-      circleimageview:            "de.hdodenhof:circleimageview:${circleimageviewVersion}"
+      circleimageview:            "de.hdodenhof:circleimageview:${circleimageviewVersion}",
+      slidingtutorial:            "com.cleveroad:slidingtutorial:${slidingtutorialVersion}"
   ]
 
   unitTesting = [

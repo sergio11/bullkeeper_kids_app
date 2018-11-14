@@ -96,6 +96,7 @@ dependencies {
     implementation applicationDependencies.okhttpLoggingInterceptor
     implementation applicationDependencies.calligraphy
     implementation applicationDependencies.circleimageview
+    implementation applicationDependencies.slidingtutorial
 
     //Unit/Integration tests dependencies
     testImplementation unitTestDependencies.kotlin

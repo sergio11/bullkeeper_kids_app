@@ -37,4 +37,11 @@
     <string name="email_address_hint">Email</string>
     <!-- password hint -->
     <string name="password_hint">Password</string>
+
+    <!-- App Tutorial -->
+    <string name="first_page_title">BullKeeper Kids: Permissions for data access</string>
+    <string name="first_page_description">The BullKeeper Kids app needs access to certain data and information of this device. This assistant will request your permission to the data that is accessed through the app</string>
+
+
+
 </resources>
