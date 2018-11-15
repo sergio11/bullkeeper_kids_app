@@ -1,43 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/primaryColor">
+    android:background="@drawable/background_11">
 
     <!-- Title Text -->
     <TextView
         android:id="@+id/titleText"
         style="@style/CommonStrongText"
         android:layout_width="0dp"
-        android:layout_height="77dp"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_margin"
-        android:padding="@dimen/common_padding"
         android:gravity="center"
-        android:text="@string/sign_in_title"
+        android:padding="@dimen/common_padding"
+        android:text="@string/second_page_title"
         android:textAlignment="center"
         android:textColor="@color/commonWhite"
+        app:layout_constraintBottom_toTopOf="@id/contentText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/contentText"/>
+        app:layout_constraintVertical_bias="0.51" />
 
 
     <!-- Content Text -->
     <TextView
         android:id="@+id/contentText"
-        style="@style/CommonStrongText"
+        style="@style/CommonStrongText.Big"
         android:layout_width="0dp"
-        android:layout_height="77dp"
-        android:layout_margin="@dimen/common_margin"
-        android:padding="@dimen/common_padding"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_margin"
         android:gravity="center"
-        android:text="@string/sign_in_title"
+        android:padding="@dimen/common_padding"
+        android:text="@string/second_page_description"
         android:textAlignment="center"
         android:textColor="@color/commonWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+    <RelativeLayout
+        android:id="@+id/imageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contentText">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/content_not_be_loaded"
+            android:src="@drawable/tutorial_first_page_permission"
+             />
+
+    </RelativeLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

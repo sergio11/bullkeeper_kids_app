@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_13">
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/titleText"
+        style="@style/CommonStrongText"
+        android:layout_width="0dp"
+        android:layout_height="77dp"
+        android:layout_margin="@dimen/common_margin"
+        android:padding="@dimen/common_padding"
+        android:gravity="center"
+        android:text="@string/four_page_title"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"/>
+
+
+    <!-- Start Access required -->
+    <ScrollView
+        android:id="@+id/accessRequired"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleText"
+        android:layout_marginBottom="80dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Run On Startup -->
+            <RelativeLayout
+                android:id="@+id/runOnStartup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Run On Startup Icon -->
+                <ImageView
+                    android:id="@+id/runOnStartupIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/gear_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Run On Startup Title -->
+                <TextView
+                    android:id="@+id/runOnStartupTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/runOnStartupIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/runOnStartupDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/four_run_on_startup_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Run On Startup Description -->
+                <TextView
+                    android:id="@+id/runOnStartupDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/runOnStartupIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/four_run_on_startup_description"
+                    android:textColor="@color/commonWhite" />
+
+            </RelativeLayout>
+            <!-- End Run on Startup -->
+
+            <!-- Run in the background -->
+            <RelativeLayout
+                android:id="@+id/runInTheBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Run in the background icon -->
+                <ImageView
+                    android:id="@+id/runInTheBackgroundIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/robot_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Run in the background title -->
+                <TextView
+                    android:id="@+id/runInTheBackgroundTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/runInTheBackgroundIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/runInTheBackgroundDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/four_run_in_the_background_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Run in the background Description -->
+                <TextView
+                    android:id="@+id/runInTheBackgroundDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/runInTheBackgroundIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/four_run_in_the_background_description"
+                    android:textColor="@color/commonWhite" />
+
+            </RelativeLayout>
+            <!-- End Run int the background -->
+
+        </LinearLayout>
+
+    </ScrollView>
+    <!-- End Access Required -->
+
+</RelativeLayout>

@@ -79,9 +79,10 @@
             </intent-filter>
         </receiver>
 
-
+        <activity android:name=".presentation.tutorial.AppTutorialActivity" />
         <activity
-            android:name=".presentation.tutorial.AppTutorialActivity" />
+            android:name=".presentation.legalcontent.LegalContentActivity"
+            android:label="@string/title_activity_legal_content"></activity>
     </application>
 
 </manifest>

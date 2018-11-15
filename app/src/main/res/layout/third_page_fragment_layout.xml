@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_12">
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/titleText"
+        style="@style/CommonStrongText"
+        android:layout_width="0dp"
+        android:layout_height="77dp"
+        android:layout_margin="@dimen/common_margin"
+        android:padding="@dimen/common_padding"
+        android:gravity="center"
+        android:text="@string/third_page_title"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"/>
+
+
+    <!-- Access required -->
+    <ScrollView
+        android:id="@+id/accessRequired"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleText"
+        android:layout_marginBottom="80dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Location History -->
+            <RelativeLayout
+                android:id="@+id/locationHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Location History Icon -->
+                <ImageView
+                    android:id="@+id/locationHistoryIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/location_history_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Location History Title -->
+                <TextView
+                    android:id="@+id/locationHistoryTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/locationHistoryIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/locationHistoryDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_location_history_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Location History Description -->
+                <TextView
+                    android:id="@+id/locationHistoryDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/locationHistoryIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_location_history_description"
+                    android:textColor="@color/commonWhite" />
+
+            </RelativeLayout>
+            <!-- End Location History -->
+
+            <!-- Calls and Contacts -->
+            <RelativeLayout
+                android:id="@+id/callsAndContacts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Calls And Contacts Icon -->
+                <ImageView
+                    android:id="@+id/callsAndContactsIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/phone_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Calls And Contacts Title -->
+                <TextView
+                    android:id="@+id/callsAndContactsTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/callsAndContactsIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/callsAndContactsDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_call_logs_and_contacts_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Calls And Contacts Description -->
+                <TextView
+                    android:id="@+id/callsAndContactsDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/callsAndContactsIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_call_logs_and_contacts_description"
+                    android:textColor="@color/commonWhite" />
+
+            </RelativeLayout>
+            <!-- End Location History -->
+
+            <!-- Text Message -->
+            <RelativeLayout
+                android:id="@+id/textMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Text Message Icon -->
+                <ImageView
+                    android:id="@+id/textMessageIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/message_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Text Message Title -->
+                <TextView
+                    android:id="@+id/textMessageTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/textMessageIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/textMessageDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_text_messages_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Text Message Description -->
+                <TextView
+                    android:id="@+id/textMessageDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/textMessageIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_text_messages_description"
+                    android:textColor="@color/commonWhite" />
+
+            </RelativeLayout>
+            <!-- End Text Message -->
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</RelativeLayout>

@@ -10,6 +10,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -46,4 +47,9 @@ interface ApplicationComponent {
      * Inject Into Sign In Activity
      */
     fun inject(signInActivity: SignInActivity)
+
+    /**
+     * Inject into App Tutorial Activity
+     */
+    fun inject(appTutorialActivity: AppTutorialActivity)
 }

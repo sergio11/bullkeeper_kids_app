@@ -8,6 +8,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDevi
 import com.sanchez.sanchez.bullkeeper_kids.services.AuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
 import javax.inject.Inject
@@ -68,6 +69,12 @@ class Navigator
         activity.startActivityForResult(intent, resultCode)
     }
 
+    /**
+     * Show Legal Content
+     */
+    fun showLegalContent(context: Context, legalContentType: LegalContentActivity.LegalTypeEnum) {
+        context.startActivity(LegalContentActivity.callingIntent(context, legalContentType))
+    }
 
 
 

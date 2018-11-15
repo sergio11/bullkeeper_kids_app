@@ -38,10 +38,40 @@
     <!-- password hint -->
     <string name="password_hint">Password</string>
 
+    <!-- Accept -->
+    <string name="accept">I understood</string>
+
     <!-- App Tutorial -->
-    <string name="first_page_title">BullKeeper Kids: Permissions for data access</string>
-    <string name="first_page_description">The BullKeeper Kids app needs access to certain data and information of this device. This assistant will request your permission to the data that is accessed through the app</string>
 
+    <!-- First Page -->
 
+    <string name="first_page_title">Welcome to BullKeeper Kids</string>
+    <string name="first_page_registration_terms_and_conditions" formatted="false">If you continue, you accept our %s and %s</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service_not_accepted">You must accept the license terms to continue</string>
+    <string name="terms_of_service_url">file:///android_asset/web/terms_of_service_content.html</string>
+    <string name="privacy_policy_url">file:///android_asset/web/privacy_policy_content.html</string>
+
+    <!-- Second Page -->
+    <string name="second_page_title">BullKeeper Kids: Permissions for data access</string>
+    <string name="second_page_description">The BullKeeper Kids app needs access to certain data and information of this device. This assistant will request your permission to the data that is accessed through the app</string>
+
+    <!-- Third Page -->
+    <string name="third_page_title">BullKeeper Kids needs access:</string>
+    <string name="third_page_location_history_title">Location history</string>
+    <string name="third_page_location_history_description">BullKeeper Kids needs to periodically store the location in your account for the exclusive use of BullKeeper.</string>
+    <string name="third_page_call_logs_and_contacts_title">Call logs and contacts</string>
+    <string name="third_page_call_logs_and_contacts_description">BullKeeper Kids will synchronize the call history as well as the contacts stored in the device</string>
+    <string name="third_page_text_messages_title">Text messages</string>
+    <string name="third_page_text_messages_description">BullKeeper Kids synchronizes all SMS present in the device for further analysis, as well as the new SMS received after the installation of the application.</string>
+
+    <!-- Four page -->
+    <string name="four_page_title">You should consider that Bull Keeper Kids:</string>
+    <string name="four_run_on_startup_title">Run at startup</string>
+    <string name="four_run_on_startup_description">Every time the phone starts, BullKeeper Kids automatically starts working</string>
+    <string name="four_run_in_the_background_title">Run in the background</string>
+    <string name="four_run_in_the_background_description">Even if the phone is idle or in sleep mode, BullKeeper Kids still works in the background. BullKeeper Kids icon will always stay in the notification bar, that indicates background services are running.</string>
+    <string name="title_activity_legal_content">LegalContentActivity</string>
 
 </resources>

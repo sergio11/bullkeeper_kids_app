@@ -21,7 +21,8 @@ class SecondPageFragment: PageSupportFragment() {
     override fun getTransformItems(): Array<TransformItem> {
         return arrayOf(
                 TransformItem.create(R.id.titleText, Direction.LEFT_TO_RIGHT, 0.2f),
-                TransformItem.create(R.id.contentText, Direction.RIGHT_TO_LEFT, 0.07f)
+                TransformItem.create(R.id.contentText, Direction.RIGHT_TO_LEFT, 0.07f),
+                TransformItem.create(R.id.imageContainer, Direction.LEFT_TO_RIGHT, 0.2f)
         )
     }
 }
