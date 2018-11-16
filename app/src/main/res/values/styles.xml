@@ -239,5 +239,17 @@
         </item>
     </style>
 
+    <!-- Menu Theme -->
+    <style name="CommonDialogFragmentTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/CommonDialogWindow.Window</item>
+        <item name="android:windowBackground">@drawable/common_dialog_drawable</item>
+    </style>
+
+    <style name="CommonDialogWindow.Window" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/anim_in</item>
+        <item name="android:windowExitAnimation">@anim/anim_out</item>
+    </style>
+
+
 
 </resources>

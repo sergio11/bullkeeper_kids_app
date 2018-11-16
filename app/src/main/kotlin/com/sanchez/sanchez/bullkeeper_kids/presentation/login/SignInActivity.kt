@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.navigation.Navigator
+import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler {
      * Navigator
      */
     @Inject
-    internal lateinit var navigator: Navigator
+    internal lateinit var navigator: INavigator
 
 
     /**

@@ -16,8 +16,6 @@
 package com.sanchez.sanchez.presentation.activities.login
 
 import com.sanchez.sanchez.UnitTest
-import com.sanchez.sanchez.bullkeeper_kids.services.AuthenticatorService
-import org.amshove.kluent.shouldBe
 import org.junit.Test
 
 class AuthenticatorServiceTest : UnitTest() {

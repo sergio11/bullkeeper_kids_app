@@ -10,6 +10,11 @@ android {
     compileSdkVersion config["compile_sdk"]
     buildToolsVersion config["build_tools"]
 
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
     defaultConfig {
         applicationId config["application_id"]
         minSdkVersion config["min_sdk"]
@@ -97,6 +102,10 @@ dependencies {
     implementation applicationDependencies.calligraphy
     implementation applicationDependencies.circleimageview
     implementation applicationDependencies.slidingtutorial
+    implementation applicationDependencies.arrow
+    implementation applicationDependencies.androidToggle
+    implementation applicationDependencies.dexter
+    implementation applicationDependencies.timber
 
     //Unit/Integration tests dependencies
     testImplementation unitTestDependencies.kotlin

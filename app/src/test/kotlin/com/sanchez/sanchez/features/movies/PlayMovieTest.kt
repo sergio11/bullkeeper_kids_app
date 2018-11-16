@@ -16,7 +16,6 @@
 package com.sanchez.sanchez.features.movies
 
 import com.sanchez.sanchez.AndroidTest
-import com.sanchez.sanchez.bullkeeper_kids.core.navigation.Navigator
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before
 import org.junit.Test

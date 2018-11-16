@@ -1,49 +1,47 @@
-package com.sanchez.sanchez.bullkeeper_kids.core.navigation
+package com.sanchez.sanchez.bullkeeper_kids.core.navigation.impl
 
 import android.app.Activity
 import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.Intent
+import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
-import com.sanchez.sanchez.bullkeeper_kids.services.AuthenticatorService
-import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
+import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
- * Navigator
+ * Navigator Impl
  */
-@Singleton
-class Navigator
-    @Inject constructor(private val authenticatorService: AuthenticatorService) {
-
+class NavigatorImpl
+    @Inject constructor(private val authenticatorService: IAuthenticatorService): INavigator {
 
     /**
      * Show App Tutorial
      */
-    fun showAppTutorial(context: Context) =
+    override fun showAppTutorial(context: Context) =
             context.startActivity(AppTutorialActivity.callingIntent(context))
 
     /**
      * Show Login
      */
-    fun showLogin(context: Context) =
+    override fun showLogin(context: Context) =
             context.startActivity(SignInActivity.callingIntent(context))
 
     /**
      * Show Home
      */
-     fun showHome(context: Context) =
+    override fun showHome(context: Context) =
             context.startActivity(HomeActivity.callingIntent(context))
 
     /**
      * Show Main
      */
-    fun showMain(context: Context) {
+    override fun showMain(context: Context) {
         when (authenticatorService.userLoggedIn()) {
             true -> showHome(context)
             false -> showLogin(context)
@@ -53,14 +51,13 @@ class Navigator
     /**
      * Show Lock Screen
      */
-    fun showLockScreen(context: Context) =
+    override fun showLockScreen(context: Context) =
             context.startActivity(LockScreenActivity.callingIntent(context))
-
 
     /**
      * Show Enable Admin Device Features
      */
-    fun showEnableAdminDeviceFeatures(activity: Activity, resultCode: Int) = {
+    override fun showEnableAdminDeviceFeatures(activity: Activity, resultCode: Int) {
         val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
         intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN,
                 MonitoringDeviceAdminReceiver.getComponentName(activity))
@@ -69,15 +66,12 @@ class Navigator
         activity.startActivityForResult(intent, resultCode)
     }
 
+
     /**
      * Show Legal Content
      */
-    fun showLegalContent(context: Context, legalContentType: LegalContentActivity.LegalTypeEnum) {
-        context.startActivity(LegalContentActivity.callingIntent(context, legalContentType))
-    }
-
-
+    override fun showLegalContent(context: Context, legalContentType: LegalContentActivity.LegalTypeEnum)
+        = context.startActivity(LegalContentActivity.callingIntent(context = context,
+            legalTypeEnum = legalContentType))
 
 }
-
-

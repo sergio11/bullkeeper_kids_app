@@ -72,6 +72,10 @@
     <dimen name="common_dialog_height">250dp</dimen>
     <!-- Schedule Block Item Height -->
     <dimen name="list_item_very_high">120dp</dimen>
+    <!-- Labeled Switch Height -->
+    <dimen name="common_labeled_switch_height">60dp</dimen>
+    <!-- Labeled Switch Width -->
+    <dimen name="common_labeled_switch_width">120dp</dimen>
 
 
 </resources>

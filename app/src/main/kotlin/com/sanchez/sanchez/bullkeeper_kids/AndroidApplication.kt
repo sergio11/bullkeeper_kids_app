@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids
 import android.app.Application
 import android.content.Intent
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import com.facebook.stetho.Stetho
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerApplicationComponent
@@ -16,6 +17,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringServi
 import com.squareup.leakcanary.LeakCanary
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import io.realm.Realm
+import timber.log.Timber
 import java.util.regex.Pattern
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
@@ -31,9 +33,9 @@ class AndroidApplication : Application() {
     val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         DaggerApplicationComponent
                 .builder()
+                .servicesModule(ServicesModule(this))
                 .applicationModule(ApplicationModule(this))
                 .persistenceModule(PersistenceModule(this))
-                .servicesModule(ServicesModule(this))
                 .build()
     }
 
@@ -64,16 +66,48 @@ class AndroidApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        // Apply Common Config
+        onCommonConfig()
+
+        if (BuildConfig.DEBUG) {
+            onDebugConfig()
+        } else {
+            onReleaseConfig()
+        }
+
         INSTANCE = this
+
+    }
+
+    /**
+     * On Common Config
+     */
+    fun onCommonConfig(){
 
         this.injectMembers()
         this.initializeCalligraphy()
-        this.initializeLeakDetection()
         this.initializeRealm()
-        this.initializeStetho()
         this.initializeServices()
+    }
 
+    /**
+     * On Debug Config
+     */
+    fun onDebugConfig() {
+        // Debug Tree
+        Timber.plant(Timber.DebugTree())
 
+        this.initializeLeakDetection()
+
+        this.initializeStetho()
+    }
+
+    /**
+     * On Release Config
+     */
+    fun onReleaseConfig(){
+        // Reporting Tree
+        Timber.plant(CrashReportingTree())
     }
 
     /**
@@ -132,6 +166,28 @@ class AndroidApplication : Application() {
     private fun initializeServices() {
         ContextCompat.startForegroundService(this,
                 Intent(this, MonitoringService::class.java))
+    }
+
+
+    /** A tree which logs important information for crash reporting.  */
+    private class CrashReportingTree : Timber.Tree() {
+
+
+        override fun log(priority: Int, tag: String, message: String, t: Throwable?) {
+            if (priority == Log.VERBOSE || priority == Log.DEBUG) {
+                return
+            }
+
+            //FakeCrashLibrary.log(priority, tag, message);
+
+            if (t != null) {
+                if (priority == Log.ERROR) {
+                    //FakeCrashLibrary.logError(t);
+                } else if (priority == Log.WARN) {
+                    //FakeCrashLibrary.logWarning(t);
+                }
+            }
+        }
     }
 
 }

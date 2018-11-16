@@ -11,19 +11,27 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.TextView
 import com.cleveroad.slidingtutorial.Direction
-import com.cleveroad.slidingtutorial.PageSupportFragment
 import com.cleveroad.slidingtutorial.TransformItem
 import com.sanchez.sanchez.bullkeeper_kids.R
+import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AppTutorialComponent
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.IAppTutorialHandler
 import kotlinx.android.synthetic.main.first_page_fragment_layout.*
+import timber.log.Timber
 import java.lang.IllegalStateException
 import java.util.*
 
 /**
  * First Page Fragment
  */
-class FirstPageFragment: PageSupportFragment() {
+class FirstPageFragment: AbstractPageFragment<AppTutorialComponent>() {
+
+
+    /**
+     * App Tutorial Handler
+     */
+    lateinit var appTutorialHandler: IAppTutorialHandler
 
     /**
      * Get Layout Res Id
@@ -31,10 +39,15 @@ class FirstPageFragment: PageSupportFragment() {
     override fun getLayoutResId(): Int = R.layout.first_page_fragment_layout
 
     /**
-     * App Tutorial Handler
+     * Initialize Injector
      */
-    lateinit var appTutorialHandler: IAppTutorialHandler
-
+    override fun initializeInjector(): AppTutorialComponent? {
+        val appTutorialComponent = AppTutorialComponent::class.java
+                .cast((activity as HasComponent<AppTutorialComponent>)
+                        .component)
+        appTutorialComponent.inject(this)
+        return appTutorialComponent
+    }
 
     /**
      * On Attach
@@ -58,6 +71,20 @@ class FirstPageFragment: PageSupportFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configureTermsOfServiceAndPrivacyPolicy()
+    }
+
+    /**
+     * When Phase Is Hidden
+     */
+    override fun whenPhaseIsHidden(pagePosition: Int, currentPosition: Int) {
+        Timber.d("Phase Is Hidden")
+    }
+
+    /**
+     * When Phase Is Showed
+     */
+    override fun whenPhaseIsShowed() {
+        Timber.d("Phase Is Showed")
     }
 
     /**

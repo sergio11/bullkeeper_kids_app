@@ -9,7 +9,7 @@ import android.provider.Settings
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.navigation.Navigator
+import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
@@ -44,7 +44,7 @@ class HomeActivity : BaseActivity() {
     /**
      * Navigator
      */
-    @Inject internal lateinit var navigator: Navigator
+    @Inject internal lateinit var navigator: INavigator
 
     private lateinit var devicePolicyManager: DevicePolicyManager
 

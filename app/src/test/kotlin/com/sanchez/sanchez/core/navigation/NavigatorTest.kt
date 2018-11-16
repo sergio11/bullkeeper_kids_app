@@ -16,13 +16,11 @@
 package com.sanchez.sanchez.core.navigation
 
 import com.sanchez.sanchez.AndroidTest
-import com.sanchez.sanchez.bullkeeper_kids.services.AuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.features.movies.MoviesActivity
 import com.sanchez.sanchez.shouldNavigateTo
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.nhaarman.mockito_kotlin.whenever
-import com.sanchez.sanchez.bullkeeper_kids.core.navigation.Navigator
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock

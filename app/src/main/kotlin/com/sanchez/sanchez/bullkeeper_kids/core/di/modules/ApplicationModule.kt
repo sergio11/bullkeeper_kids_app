@@ -2,7 +2,9 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetBlockedPackagesInteract
+import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
+import com.sanchez.sanchez.bullkeeper_kids.core.navigation.impl.NavigatorImpl
+import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.SystemPackageHelperImpl
 import dagger.Module
@@ -26,4 +28,11 @@ class ApplicationModule(private val application: AndroidApplication) {
     @Provides @Singleton fun provideSystemPackageHelper(context: Context): ISystemPackageHelper {
         return SystemPackageHelperImpl(context)
     }
+
+    /**
+     * Provide Navigator
+     */
+    @Provides @Singleton fun provideNavigator(authenticatorService: IAuthenticatorService):
+            INavigator = NavigatorImpl(authenticatorService)
+
 }

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.navigation.Navigator
+import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import javax.inject.Inject
 
 /**
@@ -19,7 +19,7 @@ class SplashScreenActivity : AppCompatActivity() {
     /**
      * Navigator
      */
-    @Inject internal lateinit var navigator: Navigator
+    @Inject internal lateinit var navigator: INavigator
 
     /**
      * On Create

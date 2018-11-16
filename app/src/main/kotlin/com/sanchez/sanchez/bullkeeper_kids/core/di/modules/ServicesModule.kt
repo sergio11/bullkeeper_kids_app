@@ -1,8 +1,10 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
+import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
+import com.sanchez.sanchez.bullkeeper_kids.services.impl.AuthenticatorServiceImpl
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.LocalNotificationServiceImpl
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.UsageStatsServiceImpl
 import dagger.Module
@@ -32,5 +34,14 @@ class ServicesModule(private val context: Context)  {
     @Singleton
     fun provideUsageStatsService(context: Context): IUsageStatsService =
             UsageStatsServiceImpl(context)
+
+
+    /**
+     * Provide Authenticator Service
+     */
+    @Provides
+    @Singleton
+    fun provideAuthenticatorService(): IAuthenticatorService =
+            AuthenticatorServiceImpl()
 
 }

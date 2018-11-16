@@ -61,10 +61,22 @@
     <string name="third_page_title">BullKeeper Kids needs access:</string>
     <string name="third_page_location_history_title">Location history</string>
     <string name="third_page_location_history_description">BullKeeper Kids needs to periodically store the location in your account for the exclusive use of BullKeeper.</string>
-    <string name="third_page_call_logs_and_contacts_title">Call logs and contacts</string>
-    <string name="third_page_call_logs_and_contacts_description">BullKeeper Kids will synchronize the call history as well as the contacts stored in the device</string>
+    <string name="third_page_location_history_reason">BullKeepper Kids will need to access the current position for the functionality of "Family Locator"</string>
+    <string name="third_page_call_logs_title">Call logs</string>
+    <string name="third_page_call_logs_description">BullKeeper Kids will synchronize the call history. In order to stay informed about the calls received and made at all times</string>
+    <string name="third_page_call_logs_reason">Bullkeeper kids needs access to call history to keep informed about possible threats</string>
+    <string name="third_page_contacts_title">Contacts</string>
+    <string name="third_page_contacts_description">BullKeeper Kids will synchronize the list of contacts stored in the device with the aim of offering you information about the users with whom you usually contact</string>
+    <string name="third_page_contacts_reason">Bullkeeper kids needs access to the list of contacts to inform you about the usual contacts</string>
     <string name="third_page_text_messages_title">Text messages</string>
     <string name="third_page_text_messages_description">BullKeeper Kids synchronizes all SMS present in the device for further analysis, as well as the new SMS received after the installation of the application.</string>
+    <string name="third_page_text_messages_reason">Bull Keeper Kids needs to obtain the content of the received SMS to analyze its content in a preventive way and detect possible threats.</string>
+
+
+    <string name="third_page_permission_enabled">Enabled</string>
+    <string name="third_page_permission_disabled">Disabled</string>
+
+    <string name="third_page_review_permission_request">You must review and enable all permissions to continue</string>
 
     <!-- Four page -->
     <string name="four_page_title">You should consider that Bull Keeper Kids:</string>
@@ -73,5 +85,9 @@
     <string name="four_run_in_the_background_title">Run in the background</string>
     <string name="four_run_in_the_background_description">Even if the phone is idle or in sleep mode, BullKeeper Kids still works in the background. BullKeeper Kids icon will always stay in the notification bar, that indicates background services are running.</string>
     <string name="title_activity_legal_content">LegalContentActivity</string>
+
+
+    <!-- Dialogs Strings -->
+    <string name="default_notice_dialog_title">Notice Dialog</string>
 
 </resources>

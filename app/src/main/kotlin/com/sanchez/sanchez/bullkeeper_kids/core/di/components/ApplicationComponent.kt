@@ -6,6 +6,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.NetModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PersistenceModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ServicesModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.viewmodel.ViewModelModule
+import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
@@ -52,4 +53,7 @@ interface ApplicationComponent {
      * Inject into App Tutorial Activity
      */
     fun inject(appTutorialActivity: AppTutorialActivity)
+
+    //Exposed to sub-graphs.
+    fun navigator(): INavigator
 }
