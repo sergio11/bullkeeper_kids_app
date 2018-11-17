@@ -4,6 +4,7 @@ import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.impl.NavigatorImpl
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.SystemPackageHelperImpl
@@ -32,7 +33,8 @@ class ApplicationModule(private val application: AndroidApplication) {
     /**
      * Provide Navigator
      */
-    @Provides @Singleton fun provideNavigator(authenticatorService: IAuthenticatorService):
-            INavigator = NavigatorImpl(authenticatorService)
+    @Provides @Singleton fun provideNavigator(authenticatorService: IAuthenticatorService,
+                                              preferenceRepository: IPreferenceRepository):
+            INavigator = NavigatorImpl(authenticatorService, preferenceRepository)
 
 }

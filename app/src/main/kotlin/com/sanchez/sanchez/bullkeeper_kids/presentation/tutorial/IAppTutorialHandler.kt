@@ -17,4 +17,24 @@ interface IAppTutorialHandler: IBasicActivityHandler {
      * Request
      */
     fun requestFocus()
+
+    /**
+     * Release Focus
+     */
+    fun releaseFocus()
+
+    /**
+     * Show Usage Access Settings
+     */
+    fun showUsageAccessSettings()
+
+    /**
+     * Show SignIn
+     */
+    fun showSignIn()
+
+    /**
+     * Show Device Admin Settings
+     */
+    fun showDeviceAdminSettings()
 }

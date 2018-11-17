@@ -34,7 +34,10 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
     private val SECOND_PAGE_POS = 1
     private val THIRD_PAGE_POS = 2
     private val FOUR_PAGE_POS = 3
-    private val TUTORIAL_PAGES_COUNT = 4
+    private val FIFTH_PAGE_POS = 4
+    private val SIXTH_PAGE_POS = 5
+    private val SEVENTH_PAGE_POS = 6
+    private val TUTORIAL_PAGES_COUNT = 7
 
     /**
      * App Tutorial Component
@@ -56,6 +59,12 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
                 Intent(context, AppTutorialActivity::class.java)
     }
 
+
+    /**
+     * Dependencies
+     * ====================
+     */
+
     /**
      * Navigator
      */
@@ -65,7 +74,7 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
     /**
      * Tutorial Support Fragment
      */
-    lateinit var tutorialSupportFragment: TutorialSupportFragment
+    private lateinit var tutorialSupportFragment: TutorialSupportFragment
 
     /**
      * Get Component
@@ -91,8 +100,8 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
         if(savedInstanceState == null) {
 
             val phaseFragments = arrayOf(
-                    FirstPageFragment(), SecondPageFragment(), ThirdPageFragment(), FourPageFragment())
-
+                    FirstPageFragment(), SecondPageFragment(), ThirdPageFragment(), FourPageFragment(),
+                    FifthPageFragment(), SixthPageFragment(), SeventhPageFragment())
 
             val tutorialOptions = TutorialSupportFragment
                     .newTutorialOptionsBuilder(this)
@@ -103,6 +112,9 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
                             SECOND_PAGE_POS -> phaseFragments[SECOND_PAGE_POS]
                             THIRD_PAGE_POS -> phaseFragments[THIRD_PAGE_POS]
                             FOUR_PAGE_POS -> phaseFragments[FOUR_PAGE_POS]
+                            FIFTH_PAGE_POS -> phaseFragments[FIFTH_PAGE_POS]
+                            SIXTH_PAGE_POS -> phaseFragments[SIXTH_PAGE_POS]
+                            SEVENTH_PAGE_POS -> phaseFragments[SEVENTH_PAGE_POS]
                             else -> throw IllegalArgumentException("Unknown position: $position")
                         }
                     })
@@ -140,7 +152,7 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
      * Show Legal Content
      */
     override fun showLegalContent(legalContent: LegalContentActivity.LegalTypeEnum) {
-        navigator.showLegalContent(context = applicationContext, legalContentType = legalContent)
+        navigator.showLegalContent(this, legalContentType = legalContent)
     }
 
     /**
@@ -158,4 +170,50 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
             tutorialSupportFragment.viewPager.currentItem = --currentPos
     }
 
+    /**
+     * Release Focus
+     */
+    override fun releaseFocus() {
+        var currentPos = tutorialSupportFragment.viewPager.currentItem
+        if (currentPos + 1 < TUTORIAL_PAGES_COUNT)
+            tutorialSupportFragment.viewPager.currentItem = ++currentPos
+    }
+
+
+    /**
+     * Show Usage Access Settings
+     */
+    override fun showUsageAccessSettings() {
+        navigator.showUsageAccessSettings(this)
+    }
+
+
+    /**
+     * On Activity Results
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        for (fragment in supportFragmentManager.fragments) {
+            fragment.onActivityResult(requestCode, resultCode, data)
+            for (nestedFragment in fragment.childFragmentManager.fragments) {
+                nestedFragment.onActivityResult(requestCode, resultCode, data)
+            }
+        }
+    }
+
+    /**
+     * Show Sign In
+     */
+    override fun showSignIn() {
+        navigator.showLogin(this)
+    }
+
+    /**
+     * Show Device Admin Settings
+     */
+    override fun showDeviceAdminSettings() {
+        navigator.showEnableAdminDeviceFeatures(this)
+    }
 }

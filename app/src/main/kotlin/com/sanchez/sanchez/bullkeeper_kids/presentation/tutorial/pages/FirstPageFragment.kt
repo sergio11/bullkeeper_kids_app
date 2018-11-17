@@ -27,7 +27,6 @@ import java.util.*
  */
 class FirstPageFragment: AbstractPageFragment<AppTutorialComponent>() {
 
-
     /**
      * App Tutorial Handler
      */
@@ -162,11 +161,8 @@ class FirstPageFragment: AbstractPageFragment<AppTutorialComponent>() {
          * @param ds
          */
         override fun updateDrawState(ds: TextPaint) {
-
             ds.isUnderlineText = true
-
             appContext?.let {
-
                 if (textView.isPressed && textView.selectionStart != -1 && textView.text
                                 .toString()
                                 .substring(textView.selectionStart, textView.selectionEnd) == clickableText) {
@@ -175,8 +171,6 @@ class FirstPageFragment: AbstractPageFragment<AppTutorialComponent>() {
                     ds.color = ContextCompat.getColor(it, R.color.commonWhite)
                 }
             }
-
-
         }
 
     }

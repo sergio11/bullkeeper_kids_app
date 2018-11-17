@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_11">
+    android:background="@drawable/background_13">
 
     <!-- Title Text -->
     <TextView
@@ -13,16 +13,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_margin"
-        android:gravity="center"
         android:padding="@dimen/common_padding"
-        android:text="@string/second_page_title"
+        android:gravity="center"
+        android:text="@string/seventh_page_title"
         android:textAlignment="center"
         android:textColor="@color/commonWhite"
-        app:layout_constraintBottom_toTopOf="@id/contentText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.51" />
+        app:layout_constraintBottom_toTopOf="@id/contentText"/>
 
 
     <!-- Content Text -->
@@ -34,35 +33,27 @@
         android:layout_marginTop="@dimen/common_margin"
         android:gravity="center"
         android:padding="@dimen/common_padding"
-        android:text="@string/second_page_description"
+        android:text="@string/seventh_page_description"
         android:textAlignment="center"
         android:textColor="@color/commonWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        app:layout_constraintBottom_toTopOf="@+id/goToSignIn"/>
 
-    <RelativeLayout
-        android:id="@+id/imageContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:padding="@dimen/common_padding"
+
+    <!-- Enable Usage Stats -->
+    <Button
+        android:id="@+id/goToSignIn"
+        style="@style/CommonActionButton"
+        android:layout_width="@dimen/common_action_button_width"
+        android:layout_height="@dimen/common_action_button_height"
+        android:layout_margin="@dimen/common_margin"
         android:layout_marginBottom="80dp"
+        android:text="@string/seventh_page_signin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contentText">
-
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:contentDescription="@string/content_not_be_loaded"
-            android:src="@drawable/tutorial_first_page_permission"
-             />
-
-    </RelativeLayout>
-
-
+        app:layout_constraintTop_toBottomOf="@id/contentText"/>
 
 </android.support.constraint.ConstraintLayout>

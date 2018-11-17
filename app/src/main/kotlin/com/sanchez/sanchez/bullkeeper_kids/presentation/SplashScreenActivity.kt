@@ -12,6 +12,9 @@ import javax.inject.Inject
  */
 class SplashScreenActivity : AppCompatActivity() {
 
+    /**
+     * App Component
+     */
     private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as AndroidApplication).appComponent
     }
@@ -27,6 +30,6 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        navigator.showAppTutorial(this)
+        navigator.showMain(this)
     }
 }

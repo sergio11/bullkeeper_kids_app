@@ -18,6 +18,9 @@ class SecondPageFragment: AbstractPageFragment<AppTutorialComponent>() {
      */
     override fun getLayoutResId(): Int = R.layout.second_page_fragment_layout
 
+    /**
+     * When Phase Is Hidden
+     */
     override fun whenPhaseIsHidden(pagePosition: Int, currentPosition: Int) {
         Timber.d("When Phase is hidden")
     }

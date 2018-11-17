@@ -1,7 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.navigation
 
 import android.app.Activity
-import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 
 /**
@@ -12,27 +11,27 @@ interface INavigator {
     /**
      * Show App Tutorial
      */
-    fun showAppTutorial(context: Context)
+    fun showAppTutorial(activity: Activity)
 
     /**
      * Show Login
      */
-    fun showLogin(context: Context)
+    fun showLogin(activity: Activity)
 
     /**
      * Show Home
      */
-    fun showHome(context: Context)
+    fun showHome(activity: Activity)
 
     /**
      * Show Main
      */
-    fun showMain(context: Context)
+    fun showMain(activity: Activity)
 
     /**
      * Show Lock Screen
      */
-    fun showLockScreen(context: Context)
+    fun showLockScreen(activity: Activity)
 
     /**
      * Show Enable
@@ -40,8 +39,18 @@ interface INavigator {
     fun showEnableAdminDeviceFeatures(activity: Activity, resultCode: Int)
 
     /**
+     * Show Enable
+     */
+    fun showEnableAdminDeviceFeatures(activity: Activity)
+
+    /**
+     * Show Usage Access Settings
+     */
+    fun showUsageAccessSettings(activity: Activity)
+
+    /**
      * Show Legal Content
      */
-    fun showLegalContent(context: Context, legalContentType: LegalContentActivity.LegalTypeEnum)
+    fun showLegalContent(activity: Activity, legalContentType: LegalContentActivity.LegalTypeEnum)
 
 }

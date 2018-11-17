@@ -87,7 +87,29 @@
     <string name="title_activity_legal_content">LegalContentActivity</string>
 
 
+    <!-- Fifth page -->
+    <string name="fifth_page_title">Bullkeeper Kids needs access to device statistics</string>
+    <string name="fifth_page_description">We need to allow us to access the statistics service
+        of the system, which allows us to retrieve statistics on the use of applications installed on the device in
+        order to inform you about the applications used frequently, in addition to determining the application currently in use to offer you blocking capabilities</string>
+    <string name="fifth_page_enable_usage_stats">Enable</string>
+    <string name="fifth_page_usage_stats_already_allowed">You have already granted access to usage statistics</string>
+    <string name="fifth_page_usage_stats_no_granted">You must grant access to usage statistics before continuing</string>
+    <string name="fifth_page_usage_stats_granted">You have granted access to usage statistics</string>
+    <!-- Sixth page -->
+    <string name="sixth_page_title">Bullkepper Kids requires administration permissions on this device</string>
+    <string name="sixth_page_description">You need to allow Bullkeeper Kids to have adminsitration permissions on this device to prevent it from being uninstalled easily</string>
+    <string name="sixth_page_admin_is_already_enabled">Management capabilities have already been granted</string>
+    <string name="sixth_page_admin_is_granted">Management capabilities have been granted</string>
+    <string name="sixth_page_admin_is_not_enabled">You must grant management capabilities before continuing</string>
+    <!-- Seventh page -->
+    <string name="seventh_page_title">Configuration completed !!!</string>
+    <string name="seventh_page_description">Congratulations you have completed the configuration of the application, log in and start enjoying the capabilities offered by BullKeeper</string>
+    <string name="seventh_page_signin">Log in</string>
+
     <!-- Dialogs Strings -->
     <string name="default_notice_dialog_title">Notice Dialog</string>
+
+    <string name="required_administration_permissions">Bullkepper Kids requires administration permissions on this device</string>
 
 </resources>

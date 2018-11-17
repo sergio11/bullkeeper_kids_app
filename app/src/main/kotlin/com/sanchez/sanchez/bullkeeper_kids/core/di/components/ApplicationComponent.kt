@@ -7,11 +7,13 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PersistenceModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ServicesModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.viewmodel.ViewModelModule
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
+import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import dagger.Component
 import javax.inject.Singleton
 
@@ -56,4 +58,6 @@ interface ApplicationComponent {
 
     //Exposed to sub-graphs.
     fun navigator(): INavigator
+    fun preferenceRepository(): IPreferenceRepository
+    fun usageStatsService(): IUsageStatsService
 }

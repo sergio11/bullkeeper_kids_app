@@ -1,5 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.platform
 
+import android.app.admin.DevicePolicyManager
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
@@ -15,6 +17,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.permission.PermissionManagerImpl
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.ConfirmationDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.ProgressDialogFragment
+import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
 import timber.log.Timber
 
 /**
@@ -233,4 +236,13 @@ abstract class SupportActivity: AppCompatActivity(),
      * Close Activity
      */
     override fun closeActivity() = finish()
+
+    /**
+     * Is Device Policy Manager Activty
+     */
+    override fun isDevicePolicyManagerActive(): Boolean {
+        val devicePolicyManager = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        return devicePolicyManager
+                .isAdminActive(MonitoringDeviceAdminReceiver.getComponentName(this))
+    }
 }

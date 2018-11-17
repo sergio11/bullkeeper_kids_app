@@ -340,7 +340,7 @@ class MonitoringService : Service(){
                         if (appBlockList.map { it.packageName }.contains(currentAppForeground)) {
                             Log.d(TAG, "Package $currentAppForeground not allowed")
                             currentAppLocked = currentAppForeground
-                            navigator.showLockScreen(applicationContext)
+                            //navigator.showLockScreen(this)
                         } else {
                             currentAppLocked = null
                             val localBroadcastManager = LocalBroadcastManager

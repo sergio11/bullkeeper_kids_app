@@ -2,9 +2,11 @@ package com.sanchez.sanchez.bullkeeper_kids.core.navigation.impl
 
 import android.app.Activity
 import android.app.admin.DevicePolicyManager
-import android.content.Context
 import android.content.Intent
+import android.provider.Settings
+import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
@@ -18,41 +20,53 @@ import javax.inject.Inject
  * Navigator Impl
  */
 class NavigatorImpl
-    @Inject constructor(private val authenticatorService: IAuthenticatorService): INavigator {
+    @Inject constructor(private val authenticatorService: IAuthenticatorService,
+                        private val preferenceRepository: IPreferenceRepository): INavigator {
+
+    /**
+     * Show Usage Access Settings
+     */
+    override fun showUsageAccessSettings(activity: Activity) =
+            activity.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+
 
     /**
      * Show App Tutorial
      */
-    override fun showAppTutorial(context: Context) =
-            context.startActivity(AppTutorialActivity.callingIntent(context))
+    override fun showAppTutorial(activity: Activity) =
+            activity.startActivity(AppTutorialActivity.callingIntent(activity))
 
     /**
      * Show Login
      */
-    override fun showLogin(context: Context) =
-            context.startActivity(SignInActivity.callingIntent(context))
+    override fun showLogin(activity: Activity) {
+        when(preferenceRepository.isTutorialCompleted()) {
+            true -> activity.startActivity(SignInActivity.callingIntent(activity))
+            false -> showAppTutorial(activity)
+        }
+    }
 
     /**
      * Show Home
      */
-    override fun showHome(context: Context) =
-            context.startActivity(HomeActivity.callingIntent(context))
+    override fun showHome(activity: Activity) =
+            activity.startActivity(HomeActivity.callingIntent(activity))
 
     /**
      * Show Main
      */
-    override fun showMain(context: Context) {
+    override fun showMain(activity: Activity) {
         when (authenticatorService.userLoggedIn()) {
-            true -> showHome(context)
-            false -> showLogin(context)
+            true -> showHome(activity)
+            false -> showLogin(activity)
         }
     }
 
     /**
      * Show Lock Screen
      */
-    override fun showLockScreen(context: Context) =
-            context.startActivity(LockScreenActivity.callingIntent(context))
+    override fun showLockScreen(activity: Activity) =
+            activity.startActivity(LockScreenActivity.callingIntent(activity))
 
     /**
      * Show Enable Admin Device Features
@@ -62,16 +76,27 @@ class NavigatorImpl
         intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN,
                 MonitoringDeviceAdminReceiver.getComponentName(activity))
         intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-                "Additional text explaining why we need this permission")
+                activity.getString(R.string.required_administration_permissions))
         activity.startActivityForResult(intent, resultCode)
     }
 
+    /**
+     * Show Enable Admin Device Features
+     */
+    override fun showEnableAdminDeviceFeatures(activity: Activity) {
+        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
+        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN,
+                MonitoringDeviceAdminReceiver.getComponentName(activity))
+        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                activity.getString(R.string.required_administration_permissions))
+        activity.startActivity(intent)
+    }
 
     /**
      * Show Legal Content
      */
-    override fun showLegalContent(context: Context, legalContentType: LegalContentActivity.LegalTypeEnum)
-        = context.startActivity(LegalContentActivity.callingIntent(context = context,
+    override fun showLegalContent(activity: Activity, legalContentType: LegalContentActivity.LegalTypeEnum)
+        = activity.startActivity(LegalContentActivity.callingIntent(context = activity,
             legalTypeEnum = legalContentType))
 
 }

@@ -3,10 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.components
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.pages.FirstPageFragment
-import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.pages.FourPageFragment
-import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.pages.SecondPageFragment
-import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.pages.ThirdPageFragment
+import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.pages.*
 import dagger.Component
 
 /**
@@ -41,6 +38,21 @@ interface AppTutorialComponent: ActivityComponent {
      * Inject into Four Page Fragments
      */
     fun inject(fourPageFragment: FourPageFragment)
+
+    /**
+     * Inject into Fifth Page Fragment
+     */
+    fun inject(fifthPageFragment: FifthPageFragment)
+
+    /**
+     * Inject into Sixth Page Fragment
+     */
+    fun inject(sixthPageFragment: SixthPageFragment)
+
+    /**
+     * Inject into Seventh Page Fragment
+     */
+    fun inject(seventhPageFragment: SeventhPageFragment)
 
 
 }

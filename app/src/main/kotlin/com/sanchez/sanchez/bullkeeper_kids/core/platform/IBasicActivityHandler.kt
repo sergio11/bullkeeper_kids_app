@@ -120,4 +120,8 @@ interface IBasicActivityHandler {
     fun showLongSimpleSnackbar(viewRoot: ViewGroup, description: String, actionText: String,
                                onClickListener: View.OnClickListener, snackbarCallback: Snackbar.Callback?)
 
+    /**
+     * Is Device Policy Manager Activity
+     */
+    fun isDevicePolicyManagerActive(): Boolean
 }

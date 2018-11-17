@@ -58,7 +58,7 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler {
      * Navigate To Home
      */
     override fun navigateToHome() {
-        navigator.showHome(context = applicationContext)
+        navigator.showHome(this)
     }
 
 
