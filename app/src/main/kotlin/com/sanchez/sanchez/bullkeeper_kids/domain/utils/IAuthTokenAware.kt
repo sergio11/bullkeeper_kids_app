@@ -9,7 +9,7 @@ interface IAuthTokenAware {
      * Get Auth Token
      * @return
      */
-    fun getAuthToken(): String
+    fun getAuthToken(): String?
 
     /**
      * Set Auth Token

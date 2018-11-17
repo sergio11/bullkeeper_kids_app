@@ -1,38 +1,36 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages
 
 import android.util.Log
-import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
-import com.sanchez.sanchez.bullkeeper_kids.core.functional.Either
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPackageUsageStatsRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
+import retrofit2.Retrofit
 import javax.inject.Inject
 
 /**
  * Syn Package Usage Stats Interact
  */
 class SynPackageUsageStatsInteract
-    @Inject constructor(private val usageStatsService: IUsageStatsService,
-                        private val packageUsageStatsRepository: IPackageUsageStatsRepository)
-    : UseCase<Int, UseCase.None>() {
+    @Inject constructor(
+            retrofit: Retrofit,
+            private val usageStatsService: IUsageStatsService,
+            private val packageUsageStatsRepository: IPackageUsageStatsRepository)
+    : UseCase<Int, UseCase.None>(retrofit) {
+
 
     val TAG = "SYC_PACKAGE_USAGE"
 
     /**
-     * Run Interact
+     * On Executed
      */
-    override suspend fun run(params: None): Either<Failure, Int> {
-        return try {
-            // Get Daily Stats
-            val usageStatsList =  usageStatsService.getDailyStatsFromAYear()
-            Log.d(TAG, "Sync ${usageStatsList.size} usage")
-            if(usageStatsList.isNotEmpty()) {
-                packageUsageStatsRepository.save(usageStatsList)
-            }
-            Either.Right(usageStatsList.size)
-        } catch (exception: Throwable) {
-            exception.printStackTrace()
-            Either.Left(Failure.ServerError())
+    override suspend fun onExecuted(params: None): Int {
+        // Get Daily Stats
+        val usageStatsList =  usageStatsService.getDailyStatsFromAYear()
+        Log.d(TAG, "Sync ${usageStatsList.size} usage")
+        if(usageStatsList.isNotEmpty()) {
+            packageUsageStatsRepository.save(usageStatsList)
         }
+        return usageStatsList.size
     }
+
 }

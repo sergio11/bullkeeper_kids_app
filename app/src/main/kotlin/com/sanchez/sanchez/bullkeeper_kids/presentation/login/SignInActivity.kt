@@ -21,6 +21,7 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler,
     HasComponent<SignInComponent>{
 
 
+
     /**
      * Sign In Component
      */
@@ -41,6 +42,9 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler,
                 Intent(context, SignInActivity::class.java)
     }
 
+    /**
+     * Get Component
+     */
     override val component: SignInComponent
         get() = signInComponent
 

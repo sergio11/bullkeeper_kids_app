@@ -9,8 +9,8 @@
     <!-- Support Loading Spinner -->
     <com.sanchez.sanchez.bullkeeper_kids.core.platform.components.SupportLoadingSpinner
         android:id="@+id/loadingSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"

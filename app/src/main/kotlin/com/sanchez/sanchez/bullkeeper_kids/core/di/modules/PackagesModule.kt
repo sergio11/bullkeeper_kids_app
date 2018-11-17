@@ -8,6 +8,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynPackag
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import dagger.Module
 import dagger.Provides
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 /**
@@ -21,16 +22,16 @@ class PackagesModule {
      */
     @Provides
     @Singleton
-    fun provideGetBlockedPackagesInteract(packageInstalledRepository: IPackageInstalledRepository):
-            GetBlockedPackagesInteract = GetBlockedPackagesInteract(packageInstalledRepository)
+    fun provideGetBlockedPackagesInteract(retrofit: Retrofit, packageInstalledRepository: IPackageInstalledRepository):
+            GetBlockedPackagesInteract = GetBlockedPackagesInteract(retrofit, packageInstalledRepository)
 
     /**
      * Provide Get All Packages Installed Interact
      */
     @Provides
     @Singleton
-    fun provideGetAllPackagesInstalledInteract(packageInstalledRepository: IPackageInstalledRepository):
-            GetAllPackagesInstalledInteract = GetAllPackagesInstalledInteract(packageInstalledRepository)
+    fun provideGetAllPackagesInstalledInteract(retrofit: Retrofit, packageInstalledRepository: IPackageInstalledRepository):
+            GetAllPackagesInstalledInteract = GetAllPackagesInstalledInteract(retrofit, packageInstalledRepository)
 
 
     /**
@@ -38,7 +39,7 @@ class PackagesModule {
      */
     @Provides
     @Singleton
-    fun provideSynPackageUsageStatsInteract(usageStatsService: IUsageStatsService, packageUsageStatsRepository: IPackageUsageStatsRepository):
-            SynPackageUsageStatsInteract = SynPackageUsageStatsInteract(usageStatsService,
+    fun provideSynPackageUsageStatsInteract(retrofit: Retrofit, usageStatsService: IUsageStatsService, packageUsageStatsRepository: IPackageUsageStatsRepository):
+            SynPackageUsageStatsInteract = SynPackageUsageStatsInteract(retrofit, usageStatsService,
                         packageUsageStatsRepository)
 }

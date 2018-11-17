@@ -15,7 +15,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
  *
  * @see AppCompatActivity
  */
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : SupportActivity() {
 
     /**
      * On Create

@@ -104,14 +104,33 @@
     <Button
         android:id="@+id/loginBtn"
         style="@style/CommonActionButton"
-        android:layout_width="@dimen/common_action_button_width"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/common_action_button_height"
         android:layout_margin="@dimen/common_margin"
         android:text="@string/sign_in_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/loginFacebook"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginContainer"/>
+
+
+    <Button
+        android:id="@+id/loginFacebook"
+        style="@style/CommonStrongText.Big"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/facebook_action_button_state"
+        android:drawablePadding="@dimen/common_padding"
+        android:drawableStart="@drawable/facebook_square_brands_66_75"
+        android:text="@string/authenticating_with_facebook"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintTop_toBottomOf="@+id/loginBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </android.support.constraint.ConstraintLayout>

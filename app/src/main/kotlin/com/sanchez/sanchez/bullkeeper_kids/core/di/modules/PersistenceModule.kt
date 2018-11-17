@@ -8,6 +8,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.PackageInstalled
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.PackageUsageStatsRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.impl.PreferenceRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.domain.utils.IAuthTokenAware
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -43,5 +44,16 @@ class PersistenceModule(private val application: AndroidApplication)  {
     @Singleton
     fun providePreferenceRepository(context: Context): IPreferenceRepository =
             PreferenceRepositoryImpl(context)
+
+
+    /**
+     * Provide Auth Token Aware
+     * @param preferencesRepositoryImpl
+     * @return
+     */
+    @Provides
+    @Singleton
+    fun provideAuthTokenAware(preferenceRepository: IPreferenceRepository): IAuthTokenAware
+        = preferenceRepository
 
 }

@@ -20,7 +20,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.functional.Either
 import com.sanchez.sanchez.bullkeeper_kids.core.functional.Either.Right
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 

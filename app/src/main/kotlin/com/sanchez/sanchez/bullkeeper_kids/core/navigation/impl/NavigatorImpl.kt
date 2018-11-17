@@ -13,7 +13,6 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalConten
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
-import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
 import javax.inject.Inject
 
 /**
@@ -55,7 +54,7 @@ class NavigatorImpl
      * Show Main
      */
     override fun showMain(activity: Activity) {
-        when (false) {
+        when (!preferenceRepository.getAuthToken().isNullOrEmpty()) {
             true -> showHome(activity)
             false -> showLogin(activity)
         }

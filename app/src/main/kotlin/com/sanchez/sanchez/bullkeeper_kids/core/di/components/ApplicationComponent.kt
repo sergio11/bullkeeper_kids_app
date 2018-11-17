@@ -16,6 +16,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import dagger.Component
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 /**
@@ -61,5 +62,6 @@ interface ApplicationComponent {
     fun navigator(): INavigator
     fun preferenceRepository(): IPreferenceRepository
     fun usageStatsService(): IUsageStatsService
+    fun retrofit(): Retrofit
 
 }

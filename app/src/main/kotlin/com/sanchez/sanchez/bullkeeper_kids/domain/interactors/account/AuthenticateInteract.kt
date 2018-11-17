@@ -3,41 +3,77 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.account
 import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
-import com.sanchez.sanchez.bullkeeper_kids.core.functional.Either
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.RetrofitException
 import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
+import retrofit2.Retrofit
+import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 import javax.inject.Inject
-
 
 /**
  * Authenticate Interact
  */
 @PerActivity
 class AuthenticateInteract
-    @Inject constructor(private val authenticateService: IAuthenticatorService):
-        UseCase<String, AuthenticateInteract.Params>(){
-
+    @Inject constructor(retrofit: Retrofit,
+                        private val authenticateService: IAuthenticatorService):
+        UseCase<String, AuthenticateInteract.IParams>(retrofit){
 
     /**
-     * Run Interact
+     * Bad Credentials
      */
-    override suspend fun run(params: Params): Either<Failure, String> {
-        Preconditions.checkNotNull(params, "Params can not be null")
-        
-        return try {
-            val authToken = "hola"
-            Either.Right(authToken)
-        } catch (exception: Throwable) {
-            exception.printStackTrace()
-            Either.Left(Failure.ServerError())
+    private val BAD_CREDENTIALS_CODE_NAME = "BAD_CREDENTIALS"
+
+    /**
+     * On Executed
+     */
+    override suspend fun onExecuted(params: IParams): String {
+        Preconditions.checkNotNull(params, "params can not be null")
+
+       val response = when (params) {
+
+           /**
+            * User Credentials
+            */
+            is UserCredentials -> authenticateService.getAuthorizationToken(params.email, params.password).await()
+
+           /**
+            * Social Token
+            */
+            is SocialToken -> authenticateService.getAuthorizationToken(params.token).await()
+
+           /**
+            * Invalid Params
+            */
+            else -> throw IllegalArgumentException("Invalid Params")
+
         }
+
+        // Return Token
+        return response.data?.token!!
     }
 
 
     /**
-     * Interact Params
+     * On Api Exception Ocurred
      */
-    data class Params(val email: String, val password: String)
+    override fun onApiExceptionOcurred(apiException: RetrofitException, response: APIResponse<*>): Failure {
+        return if(response.codeName?.equals(BAD_CREDENTIALS_CODE_NAME)!!)
+            IncorrectCredentials() else super.onApiExceptionOcurred(apiException, response)
+    }
+
+
+    /**
+     * Params
+     */
+    interface IParams {}
+
+    data class UserCredentials(val email: String, val password: String): IParams
+    data class SocialToken(val token: String): IParams
+
+    class IncorrectCredentials: Failure.FeatureFailure() {}
 
 
 }

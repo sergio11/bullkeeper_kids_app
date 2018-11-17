@@ -13,7 +13,7 @@ ext {
     archComponents_version = '1.1.1'
     glide_version = '4.0.0'
     //Third party libraries
-    kotlin_coroutines_version = '0.22.1'
+    kotlin_coroutines_version = '1.0.1'
     dagger_version = '2.11'
     javaxAnnotations_version = '1.0'
     javaxInject_version = '1'
@@ -28,6 +28,16 @@ ext {
     arrowVersion = '1.0.0'
     dexterVersion = '4.1.0'
     timberVersion = '4.5.1'
+    retrofit2KotlinCoroutinesAdapterVersion = '0.9.2'
+    jacksonVersion = '2.9.6'
+    picassoVersion = '2.5.2'
+    picassoDownloaderVersion = '1.1.0'
+    stethoVersion = '1.5.0'
+    jodaTimeVersion = '2.10'
+    retrofitVersion = '2.4.0'
+    androidSaripaarVersion = '2.0.3'
+    facebookSdkVersion = '[4,5)'
+
 
     //Unit Testing
     robolectric_version = '3.8'
@@ -65,7 +75,19 @@ ext {
           androidToggle:              "com.github.angads25:toggle:${androidToggleVersion}",
           arrow:                      "com.fernandocejas:arrow:${arrowVersion}",
           dexter:                     "com.karumi:dexter:${dexterVersion}",
-          timber:                     "com.jakewharton.timber:timber:${timberVersion}"
+          timber:                     "com.jakewharton.timber:timber:${timberVersion}",
+          retrofit2KotlinCoroutinesAdapter: "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${retrofit2KotlinCoroutinesAdapterVersion}",
+          jacksonCore:                "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}",
+          jacksonAnnotations:         "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",
+          jacksonDatabind:            "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
+          picasso:                    "com.squareup.picasso:picasso:${picassoVersion}",
+          picassoDownloader:          "com.jakewharton.picasso:picasso2-okhttp3-downloader:${picassoDownloaderVersion}",
+          stetho:                     "com.facebook.stetho:stetho:${stethoVersion}",
+          stethoOkHttp:               "com.facebook.stetho:stetho-okhttp3:${stethoVersion}",
+          jodaTime:                   "joda-time:joda-time:${jodaTimeVersion}",
+          converterJackson:           "com.squareup.retrofit2:converter-jackson:${retrofitVersion}",
+          androidSaripaar:            "com.mobsandgeeks:android-saripaar:${androidSaripaarVersion}",
+          facebookSdk:                "com.facebook.android:facebook-login:${facebookSdkVersion}",
   ]
 
   unitTesting = [

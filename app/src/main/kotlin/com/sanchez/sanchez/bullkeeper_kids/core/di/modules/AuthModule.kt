@@ -1,14 +1,15 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
-import android.arch.lifecycle.ViewModel
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
-import com.sanchez.sanchez.bullkeeper_kids.core.di.viewmodel.ViewModelKey
+import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IAuthService
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.account.AuthenticateInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInViewModel
 import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.AuthenticatorServiceImpl
 import dagger.Module
 import dagger.Provides
+import retrofit2.Retrofit
 
 /**
  * Authentication Module
@@ -16,21 +17,30 @@ import dagger.Provides
 @Module
 class AuthModule {
 
+
+    /**
+     * Provide Auth Service
+     */
+    @Provides
+    @PerActivity
+    fun provideAuthService(retrofit: Retrofit): IAuthService =
+            retrofit.create(IAuthService::class.java)
+
     /**
      * Provide Authenticator Service
      */
     @Provides
     @PerActivity
-    fun provideAuthenticatorService(): IAuthenticatorService =
-            AuthenticatorServiceImpl()
+    fun provideAuthenticatorService(authService: IAuthService): IAuthenticatorService =
+            AuthenticatorServiceImpl(authService)
 
     /**
      * Provide Authenticate Interact
      */
     @Provides
     @PerActivity
-    fun provideAuthenticateInteract(authenticatorService: IAuthenticatorService): AuthenticateInteract =
-            AuthenticateInteract(authenticatorService)
+    fun provideAuthenticateInteract(retrofit: Retrofit, authenticatorService: IAuthenticatorService): AuthenticateInteract =
+            AuthenticateInteract(retrofit, authenticatorService)
 
 
     /**
@@ -38,7 +48,8 @@ class AuthModule {
      */
     @Provides
     @PerActivity
-    fun provideSignInViewModel(authenticateInteract: AuthenticateInteract): SignInViewModel
-        = SignInViewModel(authenticateInteract)
+    fun provideSignInViewModel(authenticateInteract: AuthenticateInteract,
+                               preferenceRepository: IPreferenceRepository): SignInViewModel
+            = SignInViewModel(authenticateInteract, preferenceRepository)
 
 }

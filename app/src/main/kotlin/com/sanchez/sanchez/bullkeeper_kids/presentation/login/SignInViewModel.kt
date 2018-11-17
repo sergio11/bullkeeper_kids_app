@@ -1,20 +1,31 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.login
 
 import android.arch.lifecycle.MutableLiveData
+import com.facebook.AccessToken
 import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseViewModel
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.account.AuthenticateInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import javax.inject.Inject
 
 /**
  * Sign In View Model
  */
 class SignInViewModel
-    @Inject constructor(private val authenticateInteract: AuthenticateInteract) : BaseViewModel()  {
+    @Inject constructor(private val authenticateInteract: AuthenticateInteract,
+                        private val preferenceRepository: IPreferenceRepository) : BaseViewModel()  {
 
 
+    /**
+     * Sig In Success
+     */
     var sigInSuccess: MutableLiveData<SignInSuccessView> = MutableLiveData()
+
+    /**
+     * Sig In Failure
+     */
+    var sigInFailure: MutableLiveData<Failure> = MutableLiveData()
 
 
     /**
@@ -27,11 +38,21 @@ class SignInViewModel
         Preconditions.checkState(password.isNotEmpty(), "Password can not be empty")
 
         // Get All Packages Installed
-        authenticateInteract(AuthenticateInteract.Params(email, password)){
+        authenticateInteract(AuthenticateInteract.UserCredentials(email, password)){
             it.either(::onAuthenticationFailed, ::onAuthenticationSuccess)
         }
+    }
 
-
+    /**
+     * Authenticate with Access Token
+     */
+    fun authenticate(accessToken: AccessToken) {
+        Preconditions.checkNotNull(accessToken, "AccessToken can not be null")
+        Preconditions.checkNotNull(accessToken.token, "Token can not be null")
+        // Get All Packages Installed
+        authenticateInteract(AuthenticateInteract.SocialToken(accessToken.token)){
+            it.either(::onAuthenticationFailed, ::onAuthenticationSuccess)
+        }
     }
 
 
@@ -39,8 +60,8 @@ class SignInViewModel
      * On Authentication Failed
      */
     private fun onAuthenticationFailed(failure: Failure) {
-
-
+        Preconditions.checkNotNull(failure, "Failure can not be null")
+        sigInFailure.value = failure
     }
 
     /**
@@ -49,11 +70,9 @@ class SignInViewModel
     private fun onAuthenticationSuccess(authToken: String) {
         Preconditions.checkNotNull(authToken, "Auth Token can not be null")
         Preconditions.checkState(authToken.isNotEmpty(), "Auth Token can not be empty")
-
+        preferenceRepository.setAuthToken(authToken)
         sigInSuccess.value = SignInSuccessView(authToken)
 
     }
-
-
 
 }

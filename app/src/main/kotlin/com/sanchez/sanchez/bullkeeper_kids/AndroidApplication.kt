@@ -9,10 +9,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationCompone
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerServiceComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ServiceComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ApplicationModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PackagesModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PersistenceModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GlobalServiceModule
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.*
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import com.squareup.leakcanary.LeakCanary
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
@@ -36,6 +33,7 @@ class AndroidApplication : Application() {
                 .globalServiceModule(GlobalServiceModule(this))
                 .applicationModule(ApplicationModule(this))
                 .persistenceModule(PersistenceModule(this))
+                .netModule(NetModule(this))
                 .build()
     }
 
@@ -49,6 +47,7 @@ class AndroidApplication : Application() {
                 .globalServiceModule(GlobalServiceModule(this))
                 .packagesModule(PackagesModule())
                 .persistenceModule(PersistenceModule(this))
+                .netModule(NetModule(this))
                 .build()
     }
 

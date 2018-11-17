@@ -5,12 +5,13 @@ import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.impl.NavigatorImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
-import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.SystemPackageHelperImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
+
+
 
 /**
  * Application Module
@@ -35,5 +36,6 @@ class ApplicationModule(private val application: AndroidApplication) {
      */
     @Provides @Singleton fun provideNavigator(preferenceRepository: IPreferenceRepository):
             INavigator = NavigatorImpl(preferenceRepository)
+
 
 }

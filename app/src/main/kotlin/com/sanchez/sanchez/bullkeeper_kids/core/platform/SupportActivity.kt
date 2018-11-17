@@ -200,6 +200,13 @@ abstract class SupportActivity: AppCompatActivity(),
     }
 
     /**
+     * On Error Ocurred
+     */
+    override fun onErrorOccurred(permission: String) {
+        Timber.d("On Error Ocurred: %s", permission)
+    }
+
+    /**
      * Show Long Simple Snackbar
      * @param viewRoot
      * @param description

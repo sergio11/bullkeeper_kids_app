@@ -33,4 +33,21 @@ class PreferenceRepositoryImpl
         mPref.edit().putBoolean(IPreferenceRepository.PREF_IS_TUTORIAL_COMPLETED,
                 isTutorialCompleted).apply()
     }
+
+    /**
+     * Get Auth Token
+     */
+    override fun getAuthToken(): String? {
+        return mPref.getString(IPreferenceRepository.PREF_AUTH_TOKEN,
+                IPreferenceRepository.AUTH_TOKEN_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Auth Token
+     */
+    override fun setAuthToken(token: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_AUTH_TOKEN,
+                token).apply()
+    }
+
 }

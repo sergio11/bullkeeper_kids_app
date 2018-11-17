@@ -1,10 +1,10 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages
 
-import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
-import com.sanchez.sanchez.bullkeeper_kids.core.functional.Either
+
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPackageInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageInfo
+import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,25 +13,14 @@ import javax.inject.Singleton
  */
 @Singleton
 class GetAllPackagesInstalledInteract
-    @Inject constructor(private val packageInstalledRepository: IPackageInstalledRepository): UseCase<List<SystemPackageInfo>, UseCase.None>() {
-
+    @Inject constructor(
+            retrofit: Retrofit,
+            private val packageInstalledRepository: IPackageInstalledRepository): UseCase<List<SystemPackageInfo>, UseCase.None>(retrofit) {
 
     /**
-     * Run Interact
+     * On Executed
      */
-    override suspend fun run(params: None): Either<Failure, List<SystemPackageInfo>> {
+    override suspend fun onExecuted(params: None): List<SystemPackageInfo>  =
+            packageInstalledRepository.list()
 
-        return try {
-
-            val packageInstalled: List<SystemPackageInfo>  =
-                    packageInstalledRepository.list()
-
-            Either.Right(packageInstalled)
-
-        } catch (exception: Throwable) {
-            exception.printStackTrace()
-            Either.Left(Failure.ServerError())
-        }
-
-    }
 }

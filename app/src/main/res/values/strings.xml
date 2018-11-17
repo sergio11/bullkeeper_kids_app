@@ -112,4 +112,20 @@
 
     <string name="required_administration_permissions">Bullkepper Kids requires administration permissions on this device</string>
 
+    <!-- Date Format -->
+    <string name="date_format">yyyy-MM-dd</string>
+    <string name="date_format_server_response">yyyy/MM/dd</string>
+    <string name="joda_local_time_format_server_response">HH:mm:ss.SSS</string>
+
+    <!-- Sign In -->
+    <string name="authenticating_in_progress">Authenticating wait ...</string>
+    <string name="authenticating_invalid_credentials">Incorrect username or password</string>
+    <string name="authenticating_error_ocurred">An error occurred while authenticating, please try again</string>
+    <!-- Sign in facebook -->
+    <string name="facebook_app_id">296606527738358</string>
+    <string name="authenticating_with_facebook">Log in through Facebook</string>
+    <string name="authenticating_with_facebook_canceled">The login was canceled by the user</string>
+    <string name="authenticating_with_facebook_error">There was an error when logging in through Facebook</string>
+
+
 </resources>
