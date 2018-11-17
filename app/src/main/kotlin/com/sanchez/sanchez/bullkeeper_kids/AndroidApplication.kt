@@ -12,7 +12,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ServiceComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ApplicationModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PackagesModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PersistenceModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ServicesModule
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GlobalServiceModule
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import com.squareup.leakcanary.LeakCanary
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
@@ -33,7 +33,7 @@ class AndroidApplication : Application() {
     val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         DaggerApplicationComponent
                 .builder()
-                .servicesModule(ServicesModule(this))
+                .globalServiceModule(GlobalServiceModule(this))
                 .applicationModule(ApplicationModule(this))
                 .persistenceModule(PersistenceModule(this))
                 .build()
@@ -46,7 +46,7 @@ class AndroidApplication : Application() {
         DaggerServiceComponent
                 .builder()
                 .applicationModule(ApplicationModule(this))
-                .servicesModule(ServicesModule(this))
+                .globalServiceModule(GlobalServiceModule(this))
                 .packagesModule(PackagesModule())
                 .persistenceModule(PersistenceModule(this))
                 .build()

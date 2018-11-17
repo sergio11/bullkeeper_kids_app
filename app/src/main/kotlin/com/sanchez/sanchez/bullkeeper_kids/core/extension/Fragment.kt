@@ -15,6 +15,9 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) =
         beginTransaction().func().commit()
 
+/**
+ * View Model
+ */
 inline fun <reified T : ViewModel> Fragment.viewModel(factory: Factory, body: T.() -> Unit): T {
     val vm = ViewModelProviders.of(this, factory)[T::class.java]
     vm.body()

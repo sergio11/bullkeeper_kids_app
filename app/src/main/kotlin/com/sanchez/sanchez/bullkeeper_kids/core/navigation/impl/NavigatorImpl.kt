@@ -20,8 +20,7 @@ import javax.inject.Inject
  * Navigator Impl
  */
 class NavigatorImpl
-    @Inject constructor(private val authenticatorService: IAuthenticatorService,
-                        private val preferenceRepository: IPreferenceRepository): INavigator {
+    @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
 
     /**
      * Show Usage Access Settings
@@ -56,7 +55,7 @@ class NavigatorImpl
      * Show Main
      */
     override fun showMain(activity: Activity) {
-        when (authenticatorService.userLoggedIn()) {
+        when (false) {
             true -> showHome(activity)
             false -> showLogin(activity)
         }

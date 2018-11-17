@@ -15,7 +15,7 @@ import javax.inject.Singleton
  * Service Module
  */
 @Module
-class ServicesModule(private val context: Context)  {
+class GlobalServiceModule(private val context: Context)  {
 
 
     /**
@@ -34,14 +34,5 @@ class ServicesModule(private val context: Context)  {
     @Singleton
     fun provideUsageStatsService(context: Context): IUsageStatsService =
             UsageStatsServiceImpl(context)
-
-
-    /**
-     * Provide Authenticator Service
-     */
-    @Provides
-    @Singleton
-    fun provideAuthenticatorService(): IAuthenticatorService =
-            AuthenticatorServiceImpl()
 
 }

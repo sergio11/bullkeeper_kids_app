@@ -33,8 +33,7 @@ class ApplicationModule(private val application: AndroidApplication) {
     /**
      * Provide Navigator
      */
-    @Provides @Singleton fun provideNavigator(authenticatorService: IAuthenticatorService,
-                                              preferenceRepository: IPreferenceRepository):
-            INavigator = NavigatorImpl(authenticatorService, preferenceRepository)
+    @Provides @Singleton fun provideNavigator(preferenceRepository: IPreferenceRepository):
+            INavigator = NavigatorImpl(preferenceRepository)
 
 }

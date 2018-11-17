@@ -13,7 +13,7 @@ import javax.inject.Singleton
 /**
  * Packages Module
  */
-@Module(includes = [ ServicesModule::class, PersistenceModule::class ])
+@Module(includes = [ GlobalServiceModule::class, PersistenceModule::class ])
 class PackagesModule {
 
     /**

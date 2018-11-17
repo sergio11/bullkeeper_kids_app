@@ -5,7 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.R
-import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerSignInComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.SignInComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.AuthModule
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import javax.inject.Inject
@@ -13,11 +17,20 @@ import javax.inject.Inject
 /**
  * Sign In Activity
  */
-class SignInActivity : BaseActivity(), ISignInActivityHandler {
+class SignInActivity : BaseActivity(), ISignInActivityHandler,
+    HasComponent<SignInComponent>{
 
 
-    private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
-        (application as AndroidApplication).appComponent
+    /**
+     * Sign In Component
+     */
+    private val signInComponent: SignInComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerSignInComponent
+                .builder()
+                .applicationComponent((application as AndroidApplication).appComponent)
+                .activityModule(ActivityModule(this))
+                .authModule(AuthModule())
+                .build()
     }
 
     /**
@@ -28,6 +41,8 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler {
                 Intent(context, SignInActivity::class.java)
     }
 
+    override val component: SignInComponent
+        get() = signInComponent
 
     /**
      * Navigator
@@ -41,7 +56,7 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appComponent.inject(this)
+        signInComponent.inject(this)
     }
 
     /**
@@ -60,7 +75,5 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler {
     override fun navigateToHome() {
         navigator.showHome(this)
     }
-
-
 
 }

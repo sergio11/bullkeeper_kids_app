@@ -1,10 +1,11 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.components
 
+import android.arch.lifecycle.ViewModelProvider
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ApplicationModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.NetModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PersistenceModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ServicesModule
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GlobalServiceModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.viewmodel.ViewModelModule
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -22,8 +23,8 @@ import javax.inject.Singleton
  */
 @Singleton
 @Component(modules = [ ApplicationModule::class,
-    ViewModelModule::class, PersistenceModule::class, NetModule::class,
-    ServicesModule::class])
+    PersistenceModule::class, NetModule::class,
+    GlobalServiceModule::class])
 interface ApplicationComponent {
 
     /**
@@ -60,4 +61,5 @@ interface ApplicationComponent {
     fun navigator(): INavigator
     fun preferenceRepository(): IPreferenceRepository
     fun usageStatsService(): IUsageStatsService
+
 }
