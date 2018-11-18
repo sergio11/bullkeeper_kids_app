@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
+import android.app.Application
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
@@ -18,6 +19,18 @@ import javax.inject.Singleton
  */
 @Module
 class ApplicationModule(private val application: AndroidApplication) {
+
+    /**
+     * Provide Application
+     */
+    @Provides @Singleton
+    fun provideApplication(): Application = application
+
+    /**
+     * Provide Application
+     */
+    @Provides @Singleton
+    fun provideAndroidApplication(): AndroidApplication = application
 
     /**
      * Provide Application Context

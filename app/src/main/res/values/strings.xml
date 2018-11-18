@@ -144,4 +144,13 @@
     <string name="loading_children_message">Loading Children ...</string>
     <string name="error_loading_children_information">Error loading children\'s information</string>
     <string name="no_children_found">No registered children found</string>
+
+    <!-- Third Page -->
+    <string name="link_terminal_third_page_title">Confirmation Linking the device</string>
+    <string name="link_terminal_third_page_description">It will be linked with the device</string>
+    <string name="select_child_before_continuing">You must select a child before continuing</string>
+    <string name="link_device_to_child_btn">Link</string>
+    <string name="link_device_in_progress">Linking in progress ...</string>
+    <string name="terminal_successfully_linked">The terminal was successfully linked</string>
+    <string name="terminal_linked_failed">There was an error linking the phone please try again later</string>
 </resources>

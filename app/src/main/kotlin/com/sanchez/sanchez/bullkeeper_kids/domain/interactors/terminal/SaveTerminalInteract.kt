@@ -1,0 +1,76 @@
+package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal
+
+import com.fernandocejas.arrow.checks.Preconditions
+import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.AddTerminalDTO
+import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ITerminalService
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
+import retrofit2.Retrofit
+import javax.inject.Inject
+
+/**
+ * Save Terminal Interact
+ */
+class SaveTerminalInteract
+    @Inject constructor(retrofit: Retrofit,
+                        private val terminalService: ITerminalService): UseCase<TerminalEntity, SaveTerminalInteract.Params>(retrofit) {
+
+    /**
+     * On Executed
+     */
+    override suspend fun onExecuted(params: Params): TerminalEntity {
+        Preconditions.checkNotNull(params, "Params can not be null")
+
+        val saveTerminal = AddTerminalDTO(
+                appVersionCode = params.appVersionCode,
+                appVersionName = params.appVersionName,
+                codeName = params.codeName,
+                deviceName = params.deviceName,
+                manufacturer = params.manufacturer,
+                marketName = params.marketName,
+                model = params.model,
+                osVersion = params.osVersion,
+                sdkVersion = params.sdkVersion,
+                sonId = params.sonId)
+
+        val response = terminalService
+                .saveTerminal(params.sonId, saveTerminal).await()
+
+
+        val terminalEntity = TerminalEntity()
+        terminalEntity.identity = response.data?.identity
+        terminalEntity.appVersionCode = response.data?.appVersionCode
+        terminalEntity.appVersionName = response.data?.appVersionName
+        terminalEntity.codeName = response.data?.codeName
+        terminalEntity.deviceName = response.data?.deviceName
+        terminalEntity.manufacturer = response.data?.manufacturer
+        terminalEntity.marketName = response.data?.marketName
+        terminalEntity.model = response.data?.model
+        terminalEntity.osVersion = response.data?.osVersion
+        terminalEntity.sdkVersion = response.data?.sdkVersion
+
+        return terminalEntity
+
+    }
+
+
+    /**
+     * Params
+     */
+    data class Params(
+            val sonId: String,
+            val appVersionCode: String,
+            val appVersionName: String,
+            val name: String,
+            val codeName: String,
+            val deviceName: String,
+            val manufacturer: String,
+            val marketName: String,
+            val model: String,
+            val osVersion: String,
+            val sdkVersion: String
+
+    )
+
+
+}

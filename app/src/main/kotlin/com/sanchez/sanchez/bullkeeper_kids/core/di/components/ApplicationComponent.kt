@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.components
 
+import android.app.Application
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ApplicationModule
@@ -65,6 +66,8 @@ interface ApplicationComponent {
     fun usageStatsService(): IUsageStatsService
     fun retrofit(): Retrofit
     fun appContext(): Context
+    fun androidApplication(): AndroidApplication
+    fun application(): Application
     fun picasso(): Picasso
     fun apiEndPointsHelper(): ApiEndPointsHelper
 

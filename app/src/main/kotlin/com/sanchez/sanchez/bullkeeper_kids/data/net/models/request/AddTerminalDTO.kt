@@ -2,69 +2,70 @@ package com.sanchez.sanchez.bullkeeper_kids.data.net.models.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
+
 /**
  * Save Terminal
  */
-data class SaveTerminalDTO (
-
-        /**
-         * Identity
-         */
-        @JsonProperty("identity")
-        var identity: String? = null,
+data class AddTerminalDTO (
 
         /**
          * App Version Code
          */
-        @JsonProperty("app_version_code")
+        @get:JsonProperty("app_version_code")
         var appVersionCode: String? = null,
 
         /**
          * App Version Name
          */
-        @JsonProperty("app_version_name")
+        @get:JsonProperty("app_version_name")
         var appVersionName: String? = null,
 
         /**
          * Code Name
          */
-        @JsonProperty("code_name")
+        @get:JsonProperty("code_name")
         var codeName: String? = null,
 
         /**
          * Device Name
          */
-        @JsonProperty("device_name")
+        @get:JsonProperty("device_name")
         var deviceName: String? = null,
 
         /**
          * Manufacturer
          */
-        @JsonProperty("manufacturer")
+        @get:JsonProperty("manufacturer")
         var manufacturer: String? = null,
 
         /**
          * Market Name
          */
-        @JsonProperty("market_name")
+        @get:JsonProperty("market_name")
         var marketName: String? = null,
 
         /**
          * Model
          */
-        @JsonProperty("model")
+        @get:JsonProperty("model")
         var model: String? = null,
 
         /**
          * Os Version
          */
-        @JsonProperty("os_version")
+        @get:JsonProperty("os_version")
         var osVersion: String? = null,
 
         /**
          * SDK Version
          */
-        @JsonProperty("sdk_version")
-        var sdkVersion: String? = null
+        @get:JsonProperty("sdk_version")
+        var sdkVersion: String? = null,
+
+        /**
+         * Son Identity
+         */
+        @get:JsonProperty("son_id")
+        var sonId: String? = null
 
 )

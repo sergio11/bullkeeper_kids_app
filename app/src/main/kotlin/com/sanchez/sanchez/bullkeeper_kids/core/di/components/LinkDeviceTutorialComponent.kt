@@ -8,6 +8,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FirstLinkTerminalPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.SecondLinkTerminalPageFragment
+import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.ThirdLinkTerminalPageFragment
 import dagger.Component
 
 /**
@@ -33,5 +34,10 @@ interface LinkDeviceTutorialComponent: ActivityComponent {
      * Inject into Second Link Terminal Page Fragment
      */
     fun inject(secondLinkTerminalPageFragment: SecondLinkTerminalPageFragment)
+
+    /**
+     * Inject into Third
+     */
+    fun inject(thirdLinkTerminalPageFragment: ThirdLinkTerminalPageFragment)
 
 }
