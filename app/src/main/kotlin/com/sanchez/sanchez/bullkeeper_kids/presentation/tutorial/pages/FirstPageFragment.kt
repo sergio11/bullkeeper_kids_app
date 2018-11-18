@@ -15,6 +15,7 @@ import com.cleveroad.slidingtutorial.TransformItem
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AppTutorialComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.IAppTutorialHandler
 import kotlinx.android.synthetic.main.first_page_fragment_layout.*
@@ -25,7 +26,7 @@ import java.util.*
 /**
  * First Page Fragment
  */
-class FirstPageFragment: AbstractPageFragment<AppTutorialComponent>() {
+class FirstPageFragment: SupportPageFragment<AppTutorialComponent>() {
 
     /**
      * App Tutorial Handler
@@ -58,7 +59,7 @@ class FirstPageFragment: AbstractPageFragment<AppTutorialComponent>() {
          * Check Context
          */
         if(context !is IAppTutorialHandler)
-            throw IllegalStateException("The context does not implement the handler IAppTutorialHandler")
+            throw IllegalStateException("The context does not implement the handler ILinkDeviceTutorialHandler")
 
         appTutorialHandler = context
 

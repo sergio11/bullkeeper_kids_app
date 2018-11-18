@@ -128,4 +128,20 @@
     <string name="authenticating_with_facebook_error">There was an error when logging in through Facebook</string>
 
 
+    <!-- Link Terminal Tutorial -->
+
+    <!-- First Page -->
+    <string name="link_terminal_first_page_title">This device is not linked to any supervised child</string>
+    <string name="link_terminal_first_page_description">This assistant will guide you in the process of linking the terminal with the child</string>
+
+    <!-- Second Page -->
+    <string name="link_terminal_second_page_title">Select the child to whom you want to link this device</string>
+    <string name="link_terminal_second_page_description">All device information will be linked to the selected child</string>
+
+    <string name="child_full_name_detail" formatted="false">%s %s (%d years old)</string>
+    <string name="child_has_terminals_linked" formatted="false">has %d devices linked</string>
+    <string name="child_has_not_terminals_linked">No devices linked</string>
+    <string name="loading_children_message">Loading Children ...</string>
+    <string name="error_loading_children_information">Error loading children\'s information</string>
+    <string name="no_children_found">No registered children found</string>
 </resources>

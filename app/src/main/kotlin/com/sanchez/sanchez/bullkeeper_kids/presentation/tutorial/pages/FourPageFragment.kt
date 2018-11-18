@@ -5,12 +5,13 @@ import com.cleveroad.slidingtutorial.TransformItem
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AppTutorialComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import timber.log.Timber
 
 /**
  * Four Page Fragment
  */
-class FourPageFragment: AbstractPageFragment<AppTutorialComponent>() {
+class FourPageFragment: SupportPageFragment<AppTutorialComponent>() {
 
     /**
      * Get Layout Res Id

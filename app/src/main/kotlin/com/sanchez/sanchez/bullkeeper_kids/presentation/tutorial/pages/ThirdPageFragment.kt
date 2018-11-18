@@ -12,6 +12,7 @@ import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AppTutorialComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.permission.IPermissionManager
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.IAppTutorialHandler
 import kotlinx.android.synthetic.main.third_page_fragment_layout.*
@@ -22,7 +23,7 @@ import javax.inject.Inject
 /**
  * Third Page Fragment
  */
-class ThirdPageFragment: AbstractPageFragment<AppTutorialComponent>(),
+class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
     IPermissionManager.OnCheckPermissionListener {
 
     private lateinit var appTutorialHandler: IAppTutorialHandler
@@ -39,7 +40,7 @@ class ThirdPageFragment: AbstractPageFragment<AppTutorialComponent>(),
         super.onAttach(context)
 
         if(context !is IAppTutorialHandler)
-            throw IllegalStateException("The context should implement IAppTutorialHandler")
+            throw IllegalStateException("The context should implement ILinkDeviceTutorialHandler")
 
         appTutorialHandler = context
     }
@@ -159,21 +160,33 @@ class ThirdPageFragment: AbstractPageFragment<AppTutorialComponent>(),
     private fun changeSwitchStatus(permission: String, status: Boolean) {
         when(permission) {
 
+            /**
+             * Access Fine Location
+             */
             Manifest.permission.ACCESS_FINE_LOCATION -> {
                 locationHistorySwitch.isOn = status
                 locationHistorySwitch.isEnabled = !status
             }
 
+            /**
+             * Read Contacts
+             */
             Manifest.permission.READ_CONTACTS -> {
                 contactsListSwitch.isOn = status
                 contactsListSwitch.isEnabled = !status
             }
 
+            /**
+             * Read Call Log
+             */
             Manifest.permission.READ_CALL_LOG -> {
                 callsHistorySwitch.isOn = status
                 callsHistorySwitch.isEnabled = !status
             }
 
+            /**
+             * Read SMS
+             */
             Manifest.permission.READ_SMS -> {
                 textMessageSwitch.isOn = status
                 textMessageSwitch.isEnabled = !status

@@ -77,7 +77,7 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler,
      * Navigate To Home
      */
     override fun navigateToHome() {
-        navigator.showHome(this)
+        navigator.showLinkTerminalTutorial(this)
     }
 
 }

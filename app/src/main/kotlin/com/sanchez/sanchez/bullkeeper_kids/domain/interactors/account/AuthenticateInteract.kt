@@ -73,7 +73,7 @@ class AuthenticateInteract
     data class UserCredentials(val email: String, val password: String): IParams
     data class SocialToken(val token: String): IParams
 
-    class IncorrectCredentials: Failure.FeatureFailure() {}
+    class IncorrectCredentials: Failure.FeatureFailure()
 
 
 }

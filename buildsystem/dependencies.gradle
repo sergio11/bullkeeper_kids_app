@@ -37,6 +37,7 @@ ext {
     retrofitVersion = '2.4.0'
     androidSaripaarVersion = '2.0.3'
     facebookSdkVersion = '[4,5)'
+    androidDeviceNames = '1.1.8'
 
 
     //Unit Testing
@@ -88,6 +89,7 @@ ext {
           converterJackson:           "com.squareup.retrofit2:converter-jackson:${retrofitVersion}",
           androidSaripaar:            "com.mobsandgeeks:android-saripaar:${androidSaripaarVersion}",
           facebookSdk:                "com.facebook.android:facebook-login:${facebookSdkVersion}",
+          androidDeviceNames:          "com.jaredrummler:android-device-names:${androidDeviceNames}"
   ]
 
   unitTesting = [

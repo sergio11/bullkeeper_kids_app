@@ -19,6 +19,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFra
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.ProgressDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
 import timber.log.Timber
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 /**
  * Support Activity
@@ -39,6 +40,14 @@ abstract class SupportActivity: AppCompatActivity(),
         permissionManager = PermissionManagerImpl(this)
         permissionManager.setCheckPermissionListener(this)
     }
+
+    /**
+     * Attach Base Context
+     */
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
+    }
+
 
     /**
      * Show Short Message

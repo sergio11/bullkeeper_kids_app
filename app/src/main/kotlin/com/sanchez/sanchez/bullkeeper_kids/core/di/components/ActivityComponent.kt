@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.components
 
+import android.app.Activity
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.permission.IPermissionManager
@@ -22,5 +23,6 @@ interface ActivityComponent {
      * Permission Manager
      */
     fun permissionManager(): IPermissionManager
+    fun activity(): Activity
 
 }

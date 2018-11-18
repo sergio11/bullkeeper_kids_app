@@ -120,6 +120,7 @@ dependencies {
     implementation applicationDependencies.converterJackson
     implementation applicationDependencies.androidSaripaar
     implementation applicationDependencies.facebookSdk
+    implementation applicationDependencies.androidDeviceNames
 
     //Unit/Integration tests dependencies
     testImplementation unitTestDependencies.kotlin

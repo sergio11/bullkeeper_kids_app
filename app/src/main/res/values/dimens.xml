@@ -30,7 +30,7 @@
     <!-- Common Strong Big Text -->
     <dimen name="common_strong_big_text_size">18dp</dimen>
     <!-- Common Strong Medium Text -->
-    <dimen name="common_strong_medium_text_size">11dp</dimen>
+    <dimen name="common_strong_medium_text_size">15dp</dimen>
     <!-- Common Strong Small Text -->
     <dimen name="common_strong_small_text_size">9dp</dimen>
     <!-- Common Padding -->

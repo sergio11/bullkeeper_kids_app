@@ -12,6 +12,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
 import javax.inject.Inject
 
@@ -20,6 +21,7 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
+
 
     /**
      * Show Usage Access Settings
@@ -55,7 +57,7 @@ class NavigatorImpl
      */
     override fun showMain(activity: Activity) {
         when (!preferenceRepository.getAuthToken().isNullOrEmpty()) {
-            true -> showHome(activity)
+            true -> showLinkTerminalTutorial(activity)
             false -> showLogin(activity)
         }
     }
@@ -96,5 +98,12 @@ class NavigatorImpl
     override fun showLegalContent(activity: Activity, legalContentType: LegalContentActivity.LegalTypeEnum)
         = activity.startActivity(LegalContentActivity.callingIntent(context = activity,
             legalTypeEnum = legalContentType))
+
+
+    /**
+     * Show Link Terminal Tutorial
+     */
+    override fun showLinkTerminalTutorial(activity: Activity) =
+            activity.startActivity(LinkDeviceTutorialActivity.callingIntent(activity))
 
 }

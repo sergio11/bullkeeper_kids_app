@@ -9,6 +9,7 @@ import com.cleveroad.slidingtutorial.TransformItem
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AppTutorialComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.IAppTutorialHandler
 import kotlinx.android.synthetic.main.sixth_page_fragment_layout.*
@@ -18,7 +19,7 @@ import java.lang.IllegalStateException
 /**
  * Sixth Page Fragment
  */
-class SixthPageFragment: AbstractPageFragment<AppTutorialComponent>() {
+class SixthPageFragment: SupportPageFragment<AppTutorialComponent>() {
 
     /**
      * App Tutorial Handler
@@ -44,7 +45,7 @@ class SixthPageFragment: AbstractPageFragment<AppTutorialComponent>() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if(context !is IAppTutorialHandler)
-            throw IllegalStateException("The context does not implement IAppTutorialHandler")
+            throw IllegalStateException("The context does not implement ILinkDeviceTutorialHandler")
         appTutorialHandler = context
 
     }

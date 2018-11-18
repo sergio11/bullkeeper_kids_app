@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_11">
+
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/titleText"
+        style="@style/CommonStrongText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_margin"
+        android:gravity="center"
+        android:padding="@dimen/common_padding"
+        android:text="@string/link_terminal_second_page_title"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintBottom_toTopOf="@id/contentText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!-- Content Text -->
+    <TextView
+        android:id="@+id/contentText"
+        style="@style/CommonStrongText.Big"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_margin"
+        android:gravity="center"
+        android:padding="@dimen/common_padding"
+        android:text="@string/link_terminal_second_page_description"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        app:layout_constraintBottom_toTopOf="@id/childrenContainer"/>
+
+    <!-- Children Container -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/childrenContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/common_margin"
+        android:layout_marginStart="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
+        android:layout_marginBottom="80dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/commonWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contentText"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Loading Children -->
+        <LinearLayout
+            android:id="@+id/loadingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <!-- Support Loading Spinner -->
+            <com.sanchez.sanchez.bullkeeper_kids.core.platform.components.SupportLoadingSpinner
+                android:id="@+id/loadingSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/child_primary_color_solid"/>
+
+            <!-- Message -->
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                style="@style/CommonStrongText.Big"
+                android:text="@string/loading_children_message"
+                android:textColor="@color/primaryColor" />
+
+        </LinearLayout>
+
+        <!-- Loading Children Error -->
+        <RelativeLayout
+            android:id="@+id/loadingError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+
+            <!-- Message -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_centerInParent="true"
+                style="@style/CommonStrongText.Big"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/error_loading_children_information"
+                android:textColor="@color/primaryColor" />
+
+        </RelativeLayout>
+
+        <!-- No Results Found -->
+        <RelativeLayout
+            android:id="@+id/noResultsFound"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+
+            <!-- Message -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                style="@style/CommonStrongText.Big"
+                android:layout_centerInParent="true"
+                android:text="@string/no_children_found"
+                android:textColor="@color/primaryColor" />
+
+        </RelativeLayout>
+
+        <!-- Swipe Refresh Layout -->
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent">
+
+            <!-- My Kids List -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbarThumbVertical="@android:color/white"
+                android:background="@android:color/transparent"
+                android:scrollbars="vertical"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+</android.support.constraint.ConstraintLayout>

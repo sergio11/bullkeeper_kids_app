@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.data.net.deserializers.BirthdayDeserializer
 import com.sanchez.sanchez.bullkeeper_kids.data.net.deserializers.JodaLocalTimeDeserializer
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import org.joda.time.LocalTime
 import java.util.*
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -107,6 +108,16 @@ class NetModule(private val application: AndroidApplication) {
                     .addInterceptor(authTokenInterceptor)
                     .build()
         }
+    }
+
+
+    /**
+     * Provide Api End Points Helper
+     */
+    @Provides
+    @Singleton
+    internal fun provideApiEndPointsHelper(): ApiEndPointsHelper {
+        return ApiEndPointsHelper(BuildConfig.BASE_URL)
     }
 
 }

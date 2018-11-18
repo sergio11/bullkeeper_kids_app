@@ -53,4 +53,9 @@ interface INavigator {
      */
     fun showLegalContent(activity: Activity, legalContentType: LegalContentActivity.LegalTypeEnum)
 
+    /**
+     * Show Link Terminal Tutorial
+     */
+    fun showLinkTerminalTutorial(activity: Activity)
+
 }

@@ -47,12 +47,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Sign In Activity -->
         <activity android:name=".presentation.login.SignInActivity" />
+
+        <!-- Home Activity -->
         <activity
             android:name=".presentation.home.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
 
+        <!-- Monitoring Service -->
         <service android:name=".presentation.services.MonitoringService" />
 
         <!-- Lock Screen Activity -->
@@ -95,7 +100,14 @@
             </intent-filter>
         </receiver>
 
+
+        <!-- App Tutorial Activity -->
         <activity android:name=".presentation.tutorial.AppTutorialActivity" />
+
+        <!-- Link Device Tutorial Activity -->
+        <activity android:name=".presentation.linkterminal.LinkDeviceTutorialActivity" />
+
+        <!-- Legal Content Activity -->
         <activity
             android:name=".presentation.legalcontent.LegalContentActivity"
             android:label="@string/title_activity_legal_content"></activity>

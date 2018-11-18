@@ -8,6 +8,7 @@ import com.cleveroad.slidingtutorial.TransformItem
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AppTutorialComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.IAppTutorialHandler
 import kotlinx.android.synthetic.main.seventh_page_fragment_layout.*
@@ -18,7 +19,7 @@ import javax.inject.Inject
 /**
  * Seventh Page Fragment
  */
-class SeventhPageFragment: AbstractPageFragment<AppTutorialComponent>() {
+class SeventhPageFragment: SupportPageFragment<AppTutorialComponent>() {
 
     /**
      * App Tutorial Handler
@@ -44,7 +45,7 @@ class SeventhPageFragment: AbstractPageFragment<AppTutorialComponent>() {
         super.onAttach(context)
 
         if(context !is IAppTutorialHandler)
-            throw IllegalStateException("The context should implement IAppTutorialHandler")
+            throw IllegalStateException("The context should implement ILinkDeviceTutorialHandler")
 
         appTutorialHandler = context
 

@@ -1,7 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.pages
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.View
@@ -11,6 +10,7 @@ import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AppTutorialComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.IAppTutorialHandler
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
@@ -22,7 +22,7 @@ import javax.inject.Inject
 /**
  * Fifth Page Fragment
  */
-class FifthPageFragment: AbstractPageFragment<AppTutorialComponent>() {
+class FifthPageFragment: SupportPageFragment<AppTutorialComponent>() {
 
     /**
      * Dependencies
@@ -65,7 +65,7 @@ class FifthPageFragment: AbstractPageFragment<AppTutorialComponent>() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if(context !is IAppTutorialHandler)
-            throw IllegalStateException("The context does not implement IAppTutorialHandler")
+            throw IllegalStateException("The context does not implement ILinkDeviceTutorialHandler")
         appTutorialHandler = context
 
     }

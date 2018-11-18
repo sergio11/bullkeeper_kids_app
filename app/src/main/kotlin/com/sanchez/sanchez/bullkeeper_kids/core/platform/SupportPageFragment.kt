@@ -1,4 +1,4 @@
-package com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.pages
+package com.sanchez.sanchez.bullkeeper_kids.core.platform
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import com.cleveroad.slidingtutorial.PageSupportFragment
 /**
  * Abstract Page Fragment
  */
-abstract class AbstractPageFragment<T>: PageSupportFragment() {
+abstract class SupportPageFragment<T>: PageSupportFragment() {
 
     var component: T? = null
 

@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
+import android.app.Activity
 import android.support.v7.app.AppCompatActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.permission.IPermissionManager
@@ -19,6 +20,15 @@ class ActivityModule
     @Provides
     @PerActivity
     fun provideActivityCompat(): AppCompatActivity {
+        return this.activity
+    }
+
+    /**
+     * Provide Activity
+     */
+    @Provides
+    @PerActivity
+    fun provideActivity(): Activity {
         return this.activity
     }
 
