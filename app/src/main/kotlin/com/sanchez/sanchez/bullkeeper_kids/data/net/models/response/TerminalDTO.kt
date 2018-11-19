@@ -66,5 +66,11 @@ data class TerminalDTO(
          * Device Name
          */
         @JsonProperty("device_name")
-        var deviceName: String? = null
+        var deviceName: String? = null,
+
+        /**
+         * Device Id
+         */
+        @JsonProperty("device_id")
+        var deviceId: String? = null
 )

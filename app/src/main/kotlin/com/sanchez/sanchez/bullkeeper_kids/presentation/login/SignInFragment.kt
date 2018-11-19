@@ -192,6 +192,7 @@ class SignInFragment : BaseFragment(), FacebookCallback<LoginResult> {
      */
     override fun onCancel() {
         Timber.d("Facebook Login Canceled")
+        signInActivityHandler.hideProgressDialog()
         signInActivityHandler.showShortMessage(R.string.authenticating_with_facebook_canceled)
     }
 

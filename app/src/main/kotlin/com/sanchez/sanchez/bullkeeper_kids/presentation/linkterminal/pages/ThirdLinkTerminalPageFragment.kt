@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.support.v4.app.DialogFragment
 import android.view.View
 import com.cleveroad.slidingtutorial.Direction
@@ -24,6 +25,8 @@ import timber.log.Timber
 import java.lang.IllegalStateException
 import kotlinx.android.synthetic.main.third_link_terminal_page_fragment_layout.*
 import javax.inject.Inject
+
+
 
 
 /**
@@ -48,6 +51,12 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
     // Picasso
     @Inject
     lateinit var picasso: Picasso
+
+    /**
+     * App Context
+     */
+    @Inject
+    lateinit var appContext: Context;
 
 
     /**
@@ -112,6 +121,8 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
             linkDeviceTutorialHandler.showNoticeDialog(R.string.terminal_linked_failed)
         }
 
+        thirdLinkTerminalViewModel.errorSaveTerminal.observe(this, errorSaveTerminalObserver)
+
         thirdLinkTerminalViewModel.getDeviceInformation()
     }
 
@@ -125,7 +136,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
     /**
      * When Phase Is Showed
      */
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "HardwareIds")
     override fun whenPhaseIsShowed() {
         Timber.d("Phase Is Showed")
 
@@ -148,6 +159,10 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                 linkDeviceTutorialHandler.showProgressDialog(R.string.link_device_in_progress)
 
                 val deviceInfo = thirdLinkTerminalViewModel.deviceInfo.value;
+
+
+                val deviceId = Settings.Secure.getString(appContext.contentResolver,
+                        Settings.Secure.ANDROID_ID)
                 // Save Terminal
                 thirdLinkTerminalViewModel.saveTerminal(
                         sonId = currentSonEntity?.identity!!,
@@ -158,6 +173,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                         codeName = deviceInfo.codename,
                         name = deviceInfo.name,
                         deviceName = deviceInfo.name,
+                        deviceId = deviceId,
                         model = deviceInfo.model,
                         osVersion = Build.VERSION.RELEASE,
                         sdkVersion = Build.VERSION.SDK_INT.toString()

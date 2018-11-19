@@ -26,6 +26,7 @@ class SaveTerminalInteract
                 appVersionName = params.appVersionName,
                 codeName = params.codeName,
                 deviceName = params.deviceName,
+                deviceId = params.deviceId,
                 manufacturer = params.manufacturer,
                 marketName = params.marketName,
                 model = params.model,
@@ -43,6 +44,7 @@ class SaveTerminalInteract
         terminalEntity.appVersionName = response.data?.appVersionName
         terminalEntity.codeName = response.data?.codeName
         terminalEntity.deviceName = response.data?.deviceName
+        terminalEntity.deviceId = response.data?.deviceId
         terminalEntity.manufacturer = response.data?.manufacturer
         terminalEntity.marketName = response.data?.marketName
         terminalEntity.model = response.data?.model
@@ -64,6 +66,7 @@ class SaveTerminalInteract
             val name: String,
             val codeName: String,
             val deviceName: String,
+            val deviceId: String,
             val manufacturer: String,
             val marketName: String,
             val model: String,

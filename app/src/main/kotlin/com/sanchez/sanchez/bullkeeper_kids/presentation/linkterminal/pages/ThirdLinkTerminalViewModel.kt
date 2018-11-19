@@ -48,7 +48,7 @@ class ThirdLinkTerminalViewModel
      */
     fun saveTerminal(sonId: String, appVersionName: String, appVersionCode: String,
                      manufacturer: String, marketName: String, codeName: String, name: String,
-                     deviceName: String, model: String, osVersion: String, sdkVersion: String) {
+                     deviceName: String, deviceId: String, model: String, osVersion: String, sdkVersion: String) {
 
         saveTerminalInteract(SaveTerminalInteract.Params(
                 sonId = sonId,
@@ -59,6 +59,7 @@ class ThirdLinkTerminalViewModel
                 codeName = codeName,
                 name = name,
                 deviceName = deviceName,
+                deviceId = deviceId,
                 model = model,
                 osVersion = osVersion,
                 sdkVersion = sdkVersion

@@ -33,6 +33,12 @@ data class AddTerminalDTO (
         var deviceName: String? = null,
 
         /**
+         * Device Id
+         */
+        @get:JsonProperty("device_id")
+        var deviceId: String? = null,
+
+        /**
          * Manufacturer
          */
         @get:JsonProperty("manufacturer")
