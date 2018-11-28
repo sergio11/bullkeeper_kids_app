@@ -3,13 +3,12 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.children
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.GuardianRolesEnum
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.TerminalDTO
-import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IParentsService
+import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IGuardiansService
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.RetrofitException
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SchoolEntity
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SonEntity
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.*
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -19,8 +18,8 @@ import javax.inject.Inject
 class GetSelfChildrenInteract
     @Inject constructor(
             retrofit: Retrofit,
-            private val parentService: IParentsService,
-            private val apiEndPointsHelper: ApiEndPointsHelper): UseCase<List<SonEntity>, UseCase.None>(retrofit){
+            private val parentService: IGuardiansService,
+            private val apiEndPointsHelper: ApiEndPointsHelper): UseCase<ChildrenOfSelfGuardianEntity, UseCase.None>(retrofit){
 
 
     private val NO_CHILDREN_FOUND_CODE_NAME = "NO_CHILDREN_FOUND"
@@ -38,22 +37,44 @@ class GetSelfChildrenInteract
     /**
      * On Executed
      */
-    override suspend fun onExecuted(params: None): List<SonEntity> {
+    override suspend fun onExecuted(params: None): ChildrenOfSelfGuardianEntity {
 
         val response = parentService.getSelfChildren().await()
 
-        return response.data?.map { sonDTO ->
-            SonEntity(sonDTO.identity, sonDTO.firstName, sonDTO.lastName,
-                    sonDTO.birthdate, sonDTO.age,
-                    SchoolEntity(sonDTO.schoolDTO?.identity, sonDTO.schoolDTO?.name,
-                            sonDTO.schoolDTO?.residence, sonDTO.schoolDTO?.latitude,
-                            sonDTO.schoolDTO?.longitude, sonDTO.schoolDTO?.province,
-                            sonDTO.schoolDTO?.tfno, sonDTO.schoolDTO?.email),
-                    if(sonDTO.profileImage != null)
-                        apiEndPointsHelper.getSonProfileUrl(sonDTO.profileImage!!)
-                    else null, mapTerminals(sonDTO.terminals))
-        }!!
+        val childrenOfSelfParent = ChildrenOfSelfGuardianEntity()
+        childrenOfSelfParent.confirmed = response.data?.confirmed
+        childrenOfSelfParent.noConfirmed = response.data?.noConfirmed
+        childrenOfSelfParent.total = response.data?.total
 
+        val supervisedChildrenEntities = ArrayList<SupervisedChildrenEntity>()
+        for(supervisedChildren in response.data?.supervisedChildrenList!!) {
+            val supervisedChildrenEntity = SupervisedChildrenEntity()
+            supervisedChildrenEntity.identity = supervisedChildren.identity
+            supervisedChildrenEntity.role = GuardianRolesEnum.valueOf(supervisedChildren.role.orEmpty())
+            supervisedChildrenEntity.kid = KidEntity()
+            supervisedChildrenEntity.kid?.identity = supervisedChildren.kid?.identity
+            supervisedChildrenEntity.kid?.firstName = supervisedChildren.kid?.firstName
+            supervisedChildrenEntity.kid?.lastName = supervisedChildren.kid?.lastName
+            supervisedChildrenEntity.kid?.age = supervisedChildren.kid?.age
+            supervisedChildrenEntity.kid?.school = SchoolEntity()
+            supervisedChildrenEntity.kid?.school?.identity = supervisedChildren.kid?.schoolDTO?.identity
+            supervisedChildrenEntity.kid?.school?.name = supervisedChildren.kid?.schoolDTO?.name
+            supervisedChildrenEntity.kid?.school?.residence = supervisedChildren.kid?.schoolDTO?.residence
+            supervisedChildrenEntity.kid?.school?.latitude = supervisedChildren.kid?.schoolDTO?.latitude
+            supervisedChildrenEntity.kid?.school?.longitude = supervisedChildren.kid?.schoolDTO?.longitude
+            supervisedChildrenEntity.kid?.school?.province = supervisedChildren.kid?.schoolDTO?.province
+            supervisedChildrenEntity.kid?.school?.tfno = supervisedChildren.kid?.schoolDTO?.tfno
+            supervisedChildrenEntity.kid?.school?.email = supervisedChildren.kid?.schoolDTO?.email
+            supervisedChildren.kid?.profileImage?.let{
+                supervisedChildren.kid?.profileImage = apiEndPointsHelper.getKidProfileUrl(it)
+            }
+            supervisedChildrenEntity.kid?.terminals =    mapTerminals(supervisedChildren.kid?.terminals)
+            supervisedChildrenEntities.add(supervisedChildrenEntity)
+        }
+
+        childrenOfSelfParent.supervisedChildrenList = supervisedChildrenEntities
+
+        return childrenOfSelfParent
     }
 
 

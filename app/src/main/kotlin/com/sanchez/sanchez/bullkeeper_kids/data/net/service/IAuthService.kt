@@ -19,7 +19,7 @@ interface IAuthService {
      * @param authorizationRequest
      * @return
      */
-    @POST("parents/auth/")
+    @POST("guardians/auth/")
     fun getAuthorizationToken(
             @Body authorizationRequest: JwtAuthenticationRequestDTO): Deferred<APIResponse<JwtAuthenticationResponseDTO>>
 
@@ -29,7 +29,7 @@ interface IAuthService {
      * @param authorizationRequest
      * @return
      */
-    @POST("parents/auth/facebook")
+    @POST("guardians/auth/facebook")
     fun getAuthorizationTokenByFacebook(
             @Body authorizationRequest: JwtSocialAuthenticationRequestDTO): Deferred<APIResponse<JwtAuthenticationResponseDTO>>
 }

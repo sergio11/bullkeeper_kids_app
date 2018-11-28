@@ -32,7 +32,7 @@ class SaveTerminalInteract
                 model = params.model,
                 osVersion = params.osVersion,
                 sdkVersion = params.sdkVersion,
-                sonId = params.sonId)
+                kid = params.sonId)
 
         val response = terminalService
                 .saveTerminal(params.sonId, saveTerminal).await()

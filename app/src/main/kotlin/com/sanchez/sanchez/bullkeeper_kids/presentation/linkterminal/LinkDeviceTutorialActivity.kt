@@ -19,7 +19,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.TerminalModule
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.addFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportActivity
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SonEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FirstLinkTerminalPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.SecondLinkTerminalPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.ThirdLinkTerminalPageFragment
@@ -84,7 +84,7 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
     /**
      * Current Son Entity
      */
-    private var currentSonEntity: SonEntity? = null
+    private var currentKidEntity: KidEntity? = null
 
     /**
      * Get Component
@@ -185,20 +185,20 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
     /**
      * Set Current Son Entity
      */
-    override fun setCurrentSonEntity(sonEntity: SonEntity?) {
-        Preconditions.checkNotNull(sonEntity, "Son Entity can not be null")
-        this.currentSonEntity = sonEntity
+    override fun setCurrentSonEntity(kidEntity: KidEntity?) {
+        Preconditions.checkNotNull(kidEntity, "Son Entity can not be null")
+        this.currentKidEntity = kidEntity
     }
 
     /**
      * Get Current Son Entity
      */
-    override fun getCurrentSonEntity(): SonEntity? = currentSonEntity
+    override fun getCurrentSonEntity(): KidEntity? = currentKidEntity
 
     /**
      * Has Current Son Entity
      */
-    override fun hasCurrentSonEntity(): Boolean = currentSonEntity != null
+    override fun hasCurrentSonEntity(): Boolean = currentKidEntity != null
 
     /**
      * Go To Home

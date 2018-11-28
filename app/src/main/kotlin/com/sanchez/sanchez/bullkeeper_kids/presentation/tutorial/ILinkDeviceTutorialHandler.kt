@@ -1,7 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial
 
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.IBasicActivityHandler
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SonEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidEntity
 
 /**
  * Link Device Tutorial Handler
@@ -21,12 +21,12 @@ interface ILinkDeviceTutorialHandler: IBasicActivityHandler {
     /**
      * Set Current Son Entity
      */
-    fun setCurrentSonEntity(sonEntity: SonEntity?)
+    fun setCurrentSonEntity(kidEntity: KidEntity?)
 
     /**
      * Get Current Son Entity
      */
-    fun getCurrentSonEntity(): SonEntity?
+    fun getCurrentSonEntity(): KidEntity?
 
     /**
      * Has Current Son Entity

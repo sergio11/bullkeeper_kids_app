@@ -3,9 +3,9 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.models
 import java.util.*
 
 /**
- * Son Entity
+ * Kid Entity
  */
-data class SonEntity(
+data class KidEntity(
 
         /**
          * Identity

@@ -71,7 +71,7 @@ data class AddTerminalDTO (
         /**
          * Son Identity
          */
-        @get:JsonProperty("son_id")
-        var sonId: String? = null
+        @get:JsonProperty("kid")
+        var kid: String? = null
 
 )

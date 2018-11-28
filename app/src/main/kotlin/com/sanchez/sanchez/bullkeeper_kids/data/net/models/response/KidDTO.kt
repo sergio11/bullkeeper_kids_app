@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
 /**
- * Son DTO
+ * Kid DTO
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class SonDTO(
+data class KidDTO(
 
         /**
          * Identity

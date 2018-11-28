@@ -6,7 +6,9 @@ import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseViewModel
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.children.GetSelfChildrenInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SonEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.ChildrenOfSelfGuardianEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.SupervisedChildrenEntity
 import javax.inject.Inject
 
 /**
@@ -20,7 +22,7 @@ class SecondLinkTerminalViewModel
      * Live Data
      */
 
-    var childrenList: MutableLiveData<List<SonEntity>> = MutableLiveData()
+    var childrenList: MutableLiveData<List<SupervisedChildrenEntity>> = MutableLiveData()
 
     /**
      * Load Children Failure
@@ -52,9 +54,9 @@ class SecondLinkTerminalViewModel
     /**
      * On Children Loaded
      */
-    private fun onChildrenLoaded(children: List<SonEntity>) {
+    private fun onChildrenLoaded(children: ChildrenOfSelfGuardianEntity) {
         Preconditions.checkNotNull(children, "Children list can not be null")
-        childrenList.value = children
+        childrenList.value = children.supervisedChildrenList
     }
 
 }

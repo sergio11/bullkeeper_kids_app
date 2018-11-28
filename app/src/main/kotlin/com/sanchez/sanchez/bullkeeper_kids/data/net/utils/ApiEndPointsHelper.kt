@@ -8,22 +8,22 @@ class ApiEndPointsHelper
 (private val baseUrl: String) {
 
     /**
-     * Get Son Profile Url
+     * Get Kid Profile Url
      * @param identity
      * @return
      */
-    fun getSonProfileUrl(identity: String): String {
+    fun getKidProfileUrl(identity: String): String {
         return baseUrl + String.format("images/children/%s", identity)
     }
 
 
     /**
-     * Get Parent Profile Url
+     * Get Guardians Profile Url
      * @param identity
      * @return
      */
-    fun getParentProfileUrl(identity: String): String {
-        return baseUrl + String.format("images/parents/%s", identity)
+    fun getGuardiansProfileUrl(identity: String): String {
+        return baseUrl + String.format("images/guardians/%s", identity)
     }
 
 }

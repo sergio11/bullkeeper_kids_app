@@ -21,7 +21,8 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.SupportRecycler
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.decoration.ItemOffsetDecoration
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.children.GetSelfChildrenInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SonEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.SupervisedChildrenEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.adapter.ChildrenAdapter
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.ILinkDeviceTutorialHandler
 import com.squareup.picasso.Picasso
@@ -33,7 +34,8 @@ import javax.inject.Inject
 /**
  * Second Link Terminal Page Fragment
  */
-class SecondLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialComponent>(), SwipeRefreshLayout.OnRefreshListener, SupportRecyclerViewAdapter.OnSupportRecyclerViewListener<SonEntity> {
+class SecondLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialComponent>(), SwipeRefreshLayout.OnRefreshListener,
+            SupportRecyclerViewAdapter.OnSupportRecyclerViewListener<SupervisedChildrenEntity> {
 
     /**
      * Dependencies
@@ -124,9 +126,9 @@ class SecondLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialComp
         childrenAdapter.setOnSupportRecyclerViewListener(this)
 
         // Create the observer which updates the UI.
-        val childrenListObserver = Observer<List<SonEntity>> { childrenList ->
+        val childrenListObserver = Observer<List<SupervisedChildrenEntity>> { childrenList ->
             swipeRefreshLayout.isRefreshing = false
-            childrenAdapter.setData(childrenList as MutableList<SonEntity>)
+            childrenAdapter.setData(childrenList as MutableList<SupervisedChildrenEntity>)
             childrenAdapter.notifyDataSetChanged()
             showResultsState()
         }
@@ -239,9 +241,9 @@ class SecondLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialComp
     /**
      * On Item Click
      */
-    override fun onItemClick(item: SonEntity) {
+    override fun onItemClick(item: SupervisedChildrenEntity) {
         Preconditions.checkNotNull(item, "Item can not be null")
-        linkDeviceTutorialHandler.setCurrentSonEntity(item)
+        linkDeviceTutorialHandler.setCurrentSonEntity(item.kid)
         linkDeviceTutorialHandler.releaseFocus()
     }
 
