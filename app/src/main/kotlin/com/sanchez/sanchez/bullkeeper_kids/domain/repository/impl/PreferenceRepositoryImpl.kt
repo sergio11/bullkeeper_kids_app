@@ -12,6 +12,7 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(private val context: Context): IPreferenceRepository {
 
+
     /**
      * Preferences
      */
@@ -48,6 +49,22 @@ class PreferenceRepositoryImpl
     override fun setAuthToken(token: String) {
         mPref.edit().putString(IPreferenceRepository.PREF_AUTH_TOKEN,
                 token).apply()
+    }
+
+    /**
+     * Get Pref Current User Identity
+     */
+    override fun getPrefCurrentUserIdentity(): String {
+        return mPref.getString(IPreferenceRepository.PREF_CURRENT_USER_IDENTITY,
+                IPreferenceRepository.CURRENT_USER_IDENTITY_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Pref Current User Identity
+     */
+    override fun setPrefCurrentUserIdentity(identity: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_CURRENT_USER_IDENTITY,
+                identity).apply()
     }
 
 }

@@ -19,6 +19,10 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_AUTH_TOKEN = "auth_token"
         const val AUTH_TOKEN_DEFAULT_VALUE = ""
 
+        // Current User Identity
+        const val PREF_CURRENT_USER_IDENTITY = "identity"
+        const val CURRENT_USER_IDENTITY_DEFAULT_VALUE = ""
+
     }
 
     /**
@@ -30,5 +34,18 @@ interface IPreferenceRepository: IAuthTokenAware {
      * Set Tutorial Completed
      */
     fun setTutorialCompleted(isTutorialCompleted: Boolean)
+
+
+    /**
+     * Get Pref Current User Identity
+     * @return
+     */
+    fun getPrefCurrentUserIdentity(): String
+
+    /**
+     * Set Pref Current Usre Identity
+     * @param identity
+     */
+    fun setPrefCurrentUserIdentity(identity: String)
 
 }

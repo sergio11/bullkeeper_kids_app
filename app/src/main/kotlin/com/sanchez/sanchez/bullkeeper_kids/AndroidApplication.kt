@@ -22,7 +22,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 /**
  * Android Application
  */
-class AndroidApplication : Application() {
+class AndroidApplication : Application(){
 
     /**
      * Application Component
@@ -163,10 +163,8 @@ class AndroidApplication : Application() {
      * Initialize Services
      */
     private fun initializeServices() {
-        ContextCompat.startForegroundService(this,
-                Intent(this, MonitoringService::class.java))
-    }
 
+    }
 
     /** A tree which logs important information for crash reporting.  */
     private class CrashReportingTree : Timber.Tree() {

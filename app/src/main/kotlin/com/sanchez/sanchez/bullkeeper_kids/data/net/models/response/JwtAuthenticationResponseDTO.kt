@@ -9,15 +9,23 @@ import java.io.Serializable
 class JwtAuthenticationResponseDTO: Serializable {
 
     /**
+     * Identity
+     */
+    @JsonProperty("identity")
+    var identity: String? = null
+
+    /**
      * Token
      */
     @JsonProperty("token")
     var token: String? = null
 
     /**
-     * To String
+     *
      */
     override fun toString(): String {
-        return "JwtAuthenticationResponseDTO(token=$token)"
+        return "JwtAuthenticationResponseDTO(identity=$identity, token=$token)"
     }
+
+
 }

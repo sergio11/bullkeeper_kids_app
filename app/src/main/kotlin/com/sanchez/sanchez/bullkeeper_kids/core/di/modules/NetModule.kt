@@ -23,6 +23,8 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import org.joda.time.LocalTime
 import java.util.*
 import retrofit2.converter.jackson.JacksonConverterFactory;
+import com.here.oksse.OkSse
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -102,10 +104,12 @@ class NetModule(private val application: AndroidApplication) {
             OkHttpClient.Builder()
                     .addInterceptor(authTokenInterceptor)
                     .addNetworkInterceptor(StethoInterceptor())
+                    .readTimeout(0, TimeUnit.MILLISECONDS)
                     .build()
         } else {
             OkHttpClient.Builder()
                     .addInterceptor(authTokenInterceptor)
+                    .readTimeout(0, TimeUnit.MILLISECONDS)
                     .build()
         }
     }
@@ -120,4 +124,14 @@ class NetModule(private val application: AndroidApplication) {
         return ApiEndPointsHelper(BuildConfig.BASE_URL)
     }
 
+    /**
+     * Provide Ok Sse
+     * @param okHttpClient
+     * @return
+     */
+    @Singleton
+    @Provides
+    internal fun provideOkSse(okHttpClient: OkHttpClient): OkSse {
+        return OkSse(okHttpClient)
+    }
 }

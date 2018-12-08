@@ -16,7 +16,7 @@ interface ITerminalService {
     /**
      * Save Terminal
      */
-    @POST("children/{son}/terminal")
-    fun saveTerminal(@Path("son") sonId: String, @Body addTerminalDTO: AddTerminalDTO)
+    @POST("children/{kid}/terminal")
+    fun saveTerminal(@Path("kid") kid: String, @Body addTerminalDTO: AddTerminalDTO)
             : Deferred<APIResponse<TerminalDTO>>
 }

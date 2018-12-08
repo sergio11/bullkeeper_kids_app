@@ -19,7 +19,7 @@ import javax.inject.Inject
 class AuthenticateInteract
     @Inject constructor(retrofit: Retrofit,
                         private val authenticateService: IAuthenticatorService):
-        UseCase<String, AuthenticateInteract.IParams>(retrofit){
+        UseCase<AuthenticateInteract.AuthenticationResponse, AuthenticateInteract.IParams>(retrofit){
 
     /**
      * Bad Credentials
@@ -29,7 +29,7 @@ class AuthenticateInteract
     /**
      * On Executed
      */
-    override suspend fun onExecuted(params: IParams): String {
+    override suspend fun onExecuted(params: IParams): AuthenticationResponse {
         Preconditions.checkNotNull(params, "params can not be null")
 
        val response = when (params) {
@@ -51,8 +51,8 @@ class AuthenticateInteract
 
         }
 
-        // Return Token
-        return response.data?.token!!
+
+        return AuthenticationResponse(response.data?.identity, response.data?.token)
     }
 
 
@@ -72,6 +72,15 @@ class AuthenticateInteract
 
     data class UserCredentials(val email: String, val password: String): IParams
     data class SocialToken(val token: String): IParams
+
+    /**
+     * Authentication Response
+     */
+    data class AuthenticationResponse(
+            val identity: String?,
+            val token: String?
+    )
+
 
     class IncorrectCredentials: Failure.FeatureFailure()
 

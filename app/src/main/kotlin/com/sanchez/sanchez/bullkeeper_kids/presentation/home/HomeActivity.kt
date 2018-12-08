@@ -6,12 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.support.v4.content.ContextCompat
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import javax.inject.Inject
 
@@ -46,6 +48,9 @@ class HomeActivity : BaseActivity() {
      */
     @Inject internal lateinit var navigator: INavigator
 
+    /**
+     * Device Policy Manager
+     */
     private lateinit var devicePolicyManager: DevicePolicyManager
 
     /**
@@ -54,6 +59,10 @@ class HomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
+
+        ContextCompat.startForegroundService(this,
+                Intent(this, MonitoringService::class.java))
+
 
         if (!usageStatsService.isUsageStatsAllowed())
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))

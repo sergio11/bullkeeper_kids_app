@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.components
 
 import android.app.Application
 import android.content.Context
+import com.here.oksse.OkSse
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ApplicationModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.NetModule
@@ -70,5 +71,5 @@ interface ApplicationComponent {
     fun application(): Application
     fun picasso(): Picasso
     fun apiEndPointsHelper(): ApiEndPointsHelper
-
+    fun oksse(): OkSse
 }

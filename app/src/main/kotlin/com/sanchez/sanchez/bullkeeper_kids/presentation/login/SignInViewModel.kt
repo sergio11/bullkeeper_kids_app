@@ -67,11 +67,11 @@ class SignInViewModel
     /**
      * On Authentication Succes
      */
-    private fun onAuthenticationSuccess(authToken: String) {
-        Preconditions.checkNotNull(authToken, "Auth Token can not be null")
-        Preconditions.checkState(authToken.isNotEmpty(), "Auth Token can not be empty")
-        preferenceRepository.setAuthToken(authToken)
-        sigInSuccess.value = SignInSuccessView(authToken)
+    private fun onAuthenticationSuccess(authenticationResponse: AuthenticateInteract.AuthenticationResponse) {
+        Preconditions.checkNotNull(authenticationResponse, "Auth Token can not be null")
+        preferenceRepository.setAuthToken(authenticationResponse.token!!)
+        preferenceRepository.setPrefCurrentUserIdentity(authenticationResponse.identity!!)
+        sigInSuccess.value = SignInSuccessView(authenticationResponse.token)
 
     }
 

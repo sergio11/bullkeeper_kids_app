@@ -26,15 +26,28 @@ import android.os.IBinder
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import android.support.v4.content.LocalBroadcastManager
 import android.os.Handler
+import com.here.oksse.ServerSentEvent
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynPackageUsageStatsInteract
+import okhttp3.Request
+import okhttp3.Response
+import timber.log.Timber
+import com.here.oksse.OkSse
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+
+
+
+
+
+
 
 
 /**
  * @author Sergio Sánchez Sánchez
  *
  */
-class MonitoringService : Service(){
+class MonitoringService : Service(), ServerSentEvent.Listener {
 
     // Extra Started From Notification
     private val EXTRA_STARTED_FROM_NOTIFICATION = "STARTED_FROM_NOTIFICATION"
@@ -123,6 +136,24 @@ class MonitoringService : Service(){
     @Inject
     internal lateinit var syncUsageStatsInteract: SynPackageUsageStatsInteract
 
+    /**
+     * Api End Points Helper
+     */
+    @Inject
+    internal lateinit var apiEndPointsHelper: ApiEndPointsHelper
+
+    /**
+     * OK SSE Client
+     */
+    @Inject
+    internal lateinit var okSse: OkSse
+
+    /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
+
 
     /**
      * Receivers
@@ -144,13 +175,14 @@ class MonitoringService : Service(){
      */
     private var appBlockList: Set<SystemPackageInfo> = HashSet()
 
-    private var currentAppLocked: String? = null;
+    private var currentAppLocked: String? = null
 
+    private var serverSentEvent: ServerSentEvent? = null
 
     /**
      * Get Notification
      */
-    fun getNotification(): Notification {
+    private fun getNotification(): Notification {
 
         val intent = Intent(this, MonitoringService::class.java)
         // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
@@ -174,6 +206,7 @@ class MonitoringService : Service(){
         unregisterReceiver(appStatusChangedReceiver)
         unregisterReceiver(screenStatusReceiver)
         disableAppForegroundMonitoring()
+        stopListenSse()
     }
 
 
@@ -209,6 +242,10 @@ class MonitoringService : Service(){
             it.either(::onGetAllPackagesInstalledFailed, ::onGetAllPackagesInstalledSuccess)
         }
 
+        // Launch SSE Listener
+        startListenSse()
+
+        // Start service with notification
         startForeground(NOTIFICATION_ID, getNotification())
 
     }
@@ -243,7 +280,7 @@ class MonitoringService : Service(){
     /**
      * Inject Dependencies
      */
-    fun injectDependencies() {
+    private fun injectDependencies() {
         serviceComponent.inject(this)
     }
 
@@ -398,6 +435,91 @@ class MonitoringService : Service(){
         mHandler.removeCallbacks(checkApplicationsUsageStatistics)
     }
 
+
+    /**
+     * Server Sent Events
+     */
+
+    /**
+     * Start Listen SSE
+     */
+    private fun startListenSse() {
+
+        serverSentEvent?.close()
+        serverSentEvent = null
+
+        if (preferenceRepository.getPrefCurrentUserIdentity()
+                != IPreferenceRepository.CURRENT_USER_IDENTITY_DEFAULT_VALUE) {
+
+            Timber.d("Start Listen SSE")
+            val eventSubscriptionRequest = Request.Builder()
+                    .url(apiEndPointsHelper.getEventSubscriptionUrl(preferenceRepository
+                            .getPrefCurrentUserIdentity()))
+                    .build()
+            serverSentEvent = okSse.newServerSentEvent(eventSubscriptionRequest, this)
+        }
+    }
+
+    /**
+     * Stop Listen Sse
+     */
+    private fun stopListenSse() {
+        serverSentEvent?.close()
+        serverSentEvent = null
+    }
+
+    /**
+     * On Open
+     */
+    override fun onOpen(sse: ServerSentEvent?, response: Response?) {
+        Timber.d("SSE: On Open")
+    }
+
+    /**
+     * On Retry Time
+     */
+    override fun onRetryTime(sse: ServerSentEvent?, milliseconds: Long): Boolean {
+        Timber.d("SSE: On Retry Time")
+        return false
+    }
+
+    /**
+     * On Comment
+     */
+    override fun onComment(sse: ServerSentEvent?, comment: String?) {
+        Timber.d("ServerSentEventHandler: On Comment -> %s", comment)
+    }
+
+    /**
+     * On Retry Error
+     */
+    override fun onRetryError(sse: ServerSentEvent?, throwable: Throwable?, response: Response?): Boolean {
+        Timber.d("SSE: On Retry Error")
+        return false
+    }
+
+    /**
+     * On Pre Retry
+     */
+    override fun onPreRetry(sse: ServerSentEvent?, originalRequest: Request?): Request? {
+        Timber.d("SSE: On Pre Retry")
+        return null
+    }
+
+    /**
+     * On Message
+     */
+    override fun onMessage(sse: ServerSentEvent?, id: String?, event: String?, message: String?) {
+        Timber.d("ServerSentEventHandler: On Message -> %s", message)
+    }
+
+    /**
+     * On Closed
+     */
+    override fun onClosed(sse: ServerSentEvent?) {
+        Timber.d("ServerSentEventHandler: On Closed")
+        startListenSse()
+    }
 
     /**
      * Monitoring Service
