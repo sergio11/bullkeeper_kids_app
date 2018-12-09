@@ -54,19 +54,14 @@ class ThirdLinkTerminalViewModel
     /**
      * Check Terminal Status
      */
-    fun checkTerminalStatus() {
-
-        if(preferenceRepository.getPrefKidIdentity()
-                != IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE) {
-            val kid = preferenceRepository.getPrefKidIdentity()
-            val deviceId = Settings.Secure.getString(context.contentResolver,
-                    Settings.Secure.ANDROID_ID)
-            // Get Terminal Detail
-            getTerminalDetailInteract(GetTerminalDetailInteract.Params(kid, deviceId)) {
-                it.either(::onTerminalDetailFailed, ::onTerminalDetailSuccess)
-            }
-        } else {
-            noTerminalLinked.value = FirstLinkTerminalViewModel.NoChildrenLinkedFailure()
+    fun checkTerminalStatus(kidId: String) {
+        Preconditions.checkNotNull(kidId, "Kid id can not be null")
+        Preconditions.checkState(!kidId.isNullOrEmpty(), "Kid id can not be null or empty")
+        val deviceId = Settings.Secure.getString(context.contentResolver,
+                Settings.Secure.ANDROID_ID)
+        // Get Terminal Detail
+        getTerminalDetailInteract(GetTerminalDetailInteract.Params(kidId, deviceId)) {
+            it.either(::onTerminalDetailFailed, ::onTerminalDetailSuccess)
         }
 
     }
@@ -99,8 +94,6 @@ class ThirdLinkTerminalViewModel
 
         terminalSaved.value = terminalEntity
     }
-
-    class NoChildrenLinkedFailure: Failure.FeatureFailure()
 
     /**
      * Save Terminal

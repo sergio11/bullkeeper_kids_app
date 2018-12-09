@@ -154,4 +154,5 @@
     <string name="link_device_in_progress">Linking in progress ...</string>
     <string name="terminal_successfully_linked">The terminal was successfully linked</string>
     <string name="terminal_linked_failed">There was an error linking the phone please try again later</string>
+    <string name="confirm_linking_device_required">You must confirm the linking of the device</string>
 </resources>

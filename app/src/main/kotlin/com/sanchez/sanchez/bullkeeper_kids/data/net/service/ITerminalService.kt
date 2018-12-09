@@ -4,14 +4,11 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.AddTerminalDT
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.TerminalDTO
 import kotlinx.coroutines.Deferred
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 /**
  * Terminal Service
- * GET /api/v1/children/{kid}/terminal/{terminal} GET_TERMINAL_DETAIL
+ *
  */
 interface ITerminalService {
 
@@ -30,4 +27,5 @@ interface ITerminalService {
     fun getTerminalDetail(
             @Path("kid")  kid: String,
             @Path("terminal") terminal: String) : Deferred<APIResponse<TerminalDTO>>
+
 }

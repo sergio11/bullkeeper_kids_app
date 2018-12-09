@@ -1,10 +1,16 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPackageInstalledRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IAppsService
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPackageUsageStatsRepository
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetAllPackagesInstalledInteract
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.AppsInstalledRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.PackageUsageStatsRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetAllAppsInstalledInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetBlockedPackagesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynPackageUsageStatsInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import dagger.Module
 import dagger.Provides
@@ -14,24 +20,48 @@ import javax.inject.Singleton
 /**
  * Packages Module
  */
-@Module(includes = [ GlobalServiceModule::class, PersistenceModule::class ])
+@Module
 class PackagesModule {
+
+    /**
+     * Provide Package Installed Repository
+     */
+    @Provides
+    @Singleton
+    fun providePackageInstalledRepository(): IAppsInstalledRepository =
+            AppsInstalledRepositoryImpl()
+
+    /**
+     * Provide Package Usage Stats Repository
+     */
+    @Provides
+    @Singleton
+    fun providePackageUsageStatsRepository(): IPackageUsageStatsRepository =
+            PackageUsageStatsRepositoryImpl()
+
+    /**
+     * Provide Apps Service
+     */
+    @Provides
+    @Singleton
+    fun provideAppsService(retrofit: Retrofit) : IAppsService
+        = retrofit.create(IAppsService::class.java)
 
     /**
      * Provide Get Blocked Packages Interact
      */
     @Provides
     @Singleton
-    fun provideGetBlockedPackagesInteract(retrofit: Retrofit, packageInstalledRepository: IPackageInstalledRepository):
-            GetBlockedPackagesInteract = GetBlockedPackagesInteract(retrofit, packageInstalledRepository)
+    fun provideGetBlockedPackagesInteract(retrofit: Retrofit, appsInstalledRepository: IAppsInstalledRepository):
+            GetBlockedPackagesInteract = GetBlockedPackagesInteract(retrofit, appsInstalledRepository)
 
     /**
      * Provide Get All Packages Installed Interact
      */
     @Provides
     @Singleton
-    fun provideGetAllPackagesInstalledInteract(retrofit: Retrofit, packageInstalledRepository: IPackageInstalledRepository):
-            GetAllPackagesInstalledInteract = GetAllPackagesInstalledInteract(retrofit, packageInstalledRepository)
+    fun provideGetAllPackagesInstalledInteract(retrofit: Retrofit, appsInstalledRepository: IAppsInstalledRepository):
+            GetAllAppsInstalledInteract = GetAllAppsInstalledInteract(retrofit, appsInstalledRepository)
 
 
     /**
@@ -42,4 +72,20 @@ class PackagesModule {
     fun provideSynPackageUsageStatsInteract(retrofit: Retrofit, usageStatsService: IUsageStatsService, packageUsageStatsRepository: IPackageUsageStatsRepository):
             SynPackageUsageStatsInteract = SynPackageUsageStatsInteract(retrofit, usageStatsService,
                         packageUsageStatsRepository)
+
+
+    /**
+     * Provide Synchronize Installed Packages Interact
+     */
+    @Provides
+    @Singleton
+    fun provideSynchronizeInstalledPackagesInteract(
+            retrofit: Retrofit,
+            systemPackageHelper: ISystemPackageHelper,
+            appsInstalledRepository: IAppsInstalledRepository,
+            appsService: IAppsService,
+            preferenceRepository: IPreferenceRepository
+    ): SynchronizeInstalledPackagesInteract
+        = SynchronizeInstalledPackagesInteract(retrofit, systemPackageHelper,
+            appsInstalledRepository, appsService, preferenceRepository)
 }

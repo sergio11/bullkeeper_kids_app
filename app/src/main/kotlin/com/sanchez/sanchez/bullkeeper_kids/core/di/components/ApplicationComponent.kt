@@ -6,16 +6,18 @@ import com.here.oksse.OkSse
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ApplicationModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.NetModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PersistenceModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GlobalServiceModule
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PackagesModule
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
+import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IAppsService
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
+import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import com.squareup.picasso.Picasso
 import dagger.Component
@@ -26,9 +28,8 @@ import javax.inject.Singleton
  * Application Component
  */
 @Singleton
-@Component(modules = [ ApplicationModule::class,
-    PersistenceModule::class, NetModule::class,
-    GlobalServiceModule::class])
+@Component(modules = [ ApplicationModule::class, NetModule::class,
+    GlobalServiceModule::class, PackagesModule::class])
 interface ApplicationComponent {
 
     /**
@@ -56,10 +57,6 @@ interface ApplicationComponent {
      */
     fun inject(signInActivity: SignInActivity)
 
-    /**
-     * Inject into App Tutorial Activity
-     */
-    fun inject(appTutorialActivity: LinkDeviceTutorialActivity)
 
     //Exposed to sub-graphs.
     fun navigator(): INavigator
@@ -72,4 +69,7 @@ interface ApplicationComponent {
     fun picasso(): Picasso
     fun apiEndPointsHelper(): ApiEndPointsHelper
     fun oksse(): OkSse
+    fun systemPackageHelper(): ISystemPackageHelper
+    fun appsInstalledRepository(): IAppsInstalledRepository
+    fun appsService(): IAppsService
 }

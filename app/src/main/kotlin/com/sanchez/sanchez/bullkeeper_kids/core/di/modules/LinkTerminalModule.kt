@@ -3,10 +3,12 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 import android.app.Application
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.children.GetSelfChildrenInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FirstLinkTerminalViewModel
+import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FourLinkTerminalViewModel
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.SecondLinkTerminalViewModel
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.ThirdLinkTerminalViewModel
 import dagger.Module
@@ -45,10 +47,22 @@ class LinkTerminalModule {
      */
     @Provides
     @PerActivity
-    fun provideLinkDeviceTutorialViewModel(
+    fun provideFirstLinkTerminalViewModel(
             application: Application,
             getTerminalDetailInteract: GetTerminalDetailInteract,
             preferenceRepository: IPreferenceRepository): FirstLinkTerminalViewModel
             = FirstLinkTerminalViewModel(application, getTerminalDetailInteract, preferenceRepository)
+
+
+    /**
+     * Provide Four Link Terminal ViewModel
+     */
+    @Provides
+    @PerActivity
+    fun provideFourLinkTerminalViewModel(
+            application: Application,
+            preferenceRepository: IPreferenceRepository,
+            synchronizeInstalledPackagesInteract: SynchronizeInstalledPackagesInteract): FourLinkTerminalViewModel
+            = FourLinkTerminalViewModel(application, preferenceRepository, synchronizeInstalledPackagesInteract)
 
 }

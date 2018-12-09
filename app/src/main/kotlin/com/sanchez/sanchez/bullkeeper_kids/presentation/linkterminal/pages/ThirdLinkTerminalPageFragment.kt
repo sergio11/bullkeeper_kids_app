@@ -19,6 +19,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.ILinkDeviceTutorialHandler
 import com.squareup.picasso.Picasso
 import timber.log.Timber
@@ -42,11 +43,15 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
      * ==================
      */
 
-    // Third Link Terminal View Model
+    /**
+     * Third Link Terminal View Model
+     */
     @Inject
     lateinit var thirdLinkTerminalViewModel: ThirdLinkTerminalViewModel
 
-    // Picasso
+    /**
+     * Picasso
+     */
     @Inject
     lateinit var picasso: Picasso
 
@@ -55,6 +60,12 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
      */
     @Inject
     lateinit var appContext: Context
+
+    /**
+     * Preference Repository
+     */
+    @Inject
+    lateinit var preferenceRepository: IPreferenceRepository
 
 
     /**
@@ -99,8 +110,6 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
 
         val deviceInfoObserver = Observer<DeviceName.DeviceInfo>{
             deviceNameTextView.text = "${it?.manufacturer} - ${it?.name}"
-            linkDeviceTutorialHandler.showProgressDialog(R.string.generic_loading_text)
-            thirdLinkTerminalViewModel.checkTerminalStatus()
         }
 
         thirdLinkTerminalViewModel.deviceInfo.observe(this, deviceInfoObserver)
@@ -109,7 +118,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
             linkDeviceTutorialHandler.hideProgressDialog()
             linkDeviceTutorialHandler.showNoticeDialog(R.string.terminal_successfully_linked, object : NoticeDialogFragment.NoticeDialogListener {
                 override fun onAccepted(dialog: DialogFragment) {
-                    linkDeviceTutorialHandler.goToHome()
+                    linkDeviceTutorialHandler.releaseFocus()
                 }
             })
         }
@@ -137,6 +146,16 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
      */
     override fun whenPhaseIsHidden(pagePosition: Int, currentPosition: Int) {
         Timber.d("Phase Is Hidden")
+
+        if(currentPosition > pagePosition
+                && preferenceRepository.getPrefTerminalIdentity()
+                        == IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE) {
+            linkDeviceTutorialHandler.showNoticeDialog(R.string.confirm_linking_device_required, object : NoticeDialogFragment.NoticeDialogListener {
+                override fun onAccepted(dialog: DialogFragment) {
+                    linkDeviceTutorialHandler.requestFocus()
+                }
+            })
+        }
     }
 
     /**
@@ -149,6 +168,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
         if(linkDeviceTutorialHandler.hasCurrentSonEntity()) {
 
             thirdLinkTerminalViewModel.getDeviceInformation()
+
 
             val currentSonEntity = linkDeviceTutorialHandler.getCurrentSonEntity()
 
@@ -182,10 +202,17 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                         name = deviceInfo.name,
                         deviceName = deviceInfo.name,
                         deviceId = deviceId,
+
                         model = deviceInfo.model,
                         osVersion = Build.VERSION.RELEASE,
                         sdkVersion = Build.VERSION.SDK_INT.toString()
                 )
+            }
+
+            currentSonEntity?.identity?.let{
+                // Check Terminal Status
+                linkDeviceTutorialHandler.showProgressDialog(R.string.generic_loading_text)
+                thirdLinkTerminalViewModel.checkTerminalStatus(it)
             }
 
         }

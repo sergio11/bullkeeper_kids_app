@@ -71,7 +71,7 @@ class PreferenceRepositoryImpl
      * Get Pref Device Id
      */
     override fun getPrefDeviceId(): String {
-        return mPref.getString(IPreferenceRepository.PREF_KID_IDENTITY,
+        return mPref.getString(IPreferenceRepository.PREF_DEVICE_ID,
                 IPreferenceRepository.CURRENT_DEVICE_ID_DEFAULT_VALUE)
     }
 
@@ -86,7 +86,7 @@ class PreferenceRepositoryImpl
      * Get Pref Terminal Identity
      */
     override fun getPrefTerminalIdentity(): String {
-        return mPref.getString(IPreferenceRepository.PREF_KID_IDENTITY,
+        return mPref.getString(IPreferenceRepository.PREF_TERMINAL_IDENTITY,
                 IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)
     }
 

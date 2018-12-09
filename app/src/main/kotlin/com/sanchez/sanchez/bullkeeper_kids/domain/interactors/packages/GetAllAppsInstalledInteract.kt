@@ -1,25 +1,26 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages
 
+
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageInfo
 import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Get Blocked Packages Interact
+ * Get All Apps Installed Interact
  */
 @Singleton
-class GetBlockedPackagesInteract
+class GetAllAppsInstalledInteract
     @Inject constructor(
             retrofit: Retrofit,
-            private val appsInstalledRepository: IAppsInstalledRepository): UseCase<List<SystemPackageInfo>, UseCase.None>(retrofit) {
+            private val appsInstalledRepository: IAppsInstalledRepository): UseCase<List<AppInstalledEntity>, UseCase.None>(retrofit) {
 
     /**
      * On Executed
      */
-    override suspend fun onExecuted(params: None): List<SystemPackageInfo>
-        =  arrayListOf()//appsInstalledRepository.getBlockedPackages()
+    override suspend fun onExecuted(params: None): List<AppInstalledEntity>  =
+            appsInstalledRepository.list()
 
 }

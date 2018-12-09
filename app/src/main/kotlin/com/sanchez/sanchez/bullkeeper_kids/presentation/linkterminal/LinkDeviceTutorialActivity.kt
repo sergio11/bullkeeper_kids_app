@@ -24,6 +24,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportActivity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FirstLinkTerminalPageFragment
+import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FourLinkTerminalPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.SecondLinkTerminalPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.ThirdLinkTerminalPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.ILinkDeviceTutorialHandler
@@ -42,7 +43,8 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
     private val FIRST_PAGE_POS = 0
     private val SECOND_PAGE_POS = 1
     private val THIRD_PAGE_POS = 2
-    private val TUTORIAL_PAGES_COUNT = 3
+    private val FOUR_PAGE_POS = 3
+    private val TUTORIAL_PAGES_COUNT = 4
 
     /**
      * App Tutorial Component
@@ -173,8 +175,7 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
 
         val pageFragments = arrayOf(
                 FirstLinkTerminalPageFragment(), SecondLinkTerminalPageFragment(),
-                ThirdLinkTerminalPageFragment()
-
+                ThirdLinkTerminalPageFragment(), FourLinkTerminalPageFragment()
         )
 
         val tutorialOptions = TutorialSupportFragment
@@ -185,6 +186,7 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
                         FIRST_PAGE_POS -> pageFragments[FIRST_PAGE_POS]
                         SECOND_PAGE_POS -> pageFragments[SECOND_PAGE_POS]
                         THIRD_PAGE_POS -> pageFragments[THIRD_PAGE_POS]
+                        FOUR_PAGE_POS -> pageFragments[FOUR_PAGE_POS]
                         else -> throw IllegalArgumentException("Unknown position: $position")
                     }
                 })

@@ -2,26 +2,24 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages
 
 import android.util.Log
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPackageInstalledRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import retrofit2.Retrofit
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Save Installed Package Interact
+ * Save App Installed Interact
  */
 @Singleton
-class SaveInstalledPackageInteract
+class SaveAppInstalledInteract
     @Inject constructor(
             retrofit: Retrofit,
             private val systemPackageHelper: ISystemPackageHelper,
-            private val packageInstalledRepository: IPackageInstalledRepository):
-        UseCase<String, SaveInstalledPackageInteract.Params>(retrofit) {
+            private val appsInstalledRepository: IAppsInstalledRepository):
+        UseCase<String, SaveAppInstalledInteract.Params>(retrofit) {
 
-
-
-    val TAG = "SAVE_PACKAGE"
 
     /**
      * On Executed
@@ -30,13 +28,13 @@ class SaveInstalledPackageInteract
         val packageInfo = systemPackageHelper.getPackageInfo(
                 params.packageName.replace("package:", ""))
         packageInfo?.let {
-            Log.d(TAG, "Package Info obtained")
+            Timber.d("Package Info obtained")
             it.prettyPrint()
             // Save Package
-            packageInstalledRepository.save(it)
+            //appsInstalledRepository.save(it)
             return it.appName
         } ?: run {
-            Log.d(TAG, "Package not founded")
+            Timber.d("Package not founded")
             return ""
         }
     }

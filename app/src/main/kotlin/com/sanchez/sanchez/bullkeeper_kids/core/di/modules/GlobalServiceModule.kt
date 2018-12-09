@@ -1,6 +1,9 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.impl.PreferenceRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.domain.utils.IAuthTokenAware
 import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
@@ -34,5 +37,24 @@ class GlobalServiceModule(private val context: Context)  {
     @Singleton
     fun provideUsageStatsService(context: Context): IUsageStatsService =
             UsageStatsServiceImpl(context)
+
+    /**
+     * Provide Preference Repository
+     */
+    @Provides
+    @Singleton
+    fun providePreferenceRepository(context: Context): IPreferenceRepository =
+            PreferenceRepositoryImpl(context)
+
+
+    /**
+     * Provide Auth Token Aware
+     * @param preferencesRepositoryImpl
+     * @return
+     */
+    @Provides
+    @Singleton
+    fun provideAuthTokenAware(preferenceRepository: IPreferenceRepository): IAuthTokenAware
+            = preferenceRepository
 
 }

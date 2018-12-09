@@ -32,7 +32,6 @@ class AndroidApplication : Application(){
                 .builder()
                 .globalServiceModule(GlobalServiceModule(this))
                 .applicationModule(ApplicationModule(this))
-                .persistenceModule(PersistenceModule(this))
                 .netModule(NetModule(this))
                 .build()
     }
@@ -46,7 +45,6 @@ class AndroidApplication : Application(){
                 .applicationModule(ApplicationModule(this))
                 .globalServiceModule(GlobalServiceModule(this))
                 .packagesModule(PackagesModule())
-                .persistenceModule(PersistenceModule(this))
                 .netModule(NetModule(this))
                 .build()
     }

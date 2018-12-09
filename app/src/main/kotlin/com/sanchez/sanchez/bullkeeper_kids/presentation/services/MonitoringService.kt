@@ -10,7 +10,7 @@ import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ServiceComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetAllPackagesInstalledInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetAllAppsInstalledInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetBlockedPackagesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageInfo
@@ -33,6 +33,7 @@ import okhttp3.Request
 import okhttp3.Response
 import timber.log.Timber
 import com.here.oksse.OkSse
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 
@@ -108,7 +109,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Get All Packages Installed Interact
      */
     @Inject
-    internal lateinit var getAllPackagesInstalledInteract: GetAllPackagesInstalledInteract
+    internal lateinit var getAllAppsInstalledInteract: GetAllAppsInstalledInteract
 
     /**
      * Usage Stats Service
@@ -238,7 +239,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         initTask()
 
         // Get All Packages Installed
-        getAllPackagesInstalledInteract(UseCase.None()){
+        getAllAppsInstalledInteract(UseCase.None()){
             it.either(::onGetAllPackagesInstalledFailed, ::onGetAllPackagesInstalledSuccess)
         }
 
@@ -295,8 +296,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * On Sync Packages Success
      */
-    private fun onSyncPackagesSuccess(unit: Unit) {
-        Log.d(TAG, "On Sync Packages Success")
+    private fun onSyncPackagesSuccess(totalSyncApps: Int) {
+        Timber.d("Total Sync Apps -> %d" , totalSyncApps)
         enableAppForegroundMonitoring()
 
     }
@@ -329,19 +330,19 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * On Get All Packages Installed Success
      */
-    private fun onGetAllPackagesInstalledSuccess(packagesInstalled: List<SystemPackageInfo>) {
+    private fun onGetAllPackagesInstalledSuccess(packagesInstalled: List<AppInstalledEntity>) {
 
         if(packagesInstalled.isNotEmpty()){
 
-            appBlockList = packagesInstalled.asSequence()
-                    .filter{ it.isBlocked }.toHashSet()
+            /*appBlockList = packagesInstalled.asSequence()
+                    .filter{ it.isBlocked }.toHashSet()*/
 
             Log.d(TAG, "Packages Blocked -> ${appBlockList.size}")
 
-            appBlockList.forEach{ appBlocked ->
+           /* appBlockList.forEach{ appBlocked ->
                 Log.d(TAG, "Package Name -> ${appBlocked.packageName}, Application Name -> ${appBlocked.appName}") }
             // Enable Foreground Monitoring
-            enableAppForegroundMonitoring()
+            enableAppForegroundMonitoring()*/
 
         } else {
             synchronizeInstalledPackagesInteract(UseCase.None()){

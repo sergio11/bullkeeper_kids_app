@@ -9,7 +9,7 @@ import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.RemoveInstalledPackageInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SaveInstalledPackageInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SaveAppInstalledInteract
 import javax.inject.Inject
 
 /**
@@ -44,7 +44,7 @@ class AppStatusChangedReceiver : BroadcastReceiver() {
     /**
      * Save Installed Package Interact
      */
-    @Inject lateinit var saveInstalledPackageInteract: SaveInstalledPackageInteract
+    @Inject lateinit var saveAppInstalledInteract: SaveAppInstalledInteract
 
     /**
      * Remove Installed Package Interact
@@ -63,7 +63,7 @@ class AppStatusChangedReceiver : BroadcastReceiver() {
             Log.d(TAG, "Package Added -> ${intent.dataString}")
             Log.d(TAG, "Data -> ${intent.data}")
 
-            saveInstalledPackageInteract(SaveInstalledPackageInteract.Params(intent.dataString)){
+            saveAppInstalledInteract(SaveAppInstalledInteract.Params(intent.dataString)){
                 it.either(::handleFailure, ::handleSuccess)
             }
 
