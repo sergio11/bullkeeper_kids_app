@@ -128,12 +128,13 @@
     <string name="authenticating_with_facebook_error">There was an error when logging in through Facebook</string>
 
 
+    <string name="generic_loading_text">Please wait ...</string>
     <!-- Link Terminal Tutorial -->
 
     <!-- First Page -->
     <string name="link_terminal_first_page_title">This device is not linked to any supervised child</string>
     <string name="link_terminal_first_page_description">This assistant will guide you in the process of linking the terminal with the child</string>
-
+    <string name="link_terminal_first_page_check">We are checking some things wait please ...</string>
     <!-- Second Page -->
     <string name="link_terminal_second_page_title">Select the child to whom you want to link this device</string>
     <string name="link_terminal_second_page_description">All device information will be linked to the selected child</string>

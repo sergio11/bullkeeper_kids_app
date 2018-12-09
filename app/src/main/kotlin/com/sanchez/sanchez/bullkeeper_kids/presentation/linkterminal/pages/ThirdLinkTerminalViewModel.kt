@@ -2,12 +2,15 @@ package com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages
 
 import android.app.Application
 import android.arch.lifecycle.MutableLiveData
+import android.provider.Settings
 import com.fernandocejas.arrow.checks.Preconditions
 import com.jaredrummler.android.device.DeviceName
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseViewModel
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import javax.inject.Inject
 
 /**
@@ -15,7 +18,9 @@ import javax.inject.Inject
  */
 class ThirdLinkTerminalViewModel
     @Inject constructor(private val context: Application,
-                        private val saveTerminalInteract: SaveTerminalInteract) : BaseViewModel()  {
+                        private val saveTerminalInteract: SaveTerminalInteract,
+                        private val getTerminalDetailInteract: GetTerminalDetailInteract,
+                        private val preferenceRepository: IPreferenceRepository) : BaseViewModel()  {
 
 
     /**
@@ -31,6 +36,9 @@ class ThirdLinkTerminalViewModel
     // Error Save Terminal
     var errorSaveTerminal: MutableLiveData<Failure> = MutableLiveData()
 
+    // No Terminal Linked
+    var noTerminalLinked: MutableLiveData<Failure> = MutableLiveData()
+
 
     /**
      * Methods
@@ -44,14 +52,65 @@ class ThirdLinkTerminalViewModel
     }
 
     /**
+     * Check Terminal Status
+     */
+    fun checkTerminalStatus() {
+
+        if(preferenceRepository.getPrefKidIdentity()
+                != IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE) {
+            val kid = preferenceRepository.getPrefKidIdentity()
+            val deviceId = Settings.Secure.getString(context.contentResolver,
+                    Settings.Secure.ANDROID_ID)
+            // Get Terminal Detail
+            getTerminalDetailInteract(GetTerminalDetailInteract.Params(kid, deviceId)) {
+                it.either(::onTerminalDetailFailed, ::onTerminalDetailSuccess)
+            }
+        } else {
+            noTerminalLinked.value = FirstLinkTerminalViewModel.NoChildrenLinkedFailure()
+        }
+
+    }
+
+    /**
+     * On Terminal Detail Failed
+     */
+    private fun onTerminalDetailFailed(failure: Failure) {
+        Preconditions.checkNotNull(failure, "Failure can not be null")
+        noTerminalLinked.value = failure
+    }
+
+    /**
+     * On Terminal Detail Success
+     */
+    private fun onTerminalDetailSuccess(terminalEntity: TerminalEntity) {
+        Preconditions.checkNotNull(terminalEntity, "Terminal Detail can not be null")
+
+        terminalEntity.identity?.let{
+            preferenceRepository.setPrefTerminalIdentity(it)
+        }
+
+        terminalEntity.deviceId?.let{
+            preferenceRepository.setPrefDeviceId(it)
+        }
+
+        terminalEntity.kidId?.let{
+            preferenceRepository.setPrefKidIdentity(it)
+        }
+
+        terminalSaved.value = terminalEntity
+    }
+
+    class NoChildrenLinkedFailure: Failure.FeatureFailure()
+
+    /**
      * Save Terminal
      */
-    fun saveTerminal(sonId: String, appVersionName: String, appVersionCode: String,
+    fun saveTerminal(kidId: String, appVersionName: String, appVersionCode: String,
                      manufacturer: String, marketName: String, codeName: String, name: String,
                      deviceName: String, deviceId: String, model: String, osVersion: String, sdkVersion: String) {
 
         saveTerminalInteract(SaveTerminalInteract.Params(
-                sonId = sonId,
+                kidId = kidId,
                 appVersionName = appVersionName,
                 appVersionCode = appVersionCode,
                 manufacturer = manufacturer,
@@ -73,7 +132,7 @@ class ThirdLinkTerminalViewModel
      * Handlers
      */
 
-    fun onSaveTerminalFailed(failure: Failure) {
+    private fun onSaveTerminalFailed(failure: Failure) {
         Preconditions.checkNotNull(failure, "Failure can not be null")
         errorSaveTerminal.value = failure
     }
@@ -81,8 +140,21 @@ class ThirdLinkTerminalViewModel
     /**
      * On Save Terminal Success
      */
-    fun onSaveTerminalSuccess(terminalEntity: TerminalEntity) {
+    private fun onSaveTerminalSuccess(terminalEntity: TerminalEntity) {
         Preconditions.checkNotNull(terminalEntity, "Terminal can not be null")
+
+        terminalEntity.deviceId?.let {
+            preferenceRepository.setPrefDeviceId(it)
+        }
+
+        terminalEntity.identity?.let {
+            preferenceRepository.setPrefTerminalIdentity(it)
+        }
+
+        terminalEntity.kidId?.let {
+            preferenceRepository.setPrefKidIdentity(it)
+        }
+
         terminalSaved.value = terminalEntity
     }
 

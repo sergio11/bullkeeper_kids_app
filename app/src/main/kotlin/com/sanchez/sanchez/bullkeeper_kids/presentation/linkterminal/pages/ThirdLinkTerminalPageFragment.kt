@@ -27,8 +27,6 @@ import kotlinx.android.synthetic.main.third_link_terminal_page_fragment_layout.*
 import javax.inject.Inject
 
 
-
-
 /**
  * Third Link Terminal Page Fragment
  */
@@ -56,7 +54,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
      * App Context
      */
     @Inject
-    lateinit var appContext: Context;
+    lateinit var appContext: Context
 
 
     /**
@@ -101,6 +99,8 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
 
         val deviceInfoObserver = Observer<DeviceName.DeviceInfo>{
             deviceNameTextView.text = "${it?.manufacturer} - ${it?.name}"
+            linkDeviceTutorialHandler.showProgressDialog(R.string.generic_loading_text)
+            thirdLinkTerminalViewModel.checkTerminalStatus()
         }
 
         thirdLinkTerminalViewModel.deviceInfo.observe(this, deviceInfoObserver)
@@ -123,7 +123,13 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
 
         thirdLinkTerminalViewModel.errorSaveTerminal.observe(this, errorSaveTerminalObserver)
 
-        thirdLinkTerminalViewModel.getDeviceInformation()
+        val noTerminalLinkedObserver = Observer<Failure> {
+            linkDeviceTutorialHandler.hideProgressDialog()
+            linkTerminal.isEnabled = true
+        }
+
+        thirdLinkTerminalViewModel.noTerminalLinked.observe(this, noTerminalLinkedObserver)
+
     }
 
     /**
@@ -141,6 +147,8 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
         Timber.d("Phase Is Showed")
 
         if(linkDeviceTutorialHandler.hasCurrentSonEntity()) {
+
+            thirdLinkTerminalViewModel.getDeviceInformation()
 
             val currentSonEntity = linkDeviceTutorialHandler.getCurrentSonEntity()
 
@@ -165,7 +173,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                         Settings.Secure.ANDROID_ID)
                 // Save Terminal
                 thirdLinkTerminalViewModel.saveTerminal(
-                        sonId = currentSonEntity?.identity!!,
+                        kidId = currentSonEntity?.identity!!,
                         appVersionName = BuildConfig.VERSION_NAME,
                         appVersionCode = BuildConfig.VERSION_CODE.toString(),
                         manufacturer = deviceInfo?.manufacturer!!,

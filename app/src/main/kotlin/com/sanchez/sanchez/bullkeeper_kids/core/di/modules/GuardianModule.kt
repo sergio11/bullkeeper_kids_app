@@ -10,17 +10,17 @@ import dagger.Provides
 import retrofit2.Retrofit
 
 /**
- * Parent Module
+ * Guardian Module
  */
 @Module
-class ParentModule(private val application: AndroidApplication) {
+class GuardianModule(private val application: AndroidApplication) {
 
     /**
-     * Provide Parent Service
+     * Provide Guardian Service
      */
     @Provides
     @PerActivity
-    fun provideParentService(retrofit: Retrofit): IGuardiansService
+    fun provideGuardianService(retrofit: Retrofit): IGuardiansService
             = retrofit.create(IGuardiansService::class.java)
 
     /**

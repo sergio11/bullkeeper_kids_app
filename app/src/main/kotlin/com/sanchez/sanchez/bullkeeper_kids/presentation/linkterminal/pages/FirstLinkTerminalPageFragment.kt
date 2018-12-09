@@ -1,20 +1,36 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages
 
+import android.arch.lifecycle.Observer
 import android.content.Context
+import android.os.Bundle
+import android.view.View
+import android.view.View.VISIBLE
 import com.cleveroad.slidingtutorial.Direction
 import com.cleveroad.slidingtutorial.TransformItem
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.LinkDeviceTutorialComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.ILinkDeviceTutorialHandler
+import kotlinx.android.synthetic.main.first_link_terminal_page_fragment_layout.*
 import timber.log.Timber
 import java.lang.IllegalStateException
+import javax.inject.Inject
 
 /**
  * First Link Terminal Page Fragment
  */
 class FirstLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialComponent>() {
+
+    /**
+     * Dependencies
+     * ===============
+     */
+
+    @Inject
+    lateinit var firstLinkTerminalViewModel: FirstLinkTerminalViewModel
 
     /**
      * Link Device Tutorial Handler
@@ -51,6 +67,32 @@ class FirstLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
             throw IllegalStateException("The context does not implement the handler ILinkDeviceTutorialHandler")
 
         linkDeviceTutorialHandler = context
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Create the observer which updates the UI.
+        val terminalEntityObserver = Observer<TerminalEntity> { terminalEntity ->
+            Timber.d("Terminal Already linked go to home")
+            linkDeviceTutorialHandler.goToHome()
+        }
+
+        // Create the observer which updates the UI.
+        val terminalEntityFailureObserver = Observer<Failure> { failure ->
+            titleText.text = getString(R.string.link_terminal_first_page_title)
+            contentText.visibility = VISIBLE
+            linkDeviceTutorialHandler.hideProgressDialog()
+        }
+
+        firstLinkTerminalViewModel.terminalSuccess.observe(this, terminalEntityObserver)
+        firstLinkTerminalViewModel.terminalFailure.observe(this, terminalEntityFailureObserver)
+
+        linkDeviceTutorialHandler.showProgressDialog(R.string.generic_loading_text)
+        firstLinkTerminalViewModel.checkTerminalStatus()
+
+
 
     }
 

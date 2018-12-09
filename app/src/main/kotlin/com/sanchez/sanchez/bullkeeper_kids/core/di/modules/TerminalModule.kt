@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ITerminalService
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalInteract
 import dagger.Module
 import dagger.Provides
@@ -30,5 +31,14 @@ class TerminalModule(private val application: AndroidApplication) {
     @PerActivity
     fun provideSaveTerminalInteract(retrofit: Retrofit, terminalService: ITerminalService)
         = SaveTerminalInteract(retrofit, terminalService)
+
+
+    /**
+     * Provide Get Terminal Detail Interact
+     */
+    @Provides
+    @PerActivity
+    fun provideGetTerminalDetailInteract(retrofit: Retrofit, terminalService: ITerminalService)
+        = GetTerminalDetailInteract(retrofit, terminalService)
 
 }

@@ -123,6 +123,7 @@
             android:layout_width="@dimen/common_action_button_width"
             android:layout_height="@dimen/common_action_button_height"
             android:layout_margin="@dimen/common_margin"
+            android:enabled="false"
             android:layout_marginBottom="120dp"
             android:text="@string/link_device_to_child_btn"/>
 

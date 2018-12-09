@@ -21,7 +21,7 @@
             android:layout_margin="@dimen/common_margin"
             android:gravity="center"
             android:padding="@dimen/common_padding"
-            android:text="@string/link_terminal_first_page_title"
+            android:text="@string/link_terminal_first_page_check"
             android:textAlignment="center"
             android:textColor="@color/commonWhite" />
 
@@ -45,6 +45,7 @@
             android:layout_marginTop="@dimen/common_margin"
             android:gravity="center"
             android:padding="@dimen/common_padding"
+            android:visibility="gone"
             android:text="@string/link_terminal_first_page_description"
             android:textAlignment="center"
             android:textColor="@color/commonWhite"/>

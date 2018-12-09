@@ -2,7 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.components
 
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.LinkTerminalModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ParentModule
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GuardianModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.TerminalModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
@@ -17,7 +17,7 @@ import dagger.Component
 @PerActivity
 @Component(dependencies = [ApplicationComponent::class],
         modules = [ActivityModule::class, TerminalModule::class,
-            ParentModule::class, LinkTerminalModule::class])
+            GuardianModule::class, LinkTerminalModule::class])
 interface LinkDeviceTutorialComponent: ActivityComponent {
 
     /**

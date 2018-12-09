@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.content.Context
 import android.content.Intent
@@ -14,12 +15,14 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerLinkDeviceTu
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.LinkDeviceTutorialComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.LinkTerminalModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ParentModule
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GuardianModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.TerminalModule
+import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.addFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportActivity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FirstLinkTerminalPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.SecondLinkTerminalPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.ThirdLinkTerminalPageFragment
@@ -50,7 +53,7 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
                 .applicationComponent((application as AndroidApplication).appComponent)
                 .activityModule(ActivityModule(this))
                 .linkTerminalModule(LinkTerminalModule())
-                .parentModule(ParentModule(application as AndroidApplication))
+                .guardianModule(GuardianModule(application as AndroidApplication))
                 .terminalModule(TerminalModule(application as AndroidApplication))
                 .build()
     }
@@ -100,54 +103,10 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
         setContentView(R.layout.activity_app_tutorial)
         linkDeviceTutorialComponent.inject(this)
 
-        if(savedInstanceState == null) {
-
-            val pageFragments = arrayOf(
-                    FirstLinkTerminalPageFragment(), SecondLinkTerminalPageFragment(),
-                    ThirdLinkTerminalPageFragment()
-
-            )
-
-            val tutorialOptions = TutorialSupportFragment
-                    .newTutorialOptionsBuilder(this)
-                    .setUseInfiniteScroll(false)
-                    .setTutorialPageProvider(TutorialPageProvider<Fragment> { position ->
-                        when (position) {
-                            FIRST_PAGE_POS -> pageFragments[FIRST_PAGE_POS]
-                            SECOND_PAGE_POS -> pageFragments[SECOND_PAGE_POS]
-                            THIRD_PAGE_POS -> pageFragments[THIRD_PAGE_POS]
-                            else -> throw IllegalArgumentException("Unknown position: $position")
-                        }
-                    })
-                    .setOnSkipClickListener {
-                        finishAndRemoveTask()
-                        System.exit(0)
-                    }
-                    .setPagesCount(TUTORIAL_PAGES_COUNT)
-                    .build()
-
-            tutorialSupportFragment = TutorialSupportFragment
-                    .newInstance(tutorialOptions)
-
-            // Add On Tutorial Page Change Listener
-            tutorialSupportFragment.addOnTutorialPageChangeListener{ position ->
-
-                if (position >= 0 && position < pageFragments.size) {
-                    if (position - 1 >= 0)
-                        pageFragments[position - 1].whenPhaseIsHidden((position - 1), position)
-
-                    if (position + 1 < pageFragments.size)
-                        pageFragments[position + 1].whenPhaseIsHidden((position + 1), position)
-
-                    Timber.d("Fragment on position %d is showed", position)
-                    pageFragments[position].whenPhaseIsShowed()
-                }
-
-            }
-
-            addFragment(R.id.fragmentContainer, tutorialSupportFragment, false)
-        }
+        if (savedInstanceState == null)
+            buildTutorial()
     }
+
 
     /**
      * Request Focus
@@ -206,4 +165,57 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
     override fun goToHome() {
         navigator.showHome(this)
     }
+
+    /**
+     * Build Tutorial
+     */
+    private fun buildTutorial(){
+
+        val pageFragments = arrayOf(
+                FirstLinkTerminalPageFragment(), SecondLinkTerminalPageFragment(),
+                ThirdLinkTerminalPageFragment()
+
+        )
+
+        val tutorialOptions = TutorialSupportFragment
+                .newTutorialOptionsBuilder(this)
+                .setUseInfiniteScroll(false)
+                .setTutorialPageProvider(TutorialPageProvider<Fragment> { position ->
+                    when (position) {
+                        FIRST_PAGE_POS -> pageFragments[FIRST_PAGE_POS]
+                        SECOND_PAGE_POS -> pageFragments[SECOND_PAGE_POS]
+                        THIRD_PAGE_POS -> pageFragments[THIRD_PAGE_POS]
+                        else -> throw IllegalArgumentException("Unknown position: $position")
+                    }
+                })
+                .setOnSkipClickListener {
+                    finishAndRemoveTask()
+                    System.exit(0)
+                }
+                .setPagesCount(TUTORIAL_PAGES_COUNT)
+                .build()
+
+        tutorialSupportFragment = TutorialSupportFragment
+                .newInstance(tutorialOptions)
+
+        // Add On Tutorial Page Change Listener
+        tutorialSupportFragment.addOnTutorialPageChangeListener{ position ->
+
+            if (position >= 0 && position < pageFragments.size) {
+                if (position - 1 >= 0)
+                    pageFragments[position - 1].whenPhaseIsHidden((position - 1), position)
+
+                if (position + 1 < pageFragments.size)
+                    pageFragments[position + 1].whenPhaseIsHidden((position + 1), position)
+
+                Timber.d("Fragment on position %d is showed", position)
+                pageFragments[position].whenPhaseIsShowed()
+            }
+
+        }
+
+        addFragment(R.id.fragmentContainer, tutorialSupportFragment, false)
+
+    }
+
 }

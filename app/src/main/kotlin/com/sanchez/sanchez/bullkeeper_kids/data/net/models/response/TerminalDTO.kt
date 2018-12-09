@@ -1,10 +1,12 @@
 package com.sanchez.sanchez.bullkeeper_kids.data.net.models.response
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
  * Terminal DTO
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class TerminalDTO(
 
         /**
@@ -72,5 +74,11 @@ data class TerminalDTO(
          * Device Id
          */
         @JsonProperty("device_id")
-        var deviceId: String? = null
+        var deviceId: String? = null,
+
+        /**
+         * Kid Id
+         */
+        @JsonProperty("kid")
+        var kidId: String? = null
 )

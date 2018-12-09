@@ -67,4 +67,49 @@ class PreferenceRepositoryImpl
                 identity).apply()
     }
 
+    /**
+     * Get Pref Device Id
+     */
+    override fun getPrefDeviceId(): String {
+        return mPref.getString(IPreferenceRepository.PREF_KID_IDENTITY,
+                IPreferenceRepository.CURRENT_DEVICE_ID_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Pref Device Id
+     */
+    override fun setPrefDeviceId(deviceId: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_DEVICE_ID, deviceId).apply()
+    }
+
+    /**
+     * Get Pref Terminal Identity
+     */
+    override fun getPrefTerminalIdentity(): String {
+        return mPref.getString(IPreferenceRepository.PREF_KID_IDENTITY,
+                IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Pref Terminal Identity
+     */
+    override fun setPrefTerminalIdentity(identity: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_TERMINAL_IDENTITY, identity).apply()
+    }
+
+    /**
+     * Get Pref Kid Identity
+     */
+    override fun getPrefKidIdentity(): String {
+        return mPref.getString(IPreferenceRepository.PREF_KID_IDENTITY,
+                IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Pref Kid Identity
+     */
+    override fun setPrefKidIdentity(kid: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_KID_IDENTITY, kid).apply()
+    }
+
 }

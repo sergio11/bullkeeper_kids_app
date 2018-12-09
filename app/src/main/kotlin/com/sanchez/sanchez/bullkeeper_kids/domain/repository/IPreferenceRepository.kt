@@ -23,6 +23,18 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_CURRENT_USER_IDENTITY = "identity"
         const val CURRENT_USER_IDENTITY_DEFAULT_VALUE = ""
 
+        // Terminal Identity
+        const val PREF_TERMINAL_IDENTITY = "terminal_identity"
+        const val TERMINAL_IDENTITY_DEFAULT_VALUE = ""
+
+        // Device Id Identity
+        const val PREF_DEVICE_ID = "device_id"
+        const val CURRENT_DEVICE_ID_DEFAULT_VALUE = ""
+
+        // Current User Identity
+        const val PREF_KID_IDENTITY = "kid"
+        const val KID_IDENTITY_DEFAULT_VALUE = ""
+
     }
 
     /**
@@ -47,5 +59,43 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param identity
      */
     fun setPrefCurrentUserIdentity(identity: String)
+
+    /**
+     * Get Pref Device Id
+     * @return
+     */
+    fun getPrefDeviceId(): String
+
+    /**
+     * Set Pref Device Id
+     * @param identity
+     */
+    fun setPrefDeviceId(deviceId: String)
+
+
+    /**
+     * Get Pref Terminal Identity
+     * @return
+     */
+    fun getPrefTerminalIdentity(): String
+
+    /**
+     * Set Pref Terminal Identity
+     * @param identity
+     */
+    fun setPrefTerminalIdentity(identity: String)
+
+
+    /**
+     * Get Pref Kid Identity
+     * @return
+     */
+    fun getPrefKidIdentity(): String
+
+    /**
+     * Set Pref Kid Identity
+     * @param identity
+     */
+    fun setPrefKidIdentity(kid: String)
 
 }
