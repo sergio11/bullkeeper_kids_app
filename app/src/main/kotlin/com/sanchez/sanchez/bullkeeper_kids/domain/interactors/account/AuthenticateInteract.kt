@@ -59,8 +59,8 @@ class AuthenticateInteract
     /**
      * On Api Exception Ocurred
      */
-    override fun onApiExceptionOcurred(apiException: RetrofitException, response: APIResponse<*>): Failure {
-        return if(response.codeName?.equals(BAD_CREDENTIALS_CODE_NAME)!!)
+    override fun onApiExceptionOcurred(apiException: RetrofitException, response: APIResponse<*>?): Failure {
+        return if(response?.codeName?.equals(BAD_CREDENTIALS_CODE_NAME)!!)
             IncorrectCredentials() else super.onApiExceptionOcurred(apiException, response)
     }
 

@@ -21,7 +21,11 @@ data class SystemPackageInfo (
         // App Name
         var appName: String = "",
         // App Icon
-        var icon: Drawable? = null,
+        var icon: String? = null,
+        // Target SDK Version
+        var targetSdkVersion: Int? = 0,
+        // Permissions
+        var permissions: String? = null,
         // Is Blocked
         var isBlocked: Boolean = false
 ) : Serializable {

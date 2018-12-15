@@ -8,10 +8,8 @@ import java.io.Serializable
  * App Installed Entity
  */
 open class AppInstalledEntity(
-        // Identity
-        @PrimaryKey var identity: String? = "",
         // Package Name
-        var packageName: String? = "",
+        @PrimaryKey var packageName: String? = "",
         // First Install Time
         var firstInstallTime: Long?  = 0,
         // Last Update Time
@@ -22,6 +20,12 @@ open class AppInstalledEntity(
         var versionCode: String? = "",
         // App Name
         var appName: String? = "",
-        // App Rule
-        var appRule: String? = AppRuleEnum.PER_SCHEDULER.name
+        // App Rules
+        var appRule: String? = AppRuleEnum.PER_SCHEDULER.name,
+        // App Icon
+        var icon: String? = null,
+        // Sync
+        var sync: Int = 0,
+        // Server Id
+        var serverId: String? = null
 ) : RealmObject(), Serializable

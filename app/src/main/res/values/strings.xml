@@ -121,6 +121,7 @@
     <string name="authenticating_in_progress">Authenticating wait ...</string>
     <string name="authenticating_invalid_credentials">Incorrect username or password</string>
     <string name="authenticating_error_ocurred">An error occurred while authenticating, please try again</string>
+    <string name="you_must_provide_email_and_password">You must provide an email and password</string>
     <!-- Sign in facebook -->
     <string name="facebook_app_id">296606527738358</string>
     <string name="authenticating_with_facebook">Log in through Facebook</string>
@@ -155,4 +156,25 @@
     <string name="terminal_successfully_linked">The terminal was successfully linked</string>
     <string name="terminal_linked_failed">There was an error linking the phone please try again later</string>
     <string name="confirm_linking_device_required">You must confirm the linking of the device</string>
+
+    <!-- Four Page -->
+    <string name="link_terminal_four_page_title">Synchronizing Terminal Data</string>
+    <string name="error_ocurred_during_synchronization">An error occurred during synchronization</string>
+    <!-- Sync App -->
+    <string name="synchronizing_applications_installed">Synchronizing applications installed in the terminal …</string>
+    <string name="successfully_synchronized_applications" formatted="false">%d applications installed with the terminal have been synchronized</string>
+    <!-- Sync Sms -->
+    <string name="synchronizing_sms">Synchronizing SMS registered in the terminal …</string>
+    <string name="sms_successfully_synchronized" formatted="false">A total of %d SMS registered in the terminal were synchronized successfully</string>
+    <!-- Sync Calls -->
+    <string name="synchronizing_call_history">Call history synchronization …</string>
+    <string name="successfully_synchronized_call_history" formatted="false">A total of %d calls were successfully synchronized</string>
+
+    <string name="retry_synchronizing">Retry</string>
+    <string name="synchronization_completed">The synchronization has been completed successfully</string>
+    <string name="synchronized_later_time">The terminal information will be synchronized at a later time</string>
+
+    <!-- Fifth Page -->
+    <string name="link_terminal_fifth_page_title"> We already have all the necessary information to start working, Use BullKepper to visualize all the information synchronized and apply different configuration rules.</string>
+    <string name="link_terminal_fifth_page_finish">Finish</string>
 </resources>

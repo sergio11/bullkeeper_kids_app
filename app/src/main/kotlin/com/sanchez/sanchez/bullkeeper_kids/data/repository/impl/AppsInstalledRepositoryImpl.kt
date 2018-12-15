@@ -10,31 +10,7 @@ import timber.log.Timber
  * Package Installed Repository Impl
  */
 
-class AppsInstalledRepositoryImpl: IAppsInstalledRepository {
-
-
-    /**
-     * Save
-     */
-    override fun save(model: AppInstalledEntity) {
-        Timber.d("Save Model -> $model")
-        val realm = Realm.getDefaultInstance()
-        realm.executeTransaction {
-            it.insertOrUpdate(model)
-        }
-        realm.close()
-    }
-
-    /**
-     * Save
-     */
-    override fun save(modelList: List<AppInstalledEntity>) {
-        val realm = Realm.getDefaultInstance()
-        realm.executeTransaction {
-            it.insertOrUpdate(modelList)
-        }
-        realm.close()
-    }
+class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(), IAppsInstalledRepository {
 
     /**
      * List

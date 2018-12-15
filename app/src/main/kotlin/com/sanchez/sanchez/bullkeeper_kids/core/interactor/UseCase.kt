@@ -35,7 +35,7 @@ abstract class UseCase<out Type, in Params> constructor(private val retrofit: Re
                     Either.Left(Failure.NetworkConnection)
                 } else {
                     val response = retrofitException.getErrorBodyAs(APIResponse::class.java)
-                    Either.Left(onApiExceptionOcurred(retrofitException, response!!))
+                    Either.Left(onApiExceptionOcurred(retrofitException, response))
                 }
             } catch (e1: IOException) {
                 e1.printStackTrace()
@@ -52,7 +52,7 @@ abstract class UseCase<out Type, in Params> constructor(private val retrofit: Re
     /**
      * On Api Exception Ocurred
      */
-    open fun onApiExceptionOcurred(apiException: RetrofitException, response: APIResponse<*>): Failure
+    open fun onApiExceptionOcurred(apiException: RetrofitException, response: APIResponse<*>?): Failure
         =  Failure.ApiError(response)
 
     /**

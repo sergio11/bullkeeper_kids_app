@@ -3,10 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.components
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.*
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FirstLinkTerminalPageFragment
-import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FourLinkTerminalPageFragment
-import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.SecondLinkTerminalPageFragment
-import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.ThirdLinkTerminalPageFragment
+import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.*
 import dagger.Component
 
 /**
@@ -42,5 +39,10 @@ interface LinkDeviceTutorialComponent: ActivityComponent {
      * Inject into Four Link Terminal Page Fragment
      */
     fun inject(fourLinkTerminalPageFragment: FourLinkTerminalPageFragment)
+
+    /**
+     * Inject into Fifth link terminal page fragment
+     */
+    fun inject(fifthLinkTerminalPageFragment: FifthLinkTerminalPageFragment)
 
 }

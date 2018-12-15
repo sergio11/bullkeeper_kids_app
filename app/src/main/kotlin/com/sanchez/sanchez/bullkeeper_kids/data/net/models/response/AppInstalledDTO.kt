@@ -69,6 +69,13 @@ data class AppInstalledDTO(
          * Terminal ID
          */
         @JsonProperty("terminal_id")
-        var terminal: String? = null
+        var terminal: String? = null,
+
+        /**
+         * Icon Encoded String
+         */
+        @JsonProperty("icon_encoded_string")
+        var icon: String? = null
+
 
 )

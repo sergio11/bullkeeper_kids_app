@@ -2,8 +2,10 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.app.Application
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SaveTerminalHistoryCallsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.children.GetSelfChildrenInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SaveSmsInTheTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -17,7 +19,7 @@ import dagger.Provides
 /**
  * Link Terminal Module
  */
-@Module(includes = [TerminalModule::class])
+@Module(includes = [TerminalModule::class, CallDetailsModule::class, SmsModule::class])
 class LinkTerminalModule {
 
     /**
@@ -62,7 +64,11 @@ class LinkTerminalModule {
     fun provideFourLinkTerminalViewModel(
             application: Application,
             preferenceRepository: IPreferenceRepository,
-            synchronizeInstalledPackagesInteract: SynchronizeInstalledPackagesInteract): FourLinkTerminalViewModel
-            = FourLinkTerminalViewModel(application, preferenceRepository, synchronizeInstalledPackagesInteract)
+            synchronizeInstalledPackagesInteract: SynchronizeInstalledPackagesInteract,
+            saveSmsInTheTerminalInteract: SaveSmsInTheTerminalInteract,
+            saveTerminalHistoryCallsInteract: SaveTerminalHistoryCallsInteract): FourLinkTerminalViewModel
+            = FourLinkTerminalViewModel(application,
+                preferenceRepository, synchronizeInstalledPackagesInteract, saveSmsInTheTerminalInteract,
+                saveTerminalHistoryCallsInteract)
 
 }

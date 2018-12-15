@@ -7,13 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Save App Installed DTO
  */
 data class SaveAppInstalledDTO (
-
-        /**
-         * Indentity
-         */
-        @get:JsonProperty("identity")
-        var identity: String? = null,
-
         /**
          * Package Name
          */
@@ -66,6 +59,12 @@ data class SaveAppInstalledDTO (
          * Terminal Ids
          */
         @get:JsonProperty("terminal_id")
-        var terminalId: String? = null
+        var terminalId: String? = null,
+
+        /**
+         * Icon Encoded String
+         */
+        @get:JsonProperty("icon_encoded_string")
+        var icon: String? = null
 
 )

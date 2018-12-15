@@ -1,9 +1,19 @@
 package com.sanchez.sanchez.bullkeeper_kids.services.impl
 
 import android.content.Context
+import android.content.pm.PackageInfo
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageInfo
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import javax.inject.Inject
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import java.io.ByteArrayOutputStream
+import android.graphics.drawable.BitmapDrawable
+import android.util.Base64
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.graphics.drawable.Drawable
+import timber.log.Timber
 
 
 /**
@@ -30,10 +40,53 @@ class SystemPackageHelperImpl
             newInfo.packageName = p.packageName
             newInfo.versionName = p.versionName
             newInfo.versionCode = p.versionCode.toString()
-            newInfo.icon = p.applicationInfo.loadIcon(pm)
+            try {
+                newInfo.icon = getPackageIconAsEncodedString(p)
+            } catch (e: Exception) {
+                Timber.e(e.message)
+            }
+            newInfo.targetSdkVersion = p.applicationInfo.targetSdkVersion
+            p.permissions?.let {
+                newInfo.permissions = it.joinToString(separator = ",") { it.name }
+            }
+
             res.add(newInfo)
         }
         return res
+    }
+
+    /**
+     * Drawable To Bitmap
+     */
+    private fun drawableToBitmap(drawable: Drawable): Bitmap {
+        if (drawable is BitmapDrawable) {
+            return drawable.bitmap
+        }
+
+        var width = drawable.intrinsicWidth
+        width = if (width > 0) width else 1
+        var height = drawable.intrinsicHeight
+        height = if (height > 0) height else 1
+
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+
+        return bitmap
+    }
+
+    /**
+     * Get Package Icon As Encoded String
+     */
+    private fun getPackageIconAsEncodedString(packageInfo :PackageInfo?): String?{
+        packageInfo?.applicationInfo?.loadIcon(pm)?.let {
+            val bitmap = drawableToBitmap(it)
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            val bitMapData = stream.toByteArray()
+            return Base64.encodeToString(bitMapData, Base64.DEFAULT)
+        }
     }
 
     /**

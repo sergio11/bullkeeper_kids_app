@@ -21,7 +21,7 @@ sealed class Failure {
     /**
      * Api Error
      */
-    class ApiError(private val response: APIResponse<*>): Failure()
+    class ApiError(private val response: APIResponse<*>?): Failure()
 
     /**
      * Unexpected Error

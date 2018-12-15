@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages
 
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.batch
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.empty
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
@@ -27,6 +28,10 @@ class SynchronizeInstalledPackagesInteract
         UseCase<Int, UseCase.None>(retrofit) {
 
 
+    companion object {
+        val BATCH_SIZE = 5
+    }
+
     /**
      * On Executed
      */
@@ -39,35 +44,58 @@ class SynchronizeInstalledPackagesInteract
         val packageList =
                 systemPackageHelper.getPackages()
 
-        // Map To Save App Installed DTOs
-        val saveAppInstalledDTOs = packageList.mapTo (arrayListOf()) {
-            SaveAppInstalledDTO(String.empty(), it.packageName, it.firstInstallTime, it.lastUpdateTime,
-                    it.versionName, it.versionCode, it.appName, AppRuleEnum.PER_SCHEDULER.name, kidId,
-                    terminalId)
-        }
-
-        Timber.d("Apps to sync -> %s", saveAppInstalledDTOs.size)
-
         var totalAppsSync = 0
 
-        if(saveAppInstalledDTOs.isNotEmpty()) {
+        if(packageList.isNotEmpty()) {
 
-            Timber.d("Sync Apps To Server")
-            val response = appsService
-                    .saveAppsInstalledInTheTerminal(kidId, terminalId, saveAppInstalledDTOs)
-                    .await()
-
-            val appsSaved = response.data?.mapTo(arrayListOf()) {
-                AppInstalledEntity(it.identity, it.packageName,
-                        it.firstInstallTime, it.lastUpdateTime, it.versionName,
-                        it.versionCode, it.appName, it.appRule)
+            // Map To App Installed Entity
+            val appInstalledList = packageList.mapTo (arrayListOf()) {
+                AppInstalledEntity(it.packageName, it.firstInstallTime, it.lastUpdateTime,
+                        it.versionName, it.versionCode, it.appName, AppRuleEnum.PER_SCHEDULER.name,
+                        it.icon)
             }
 
-            Timber.d("Save Apps on local storage")
-            appsSaved?.let {
-                totalAppsSync = appsSaved.size
-                appsInstalledRepository.save(it)
+            appsInstalledRepository.save(appInstalledList)
+            Timber.d("Apps saved -> %d", appInstalledList.size)
+
+            val appSavedList = arrayListOf<AppInstalledEntity>()
+
+            appInstalledList.asSequence().batch(BATCH_SIZE).forEach { group ->
+
+                val response = appsService
+                        .saveAppsInstalledInTheTerminal(kidId, terminalId, group.mapTo (arrayListOf()) {
+                            SaveAppInstalledDTO(it.packageName, it.firstInstallTime, it.lastUpdateTime,
+                                    it.versionName, it.versionCode, it.appName, AppRuleEnum.PER_SCHEDULER.name, kidId,
+                                    terminalId, it.icon)
+                        })
+                        .await()
+
+                response.httpStatus?.let {
+
+                    if(it == "OK") {
+
+                        response.data?.forEach {appDTO ->
+                            group.map {
+                                if(it.packageName == appDTO.packageName) {
+                                    it.serverId = appDTO.identity
+                                    it.sync = 1
+                                }
+                            }
+                        }
+
+                        // Save Sync App
+                        appsInstalledRepository.save(group)
+                        // Add To List
+                        appSavedList.addAll(group)
+                    } else {
+                        Timber.d("No Success Sync SMS")
+                    }
+
+                }
+
             }
+
+            totalAppsSync = appSavedList.size
 
         }
 
