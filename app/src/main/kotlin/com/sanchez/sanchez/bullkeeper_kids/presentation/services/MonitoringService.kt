@@ -35,14 +35,8 @@ import timber.log.Timber
 import com.here.oksse.OkSse
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
-
-
-
-
-
-
-
 
 /**
  * @author Sergio Sánchez Sánchez
@@ -55,7 +49,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
     private val TAG = MonitoringService::class.java.simpleName
 
-    private val NOTIFICATION_ID = 6669999;
+    private val NOTIFICATION_ID = 6669999
 
     /**
      * Service Component
@@ -75,6 +69,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private val CHECK_APPLICATIONS_USAGE_STATISTICS: Long = 300000
 
     /**
+     * Heart Beat Notification Interval
+     */
+    private val HEARTBEAT_NOTIFICATION_INTERVAL: Long = 10000 // Every minute
+
+    /**
      * Task Handler
      */
     private var mHandler: Handler = Handler()
@@ -88,6 +87,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Check Applications Usage Statistics
      */
     private lateinit var checkApplicationsUsageStatistics : Runnable
+
+    /**
+     * Notify Heart Beat
+     */
+    private lateinit var notifyHeartBeatTask: Runnable
 
     /**
      * Dependencies
@@ -155,6 +159,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var preferenceRepository: IPreferenceRepository
 
+    /**
+     * Notify Heart Beat Interact
+     */
+    @Inject
+    internal lateinit var notifyHeartBeatInteract: NotifyHeartBeatInteract
+
 
     /**
      * Receivers
@@ -207,6 +217,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         unregisterReceiver(appStatusChangedReceiver)
         unregisterReceiver(screenStatusReceiver)
         disableAppForegroundMonitoring()
+        disableHeartBeatMonitoring()
         stopListenSse()
     }
 
@@ -245,6 +256,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
         // Launch SSE Listener
         startListenSse()
+
+        // Enable HeartBeat Monitoring
+        enableHeartBeatMonitoring()
 
         // Start service with notification
         startForeground(NOTIFICATION_ID, getNotification())
@@ -354,6 +368,21 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * On Heart Beat notified failed
+     */
+    private fun onHeartBeatNotifiedFailed(failure: Failure) {
+        Log.d(TAG, "On Heart Beat Notified Failed")
+
+    }
+
+    /**
+     * on Heart Beat Notified Succesfully
+     */
+    private fun onHeartBeatNotifiedSuccessfully(status: String) {
+        Log.d(TAG, "$status")
+    }
+
+    /**
      * Init Task
      */
     private fun initTask(){
@@ -415,6 +444,22 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
             mHandler.postDelayed(checkApplicationsUsageStatistics, CHECK_APPLICATIONS_USAGE_STATISTICS)
         }
 
+
+        /**
+         * Notify Heart Beat Task
+         */
+
+        notifyHeartBeatTask = Runnable {
+
+            notifyHeartBeatInteract(UseCase.None()){
+                it.either(::onHeartBeatNotifiedFailed,
+                        ::onHeartBeatNotifiedSuccessfully)
+            }
+
+            mHandler.postDelayed(notifyHeartBeatTask, HEARTBEAT_NOTIFICATION_INTERVAL)
+
+        }
+
     }
 
 
@@ -434,6 +479,22 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         Log.d(TAG, "Disable App Foreground Monitoring")
         mHandler.removeCallbacks(checkForegroundAppTask)
         mHandler.removeCallbacks(checkApplicationsUsageStatistics)
+    }
+
+    /**
+     * Enable Heart Beat Monitoring
+     */
+    fun enableHeartBeatMonitoring(){
+        Log.d(TAG, "Enable Heart Beat Monitoring")
+        mHandler.postDelayed(notifyHeartBeatTask, HEARTBEAT_NOTIFICATION_INTERVAL)
+    }
+
+    /**
+     * Disable Heart Beat Monitoring
+     */
+    fun disableHeartBeatMonitoring(){
+        Log.d(TAG, "Disable Heart Beat Monitoring")
+        mHandler.removeCallbacks(notifyHeartBeatTask)
     }
 
 
