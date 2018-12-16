@@ -8,6 +8,7 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 import android.provider.CallLog
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.batch
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toDateTime
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.CallDetailEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveCallDetailDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.CallDetailRepositoryImpl
@@ -17,9 +18,9 @@ import java.util.*
 
 
 /**
- * Save Terminal History Calls Interact
+ * Synchronize Terminal Call History Interact
  */
-class SaveTerminalHistoryCallsInteract
+class SynchronizeTerminalCallHistoryInteract
     @Inject constructor(
             private val context: Context,
             private val callService: ICallsService,
@@ -54,18 +55,16 @@ class SaveTerminalHistoryCallsInteract
             callDetail.phoneNumber = cursor.getString(number)
             val callType = cursor.getString(type)
             val callDate = cursor.getString(date)
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = java.lang.Long.valueOf(callDate)
-            callDetail.callDayTime = calendar.time
+            callDetail.callDayTime = callDate.toLong().toDateTime()
             callDetail.callDuration = cursor.getString(duration)
-            var dir: String? = null
             val dircode = Integer.parseInt(callType)
-            when (dircode) {
-                CallLog.Calls.OUTGOING_TYPE -> dir = "OUTGOING"
-                CallLog.Calls.INCOMING_TYPE -> dir = "INCOMING"
-                CallLog.Calls.MISSED_TYPE -> dir = "MISSED"
+            callDetail.callType = when (dircode) {
+                CallLog.Calls.OUTGOING_TYPE -> "OUTGOING"
+                CallLog.Calls.INCOMING_TYPE -> "INCOMING"
+                CallLog.Calls.MISSED_TYPE -> "MISSED"
+                else -> "UNKNOWN"
+
             }
-            callDetail.callType = dir
             historyCalls.add(callDetail)
         }
         cursor.close()
@@ -96,7 +95,7 @@ class SaveTerminalHistoryCallsInteract
 
                 val response = callService
                         .saveHistoryCallsInTheTerminal(kid, terminal, group.map { SaveCallDetailDTO(it.phoneNumber,
-                                it.callDayTime, it.callDuration, it.callType, it.id) })
+                                it.callDayTime, it.callDuration, it.callType, it.id, kid, terminal) })
                         .await()
 
                 response.httpStatus?.let {

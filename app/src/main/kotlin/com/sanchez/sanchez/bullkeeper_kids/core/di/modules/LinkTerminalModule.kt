@@ -2,10 +2,11 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.app.Application
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SaveTerminalHistoryCallsInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.children.GetSelfChildrenInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SaveSmsInTheTerminalInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -19,7 +20,7 @@ import dagger.Provides
 /**
  * Link Terminal Module
  */
-@Module(includes = [TerminalModule::class, CallDetailsModule::class, SmsModule::class])
+@Module(includes = [TerminalModule::class, CallDetailsModule::class, SmsModule::class, ContactsModule::class])
 class LinkTerminalModule {
 
     /**
@@ -65,10 +66,11 @@ class LinkTerminalModule {
             application: Application,
             preferenceRepository: IPreferenceRepository,
             synchronizeInstalledPackagesInteract: SynchronizeInstalledPackagesInteract,
-            saveSmsInTheTerminalInteract: SaveSmsInTheTerminalInteract,
-            saveTerminalHistoryCallsInteract: SaveTerminalHistoryCallsInteract): FourLinkTerminalViewModel
+            synchronizeTerminalSMSInteract: SynchronizeTerminalSMSInteract,
+            synchronizeTerminalCallHistoryInteract: SynchronizeTerminalCallHistoryInteract,
+            synchronizeTerminalContactsInteract: SynchronizeTerminalContactsInteract): FourLinkTerminalViewModel
             = FourLinkTerminalViewModel(application,
-                preferenceRepository, synchronizeInstalledPackagesInteract, saveSmsInTheTerminalInteract,
-                saveTerminalHistoryCallsInteract)
+                preferenceRepository, synchronizeInstalledPackagesInteract, synchronizeTerminalSMSInteract,
+                synchronizeTerminalCallHistoryInteract, synchronizeTerminalContactsInteract)
 
 }

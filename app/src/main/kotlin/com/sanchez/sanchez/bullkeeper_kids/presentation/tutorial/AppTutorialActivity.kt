@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.Fragment
+import android.view.WindowManager
 import com.cleveroad.slidingtutorial.TutorialPageProvider
 import com.cleveroad.slidingtutorial.TutorialSupportFragment
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
@@ -96,6 +97,7 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app_tutorial)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         appTutorialComponent.inject(this)
 
         if(savedInstanceState == null) {

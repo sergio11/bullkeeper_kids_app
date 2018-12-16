@@ -7,7 +7,7 @@ import kotlinx.coroutines.Deferred
 import retrofit2.http.*
 
 /**
- * Terminal Service
+ * Apps Service
  * GET /api/v1/children/{kid}/terminal/{terminal} GET_TERMINAL_DETAIL
  * DELETE /api/v1/children/{kid}/terminal/{terminal}/apps DELETE_ALL_APPS_INSTALLED
  * GET /api/v1/children/{kid}/terminal/{terminal}/apps GET_ALL_APPS_INSTALLED_IN_THE_TERMINAL

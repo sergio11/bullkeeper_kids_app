@@ -1,7 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.data.net.models.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.*
+
 
 
 /**
@@ -19,7 +19,7 @@ data class SaveCallDetailDTO (
          * Call Day Time
          */
         @get:JsonProperty("call_day_time")
-        var callDayTime: Date? = null,
+        var callDayTime: String? = null,
 
         /**
          * Call Duration
@@ -37,5 +37,17 @@ data class SaveCallDetailDTO (
          * Local Id
          */
         @get:JsonProperty("local_id")
-        var localId: String? = null
+        var localId: String? = null,
+
+        /**
+         * Kid
+         */
+        @get:JsonProperty("kid")
+        var kid: String? = null,
+
+        /**
+         * Terminal
+         */
+        @get:JsonProperty("terminal")
+        var terminal: String? = null
 )

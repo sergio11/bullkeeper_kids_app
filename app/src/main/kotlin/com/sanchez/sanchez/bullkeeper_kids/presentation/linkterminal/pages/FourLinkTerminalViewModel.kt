@@ -6,9 +6,10 @@ import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseViewModel
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SaveTerminalHistoryCallsInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SaveSmsInTheTerminalInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import javax.inject.Inject
 
@@ -19,8 +20,9 @@ class FourLinkTerminalViewModel
     @Inject constructor(private val context: Application,
                         private val preferenceRepository: IPreferenceRepository,
                         private val synchronizeInstalledPackagesInteract: SynchronizeInstalledPackagesInteract,
-                        private val saveSmsInTheTerminalInteract: SaveSmsInTheTerminalInteract,
-                        private val saveTerminalHistoryCallsInteract: SaveTerminalHistoryCallsInteract)
+                        private val synchronizeTerminalSMSInteract: SynchronizeTerminalSMSInteract,
+                        private val synchronizeTerminalCallHistoryInteract: SynchronizeTerminalCallHistoryInteract,
+                        private val synchronizeTerminalContactsInteract: SynchronizeTerminalContactsInteract)
     : BaseViewModel()  {
 
 
@@ -41,6 +43,12 @@ class FourLinkTerminalViewModel
 
     // Error Sync Calls
     var errorSyncCalls: MutableLiveData<Failure> = MutableLiveData()
+
+    // Total Contacts Sync
+    var totalContactsSync: MutableLiveData<Int> = MutableLiveData()
+
+    // Error Sync Contacts
+    var errorSyncContacts: MutableLiveData<Failure> = MutableLiveData()
 
 
     /**
@@ -73,7 +81,7 @@ class FourLinkTerminalViewModel
      */
     fun syncSms(){
         // Sync SMS
-        saveSmsInTheTerminalInteract(UseCase.None()) {
+        synchronizeTerminalSMSInteract(UseCase.None()) {
             it.either(::onSmsSynchronizationFailed, ::onFinishedSmsSynchronization)
         }
     }
@@ -99,7 +107,7 @@ class FourLinkTerminalViewModel
      */
     fun syncCalls(){
         // Sync History Calls
-        saveTerminalHistoryCallsInteract(UseCase.None()) {
+        synchronizeTerminalCallHistoryInteract(UseCase.None()) {
             it.either(::onHistoryCallSynchronizationFailed, ::onFinishedCallsSynchronization)
         }
     }
@@ -118,6 +126,30 @@ class FourLinkTerminalViewModel
      */
     private fun onFinishedCallsSynchronization(totalCallsSync: Int) {
         this.totalCallsSync.value = totalCallsSync
+    }
+
+    /**
+     * Sync Contacts
+     */
+    fun syncContacts() {
+        synchronizeTerminalContactsInteract(UseCase.None()) {
+            it.either(::onContactsSynchronizationFailed, ::onFinishedContactsSynchronization)
+        }
+    }
+
+    /**
+     * On Contacts Synchronization Failed
+     */
+    private fun onContactsSynchronizationFailed(failure: Failure) {
+        Preconditions.checkNotNull(failure, "Failure can not be null")
+        errorSyncContacts.value = failure
+    }
+
+    /**
+     * On Finished Contacts synchronization
+     */
+    private fun onFinishedContactsSynchronization(totalContactsSync: Int) {
+        this.totalContactsSync.value = totalContactsSync
     }
 
 }

@@ -169,8 +169,13 @@
     <!-- Sync Calls -->
     <string name="synchronizing_call_history">Call history synchronization …</string>
     <string name="successfully_synchronized_call_history" formatted="false">A total of %d calls were successfully synchronized</string>
+    <!-- Sync Contacts -->
+    <string name="synchronizing_contacts">Contact synchronization …</string>
+    <string name="successfully_synchronized_contacts" formatted="false">
+        A total of %d contacts were successfully synchronized</string>
 
-    <string name="retry_synchronizing">Retry</string>
+
+<string name="retry_synchronizing">Retry</string>
     <string name="synchronization_completed">The synchronization has been completed successfully</string>
     <string name="synchronized_later_time">The terminal information will be synchronized at a later time</string>
 

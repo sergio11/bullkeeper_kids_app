@@ -42,6 +42,17 @@ data class SaveSmsDTO (
          * Local Id
          */
         @get:JsonProperty("local_id")
-        var localId: String? = null
+        var localId: String? = null,
+        /**
+         * Kid
+         */
+        @get:JsonProperty("kid")
+        var kid: String? = null,
+
+        /**
+         * Terminal
+         */
+        @get:JsonProperty("terminal")
+        var terminal: String? = null
 
 )

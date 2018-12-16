@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms
 import android.app.Activity
 import android.net.Uri
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.batch
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toDateTime
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.SmsEntity
 import retrofit2.Retrofit
@@ -12,11 +13,12 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ISmsService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.SmsRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import timber.log.Timber
+import java.text.SimpleDateFormat
 
 /**
- * Save Sms In The Terminal Interact
+ * Synchronize Terminal SMS Interact
  */
-class SaveSmsInTheTerminalInteract
+class SynchronizeTerminalSMSInteract
     @Inject constructor(
             private val activity: Activity,
             private val smsService: ISmsService,
@@ -51,9 +53,18 @@ class SaveSmsInTheTerminalInteract
                 // Set Message
                 objSms.message = c.getString(c.getColumnIndexOrThrow("body"))
                 // Set Read State
-                objSms.readState = c.getString(c.getColumnIndex("read"))
+                val readState = c.getString(c.getColumnIndex("read"))
+
+                objSms.readState = when(readState) {
+                    "0" -> "NO_VIEWED"
+                    "1" -> "VIEWED"
+                    else -> "UNKNOWN"
+                }
+
                 // Set Time
-                objSms.time = c.getString(c.getColumnIndexOrThrow("date"))
+                val time = c.getString(c.getColumnIndexOrThrow("date"))
+                // Save Date Time
+                objSms.time = time.toLong().toDateTime()
 
                 if (c.getString(c.getColumnIndexOrThrow("type"))
                                 .contains("1")) {
@@ -97,7 +108,7 @@ class SaveSmsInTheTerminalInteract
 
                 val response = smsService
                         .saveSmsInTheTerminal(kidId, terminalId, group.map { SaveSmsDTO(it.address,
-                                it.message, it.readState, it.time, it.folderName) })
+                                it.message, it.readState, it.time, it.folderName, it.id, kidId, terminalId) })
                         .await()
 
                 response.httpStatus?.let {

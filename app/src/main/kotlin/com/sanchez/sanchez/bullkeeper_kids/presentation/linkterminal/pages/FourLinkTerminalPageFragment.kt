@@ -61,6 +61,7 @@ class FourLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompon
     private val SYNC_APPS_POS = 0
     private val SYNC_SMS_POS = 1
     private val SYNC_HISTORY_CALL_POS = 2
+    private val SYNC_CONTACTS_POS = 3
 
     // sync results
     private var syncResults = hashMapOf(
@@ -73,6 +74,10 @@ class FourLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompon
                     FINISHED to false
             ),
             SYNC_HISTORY_CALL_POS to hashMapOf(
+                    IS_SYNC to false,
+                    FINISHED to false
+            ),
+            SYNC_CONTACTS_POS to hashMapOf(
                     IS_SYNC to false,
                     FINISHED to false
             ))
@@ -124,6 +129,7 @@ class FourLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompon
                 SYNC_APPS_POS -> startSyncApps()
                 SYNC_SMS_POS -> startSyncSms()
                 SYNC_HISTORY_CALL_POS -> startSyncHistoryCalls()
+                SYNC_CONTACTS_POS -> startSyncContacts()
             }
         }
 
@@ -184,6 +190,18 @@ class FourLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompon
         }
         syncSms.visibility = VISIBLE
         fourLinkTerminalViewModel.syncSms()
+    }
+
+    /**
+     * Start Sync Contacts
+     */
+    private fun startSyncContacts(){
+        syncResults[SYNC_CONTACTS_POS]?.set(FINISHED, false)
+        context?.let { it ->
+            totalContactsSyncTextView.text = it.getString(R.string.synchronizing_contacts)
+        }
+        syncContacts.visibility = VISIBLE
+        fourLinkTerminalViewModel.syncContacts()
     }
 
     /**
@@ -249,7 +267,7 @@ class FourLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompon
         // Total Calls Sync
         val totalCallsSyncObserver = Observer<Int> {totalCalls ->
             context?.let {
-                totalSmsSyncTextView.text = String.format(Locale.getDefault(),
+                totalCallsSyncTextView.text = String.format(Locale.getDefault(),
                         it.getString(R.string.successfully_synchronized_call_history), totalCalls)
             }
 
@@ -271,6 +289,33 @@ class FourLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompon
         }
 
         fourLinkTerminalViewModel.errorSyncCalls.observe(this, errorSyncCallsObserver)
+
+
+        // Total Contacts Sync
+        val totalContactsSyncObserver = Observer<Int> {totalContacts ->
+            context?.let {
+                totalContactsSyncTextView.text = String.format(Locale.getDefault(),
+                        it.getString(R.string.successfully_synchronized_contacts), totalContacts)
+            }
+
+            syncResults[SYNC_CONTACTS_POS]?.set(IS_SYNC, true)
+            syncResults[SYNC_CONTACTS_POS]?.set(FINISHED, true)
+            checkSyncFinished()
+
+        }
+
+        fourLinkTerminalViewModel.totalContactsSync.observe(this, totalContactsSyncObserver)
+
+        val errorSyncContactsObserver = Observer<Failure> {
+            context?.let { it ->
+                totalContactsSyncTextView.text = it.getString(R.string.error_ocurred_during_synchronization)
+            }
+            syncResults[SYNC_CONTACTS_POS]?.set(IS_SYNC, false)
+            syncResults[SYNC_CONTACTS_POS]?.set(FINISHED, true)
+            checkSyncFinished()
+        }
+
+        fourLinkTerminalViewModel.errorSyncContacts.observe(this, errorSyncContactsObserver)
 
 
     }
@@ -316,8 +361,10 @@ class FourLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompon
                         Direction.LEFT_TO_RIGHT, 0.2f),
                 TransformItem.create(R.id.syncHistoryCalls,
                         Direction.RIGHT_TO_LEFT, 0.2f),
+                TransformItem.create(R.id.syncContacts,
+                        Direction.LEFT_TO_RIGHT, 0.2f),
                 TransformItem.create(R.id.retrySync,
-                        Direction.LEFT_TO_RIGHT, 0.2f)
+                        Direction.RIGHT_TO_LEFT, 0.2f)
         )
     }
 

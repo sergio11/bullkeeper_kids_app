@@ -40,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="120dp">
+        android:layout_marginBottom="90dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -142,6 +142,41 @@
                     android:gravity="center"
                     android:padding="@dimen/common_padding"
                     android:text="@string/synchronizing_call_history"
+                    android:textAlignment="center"
+                    android:textColor="@color/commonWhite"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+
+            </LinearLayout>
+
+            <!-- Sync Contacts -->
+
+            <LinearLayout
+                android:id="@+id/syncContacts"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_margin="@dimen/common_margin"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/contacts_icon_white"
+                    android:contentDescription="@string/content_not_be_loaded"/>
+
+                <TextView
+                    android:id="@+id/totalContactsSyncTextView"
+                    style="@style/CommonStrongText.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:gravity="center"
+                    android:padding="@dimen/common_padding"
+                    android:text="@string/synchronizing_contacts"
                     android:textAlignment="center"
                     android:textColor="@color/commonWhite"
                     app:layout_constraintEnd_toEndOf="parent"

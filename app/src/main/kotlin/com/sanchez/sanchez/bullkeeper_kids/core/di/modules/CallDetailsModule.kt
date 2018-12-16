@@ -5,7 +5,7 @@ import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ICallsService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.CallDetailRepositoryImpl
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SaveTerminalHistoryCallsInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import dagger.Module
 import dagger.Provides
@@ -44,6 +44,6 @@ class CallDetailsModule {
             callDetailsRepositoryImpl: CallDetailRepositoryImpl,
             preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit)
-        = SaveTerminalHistoryCallsInteract(context, callsService, callDetailsRepositoryImpl, preferenceRepository, retrofit)
+        = SynchronizeTerminalCallHistoryInteract(context, callsService, callDetailsRepositoryImpl, preferenceRepository, retrofit)
 
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.Fragment
+import android.view.WindowManager
 import com.cleveroad.slidingtutorial.TutorialPageProvider
 import com.cleveroad.slidingtutorial.TutorialSupportFragment
 import com.fernandocejas.arrow.checks.Preconditions
@@ -99,6 +100,7 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app_tutorial)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         linkDeviceTutorialComponent.inject(this)
 
         if (savedInstanceState == null)
