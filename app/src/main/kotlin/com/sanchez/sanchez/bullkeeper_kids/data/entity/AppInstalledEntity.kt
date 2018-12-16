@@ -27,5 +27,7 @@ open class AppInstalledEntity(
         // Sync
         var sync: Int = 0,
         // Server Id
-        var serverId: String? = null
+        var serverId: String? = null,
+        // Removed
+        var removed: Boolean = false
 ) : RealmObject(), Serializable

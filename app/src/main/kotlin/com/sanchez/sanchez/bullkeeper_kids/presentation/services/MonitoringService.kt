@@ -12,9 +12,6 @@ import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ServiceComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetAllAppsInstalledInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetBlockedPackagesInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageInfo
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import javax.inject.Inject
@@ -32,7 +29,6 @@ import android.support.v4.content.LocalBroadcastManager
 import com.google.android.gms.location.*
 import com.here.oksse.ServerSentEvent
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynPackageUsageStatsInteract
 import okhttp3.Request
 import okhttp3.Response
 import timber.log.Timber
@@ -42,6 +38,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.CurrentLocat
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.SaveCurrentLocationInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 
 /**
@@ -178,6 +175,18 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var saveCurrentLocationInteract: SaveCurrentLocationInteract
 
+    /**
+     * Save App Installed Interact
+     */
+    @Inject
+    internal lateinit var saveAppInstalledInteract: SaveAppInstalledInteract
+
+    /**
+     * Remove Installed Package Interact
+     */
+    @Inject
+    internal lateinit var removeInstalledPackageInteract: RemoveInstalledPackageInteract
+
 
     /**
      * Receivers
@@ -193,6 +202,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Screen Status Receiver
      */
     private lateinit var screenStatusReceiver: ScreenStatusReceiver
+
+
 
     /**
      * Fused Location Provider Service
@@ -266,6 +277,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         filter.addAction(Intent.ACTION_SCREEN_OFF)
         filter.addAction(Intent.ACTION_USER_PRESENT)
         registerReceiver(screenStatusReceiver, filter)
+
 
         // Init Task
         initTask()
@@ -420,6 +432,27 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun onCurrentLocationNotifiedSuccessfully(currenLocationNotified: CurrentLocationDTO) {
         Log.d(TAG, "Current Location Notified Successfully")
     }
+
+    /**
+     * On Add Package Failed
+     */
+    private fun onAddPackageFailed(failure: Failure) { Log.d(TAG, "Add Package Failed") }
+
+    /**
+     * on Package Added Successfully
+     */
+    private fun onPackageAddedSuccessfully(success: Boolean) { Log.d(TAG, "Package Added Successfully") }
+
+    /**
+     * On Remove Package Failed
+     */
+    private fun onRemovePackageFailed(failure: Failure) { Log.d(TAG, "Remove Package Failed") }
+
+    /**
+     * on Package Removed Successfully
+     */
+    private fun onPackageRemovedSuccessfully(void: Unit) { Log.d(TAG, "Package Removed Successfully") }
+
 
     /**
      * Init Task
@@ -605,9 +638,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
     }
 
-
-
-
     /**
      * Server Sent Events
      */
@@ -731,7 +761,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
             }
         }
     }
-
 
     override fun onBind(intent: Intent?): IBinder  = Binder()
 }

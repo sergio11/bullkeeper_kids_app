@@ -52,4 +52,16 @@ interface IAppsService {
             @Path("terminal") terminal: String,
             @Body apps: List<SaveAppInstalledDTO>
     ): Deferred<APIResponse<List<AppInstalledDTO>>>
+
+
+    /**
+     * Add App Installed
+     */
+    @POST("children/{kid}/terminal/{terminal}/apps/add")
+    fun addAppInstalled(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String,
+            @Body app: SaveAppInstalledDTO
+    ): Deferred<APIResponse<AppInstalledDTO>>
+
 }

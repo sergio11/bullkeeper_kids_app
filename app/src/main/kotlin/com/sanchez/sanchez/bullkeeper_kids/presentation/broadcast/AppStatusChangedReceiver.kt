@@ -58,26 +58,28 @@ class AppStatusChangedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         appComponent.inject(this)
 
-        if(intent.action.equals(Intent.ACTION_PACKAGE_ADDED)) {
+        when {
+            intent.action == Intent.ACTION_PACKAGE_ADDED -> {
 
-            Log.d(TAG, "Package Added -> ${intent.dataString}")
-            Log.d(TAG, "Data -> ${intent.data}")
+                Log.d(TAG, "Package Added -> ${intent.dataString}")
+                Log.d(TAG, "Data -> ${intent.data.schemeSpecificPart}")
 
-            saveAppInstalledInteract(SaveAppInstalledInteract.Params(intent.dataString)){
-                it.either(::handleFailure, ::handleSuccess)
+                saveAppInstalledInteract(SaveAppInstalledInteract.Params(intent.data.schemeSpecificPart)){
+                    it.either(::handleFailure, ::handleSuccess)
+                }
+
             }
+            intent.action == Intent.ACTION_PACKAGE_REMOVED -> {
 
-        } else if(intent.action.equals(Intent.ACTION_PACKAGE_REMOVED)) {
+                Log.d(TAG, "Package Removed -> ${intent.dataString}")
+                Log.d(TAG, "Data -> ${intent.data}")
 
-            Log.d(TAG, "Package Removed -> ${intent.dataString}")
-            Log.d(TAG, "Data -> ${intent.data}")
+                removeInstalledPackageInteract(RemoveInstalledPackageInteract.Params(intent.data.schemeSpecificPart)){
+                    it.either(::handleFailure, ::handleSuccess)
+                }
 
-            removeInstalledPackageInteract(RemoveInstalledPackageInteract.Params(intent.dataString)){
-                it.either(::handleFailure, ::handleSuccess)
             }
-
-        } else {
-            Log.d(TAG, "Other Result")
+            else -> Log.d(TAG, "No Handle action ->  ${intent.action}")
         }
     }
 
@@ -88,7 +90,10 @@ class AppStatusChangedReceiver : BroadcastReceiver() {
         Log.d(TAG, "Handle Failure")
     }
 
-    private fun handleSuccess(applicationName: String) {
-        Log.d(TAG, "Application $applicationName handled")
+    /**
+     * Handle Success
+     */
+    private fun handleSuccess(void: Unit) {
+        Log.d(TAG, "Application handled success")
     }
 }
