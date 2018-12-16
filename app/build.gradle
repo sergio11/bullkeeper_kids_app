@@ -122,6 +122,8 @@ dependencies {
     implementation applicationDependencies.facebookSdk
     implementation applicationDependencies.androidDeviceNames
     implementation applicationDependencies.oksse
+    implementation applicationDependencies.playServicesBase
+    implementation applicationDependencies.playServicesLocation
 
     //Unit/Integration tests dependencies
     testImplementation unitTestDependencies.kotlin

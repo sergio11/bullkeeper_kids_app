@@ -1,5 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.services
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -21,11 +23,13 @@ import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import java.util.*
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.os.Binder
-import android.os.IBinder
+import android.content.pm.PackageManager
+import android.location.Location
+import android.os.*
+import android.support.v4.content.ContextCompat
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import android.support.v4.content.LocalBroadcastManager
-import android.os.Handler
+import com.google.android.gms.location.*
 import com.here.oksse.ServerSentEvent
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynPackageUsageStatsInteract
@@ -34,8 +38,10 @@ import okhttp3.Response
 import timber.log.Timber
 import com.here.oksse.OkSse
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.CurrentLocationDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.SaveCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 
 /**
@@ -72,6 +78,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Heart Beat Notification Interval
      */
     private val HEARTBEAT_NOTIFICATION_INTERVAL: Long = 10000 // Every minute
+
 
     /**
      * Task Handler
@@ -165,6 +172,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var notifyHeartBeatInteract: NotifyHeartBeatInteract
 
+    /**
+     * Save Current Location Interact
+     */
+    @Inject
+    internal lateinit var saveCurrentLocationInteract: SaveCurrentLocationInteract
+
 
     /**
      * Receivers
@@ -182,6 +195,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private lateinit var screenStatusReceiver: ScreenStatusReceiver
 
     /**
+     * Fused Location Provider Service
+     */
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    /**
      * State
      */
     private var appBlockList: Set<SystemPackageInfo> = HashSet()
@@ -189,6 +207,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private var currentAppLocked: String? = null
 
     private var serverSentEvent: ServerSentEvent? = null
+
+
+
 
     /**
      * Get Notification
@@ -259,6 +280,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
         // Enable HeartBeat Monitoring
         enableHeartBeatMonitoring()
+
+        // Start Location Tracking
+        startLocationTracking()
 
         // Start service with notification
         startForeground(NOTIFICATION_ID, getNotification())
@@ -383,6 +407,21 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * On Current Location notified failed
+     */
+    private fun onCurrentLocationNotifiedFailed(failure: Failure) {
+        Log.d(TAG, "On Current Location Notified Failed")
+
+    }
+
+    /**
+     * on Current Location Notified Succesfully
+     */
+    private fun onCurrentLocationNotifiedSuccessfully(currenLocationNotified: CurrentLocationDTO) {
+        Log.d(TAG, "Current Location Notified Successfully")
+    }
+
+    /**
      * Init Task
      */
     private fun initTask(){
@@ -466,7 +505,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * Enable App Foreground Monitoring
      */
-    fun enableAppForegroundMonitoring(){
+    private fun enableAppForegroundMonitoring(){
         Log.d(TAG, "Enable App Foreground Monitoring")
         mHandler.postDelayed(checkForegroundAppTask, CHECK_FOREGROUND_APP_INTERVAL)
         mHandler.postDelayed(checkApplicationsUsageStatistics, CHECK_APPLICATIONS_USAGE_STATISTICS)
@@ -475,7 +514,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * Disable App Foreground Monitoring
      */
-    fun disableAppForegroundMonitoring(){
+    private fun disableAppForegroundMonitoring(){
         Log.d(TAG, "Disable App Foreground Monitoring")
         mHandler.removeCallbacks(checkForegroundAppTask)
         mHandler.removeCallbacks(checkApplicationsUsageStatistics)
@@ -484,7 +523,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * Enable Heart Beat Monitoring
      */
-    fun enableHeartBeatMonitoring(){
+    private fun enableHeartBeatMonitoring(){
         Log.d(TAG, "Enable Heart Beat Monitoring")
         mHandler.postDelayed(notifyHeartBeatTask, HEARTBEAT_NOTIFICATION_INTERVAL)
     }
@@ -492,10 +531,81 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * Disable Heart Beat Monitoring
      */
-    fun disableHeartBeatMonitoring(){
+    private fun disableHeartBeatMonitoring(){
         Log.d(TAG, "Disable Heart Beat Monitoring")
         mHandler.removeCallbacks(notifyHeartBeatTask)
     }
+
+    /**
+     * Notify Current Location
+     */
+    private fun notifyCurrentLocation(location: Location) {
+        saveCurrentLocationInteract(SaveCurrentLocationInteract.Params(
+                latitude = location.latitude,
+                longitude = location.longitude
+        )){
+            it.either(::onCurrentLocationNotifiedFailed,
+                    ::onCurrentLocationNotifiedSuccessfully)
+        }
+    }
+
+
+    /**
+     * Start Location Tracking
+     */
+    @SuppressLint("MissingPermission")
+    private fun startLocationTracking() {
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // Last Location
+        fusedLocationClient.lastLocation
+                .addOnSuccessListener { location : Location? ->
+                    location?.let { notifyCurrentLocation(it) }
+                }
+
+
+        val mLocationRequest = LocationRequest()
+        mLocationRequest.interval = 120000 // two minute interval
+        mLocationRequest.fastestInterval = 120000
+        mLocationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //Location Permission already granted
+                fusedLocationClient.requestLocationUpdates(mLocationRequest,
+                        object: LocationCallback(){
+                            override fun onLocationResult(locationResult: LocationResult?) {
+                                locationResult?.let {
+                                    if(!it.locations.isNullOrEmpty()) {
+                                        notifyCurrentLocation(it.locations[it.locations.size - 1])
+                                    }
+                                }
+                            }
+                        },
+                        Looper.myLooper())
+            } else {
+                //Request Location Permission
+            }
+        }
+        else {
+            fusedLocationClient.requestLocationUpdates(mLocationRequest,
+                    object: LocationCallback(){
+                        override fun onLocationResult(locationResult: LocationResult?) {
+                            locationResult?.let {
+                                if(!it.locations.isNullOrEmpty()) {
+                                    notifyCurrentLocation(it.locations[it.locations.size - 1])
+                                }
+                            }
+                        }
+                    },
+                    Looper.myLooper())
+        }
+
+    }
+
+
 
 
     /**

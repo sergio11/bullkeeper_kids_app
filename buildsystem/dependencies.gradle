@@ -50,6 +50,9 @@ ext {
     //Development
     leakCanaryVersion = '1.5'
 
+    playServicesVersion = '16.0.1'
+    playServicesMapsVersion = '16.0.0'
+
   mainApplication = [
           kotlin:                     "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
           kotlinCoroutines:           "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version",
@@ -89,7 +92,9 @@ ext {
           androidSaripaar:            "com.mobsandgeeks:android-saripaar:${androidSaripaarVersion}",
           facebookSdk:                "com.facebook.android:facebook-login:${facebookSdkVersion}",
           androidDeviceNames:         "com.jaredrummler:android-device-names:${androidDeviceNames}",
-          oksse:                      "com.github.heremaps:oksse:${oksseVersion}"
+          oksse:                      "com.github.heremaps:oksse:${oksseVersion}",
+          playServicesBase:           "com.google.android.gms:play-services-base:${playServicesVersion}",
+          playServicesLocation:       "com.google.android.gms:play-services-location:${playServicesMapsVersion}",
   ]
 
   unitTesting = [

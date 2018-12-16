@@ -2,7 +2,9 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IHeartBeatService
+import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ILocationService
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.SaveCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import dagger.Module
 import dagger.Provides
@@ -35,5 +37,25 @@ class MonitoringModule {
             heartBeatService: IHeartBeatService): NotifyHeartBeatInteract
         = NotifyHeartBeatInteract(retrofit, context, preferenceRepository, heartBeatService)
 
+    /**
+     * Provide Location Service
+     */
+    @Provides
+    @Singleton
+    fun provideLocationService(retrofit: Retrofit): ILocationService
+        = retrofit.create(ILocationService::class.java)
+
+
+    /**
+     * Provide Save Current Location Interact
+     */
+    @Provides
+    @Singleton
+    fun provideSaveCurrentLocationInteract(
+            retrofit: Retrofit,
+            preferenceRepository: IPreferenceRepository,
+            locationService: ILocationService
+    ): SaveCurrentLocationInteract
+        = SaveCurrentLocationInteract(retrofit, preferenceRepository, locationService)
 
 }
