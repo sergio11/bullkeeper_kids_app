@@ -39,6 +39,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.SaveCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.*
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.phonenumber.GetBlockedPhoneNumbersInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 
 /**
@@ -187,6 +188,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var removeInstalledPackageInteract: RemoveInstalledPackageInteract
 
+    /**
+     * Get Blocked Phone Numbers Interact
+     */
+    @Inject
+    internal lateinit var getBlockedPhoneNumbersInteract: GetBlockedPhoneNumbersInteract
+
 
     /**
      * Receivers
@@ -295,6 +302,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
         // Start Location Tracking
         startLocationTracking()
+
+        // Get Phone Numbers Blocked
+        getPhoneNumbersBlocked()
 
         // Start service with notification
         startForeground(NOTIFICATION_ID, getNotification())
@@ -433,26 +443,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         Log.d(TAG, "Current Location Notified Successfully")
     }
 
-    /**
-     * On Add Package Failed
-     */
-    private fun onAddPackageFailed(failure: Failure) { Log.d(TAG, "Add Package Failed") }
-
-    /**
-     * on Package Added Successfully
-     */
-    private fun onPackageAddedSuccessfully(success: Boolean) { Log.d(TAG, "Package Added Successfully") }
-
-    /**
-     * On Remove Package Failed
-     */
-    private fun onRemovePackageFailed(failure: Failure) { Log.d(TAG, "Remove Package Failed") }
-
-    /**
-     * on Package Removed Successfully
-     */
-    private fun onPackageRemovedSuccessfully(void: Unit) { Log.d(TAG, "Package Removed Successfully") }
-
 
     /**
      * Init Task
@@ -579,6 +569,20 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         )){
             it.either(::onCurrentLocationNotifiedFailed,
                     ::onCurrentLocationNotifiedSuccessfully)
+        }
+    }
+
+
+    /**
+     * Get Phone Numbers Blocked
+     */
+    private fun getPhoneNumbersBlocked() {
+        getBlockedPhoneNumbersInteract(UseCase.None()){
+            it.either(fnL = fun(_: Failure){
+                Timber.d("Get Phone Numbers Blocked Failed")
+            }, fnR = fun(_: Unit){
+                Timber.d("Phone Numbers Blocked Saved Successfully")
+            })
         }
     }
 
