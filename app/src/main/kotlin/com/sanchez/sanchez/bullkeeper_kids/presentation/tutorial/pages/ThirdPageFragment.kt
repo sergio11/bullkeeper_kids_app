@@ -59,8 +59,6 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
                 })
             }
         }
-
-
     }
 
     /**
@@ -152,6 +150,7 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
             }
         }
 
+
     }
 
     /**
@@ -191,6 +190,7 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
                 textMessageSwitch.isOn = status
                 textMessageSwitch.isEnabled = !status
             }
+
         }
     }
 

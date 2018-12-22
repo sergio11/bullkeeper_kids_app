@@ -15,6 +15,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledReposit
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
+import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.PhoneCallReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
@@ -56,6 +57,11 @@ interface ApplicationComponent {
      * Inject Into Sign In Activity
      */
     fun inject(signInActivity: SignInActivity)
+
+    /**
+     * Inject into Phone Call Receiver
+     */
+    fun inject(phoneCallReceiver: PhoneCallReceiver)
 
 
     //Exposed to sub-graphs.

@@ -210,8 +210,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private lateinit var screenStatusReceiver: ScreenStatusReceiver
 
-
-
     /**
      * Fused Location Provider Service
      */
