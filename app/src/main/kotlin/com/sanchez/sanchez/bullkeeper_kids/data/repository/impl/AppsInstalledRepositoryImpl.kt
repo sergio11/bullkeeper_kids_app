@@ -54,8 +54,11 @@ class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(), 
     override fun findByPackageName(packageName: String): AppInstalledEntity? {
         Timber.d("Find package $packageName")
         val realm = Realm.getDefaultInstance()
-        val packageInstalled = realm.where(AppInstalledEntity::class.java)
+        val realmResult = realm.where(AppInstalledEntity::class.java)
                 .equalTo("packageName", packageName).findFirst()
+        var packageInstalled: AppInstalledEntity? = null
+        if(realmResult != null)
+            packageInstalled = realm.copyFromRealm(realmResult)
         realm.close()
         return packageInstalled
 
