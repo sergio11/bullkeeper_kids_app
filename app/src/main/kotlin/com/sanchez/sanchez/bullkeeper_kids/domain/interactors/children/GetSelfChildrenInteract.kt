@@ -82,7 +82,8 @@ class GetSelfChildrenInteract
      * On Api Exception Ocurred
      */
     override fun onApiExceptionOcurred(apiException: RetrofitException, response: APIResponse<*>?): Failure {
-        return if(response?.codeName?.equals(NO_CHILDREN_FOUND_CODE_NAME)!!)
+        return if(response?.codeName != null
+                && response.codeName.equals(NO_CHILDREN_FOUND_CODE_NAME))
             NoChildrenFoundFailure() else super.onApiExceptionOcurred(apiException, response)
     }
 

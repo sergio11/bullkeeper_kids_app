@@ -127,6 +127,18 @@
         <activity
             android:name=".presentation.legalcontent.LegalContentActivity"
             android:label="@string/title_activity_legal_content"></activity>
+
+        <!-- Crash Error Activity -->
+        <activity
+            android:name=".presentation.crash.CrashErrorActivity"
+            android:label="@string/app_name"
+            android:process=":error_activity"
+            android:theme="@style/AppTheme.Common">
+            <intent-filter>
+                <action android:name="cat.ereza.customactivityoncrash.ERROR" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

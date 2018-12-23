@@ -25,8 +25,7 @@ class LockScreenActivity : AppCompatActivity() {
          */
         fun callingIntent(context: Context): Intent {
             val intent = Intent(context, LockScreenActivity::class.java)
-            intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK
-                    or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.flags = (Intent.FLAG_ACTIVITY_REORDER_TO_FRONT )
             return intent
         }
     }

@@ -124,6 +124,7 @@ dependencies {
     implementation applicationDependencies.oksse
     implementation applicationDependencies.playServicesBase
     implementation applicationDependencies.playServicesLocation
+    implementation applicationDependencies.customactivityoncrash
 
     //Unit/Integration tests dependencies
     testImplementation unitTestDependencies.kotlin

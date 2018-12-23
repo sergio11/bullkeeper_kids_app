@@ -3,6 +3,13 @@
 
     <string name="action_refresh">Refresh</string>
 
+    <!-- Restart App -->
+    <string name="btn_restart">Restart</string>
+    <!-- Details App -->
+    <string name="btn_details">Details</string>
+    <!-- CLose App -->
+    <string name="btn_close">Close</string>
+
     <string name="failure_network_connection">No Network Connection.</string>
     <string name="failure_server_error">Server Error</string>
     <string name="failure_movies_list_unavailable">Movies Unavailable.</string>
@@ -175,7 +182,7 @@
         A total of %d contacts were successfully synchronized</string>
 
 
-<string name="retry_synchronizing">Retry</string>
+    <string name="retry_synchronizing">Retry</string>
     <string name="synchronization_completed">The synchronization has been completed successfully</string>
     <string name="synchronized_later_time">The terminal information will be synchronized at a later time</string>
 

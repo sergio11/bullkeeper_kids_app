@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@android:color/transparent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/customactivityoncrash_activity_vertical_margin"
+            android:paddingLeft="@dimen/customactivityoncrash_activity_horizontal_margin"
+            android:paddingRight="@dimen/customactivityoncrash_activity_horizontal_margin"
+            android:paddingTop="@dimen/customactivityoncrash_activity_vertical_margin">
+
+            <ImageView
+                android:id="@+id/error_activity_image"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginBottom="30dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_launcher" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:gravity="center"
+                style="@style/CommonStrongText"
+                android:textColor="@color/commonWhite"
+                android:text="@string/customactivityoncrash_error_activity_error_occurred_explanation" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/error_activity_restart_button"
+                    style="@style/CommonActionButton"
+                    android:layout_marginTop="0dp"
+                    android:layout_width="@dimen/common_action_button_width"
+                    android:layout_height="@dimen/common_action_button_height"
+                    android:background="@drawable/common_action_button_state"
+                    android:text="@string/customactivityoncrash_error_activity_close_app" />
+
+                <Button
+                    android:id="@+id/error_activity_more_info_button"
+                    style="@style/CommonActionButton"
+                    android:layout_marginTop="0dp"
+                    android:layout_width="@dimen/common_action_button_width"
+                    android:layout_height="@dimen/common_action_button_height"
+                    android:background="@drawable/common_action_button_state"
+                    android:text="@string/btn_details" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

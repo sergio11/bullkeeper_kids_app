@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import cat.ereza.customactivityoncrash.config.CaocConfig
 import com.facebook.stetho.Stetho
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.*
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.*
@@ -86,18 +87,21 @@ class AndroidApplication : Application(){
     /**
      * On Common Config
      */
-    fun onCommonConfig(){
+    private fun onCommonConfig(){
 
         this.injectMembers()
         this.initializeCalligraphy()
         this.initializeRealm()
         this.initializeServices()
+
+        // Chrash Screen
+        CaocConfig.Builder.create().apply()
     }
 
     /**
      * On Debug Config
      */
-    fun onDebugConfig() {
+    private fun onDebugConfig() {
         // Debug Tree
         Timber.plant(Timber.DebugTree())
 
@@ -109,7 +113,7 @@ class AndroidApplication : Application(){
     /**
      * On Release Config
      */
-    fun onReleaseConfig(){
+    private fun onReleaseConfig(){
         // Reporting Tree
         Timber.plant(CrashReportingTree())
     }

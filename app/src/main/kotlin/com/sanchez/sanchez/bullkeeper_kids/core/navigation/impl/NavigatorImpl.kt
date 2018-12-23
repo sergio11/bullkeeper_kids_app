@@ -50,8 +50,11 @@ class NavigatorImpl
     /**
      * Show Home
      */
-    override fun showHome(activity: Activity) =
-            activity.startActivity(HomeActivity.callingIntent(activity))
+    override fun showHome(activity: Activity) {
+        activity.startActivity(HomeActivity.callingIntent(activity))
+        activity.finish()
+    }
+
 
     /**
      * Show Main

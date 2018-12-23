@@ -422,11 +422,10 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 val currentAppForeground = usageStatsService.getCurrentForegroundApp()
                 Timber.d("CHECK_FOREGROUND Current App Foreground -> %s", currentAppForeground)
                 if (!currentAppForeground.isNullOrEmpty() &&
-                        currentAppForeground != packageName &&
-                        currentAppForeground != currentAppLocked) {
+                        currentAppForeground != packageName ) {
 
                     // Get information about the application in the BD
-                    Timber.d("CHECK_FOREGROUND -> Current App in foreground -> %s in foreground -> %s", currentAppForeground)
+                    Timber.d("CHECK_FOREGROUND -> Current App in foreground -> %s ", currentAppForeground)
 
                     val appInstalledEntity =
                             appsInstalledRepository.findByPackageName(currentAppForeground)
@@ -494,6 +493,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                             localBroadcastManager.sendBroadcast(Intent(
                                                     "com.sanchez.sergio.unlock"))
                                         } else {
+                                            Timber.d("CHECK_FOREGROUND -> Lock Current Foreground app: %s", currentAppForeground)
                                             currentAppLocked = currentAppForeground
                                             navigator.showLockScreen(this)
                                         }
