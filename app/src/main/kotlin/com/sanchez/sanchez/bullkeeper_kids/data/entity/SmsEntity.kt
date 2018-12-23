@@ -23,5 +23,8 @@ open class SmsEntity(
         // Sync
         var sync: Int = 0,
         // Server Id
-        var serverId: String? = ""
+        var serverId: String? = "",
+        // Remove
+        var remove: Int = 0
+
 ) : RealmObject(), Serializable

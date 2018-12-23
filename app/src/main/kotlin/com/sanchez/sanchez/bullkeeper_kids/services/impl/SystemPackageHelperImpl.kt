@@ -10,10 +10,9 @@ import android.graphics.Canvas
 import java.io.ByteArrayOutputStream
 import android.graphics.drawable.BitmapDrawable
 import android.util.Base64
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
 import android.graphics.drawable.Drawable
 import timber.log.Timber
+import android.content.pm.ApplicationInfo
 
 
 /**
@@ -29,28 +28,34 @@ class SystemPackageHelperImpl
      */
     override fun getInstalledApps(getSysPackages: Boolean, discardAppPackage: Boolean): ArrayList<SystemPackageInfo> {
         val res = ArrayList<SystemPackageInfo>()
-        val packs = pm.getInstalledPackages(0)
-        for (i in packs.indices) {
-            val p = packs.get(i)
-            if ((!getSysPackages && p.versionName == null) ||
-                    (discardAppPackage && p.packageName == context.packageName))
+        val apps = pm.getInstalledPackages(0)
+        for(app in apps) {
+
+            val applicationInfo = app.applicationInfo
+            val isSystemApp = applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+
+            if((isSystemApp && !getSysPackages) ||
+                    (discardAppPackage && app.packageName == context.packageName))
                 continue
+
             val newInfo = SystemPackageInfo()
-            newInfo.appName = p.applicationInfo.loadLabel(pm).toString()
-            newInfo.packageName = p.packageName
-            newInfo.versionName = p.versionName
-            newInfo.versionCode = p.versionCode.toString()
+            newInfo.appName = app.applicationInfo.loadLabel(pm).toString()
+            newInfo.packageName = app.packageName
+            newInfo.versionName = app.versionName
+            newInfo.versionCode = app.versionCode.toString()
             try {
-                newInfo.icon = getPackageIconAsEncodedString(p)
+                newInfo.icon = getPackageIconAsEncodedString(app)
             } catch (e: Exception) {
                 Timber.e(e.message)
             }
-            newInfo.targetSdkVersion = p.applicationInfo.targetSdkVersion
-            p.permissions?.let {
+            newInfo.targetSdkVersion = app.applicationInfo.targetSdkVersion
+            app.permissions?.let {
                 newInfo.permissions = it.joinToString(separator = ",") { it.name }
             }
 
             res.add(newInfo)
+
+
         }
         return res
     }

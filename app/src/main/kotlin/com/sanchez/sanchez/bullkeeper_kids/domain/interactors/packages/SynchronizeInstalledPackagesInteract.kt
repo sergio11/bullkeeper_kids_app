@@ -1,7 +1,8 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages
 
+import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.batch
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.empty
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toDateTime
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppRuleEnum
@@ -33,70 +34,211 @@ class SynchronizeInstalledPackagesInteract
     }
 
     /**
-     * On Executed
+     * Get Apps To Save
      */
-    override suspend fun onExecuted(params: None): Int {
+    private fun getAppsToSave(
+            appsRegisteredInTheTerminal: List<AppInstalledEntity>,
+            appsSaved: List<AppInstalledEntity>
+            ): List<AppInstalledEntity> {
 
-        val kidId = preferenceRepository.getPrefKidIdentity()
-        val terminalId = preferenceRepository.getPrefTerminalIdentity()
+        val appsToSave = arrayListOf<AppInstalledEntity>()
 
-        // Get Packages
-        val packageList =
-                systemPackageHelper.getPackages()
+        for(appRegistered in appsRegisteredInTheTerminal) {
+            var isFound = false
+            for(appSaved in appsSaved) {
+                if(appRegistered.packageName ==
+                        appSaved.packageName) {
+                    isFound = true
 
-        var totalAppsSync = 0
+                    val appRegisteredLastUpdate = appRegistered.lastUpdateTime?.toDateTime()
+                    val appSavedLastUpdate = appSaved.lastUpdateTime?.toDateTime()
 
-        if(packageList.isNotEmpty()) {
+                    if (appRegisteredLastUpdate != null && appSavedLastUpdate != null &&
+                            appRegisteredLastUpdate.after(appSavedLastUpdate)) {
 
-            // Map To App Installed Entity
-            val appInstalledList = packageList.mapTo (arrayListOf()) {
-                AppInstalledEntity(it.packageName, it.firstInstallTime, it.lastUpdateTime,
-                        it.versionName, it.versionCode, it.appName, AppRuleEnum.PER_SCHEDULER.name,
-                        it.icon)
-            }
-
-            appsInstalledRepository.save(appInstalledList)
-            Timber.d("Apps saved -> %d", appInstalledList.size)
-
-            val appSavedList = arrayListOf<AppInstalledEntity>()
-
-            appInstalledList.asSequence().batch(BATCH_SIZE).forEach { group ->
-
-                val response = appsService
-                        .saveAppsInstalledInTheTerminal(kidId, terminalId, group.mapTo (arrayListOf()) {
-                            SaveAppInstalledDTO(it.packageName, it.firstInstallTime, it.lastUpdateTime,
-                                    it.versionName, it.versionCode, it.appName, AppRuleEnum.PER_SCHEDULER.name, kidId,
-                                    terminalId, it.icon)
-                        })
-                        .await()
-
-                response.httpStatus?.let {
-
-                    if(it == "OK") {
-
-                        response.data?.forEach {appDTO ->
-                            group.map {
-                                if(it.packageName == appDTO.packageName) {
-                                    it.serverId = appDTO.identity
-                                    it.sync = 1
-                                }
-                            }
-                        }
-
-                        // Save Sync App
-                        appsInstalledRepository.save(group)
-                        // Add To List
-                        appSavedList.addAll(group)
+                        appRegistered.serverId = appSaved.serverId
+                        appRegistered.sync = 0
+                        appRegistered.removed = false
+                        appsToSave.add(appRegistered)
                     } else {
-                        Timber.d("No Success Sync SMS")
+                        // Is app Save Sync?
+                        if (appSaved.sync == 0 || appSaved.removed) {
+                            appSaved.removed = false
+                            appsToSave.add(appSaved)
+                        }
                     }
-
                 }
 
             }
 
-            totalAppsSync = appSavedList.size
+            if(!isFound)
+                appsToSave.add(appRegistered)
+        }
 
+
+        return appsToSave
+    }
+
+    /**
+     * Get Apps To Remove
+     */
+    private fun getAppsToRemove(
+            appsSaved: List<AppInstalledEntity>,
+            appsRegisteredInTheTerminal: List<AppInstalledEntity>
+    ): List<AppInstalledEntity> {
+
+        val appsToRemove = arrayListOf<AppInstalledEntity>()
+
+        for(appSaved in appsSaved) {
+
+            if(appSaved.removed) {
+                appsToRemove.add(appSaved)
+                continue
+            }
+
+            var isFound = false
+            for(appRegistered in appsRegisteredInTheTerminal) {
+                if(appSaved.packageName == appRegistered.packageName)
+                    isFound = true
+            }
+
+            if(!isFound) {
+                if (appSaved.sync == 1 && appSaved.serverId != null) {
+                    appSaved.removed = true
+                    appsToRemove.add(appSaved)
+                } else {
+                    appsInstalledRepository.delete(appSaved)
+                }
+            }
+        }
+
+        return appsToRemove
+    }
+
+    /**
+     * Get Apps To Sync
+     */
+    private fun getAppsToSynchronize(): Pair<List<AppInstalledEntity>, List<AppInstalledEntity>> {
+
+        // Get Packages
+        val appsRegisteredInTheTerminal =
+                systemPackageHelper.getPackages().mapTo (arrayListOf()) {
+            AppInstalledEntity(it.packageName, it.firstInstallTime, it.lastUpdateTime,
+                    it.versionName, it.versionCode, it.appName, AppRuleEnum.PER_SCHEDULER.name,
+                    it.icon)}
+
+        // Apps Saved
+        val appsSaved = appsInstalledRepository.list()
+
+        // Apps To Save
+        val appsToSave = arrayListOf<AppInstalledEntity>()
+        // Apps To Remove
+        val appsToRemove = arrayListOf<AppInstalledEntity>()
+
+        if(appsRegisteredInTheTerminal.isEmpty() && appsSaved.isNotEmpty()) {
+
+            // Delete all sync apps
+            appsToRemove.addAll(appsSaved
+                    .filter { it.sync == 1 && it.serverId != null }
+                    .onEach { it.removed = true }
+                    .map { it })
+
+            // Delete all unsync apps
+            appsInstalledRepository.delete(appsSaved
+                    .filter { it.sync == 0 }
+                    .map { it })
+
+        } else if(appsRegisteredInTheTerminal.isNotEmpty() && appsSaved.isEmpty()) {
+
+            // save all apps registered
+            appsToSave.addAll(appsRegisteredInTheTerminal)
+
+        } else if(appsRegisteredInTheTerminal.isNotEmpty() && appsSaved.isNotEmpty()) {
+            // Get Apps to save
+            appsToSave.addAll(getAppsToSave(appsRegisteredInTheTerminal, appsSaved))
+            // Get apps to remove
+            appsToRemove.addAll(getAppsToRemove(appsSaved, appsRegisteredInTheTerminal))
+        }
+
+        return Pair(appsToSave, appsToRemove)
+    }
+
+    /**
+     * Upload Apps To Sync
+     */
+    private suspend fun uploadAppsToSync(appsToUpload: List<AppInstalledEntity>): Int {
+        Preconditions.checkNotNull(appsToUpload, "Apps To Upload can not be null")
+        Preconditions.checkState(!appsToUpload.isEmpty(), "App to upload can not be empty")
+
+        val kidId = preferenceRepository.getPrefKidIdentity()
+        val terminalId = preferenceRepository.getPrefTerminalIdentity()
+
+        val appsUploadedList = arrayListOf<AppInstalledEntity>()
+
+        appsToUpload.asSequence().batch(BATCH_SIZE).forEach { group ->
+
+            val response = appsService
+                    .saveAppsInstalledInTheTerminal(kidId, terminalId, group.mapTo (arrayListOf()) {
+                        SaveAppInstalledDTO(it.packageName, it.firstInstallTime, it.lastUpdateTime,
+                                it.versionName, it.versionCode, it.appName, AppRuleEnum.PER_SCHEDULER.name, kidId,
+                                terminalId, it.icon)
+                    })
+                    .await()
+
+            response.httpStatus?.let {
+
+                if(it == "OK") {
+
+                    response.data?.forEach {appDTO ->
+                        group.map {
+                            if(it.packageName == appDTO.packageName) {
+                                it.serverId = appDTO.identity
+                                it.sync = 1
+                                it.removed = false
+                            }
+                        }
+                    }
+
+                    // Save Sync App
+                    appsInstalledRepository.save(group)
+                    // Add To List
+                    appsUploadedList.addAll(group)
+                } else {
+                    Timber.d("No Success Sync SMS")
+                }
+
+            }
+
+        }
+
+        return appsUploadedList.size
+    }
+
+
+    /**
+     * On Executed
+     */
+    override suspend fun onExecuted(params: None): Int {
+
+        val appsToSync = getAppsToSynchronize()
+        // Apps To Save
+        val appsToSave = appsToSync.first
+        // Apps To Remove
+        val appsToRemove = appsToSync.second
+
+        var totalAppsSync = 0
+
+        if(appsToSave.isNotEmpty()) {
+
+            appsInstalledRepository.save(appsToSave)
+            Timber.d("Apps to upload -> %d", appsToSave.size)
+            totalAppsSync += uploadAppsToSync(appsToSave)
+
+        }
+
+        if(appsToRemove.isNotEmpty()) {
+            appsInstalledRepository.save(appsToRemove)
+            Timber.d("Apps to remove -> %d", appsToRemove.size)
         }
 
         return totalAppsSync

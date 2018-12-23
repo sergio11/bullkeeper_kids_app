@@ -17,9 +17,9 @@ class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(), 
      */
     override fun list(): List<AppInstalledEntity> {
         val realm = Realm.getDefaultInstance()
-        val realmResults =
-                realm.where(AppInstalledEntity::class.java).findAll()
-        val appInstalledList = realmResults.toList()
+        val appInstalledList =
+                realm.copyFromRealm(
+                        realm.where(AppInstalledEntity::class.java).findAll())
         realm.close()
         return appInstalledList
     }

@@ -10,7 +10,9 @@ import javax.inject.Singleton
  */
 @Singleton
 @Component(modules = [ ApplicationModule::class, GlobalServiceModule::class,
-    PackagesModule::class, NetModule::class, MonitoringModule::class, PhoneNumberBlockedModule::class ])
+    PackagesModule::class, NetModule::class, MonitoringModule::class,
+    PhoneNumberBlockedModule::class, SmsModule::class, CallDetailsModule::class,
+    ContactsModule::class])
 interface ServiceComponent {
 
     /**

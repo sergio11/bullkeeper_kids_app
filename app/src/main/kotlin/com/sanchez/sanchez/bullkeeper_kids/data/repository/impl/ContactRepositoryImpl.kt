@@ -2,6 +2,8 @@ package com.sanchez.sanchez.bullkeeper_kids.data.repository.impl
 
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.ContactEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IContactRepository
+import io.realm.Realm
+import timber.log.Timber
 
 /**
  * Contact Repository
@@ -12,20 +14,34 @@ class ContactRepositoryImpl: SupportRepositoryImpl<ContactEntity>(), IContactRep
      * Delete
      */
     override fun delete(model: ContactEntity) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Timber.d("Delete Model -> $model")
+        val realm = Realm.getDefaultInstance()
+        // Find Contact Detail
+        val contactDetail = realm.where(ContactEntity::class.java)
+                .equalTo("id", model.id)
+                .findFirst()
+        realm.executeTransaction {
+            contactDetail?.deleteFromRealm()
+        }
+        realm.close()
     }
 
     /**
      * Delete
      */
     override fun delete(modelList: List<ContactEntity>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        for(model in modelList) delete(model)
     }
 
     /**
      * List
      */
     override fun list(): List<ContactEntity> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val realm = Realm.getDefaultInstance()
+        val contactList =
+                realm.copyFromRealm(
+                        realm.where(ContactEntity::class.java).findAll())
+        realm.close()
+        return contactList
     }
 }

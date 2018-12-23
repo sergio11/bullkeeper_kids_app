@@ -3,7 +3,6 @@ package com.sanchez.sanchez.bullkeeper_kids.data.entity
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import java.io.Serializable
-import java.util.*
 
 /**
  * Call Detail Entity
@@ -22,5 +21,7 @@ open class CallDetailEntity(
         // Sync
         var sync: Int = 0,
         // Server Id
-        var serverId: String? = ""
+        var serverId: String? = "",
+        // Remove
+        var remove: Int = 0
 ) : RealmObject(), Serializable

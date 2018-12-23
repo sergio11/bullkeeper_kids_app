@@ -33,13 +33,14 @@ import okhttp3.Request
 import okhttp3.Response
 import timber.log.Timber
 import com.here.oksse.OkSse
-import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
-import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.CurrentLocationDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.SaveCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.phonenumber.GetBlockedPhoneNumbersInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 
 /**
@@ -101,6 +102,25 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * Dependencies
      */
+
+    /**
+     * Synchronize Terminal Call History Interact
+     */
+    @Inject
+    internal lateinit var synchronizeTerminalCallHistoryInteract: SynchronizeTerminalCallHistoryInteract
+
+    /**
+     * Synchronize Terminal Contacts Interact
+     */
+    @Inject
+    internal lateinit var synchronizeTerminalContactsInteract: SynchronizeTerminalContactsInteract
+
+    /**
+     * Synchronize Terminal SMS Interact
+     */
+    @Inject
+    internal lateinit var synchronizeTerminalSMSInteract: SynchronizeTerminalSMSInteract
+
 
     /**
      * Local Notification Service
@@ -283,26 +303,14 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         filter.addAction(Intent.ACTION_USER_PRESENT)
         registerReceiver(screenStatusReceiver, filter)
 
-
         // Init Task
         initTask()
 
-        // Get All Packages Installed
-        getAllAppsInstalledInteract(UseCase.None()){
-            it.either(::onGetAllPackagesInstalledFailed, ::onGetAllPackagesInstalledSuccess)
-        }
+        // Start Services
+        startBasicServices()
 
-        // Launch SSE Listener
-        startListenSse()
-
-        // Enable HeartBeat Monitoring
-        enableHeartBeatMonitoring()
-
-        // Start Location Tracking
-        startLocationTracking()
-
-        // Get Phone Numbers Blocked
-        getPhoneNumbersBlocked()
+        // Start Data Synchronization
+        startDataSynchronization()
 
         // Start service with notification
         startForeground(NOTIFICATION_ID, getNotification())
@@ -344,103 +352,29 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
-     * On Sync Packages Failed
+     * Start Basic Services
      */
-    private fun onSyncPackagesFailed(failure: Failure) {
-        Log.d(TAG, "On Sync Packages Failed")
-
-    }
-
-    /**
-     * On Sync Packages Success
-     */
-    private fun onSyncPackagesSuccess(totalSyncApps: Int) {
-        Timber.d("Total Sync Apps -> %d" , totalSyncApps)
+    private fun startBasicServices(){
+        // Launch SSE Listener
+        startListenSse()
+        // Enable HeartBeat Monitoring
+        enableHeartBeatMonitoring()
+        // Start Location Tracking
+        startLocationTracking()
+        // Enable App Foreground Monitoring
         enableAppForegroundMonitoring()
-
-    }
-
-
-    /**
-     * On Sync Package Usage Stats Failed
-     */
-    private fun onSyncPackageUsageStatsFailed(failure: Failure) {
-        Log.d(TAG, "On Sync Package Usage Stats")
-
     }
 
     /**
-     * On Sync Package Usage Stats Success
+     * Start Data Synchronization
      */
-    private fun onSyncPackageUsageStatsSuccess(syncPackages: Int) {
-        Log.d(TAG, "Sync Packages count -> $syncPackages")
+    private fun startDataSynchronization(){
+        syncPhoneNumbersBlocked()
+        syncTerminalApps()
+        syncTerminalCallHistory()
+        syncTerminalContacts()
+        syncTerminalSMS()
     }
-
-
-    /**
-     * On Get All Packages Installed Failed
-     */
-    private fun onGetAllPackagesInstalledFailed(failure: Failure) {
-        Log.d(TAG, "onGetAllPackagesInstalledFailed")
-    }
-
-
-    /**
-     * On Get All Packages Installed Success
-     */
-    private fun onGetAllPackagesInstalledSuccess(packagesInstalled: List<AppInstalledEntity>) {
-
-        if(packagesInstalled.isNotEmpty()){
-
-            /*appBlockList = packagesInstalled.asSequence()
-                    .filter{ it.isBlocked }.toHashSet()*/
-
-            Log.d(TAG, "Packages Blocked -> ${appBlockList.size}")
-
-           /* appBlockList.forEach{ appBlocked ->
-                Log.d(TAG, "Package Name -> ${appBlocked.packageName}, Application Name -> ${appBlocked.appName}") }
-            // Enable Foreground Monitoring
-            enableAppForegroundMonitoring()*/
-
-        } else {
-            synchronizeInstalledPackagesInteract(UseCase.None()){
-                it.either(::onSyncPackagesFailed, ::onSyncPackagesSuccess)
-            }
-
-        }
-
-    }
-
-    /**
-     * On Heart Beat notified failed
-     */
-    private fun onHeartBeatNotifiedFailed(failure: Failure) {
-        Log.d(TAG, "On Heart Beat Notified Failed")
-
-    }
-
-    /**
-     * on Heart Beat Notified Succesfully
-     */
-    private fun onHeartBeatNotifiedSuccessfully(status: String) {
-        Log.d(TAG, "$status")
-    }
-
-    /**
-     * On Current Location notified failed
-     */
-    private fun onCurrentLocationNotifiedFailed(failure: Failure) {
-        Log.d(TAG, "On Current Location Notified Failed")
-
-    }
-
-    /**
-     * on Current Location Notified Succesfully
-     */
-    private fun onCurrentLocationNotifiedSuccessfully(currenLocationNotified: CurrentLocationDTO) {
-        Log.d(TAG, "Current Location Notified Successfully")
-    }
-
 
     /**
      * Init Task
@@ -496,8 +430,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
             if (usageStatsService.isUsageStatsAllowed()) {
                 // Sync Usage Stats
                 syncUsageStatsInteract(UseCase.None()){
-                    it.either(::onSyncPackageUsageStatsFailed,
-                            ::onSyncPackageUsageStatsSuccess)
+                    it.either(fnL = fun(failure) {
+                        Timber.d("Sync Usage Stats Failed")
+                    } , fnR = fun(count: Int){
+                        Timber.d("Sync Usage stats success, count -> $count")
+                    })
                 }
             }
 
@@ -512,8 +449,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         notifyHeartBeatTask = Runnable {
 
             notifyHeartBeatInteract(UseCase.None()){
-                it.either(::onHeartBeatNotifiedFailed,
-                        ::onHeartBeatNotifiedSuccessfully)
+                it.either(fnL = fun(failure) {
+                    Timber.d( "Heartbeat notification failed")
+                } , fnR = fun(result){
+                    Timber.d("HeartBeat Notified -> $result")
+                })
             }
 
             mHandler.postDelayed(notifyHeartBeatTask, HEARTBEAT_NOTIFICATION_INTERVAL)
@@ -565,21 +505,78 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 latitude = location.latitude,
                 longitude = location.longitude
         )){
-            it.either(::onCurrentLocationNotifiedFailed,
-                    ::onCurrentLocationNotifiedSuccessfully)
+            it.either(fnL = fun(failure){
+                Timber.d("Notification of the current position failed")
+            }, fnR = fun(location){
+                Timber.d("Current position successfully notified")
+            })
         }
     }
 
 
     /**
-     * Get Phone Numbers Blocked
+     * Syn Phone Numbers Blocked
      */
-    private fun getPhoneNumbersBlocked() {
+    private fun syncPhoneNumbersBlocked() {
         getBlockedPhoneNumbersInteract(UseCase.None()){
             it.either(fnL = fun(_: Failure){
                 Timber.d("Get Phone Numbers Blocked Failed")
             }, fnR = fun(_: Unit){
                 Timber.d("Phone Numbers Blocked Saved Successfully")
+            })
+        }
+    }
+
+    /**
+     * Sync Terminal Apps
+     */
+    private fun syncTerminalApps(){
+        synchronizeInstalledPackagesInteract(UseCase.None()){
+            it.either(fnL = fun(_:Failure){
+                Timber.d("Apps Sync Failed")
+            }, fnR = fun(total: Int){
+                Timber.d("Apps Sync successfully, Total ->  %d", total)
+            })
+        }
+
+    }
+
+    /**
+     * Sync Terminal Call History
+     */
+    private fun syncTerminalCallHistory(){
+        synchronizeTerminalCallHistoryInteract(UseCase.None()){
+            it.either(fnL = fun(_: Failure){
+                Timber.d("Sync Terminal Call History failed")
+            }, fnR = fun(total: Int){
+                Timber.d("Sync Terminal Call History Success, Total -> %d", total)
+            })
+        }
+
+    }
+
+    /**
+     * Sync Terminal Contacts
+     */
+    private fun syncTerminalContacts(){
+        synchronizeTerminalContactsInteract(UseCase.None()){
+            it.either(fnL = fun(_: Failure){
+                Timber.d("Sync Terminal Contacts failed")
+            }, fnR = fun(totalContacts: Int){
+                Timber.d("Sync Terminal Contacts Success -> Total %d", totalContacts)
+            })
+        }
+    }
+
+    /**
+     * Sync Terminal SMS
+     */
+    private fun syncTerminalSMS(){
+        synchronizeTerminalSMSInteract(UseCase.None()){
+            it.either(fnL = fun(_: Failure){
+                Timber.d("Sync Terminal SMS failed")
+            }, fnR = fun(totalSms: Int){
+                Timber.d("Sync Terminal Sms Success -> Total %d", totalSms)
             })
         }
     }
