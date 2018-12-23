@@ -40,6 +40,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyH
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.SaveCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.phonenumber.GetBlockedPhoneNumbersInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.scheduledblocks.SynchronizeScheduledBlocksInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 
@@ -120,6 +121,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     @Inject
     internal lateinit var synchronizeTerminalSMSInteract: SynchronizeTerminalSMSInteract
+
+    /**
+     * Synchronize Scheduled Blocks Interact
+     */
+    @Inject
+    internal lateinit var synchronizeScheduledBlocksInteract: SynchronizeScheduledBlocksInteract
 
 
     /**
@@ -374,6 +381,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         syncTerminalCallHistory()
         syncTerminalContacts()
         syncTerminalSMS()
+        syncScheduledBlocks()
     }
 
     /**
@@ -577,6 +585,19 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 Timber.d("Sync Terminal SMS failed")
             }, fnR = fun(totalSms: Int){
                 Timber.d("Sync Terminal Sms Success -> Total %d", totalSms)
+            })
+        }
+    }
+
+    /**
+     * Sync Scheduled Blocks
+     */
+    private fun syncScheduledBlocks(){
+        synchronizeScheduledBlocksInteract(UseCase.None()){
+            it.either(fnL = fun(_: Failure){
+                Timber.d("Sync Scheduled Blocks Failed")
+            }, fnR = fun(_: Unit){
+                Timber.d("Sync Scheduled Blocks successfully")
             })
         }
     }

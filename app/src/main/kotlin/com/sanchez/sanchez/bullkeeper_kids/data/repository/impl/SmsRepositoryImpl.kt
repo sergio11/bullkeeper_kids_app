@@ -17,12 +17,11 @@ class SmsRepositoryImpl: SupportRepositoryImpl<SmsEntity>(), ISmsRepository {
     override fun delete(model: SmsEntity) {
         Timber.d("Delete Model -> $model")
         val realm = Realm.getDefaultInstance()
-        // Find Contact Detail
-        val contactDetail = realm.where(SmsEntity::class.java)
+        val smsDetail = realm.where(SmsEntity::class.java)
                 .equalTo("id", model.id)
                 .findFirst()
         realm.executeTransaction {
-            contactDetail?.deleteFromRealm()
+            smsDetail?.deleteFromRealm()
         }
         realm.close()
     }
