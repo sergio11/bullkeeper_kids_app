@@ -4,18 +4,18 @@ import android.app.Application
 import android.content.Context
 import com.here.oksse.OkSse
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ApplicationModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.NetModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GlobalServiceModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.PackagesModule
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.*
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IAppsService
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.AddCallDetailsFromTerminalInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
-import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.PhoneCallReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
@@ -29,8 +29,11 @@ import javax.inject.Singleton
  * Application Component
  */
 @Singleton
-@Component(modules = [ ApplicationModule::class, NetModule::class,
-    GlobalServiceModule::class, PackagesModule::class])
+@Component(modules = [
+    ApplicationModule::class, NetModule::class,
+    GlobalServiceModule::class, PackagesModule::class,
+    CallDetailsModule::class, SmsModule::class,
+    ContactsModule::class])
 interface ApplicationComponent {
 
     /**
@@ -58,10 +61,6 @@ interface ApplicationComponent {
      */
     fun inject(signInActivity: SignInActivity)
 
-    /**
-     * Inject into Phone Call Receiver
-     */
-    fun inject(phoneCallReceiver: PhoneCallReceiver)
 
 
     //Exposed to sub-graphs.
@@ -78,4 +77,8 @@ interface ApplicationComponent {
     fun systemPackageHelper(): ISystemPackageHelper
     fun appsInstalledRepository(): IAppsInstalledRepository
     fun appsService(): IAppsService
+    fun synchronizeTerminalCallHistoryInteract(): SynchronizeTerminalCallHistoryInteract
+    fun addCallDetailsFromTerminalInteract(): AddCallDetailsFromTerminalInteract
+    fun synchronizeTerminalSMSInteract(): SynchronizeTerminalSMSInteract
+    fun synchronizeTerminalContactsInteract(): SynchronizeTerminalContactsInteract
 }

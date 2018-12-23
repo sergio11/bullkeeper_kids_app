@@ -1,7 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
-import android.app.Activity
-import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
+import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IContactsService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ContactRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
@@ -9,6 +8,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceReposito
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 /**
  * Contacts Module
@@ -20,7 +20,7 @@ class ContactsModule {
      * Provide Contacts Service
      */
     @Provides
-    @PerActivity
+    @Singleton
     fun provideContactsService(retrofit: Retrofit) : IContactsService
             = retrofit.create(IContactsService::class.java)
 
@@ -28,7 +28,7 @@ class ContactsModule {
      * Provide Contact Repository
      */
     @Provides
-    @PerActivity
+    @Singleton
     fun provideContactRepository(): ContactRepositoryImpl
             = ContactRepositoryImpl()
 
@@ -36,12 +36,12 @@ class ContactsModule {
      * Provide Synchronize Terminal Contacts Interact
      */
     @Provides
-    @PerActivity
+    @Singleton
     fun provideSynchronizeTerminalContactsInteract(
             contactsService: IContactsService,
             contactRepositoryImpl: ContactRepositoryImpl,
-            activity: Activity,
+            context: Context,
             preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit)
-            = SynchronizeTerminalContactsInteract(activity, contactsService, contactRepositoryImpl, preferenceRepository, retrofit)
+            = SynchronizeTerminalContactsInteract(context, contactsService, contactRepositoryImpl, preferenceRepository, retrofit)
 }

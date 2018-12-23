@@ -104,7 +104,7 @@
 
         <!-- Phone Call Receiver  -->
         <receiver
-            android:name=".presentation.broadcast.CallReceiver"
+            android:name=".presentation.broadcast.phone.CallReceiver"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>

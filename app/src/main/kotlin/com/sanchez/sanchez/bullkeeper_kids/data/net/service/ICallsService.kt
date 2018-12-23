@@ -35,7 +35,7 @@ interface ICallsService {
     fun deleteCallDetailById(
             @Path("kid")  kid: String,
             @Path("terminal") terminal: String,
-            @Path("app") app: String) : Deferred<APIResponse<String>>
+            @Path("call") call: String) : Deferred<APIResponse<String>>
 
     /**
      * Save History Calls In The terminal
@@ -44,6 +44,17 @@ interface ICallsService {
     fun saveHistoryCallsInTheTerminal(
             @Path("kid")  kid: String,
             @Path("terminal") terminal: String,
-            @Body apps: List<SaveCallDetailDTO>
+            @Body calls: List<SaveCallDetailDTO>
     ): Deferred<APIResponse<List<CallDetailDTO>>>
+
+    /**
+     * Add Call Details From Terminal
+     */
+    @POST("children/{kid}/terminal/{terminal}/calls/add")
+    fun addCallDetailsFromTerminal(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String,
+            @Body calls: SaveCallDetailDTO
+
+    ): Deferred<APIResponse<CallDetailDTO>>
 }

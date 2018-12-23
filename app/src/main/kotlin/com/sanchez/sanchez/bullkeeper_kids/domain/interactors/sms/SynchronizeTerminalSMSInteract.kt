@@ -1,6 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms
 
-import android.app.Activity
+
+import android.content.Context
 import android.net.Uri
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.batch
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.toDateTime
@@ -13,14 +14,13 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ISmsService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.SmsRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import timber.log.Timber
-import java.text.SimpleDateFormat
 
 /**
  * Synchronize Terminal SMS Interact
  */
 class SynchronizeTerminalSMSInteract
     @Inject constructor(
-            private val activity: Activity,
+            private val context: Context,
             private val smsService: ISmsService,
             private val smsRepositoryImpl: SmsRepositoryImpl,
             private val preferenceRepository: IPreferenceRepository,
@@ -36,11 +36,9 @@ class SynchronizeTerminalSMSInteract
     private fun getAllSms(): List<SmsEntity> {
         val lstSms = ArrayList<SmsEntity>()
         val message = Uri.parse("content://sms/")
-        val cr = activity.contentResolver
+        val cr = context.contentResolver
         val c = cr.query(message, null, null, null, null)
-        activity.startManagingCursor(c)
         val totalSMS = c.count
-
         if (c.moveToFirst()) {
             for (i in 0 until totalSMS) {
 

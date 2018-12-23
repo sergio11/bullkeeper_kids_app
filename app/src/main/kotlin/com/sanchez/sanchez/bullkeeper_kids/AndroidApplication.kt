@@ -5,10 +5,7 @@ import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import com.facebook.stetho.Stetho
-import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerApplicationComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerServiceComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ServiceComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.*
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.*
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import com.squareup.leakcanary.LeakCanary
@@ -48,6 +45,16 @@ class AndroidApplication : Application(){
                 .netModule(NetModule(this))
                 .build()
     }
+
+    /**
+     * Service Component
+     */
+    val callReceiverComponent: CallReceiverComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerCallReceiverComponent
+                .builder()
+                .build()
+    }
+
 
     companion object {
 

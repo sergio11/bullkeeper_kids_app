@@ -20,7 +20,9 @@ import dagger.Provides
 /**
  * Link Terminal Module
  */
-@Module(includes = [TerminalModule::class, CallDetailsModule::class, SmsModule::class, ContactsModule::class])
+@Module(includes = [
+    TerminalModule::class
+])
 class LinkTerminalModule {
 
     /**
