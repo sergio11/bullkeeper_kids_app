@@ -1,6 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.navigation
 
 import android.app.Activity
+import android.app.Service
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 
 /**
@@ -31,7 +32,7 @@ interface INavigator {
     /**
      * Show Lock Screen
      */
-    fun showLockScreen(activity: Activity)
+    fun showLockScreen(service: Service)
 
     /**
      * Show Enable

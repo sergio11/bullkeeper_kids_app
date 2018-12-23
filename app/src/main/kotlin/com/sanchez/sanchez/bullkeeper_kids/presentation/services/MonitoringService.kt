@@ -12,20 +12,18 @@ import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ServiceComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageInfo
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import javax.inject.Inject
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
-import java.util.*
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.*
 import android.support.v4.content.ContextCompat
-import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import android.support.v4.content.LocalBroadcastManager
+import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import com.google.android.gms.location.*
 import com.here.oksse.ServerSentEvent
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
@@ -33,7 +31,13 @@ import okhttp3.Request
 import okhttp3.Response
 import timber.log.Timber
 import com.here.oksse.OkSse
+import com.sanchez.sanchez.bullkeeper_kids.R
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toIntArray
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toLocalTime
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppRuleEnum
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
@@ -43,6 +47,9 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.phonenumber.GetBlo
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.scheduledblocks.SynchronizeScheduledBlocksInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import org.joda.time.LocalTime
+import java.lang.Exception
+import java.util.*
 
 /**
  * @author Sergio Sánchez Sánchez
@@ -221,6 +228,18 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var getBlockedPhoneNumbersInteract: GetBlockedPhoneNumbersInteract
 
+    /**
+     * Apps Installed Repository
+     */
+    @Inject
+    internal lateinit var appsInstalledRepository: IAppsInstalledRepository
+
+    /**
+     * Scheduled Block Repository
+     */
+    @Inject
+    internal lateinit var scheduledBlocksRepositoryImpl: ScheduledBlocksRepositoryImpl
+
 
     /**
      * Receivers
@@ -242,10 +261,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+
     /**
      * State
+     *
      */
-    private var appBlockList: Set<SystemPackageInfo> = HashSet()
 
     private var currentAppLocked: String? = null
 
@@ -394,35 +414,134 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
          */
         checkForegroundAppTask = Runnable {
 
-            Log.d(TAG, "Check Foreground App Task")
+            Timber.d("Check Foreground App Task")
 
-            if (appBlockList.isNotEmpty()) {
-                // Check Usage Stats Allowed
-                if (usageStatsService.isUsageStatsAllowed()) {
-                    // Get Current Foreground App
-                    val currentAppForeground = usageStatsService.getCurrentForegroundApp()
-                    Log.d(TAG, "Current App Foreground -> $currentAppForeground")
-                    if (!currentAppForeground.isNullOrEmpty() &&
-                            currentAppForeground != packageName &&
-                            currentAppForeground != currentAppLocked) {
+            // Check Usage Stats Allowed
+            if (usageStatsService.isUsageStatsAllowed()) {
+                // Get Current Foreground App
+                val currentAppForeground = usageStatsService.getCurrentForegroundApp()
+                Timber.d("CHECK_FOREGROUND Current App Foreground -> %s", currentAppForeground)
+                if (!currentAppForeground.isNullOrEmpty() &&
+                        currentAppForeground != packageName &&
+                        currentAppForeground != currentAppLocked) {
 
-                        if (appBlockList.map { it.packageName }.contains(currentAppForeground)) {
-                            Log.d(TAG, "Package $currentAppForeground not allowed")
-                            currentAppLocked = currentAppForeground
-                            //navigator.showLockScreen(this)
-                        } else {
-                            currentAppLocked = null
-                            val localBroadcastManager = LocalBroadcastManager
-                                    .getInstance(this@MonitoringService)
-                            localBroadcastManager.sendBroadcast(Intent(
-                                    "com.sanchez.sergio.unlock"))
+                    // Get information about the application in the BD
+                    Timber.d("CHECK_FOREGROUND -> Current App in foreground -> %s in foreground -> %s", currentAppForeground)
+
+                    val appInstalledEntity =
+                            appsInstalledRepository.findByPackageName(currentAppForeground)
+
+
+                    appInstalledEntity?.let {
+
+                        if(it.appRule != null) {
+
+                            try {
+
+                                val appRuleEnum = AppRuleEnum.valueOf(it.appRule!!)
+
+                                when(appRuleEnum) {
+
+                                    /**
+                                     * App Rule Per Scheduler
+                                     */
+                                    AppRuleEnum.PER_SCHEDULER -> {
+                                        Timber.d("CHECK_FOREGROUND -> PER_SCHEDULER rule applied to the current application ")
+
+                                        val scheduledBlocks =
+                                                scheduledBlocksRepositoryImpl.list()
+
+                                        var anyScheduledBlockEnable = false
+
+                                        for(scheduledBlock in scheduledBlocks) {
+
+                                            if(scheduledBlock.enable) {
+
+                                                // Start At
+                                                val startAt = scheduledBlock.startAt?.toLocalTime(
+                                                        getString(R.string.joda_local_time_format_server_response))
+                                                // End At
+                                                val endAt = scheduledBlock.endAt?.toLocalTime(
+                                                        getString(R.string.joda_local_time_format_server_response))
+
+                                                // Weekly Frequency
+                                                val weeklyFrequency = scheduledBlock.weeklyFrequency?.toIntArray()
+
+                                                val calendar = Calendar.getInstance()
+                                                calendar.firstDayOfWeek = Calendar.MONDAY
+
+                                                if(weeklyFrequency?.getOrNull(calendar.get(Calendar.DAY_OF_WEEK)) == 1) {
+
+                                                    val currentLocalTime = LocalTime.now()
+
+                                                    if(currentLocalTime.isAfter(startAt) && currentLocalTime.isBefore(endAt)) {
+                                                        Timber.d("CHECK_FOREGROUND -> Scheduled Block Enable %s", scheduledBlock.name)
+                                                        anyScheduledBlockEnable = true
+                                                        break
+                                                    }
+
+                                                }
+
+
+                                            }
+
+                                        }
+
+                                        if(anyScheduledBlockEnable) {
+                                            currentAppLocked = null
+                                            val localBroadcastManager = LocalBroadcastManager
+                                                    .getInstance(this@MonitoringService)
+                                            localBroadcastManager.sendBroadcast(Intent(
+                                                    "com.sanchez.sergio.unlock"))
+                                        } else {
+                                            currentAppLocked = currentAppForeground
+                                            navigator.showLockScreen(this)
+                                        }
+
+                                    }
+
+                                    /**
+                                     * Always Allowed
+                                     */
+                                    AppRuleEnum.ALWAYS_ALLOWED -> {
+                                        Timber.d("CHECK_FOREGROUND -> ALWAYS_ALLOWED rule applied to the current application ")
+
+                                        currentAppLocked = null
+                                        val localBroadcastManager = LocalBroadcastManager
+                                                .getInstance(this@MonitoringService)
+                                        localBroadcastManager.sendBroadcast(Intent(
+                                                "com.sanchez.sergio.unlock"))
+
+                                    }
+
+                                    /**
+                                     * Never Allowed
+                                     */
+                                    AppRuleEnum.NEVER_ALLOWED -> {
+                                        Timber.d("CHECK_FOREGROUND -> NEVER_ALLOWED rule applied to the current application ")
+                                        currentAppLocked = currentAppForeground
+                                        navigator.showLockScreen(this)
+                                    }
+
+                                }
+
+
+                            } catch (ex: Exception) {
+                                Timber.d("CHECK_FOREGROUND -> ex: %s", ex.message)
+                                ex.printStackTrace()
+                            }
+
                         }
+
+
                     }
 
-                } else {
-                    Log.d(TAG, "Usage Stats Not Allowed generate alert")
                 }
+
+            } else {
+                Log.d(TAG, "Usage Stats Not Allowed generate alert")
             }
+
 
             mHandler.postDelayed(checkForegroundAppTask, CHECK_FOREGROUND_APP_INTERVAL)
         }

@@ -1,6 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.navigation.impl
 
 import android.app.Activity
+import android.app.Service
 import android.app.admin.DevicePolicyManager
 import android.content.Intent
 import android.provider.Settings
@@ -65,8 +66,8 @@ class NavigatorImpl
     /**
      * Show Lock Screen
      */
-    override fun showLockScreen(activity: Activity) =
-            activity.startActivity(LockScreenActivity.callingIntent(activity))
+    override fun showLockScreen(service: Service) =
+            service.startActivity(LockScreenActivity.callingIntent(service))
 
     /**
      * Show Enable Admin Device Features
