@@ -1,6 +1,8 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
+import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
+import com.sanchez.sanchez.bullkeeper_kids.core.sounds.impl.SoundPoolManagerImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.impl.PreferenceRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.utils.IAuthTokenAware
@@ -56,5 +58,13 @@ class GlobalServiceModule(private val context: Context)  {
     @Singleton
     fun provideAuthTokenAware(preferenceRepository: IPreferenceRepository): IAuthTokenAware
             = preferenceRepository
+
+    /**
+     * Provide Sound Manager
+     */
+    @Provides
+    @Singleton
+    fun provideSoundManager(context: Context): ISoundManager =
+            SoundPoolManagerImpl(context)
 
 }

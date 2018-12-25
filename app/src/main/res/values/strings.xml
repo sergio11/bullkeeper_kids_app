@@ -189,4 +189,9 @@
     <!-- Fifth Page -->
     <string name="link_terminal_fifth_page_title"> We already have all the necessary information to start working, Use BullKepper to visualize all the information synchronized and apply different configuration rules.</string>
     <string name="link_terminal_fifth_page_finish">Finish</string>
+
+
+    <!-- Lock Screen -->
+    <string name="lock_screen_content_screen" formatted="false">Bullkeeper blocked %s because it\'s restricted by your house rules.</string>
+    <string name="lock_screen_close_app">Close App</string>
 </resources>

@@ -495,7 +495,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                         } else {
                                             Timber.d("CHECK_FOREGROUND -> Lock Current Foreground app: %s", currentAppForeground)
                                             currentAppLocked = currentAppForeground
-                                            navigator.showLockScreen(this)
+                                            navigator.showLockScreen(this, it.packageName,
+                                                    it.appName, it.icon, it.appRule)
                                         }
 
                                     }
@@ -520,7 +521,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                     AppRuleEnum.NEVER_ALLOWED -> {
                                         Timber.d("CHECK_FOREGROUND -> NEVER_ALLOWED rule applied to the current application ")
                                         currentAppLocked = currentAppForeground
-                                        navigator.showLockScreen(this)
+                                        navigator.showLockScreen(this, it.packageName,
+                                                it.appName, it.icon, it.appRule)
                                     }
 
                                 }

@@ -30,7 +30,13 @@ class HomeActivity : BaseActivity() {
         /**
          * Calling Intent
          */
-        fun callingIntent(context: Context) = Intent(context, HomeActivity::class.java)
+        fun callingIntent(context: Context): Intent {
+            val intent = Intent(context, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                    or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+            return intent
+        }
     }
 
     val ENABLE_DEVICE_ADMIN_FEATURES_CODE = 666

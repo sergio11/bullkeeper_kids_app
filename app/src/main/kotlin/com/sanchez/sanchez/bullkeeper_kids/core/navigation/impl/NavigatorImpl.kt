@@ -51,7 +51,8 @@ class NavigatorImpl
      * Show Home
      */
     override fun showHome(activity: Activity) {
-        activity.startActivity(HomeActivity.callingIntent(activity))
+        activity.startActivity(
+                HomeActivity.callingIntent(activity))
         activity.finish()
     }
 
@@ -69,8 +70,10 @@ class NavigatorImpl
     /**
      * Show Lock Screen
      */
-    override fun showLockScreen(service: Service) =
-            service.startActivity(LockScreenActivity.callingIntent(service))
+    override fun showLockScreen(service: Service, packageName: String?, appName: String?,
+                                icon: String?, appRule: String?) =
+            service.startActivity(
+                    LockScreenActivity.callingIntent(service, packageName, appName, icon, appRule))
 
     /**
      * Show Enable Admin Device Features

@@ -4,8 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="100dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".presentation.lockscreen.LockScreenActivity"
     tools:showIn="@layout/activity_lock_screen">
+
+
+    <!--App Blocked -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/appBlockedIcon"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_margin="@dimen/common_margin"
+        android:layout_marginBottom="95dp"
+        android:contentDescription="@string/content_not_be_loaded"
+        app:civ_border_color="@color/commonWhite"
+        app:civ_border_width="@dimen/common_image_stroke_width"
+        app:layout_constraintBottom_toTopOf="@+id/contentText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contentText"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!-- Content Text -->
+    <TextView
+        android:id="@+id/contentText"
+        style="@style/CommonStrongText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_margin"
+        android:gravity="center"
+        android:padding="@dimen/common_padding"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintBottom_toTopOf="@id/closeApp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBlockedIcon" />
+
+
+    <!-- Enable Usage Stats -->
+    <Button
+        android:id="@+id/closeApp"
+        style="@style/CommonActionButton"
+        android:layout_width="@dimen/common_action_button_width"
+        android:layout_height="@dimen/common_action_button_height"
+        android:layout_margin="@dimen/common_margin"
+        android:text="@string/lock_screen_close_app"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contentText" />
+
 
 </android.support.constraint.ConstraintLayout>

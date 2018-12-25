@@ -32,7 +32,7 @@ interface INavigator {
     /**
      * Show Lock Screen
      */
-    fun showLockScreen(service: Service)
+    fun showLockScreen(service: Service, packageName: String?, appName: String?, icon: String?, appRule: String?)
 
     /**
      * Show Enable

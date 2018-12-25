@@ -17,6 +17,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceReposito
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
@@ -60,6 +61,11 @@ interface ApplicationComponent {
      * Inject Into Sign In Activity
      */
     fun inject(signInActivity: SignInActivity)
+
+    /**
+     * Inject into Lock Sceen
+     */
+    fun inject(lockScreenActivity: LockScreenActivity)
 
 
 
