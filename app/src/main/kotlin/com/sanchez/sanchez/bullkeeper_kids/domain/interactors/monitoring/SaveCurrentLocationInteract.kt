@@ -26,6 +26,11 @@ class SaveCurrentLocationInteract
         Preconditions.checkNotNull(params, "Params can not be null")
         Preconditions.checkNotNull(params.latitude, "Latitude can not be null")
         Preconditions.checkNotNull(params.longitude, "Longitude can not be null")
+
+        // Save Lat and log on preferences
+        preferenceRepository.setCurrentLatitude(params.latitude.toString())
+        preferenceRepository.setCurrentLatitude(params.longitude.toString())
+
         val kid = preferenceRepository.getPrefKidIdentity()
         val response = locationService.saveCurrentLocation(kid,
                 SaveCurrentLocation(params.latitude, params.longitude)).await()

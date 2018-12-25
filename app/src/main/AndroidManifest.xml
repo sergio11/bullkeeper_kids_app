@@ -43,7 +43,8 @@
         <activity
             android:name=".presentation.SplashScreenActivity"
             android:noHistory="true"
-            android:theme="@style/AppTheme.Splash">
+            android:theme="@style/AppTheme.Splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,7 +59,8 @@
         <activity
             android:name=".presentation.home.HomeActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Monitoring Service -->
         <service android:name=".presentation.services.MonitoringService" />
@@ -68,7 +70,8 @@
             android:name=".presentation.lockscreen.LockScreenActivity"
             android:label="@string/title_activity_lock_screen"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Awaken Monitoring Service -->
         <receiver
@@ -119,26 +122,40 @@
 
 
         <!-- App Tutorial Activity -->
-        <activity android:name=".presentation.tutorial.AppTutorialActivity" />
+        <activity
+            android:name=".presentation.tutorial.AppTutorialActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- Link Device Tutorial Activity -->
-        <activity android:name=".presentation.linkterminal.LinkDeviceTutorialActivity" />
+        <activity
+            android:name=".presentation.linkterminal.LinkDeviceTutorialActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- Legal Content Activity -->
         <activity
             android:name=".presentation.legalcontent.LegalContentActivity"
-            android:label="@string/title_activity_legal_content"></activity>
+            android:label="@string/title_activity_legal_content"
+            android:screenOrientation="portrait"></activity>
 
         <!-- Crash Error Activity -->
         <activity
             android:name=".presentation.crash.CrashErrorActivity"
             android:label="@string/app_name"
             android:process=":error_activity"
-            android:theme="@style/AppTheme.Common">
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cat.ereza.customactivityoncrash.ERROR" />
             </intent-filter>
         </activity>
+
+
+        <!-- Sos Activity -->
+        <activity
+            android:name=".presentation.sos.SosActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
+
 
     </application>
 

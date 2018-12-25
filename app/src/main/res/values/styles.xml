@@ -113,6 +113,12 @@
         <item name="android:textSize">@dimen/common_strong_text_size</item>
     </style>
 
+    <!-- Sos Action button Style -->
+    <style name="SosActionButton" parent="@style/CommonActionButton">
+        <item name="android:textColor">@color/sos_btn_text_color</item>
+        <item name="android:background">@drawable/sos_action_button_state</item>
+    </style>
+
     <!-- Common Title -->
     <style name="CommonTitle">
         <item name="android:textColor">@color/commonWhite</item>

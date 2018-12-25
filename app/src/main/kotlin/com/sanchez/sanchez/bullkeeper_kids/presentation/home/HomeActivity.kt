@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * Home Activity
  */
-class HomeActivity : BaseActivity() {
+class HomeActivity : BaseActivity(), IHomeActivityHandler {
 
 
     val TAG = "HOME_ACTIVITY"
@@ -41,6 +41,9 @@ class HomeActivity : BaseActivity() {
 
     val ENABLE_DEVICE_ADMIN_FEATURES_CODE = 666
 
+    /**
+     * App Component
+     */
     private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as AndroidApplication).appComponent
     }
@@ -109,7 +112,11 @@ class HomeActivity : BaseActivity() {
             devicePolicyManager.lockNow()
 
         }
-
-
     }
+
+    /**
+     * Show Sos Screen
+     */
+    override fun showSosScreen() = navigator.showSosScreen(this)
+
 }

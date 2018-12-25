@@ -7,7 +7,9 @@ import android.media.SoundPool
 import android.media.AudioManager
 import android.os.Build
 import androidx.annotation.RawRes
-import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.EMERGENCY_SOUND
+import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.APP_BLOCKED_SOUND
+import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.SOS_ALARM_SOUND
+import timber.log.Timber
 
 /**
  *
@@ -15,6 +17,8 @@ import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.E
 class SoundPoolManagerImpl(
         context: Context
 ): ISoundManager {
+
+
 
     private val MAX_STREAMS = 2
     private val DEFAULT_SOUND = 1.0f
@@ -50,7 +54,8 @@ class SoundPoolManagerImpl(
 
         // Sound Map
         soundMap = hashMapOf(
-                Pair(EMERGENCY_SOUND, soundPool.load(context, EMERGENCY_SOUND, 1))
+                Pair(APP_BLOCKED_SOUND, soundPool.load(context, APP_BLOCKED_SOUND, 1)),
+                Pair(SOS_ALARM_SOUND, soundPool.load(context, SOS_ALARM_SOUND, 1))
         )
 
     }
@@ -58,9 +63,26 @@ class SoundPoolManagerImpl(
     /**
      * Play Sound
      */
-    override fun playSound(@RawRes sound: Int) {
-        if(soundMap.isNotEmpty() && soundMap.containsKey(sound))
-            soundPool.play(soundMap[sound]!!, DEFAULT_SOUND, DEFAULT_SOUND,
-                    1, 0, 1f)
+    override fun playSound(@RawRes sound: Int): Int =  playSound(sound, false)
+
+    /**
+     * Play Sound
+     */
+    override fun playSound(@RawRes sound: Int, loop: Boolean): Int {
+        var streamId: Int = -1
+        if(soundMap.isNotEmpty() && soundMap.containsKey(sound)) {
+            Timber.d("SOUND: Play Sound")
+            streamId = soundPool.play(soundMap[sound]!!, DEFAULT_SOUND, DEFAULT_SOUND,
+                    1, if(loop) -1 else 0, 1f)
+        }
+        return streamId
+    }
+
+    /**
+     * Stop Sound
+     */
+    override fun stopSound(streamId: Int) {
+        if(streamId != -1)
+            soundPool.stop(streamId)
     }
 }

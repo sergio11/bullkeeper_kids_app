@@ -35,6 +35,15 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_KID_IDENTITY = "kid"
         const val KID_IDENTITY_DEFAULT_VALUE = ""
 
+
+        // Current Latitude
+        const val PREF_CURRENT_LATITUDE = "current_latitude"
+        const val CURRENT_LATITUDE_DEFAULT_VALUE = ""
+
+        // Current Longitude
+        const val PREF_CURRENT_LONGITUDE = "current_longitude"
+        const val CURRENT_LONGITUDE_DEFAULT_VALUE = ""
+
     }
 
     /**
@@ -97,5 +106,30 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param identity
      */
     fun setPrefKidIdentity(kid: String)
+
+    /**
+     * Get Current Latitude
+     * @return
+     */
+    fun getCurrentLatitude(): String
+
+    /**
+     * Set Current Latitude
+     * @param latitude
+     */
+    fun setCurrentLatitude(latitude: String)
+
+
+    /**
+     * Get Current Longitude
+     * @return
+     */
+    fun getCurrentLongitude(): String
+
+    /**
+     * Set Current Longitude
+     * @param longitude
+     */
+    fun setCurrentLongitude(longitude: String)
 
 }

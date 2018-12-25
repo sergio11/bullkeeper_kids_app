@@ -59,4 +59,9 @@ interface INavigator {
      */
     fun showLinkTerminalTutorial(activity: Activity)
 
+    /**
+     * Show SOS Screen
+     */
+    fun showSosScreen(activity: Activity)
+
 }

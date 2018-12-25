@@ -19,6 +19,8 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChang
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import com.squareup.picasso.Picasso
@@ -67,7 +69,15 @@ interface ApplicationComponent {
      */
     fun inject(lockScreenActivity: LockScreenActivity)
 
+    /**
+     * Inject into Sos Activity
+     */
+    fun inject(sosActivity: SosActivity)
 
+    /**
+     * Inject into Sos Activity Fragment
+     */
+    fun inject(sosActivityFragment: SosActivityFragment)
 
     //Exposed to sub-graphs.
     fun navigator(): INavigator

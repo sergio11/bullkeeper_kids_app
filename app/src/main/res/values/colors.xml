@@ -26,6 +26,8 @@
     <color name="redDanger">#ff2323</color>
     <!-- Translucent Red Danger -->
     <color name="translucentRedDanger">#90ff2323</color>
+    <!-- Red Danger Dark -->
+    <color name="redDangerDark">#d60000</color>
 
     <!-- Facebook Color -->
     <color name="facebook_color">#3a5998</color>

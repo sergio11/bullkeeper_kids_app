@@ -10,8 +10,7 @@ import javax.inject.Inject
  * Preference Repository Impl
  */
 class PreferenceRepositoryImpl
-    @Inject constructor(private val context: Context): IPreferenceRepository {
-
+    @Inject constructor(context: Context): IPreferenceRepository {
 
     /**
      * Preferences
@@ -110,6 +109,36 @@ class PreferenceRepositoryImpl
      */
     override fun setPrefKidIdentity(kid: String) {
         mPref.edit().putString(IPreferenceRepository.PREF_KID_IDENTITY, kid).apply()
+    }
+
+    /**
+     * Get Current Latitude
+     */
+    override fun getCurrentLatitude(): String {
+        return mPref.getString(IPreferenceRepository.PREF_CURRENT_LATITUDE,
+                IPreferenceRepository.CURRENT_LATITUDE_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Current Latitude
+     */
+    override fun setCurrentLatitude(latitude: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_CURRENT_LATITUDE, latitude).apply()
+    }
+
+    /**
+     * Get Current Longitude
+     */
+    override fun getCurrentLongitude(): String {
+        return mPref.getString(IPreferenceRepository.PREF_CURRENT_LONGITUDE,
+                IPreferenceRepository.CURRENT_LONGITUDE_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Current Longitude
+     */
+    override fun setCurrentLongitude(longitude: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_CURRENT_LONGITUDE, longitude).apply()
     }
 
 }

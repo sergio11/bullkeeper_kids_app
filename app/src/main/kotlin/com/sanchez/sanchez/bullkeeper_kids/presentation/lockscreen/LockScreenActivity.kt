@@ -153,7 +153,7 @@ class LockScreenActivity : AppCompatActivity() {
         }
 
         // Play Emergency Sound
-        soundManager.playSound(ISoundManager.EMERGENCY_SOUND)
+        soundManager.playSound(ISoundManager.APP_BLOCKED_SOUND)
     }
 
     /**

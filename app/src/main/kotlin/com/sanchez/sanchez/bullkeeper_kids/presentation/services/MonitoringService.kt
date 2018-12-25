@@ -627,9 +627,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
-     * Notify Current Location
+     * Save Current Location
      */
-    private fun notifyCurrentLocation(location: Location) {
+    private fun saveCurrentLocation(location: Location) {
         saveCurrentLocationInteract(SaveCurrentLocationInteract.Params(
                 latitude = location.latitude,
                 longitude = location.longitude
@@ -723,6 +723,25 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         }
     }
 
+    /**
+     * Request Location Updates
+     */
+    @SuppressLint("MissingPermission")
+    private fun requestLocationUpdates(locationRequest: LocationRequest){
+
+        fusedLocationClient.requestLocationUpdates(locationRequest,
+                object: LocationCallback(){
+                    override fun onLocationResult(locationResult: LocationResult?) {
+                        locationResult?.let {
+                            if(!it.locations.isNullOrEmpty()) {
+                                saveCurrentLocation(it.locations[it.locations.size - 1])
+                            }
+                        }
+                    }
+                },
+                Looper.myLooper())
+    }
+
 
     /**
      * Start Location Tracking
@@ -735,7 +754,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         // Last Location
         fusedLocationClient.lastLocation
                 .addOnSuccessListener { location : Location? ->
-                    location?.let { notifyCurrentLocation(it) }
+                    location?.let { saveCurrentLocation(it) }
                 }
 
 
@@ -748,33 +767,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 //Location Permission already granted
-                fusedLocationClient.requestLocationUpdates(mLocationRequest,
-                        object: LocationCallback(){
-                            override fun onLocationResult(locationResult: LocationResult?) {
-                                locationResult?.let {
-                                    if(!it.locations.isNullOrEmpty()) {
-                                        notifyCurrentLocation(it.locations[it.locations.size - 1])
-                                    }
-                                }
-                            }
-                        },
-                        Looper.myLooper())
+                requestLocationUpdates(mLocationRequest)
             } else {
                 //Request Location Permission
             }
         }
         else {
-            fusedLocationClient.requestLocationUpdates(mLocationRequest,
-                    object: LocationCallback(){
-                        override fun onLocationResult(locationResult: LocationResult?) {
-                            locationResult?.let {
-                                if(!it.locations.isNullOrEmpty()) {
-                                    notifyCurrentLocation(it.locations[it.locations.size - 1])
-                                }
-                            }
-                        }
-                    },
-                    Looper.myLooper())
+            requestLocationUpdates(mLocationRequest)
         }
 
     }

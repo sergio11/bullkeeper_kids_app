@@ -194,4 +194,11 @@
     <!-- Lock Screen -->
     <string name="lock_screen_content_screen" formatted="false">Bullkeeper blocked %s because it\'s restricted by your house rules.</string>
     <string name="lock_screen_close_app">Close App</string>
+
+    <!-- SOS Screen -->
+    <string name="sos_toolbar_title">SOS</string>
+    <string name="sos_your_current_location">Your current location</string>
+    <string name="sos_button_text">SOS \n Tap To Activate</string>
+    <string name="sos_button_activate_text">Requesting help, please wait …</string>
+
 </resources>

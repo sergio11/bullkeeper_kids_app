@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Activate SOS -->
+        <Button
+            android:id="@+id/activateSos"
+            style="@style/SosActionButton"
+            android:layout_width="@dimen/sos_btn_width"
+            android:layout_height="@dimen/sos_btn_height"
+            android:layout_margin="@dimen/common_margin"
+            android:text="@string/sos_button_text"/>
+
+        <!-- Current Location Icon -->
+        <ImageView
+            android:id="@+id/currentLocationIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/current_location_icon"
+            android:layout_margin="@dimen/common_margin"
+            android:contentDescription="@string/content_not_be_loaded"
+            />
+
+        <!-- Current Location Title  -->
+        <TextView
+            android:id="@+id/currentLocationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_margin"
+            android:text="@string/sos_your_current_location"
+            android:gravity="center"
+            style="@style/CommonTitle"/>
+
+
+        <!-- Current Location Text  -->
+        <TextView
+            android:id="@+id/currentLocationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_margin"
+            android:text="-"
+            android:gravity="center"
+            android:textColor="@color/commonWhite"
+            style="@style/CommonStrongText.Big"/>
+
+    </LinearLayout>
+
+</ScrollView>
+
