@@ -7,7 +7,9 @@ import android.view.WindowManager
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerPickMeUpComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.PickMeUpComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
@@ -17,15 +19,21 @@ import javax.inject.Inject
 /**
  * Pick Me Up Activity
  */
-class PickMeUpActivity : BaseActivity(), HasComponent<ApplicationComponent> {
+class PickMeUpActivity : BaseActivity(),
+        HasComponent<PickMeUpComponent>, IPickMeUpActivityHandler {
 
 
-    private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
-        (application as AndroidApplication).appComponent
+    /**
+     * Pick Me Up Component
+     */
+    private val pickMeUpComponent: PickMeUpComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerPickMeUpComponent
+                .builder()
+                .applicationComponent((application as AndroidApplication).appComponent)
+                .activityModule(ActivityModule(this))
+                .build()
     }
 
-
-    val TAG = "PICK_ME_UP_ACTIVITY"
 
     companion object {
 
@@ -44,15 +52,15 @@ class PickMeUpActivity : BaseActivity(), HasComponent<ApplicationComponent> {
     /**
      * Component
      */
-    override val component: ApplicationComponent
-        get() = appComponent
+    override val component: PickMeUpComponent
+        get() = pickMeUpComponent
 
     /**
      * On Create
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appComponent.inject(this)
+        pickMeUpComponent.inject(this)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         backIcon.setOnClickListener{
             navigator.showHome(this)
