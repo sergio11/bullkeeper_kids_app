@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Current Location Icon -->
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/bed_time_white_solid"
+            android:layout_margin="@dimen/common_margin"
+            android:contentDescription="@string/content_not_be_loaded"
+            />
+
+        <!-- Title  -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_margin"
+            android:text="@string/bed_time_screen_title"
+            android:gravity="center"
+            style="@style/CommonTitle"/>
+
+        <!-- Description -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_margin"
+            android:text="@string/bed_time_screen_description"
+            android:gravity="center"
+            android:textColor="@color/commonWhite"
+            style="@style/CommonStrongText.Big"/>
+
+        <!-- Description -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_margin"
+            android:text="@string/bed_time_screen_device_available_at"
+            android:gravity="center"
+            android:textColor="@color/commonWhite"
+            style="@style/CommonTitle"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_margin"
+            android:orientation="horizontal">
+
+
+            <!-- Activate PickMeUp -->
+            <Button
+                android:id="@+id/activatePickMeUp"
+                style="@style/PickMeUpActionButton"
+                android:layout_width="@dimen/pick_me_up_btn_small_width"
+                android:layout_height="@dimen/pick_me_up_btn_small_height"
+                android:layout_margin="@dimen/common_margin"
+                android:text="@string/bed_time_screen_pick_me_up"/>
+
+            <!-- Activate SOS -->
+            <Button
+                android:id="@+id/activateSos"
+                style="@style/SosActionButton"
+                android:layout_width="@dimen/sos_btn_small_width"
+                android:layout_height="@dimen/sos_btn_small_height"
+                android:layout_margin="@dimen/common_margin"
+                android:text="@string/bed_time_screen_sos"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>
+

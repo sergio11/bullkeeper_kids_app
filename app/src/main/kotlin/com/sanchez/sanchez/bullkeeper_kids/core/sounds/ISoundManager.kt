@@ -20,6 +20,8 @@ interface ISoundManager {
             get() = R.raw.pick_me_up_sound
         val TIME_BANK_SOUND: Int
             get() = R.raw.time_bank_sound
+        val BED_TIME_SOUND: Int
+            get() = R.raw.bed_time_sound
     }
 
     /**

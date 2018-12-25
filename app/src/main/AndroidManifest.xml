@@ -168,7 +168,11 @@
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
 
-
+        <!-- Bed Time Activity -->
+        <activity
+            android:name=".presentation.bedtime.BedTimeActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
 
     </application>
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.showShortMessage
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.lang.IllegalArgumentException
@@ -60,9 +59,7 @@ class HomeActivityFragment : BaseFragment() {
 
         // Profile Action
         profileAction.setOnClickListener {
-            context!!.showShortMessage("Profile Action clicked")
+            activityHandler.showBedTime()
         }
-
-
     }
 }

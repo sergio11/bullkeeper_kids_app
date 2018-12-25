@@ -22,7 +22,6 @@ import javax.inject.Inject
  */
 class HomeActivity : BaseActivity(), IHomeActivityHandler {
 
-
     val TAG = "HOME_ACTIVITY"
 
     companion object {
@@ -128,5 +127,10 @@ class HomeActivity : BaseActivity(), IHomeActivityHandler {
      * Show Time Bank Screen
      */
     override fun showTimeBankScreen() = navigator.showTimeBankScreen(this)
+
+    /**
+     * Show Bed Time
+     */
+    override fun showBedTime() = navigator.showBedTimeScreen(this)
 
 }

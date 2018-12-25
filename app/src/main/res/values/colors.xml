@@ -37,4 +37,6 @@
     <color name="normalPurple">#551A8B</color>
     <!-- Dark Purple -->
     <color name="darkPurple">#2A0D45</color>
+    <!-- Hot Pink -->
+    <color name="hotPink">#FF69B4</color>
 </resources>

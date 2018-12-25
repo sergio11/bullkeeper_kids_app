@@ -75,4 +75,9 @@ interface INavigator {
      */
     fun showTimeBankScreen(activity: Activity)
 
+    /**
+     * Show Bed Time Screen
+     */
+    fun showBedTimeScreen(activity: Activity)
+
 }

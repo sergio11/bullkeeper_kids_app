@@ -214,4 +214,13 @@
     <string name="time_bank_button_activate_text">Saving on \n time bank …</string>
     <string name="time_bank_description">You can utilize these minutes in your fun time</string>
 
+    <!-- Bed Time Screen -->
+    <string name="bed_time_screen_title">Bed Time</string>
+    <string name="bed_time_screen_description">Keep calm and get same sleep - it\'s time for bed!. \n
+    Your device will be available at</string>
+    <string name="bed_time_screen_device_available_at">7:00 am</string>
+    <string name="bed_time_screen_pick_me_up">PickMeUp</string>
+    <string name="bed_time_screen_sos">SOS</string>
+
+
 </resources>

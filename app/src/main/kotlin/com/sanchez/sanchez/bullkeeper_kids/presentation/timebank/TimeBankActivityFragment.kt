@@ -14,9 +14,9 @@ import java.util.*
 import javax.inject.Inject
 
 /**
- * Time Bank Up Activity Fragment
+ * Time Bank Activity Fragment
  */
-class TimeBankUpActivityFragment : BaseFragment() {
+class TimeBankActivityFragment : BaseFragment() {
 
     /**
      * Sound Manager
@@ -36,9 +36,9 @@ class TimeBankUpActivityFragment : BaseFragment() {
     override fun layoutId(): Int = R.layout.fragment_time_bank
 
     /**
-     * Pick Me Up Stream Id
+     * Time Bank Stream Id
      */
-    private var pickMeUpStreamId: Int = -1
+    private var timeBankStreamId: Int = -1
 
     /**
      * On View Created
@@ -53,7 +53,7 @@ class TimeBankUpActivityFragment : BaseFragment() {
 
         saveOnTimeBank.setOnClickListener {
             context!!.showLongMessage("Activate PickMeUp")
-            pickMeUpStreamId = soundManager.playSound(ISoundManager.TIME_BANK_SOUND)
+            timeBankStreamId = soundManager.playSound(ISoundManager.TIME_BANK_SOUND)
             saveOnTimeBank.isEnabled = false
             saveOnTimeBank.text = getString(R.string.time_bank_button_activate_text)
         }
@@ -66,7 +66,7 @@ class TimeBankUpActivityFragment : BaseFragment() {
      */
     override fun onDestroyView() {
         super.onDestroyView()
-        soundManager.stopSound(pickMeUpStreamId)
+        soundManager.stopSound(timeBankStreamId)
     }
 
     /**

@@ -8,6 +8,7 @@ import android.provider.Settings
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
@@ -135,5 +136,11 @@ class NavigatorImpl
      */
     override fun showTimeBankScreen(activity: Activity) =
             activity.startActivity(TimeBankActivity.callingIntent(activity))
+
+    /**
+     * Show Bed Time
+     */
+    override fun showBedTimeScreen(activity: Activity) =
+            activity.startActivity(BedTimeActivity.callingIntent(activity))
 
 }

@@ -15,6 +15,8 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.Synchroni
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
@@ -24,7 +26,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivit
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankUpActivityFragment
+import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import com.squareup.picasso.Picasso
@@ -101,7 +103,17 @@ interface ApplicationComponent {
     /**
      * Inject into Time Bank Up Activity Fragment
      */
-    fun inject(timeBankUpActivityFragment: TimeBankUpActivityFragment)
+    fun inject(timeBankActivityFragment: TimeBankActivityFragment)
+
+    /**
+     * Inject into Bed Time Activity
+     */
+    fun inject(bedTimeActivity: BedTimeActivity)
+
+    /**
+     * Inject into Bed Time Activity Fragment
+     */
+    fun inject(bedTimeActivityFragment: BedTimeActivityFragment)
 
     //Exposed to sub-graphs.
     fun navigator(): INavigator

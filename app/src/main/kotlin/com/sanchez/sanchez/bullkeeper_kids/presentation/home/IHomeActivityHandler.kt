@@ -19,4 +19,9 @@ interface IHomeActivityHandler {
      * Show Time Bank Screen
      */
     fun showTimeBankScreen()
+
+    /**
+     * Show Bed Time
+     */
+    fun showBedTime()
 }
