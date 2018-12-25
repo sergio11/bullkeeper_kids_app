@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.navigation
 import android.app.Activity
 import android.app.Service
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
 
 /**
  * Navigator
@@ -63,5 +64,10 @@ interface INavigator {
      * Show SOS Screen
      */
     fun showSosScreen(activity: Activity)
+
+    /**
+     * Show Pick Me Up Scree
+     */
+    fun showPickMeUpScreen(activity: Activity)
 
 }

@@ -9,4 +9,9 @@ interface IHomeActivityHandler {
      * Show Sos Screen
      */
     fun showSosScreen()
+
+    /**
+     * Show Pick Me Up Screen
+     */
+    fun showPickMeUpScreen()
 }

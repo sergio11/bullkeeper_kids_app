@@ -45,7 +45,7 @@ class HomeActivityFragment : BaseFragment() {
 
         // Pick Me Up click Handler
         pickMeUpAction.setOnClickListener {
-            context!!.showShortMessage("Pick Me Up Clicked")
+            activityHandler.showPickMeUpScreen()
         }
 
         // Time Bank Action

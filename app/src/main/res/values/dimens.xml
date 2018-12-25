@@ -78,8 +78,8 @@
     <dimen name="common_labeled_switch_width">120dp</dimen>
 
     <!-- SOS btn dimens -->
-    <dimen name="sos_btn_width">230dp</dimen>
-    <dimen name="sos_btn_height">230dp</dimen>
+    <dimen name="sos_btn_width">250dp</dimen>
+    <dimen name="sos_btn_height">250dp</dimen>
     <dimen name="sos_btn_stroke">5dp</dimen>
 
 

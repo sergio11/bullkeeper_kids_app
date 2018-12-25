@@ -17,6 +17,8 @@ interface ISoundManager {
             get() = R.raw.app_blocked
         val SOS_ALARM_SOUND: Int
             get() = R.raw.sos_alarm
+        val PICK_ME_UP_SOUND: Int
+            get() = R.raw.pick_me_up_sound
     }
 
     /**

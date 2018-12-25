@@ -14,6 +14,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalConten
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
 import javax.inject.Inject
@@ -23,6 +24,7 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
+
 
     /**
      * Show Usage Access Settings
@@ -120,5 +122,11 @@ class NavigatorImpl
     override fun showSosScreen(activity: Activity) =
         activity.startActivity(SosActivity.callingIntent(activity))
 
+
+    /**
+     * Show Pick Me Up Screen
+     */
+    override fun showPickMeUpScreen(activity: Activity) =
+            activity.startActivity(PickMeUpActivity.callingIntent(activity))
 
 }

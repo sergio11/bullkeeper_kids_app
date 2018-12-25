@@ -22,7 +22,6 @@ import javax.inject.Inject
  */
 class HomeActivity : BaseActivity(), IHomeActivityHandler {
 
-
     val TAG = "HOME_ACTIVITY"
 
     companion object {
@@ -118,5 +117,10 @@ class HomeActivity : BaseActivity(), IHomeActivityHandler {
      * Show Sos Screen
      */
     override fun showSosScreen() = navigator.showSosScreen(this)
+
+    /**
+     * Show Pick Me Up Screen
+     */
+    override fun showPickMeUpScreen() = navigator.showPickMeUpScreen(this)
 
 }

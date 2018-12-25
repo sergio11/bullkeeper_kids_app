@@ -19,6 +19,8 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChang
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
@@ -78,6 +80,16 @@ interface ApplicationComponent {
      * Inject into Sos Activity Fragment
      */
     fun inject(sosActivityFragment: SosActivityFragment)
+
+    /**
+     * Inject into Pick Me Up Activity
+     */
+    fun inject(pickMeUpActivity: PickMeUpActivity)
+
+    /**
+     * Inject into Pick Me Up Fragment
+     */
+    fun inject(pickMeUpActivityFragment: PickMeUpActivityFragment)
 
     //Exposed to sub-graphs.
     fun navigator(): INavigator

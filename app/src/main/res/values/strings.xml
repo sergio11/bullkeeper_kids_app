@@ -199,6 +199,12 @@
     <string name="sos_toolbar_title">SOS</string>
     <string name="sos_your_current_location">Your current location</string>
     <string name="sos_button_text">SOS \n Tap To Activate</string>
-    <string name="sos_button_activate_text">Requesting help, please wait …</string>
+    <string name="sos_button_activate_text">Requesting help, \n please wait …</string>
+
+    <!-- Pick Me Up Screen -->
+    <string name="pick_me_up_toolbar_title">PickMeUp</string>
+    <string name="pick_me_up_your_current_location">Your current location</string>
+    <string name="pick_me_up_button_text">PickMeUp \n Tap To Activate</string>
+    <string name="pick_me_up_button_activate_text">Pickup in progress, wait please …</string>
 
 </resources>

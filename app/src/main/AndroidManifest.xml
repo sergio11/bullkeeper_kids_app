@@ -156,6 +156,12 @@
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
 
+        <!-- Pick Me Up Activity -->
+        <activity
+            android:name=".presentation.pickmeup.PickMeUpActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
+
 
     </application>
 
