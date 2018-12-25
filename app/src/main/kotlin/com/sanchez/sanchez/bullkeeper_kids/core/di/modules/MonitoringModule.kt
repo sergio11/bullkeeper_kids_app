@@ -58,4 +58,5 @@ class MonitoringModule {
     ): SaveCurrentLocationInteract
         = SaveCurrentLocationInteract(retrofit, preferenceRepository, locationService)
 
+
 }

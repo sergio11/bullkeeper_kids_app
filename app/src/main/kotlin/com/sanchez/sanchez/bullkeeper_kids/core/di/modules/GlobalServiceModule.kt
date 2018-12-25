@@ -3,17 +3,17 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.impl.SoundPoolManagerImpl
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.location.GetAddressFromCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.impl.PreferenceRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.utils.IAuthTokenAware
-import com.sanchez.sanchez.bullkeeper_kids.services.IAuthenticatorService
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
-import com.sanchez.sanchez.bullkeeper_kids.services.impl.AuthenticatorServiceImpl
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.LocalNotificationServiceImpl
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.UsageStatsServiceImpl
 import dagger.Module
 import dagger.Provides
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 /**
@@ -66,5 +66,17 @@ class GlobalServiceModule(private val context: Context)  {
     @Singleton
     fun provideSoundManager(context: Context): ISoundManager =
             SoundPoolManagerImpl(context)
+
+    /**
+     * Provide Get Address From Current Location Interact
+     */
+    @Provides
+    @Singleton
+    fun provideGetAddressFromCurrentLocationInteract(
+            context: Context,
+            preferenceRepository: IPreferenceRepository,
+            retrofit: Retrofit
+    ): GetAddressFromCurrentLocationInteract =
+            GetAddressFromCurrentLocationInteract(context, preferenceRepository, retrofit)
 
 }

@@ -1,6 +1,5 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring
 
-import android.content.Context
 import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveCurrentLocation
@@ -29,7 +28,7 @@ class SaveCurrentLocationInteract
 
         // Save Lat and log on preferences
         preferenceRepository.setCurrentLatitude(params.latitude.toString())
-        preferenceRepository.setCurrentLatitude(params.longitude.toString())
+        preferenceRepository.setCurrentLongitude(params.longitude.toString())
 
         val kid = preferenceRepository.getPrefKidIdentity()
         val response = locationService.saveCurrentLocation(kid,

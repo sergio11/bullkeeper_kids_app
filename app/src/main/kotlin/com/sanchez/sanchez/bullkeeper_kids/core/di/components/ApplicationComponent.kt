@@ -6,12 +6,14 @@ import com.here.oksse.OkSse
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.*
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
+import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IAppsService
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.AddCallDetailsFromTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.location.GetAddressFromCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
@@ -23,8 +25,6 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenAct
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivityFragment
-import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
@@ -75,15 +75,6 @@ interface ApplicationComponent {
      */
     fun inject(lockScreenActivity: LockScreenActivity)
 
-    /**
-     * Inject into Sos Activity
-     */
-    fun inject(sosActivity: SosActivity)
-
-    /**
-     * Inject into Sos Activity Fragment
-     */
-    fun inject(sosActivityFragment: SosActivityFragment)
 
     /**
      * Inject into Pick Me Up Activity
@@ -115,6 +106,7 @@ interface ApplicationComponent {
      */
     fun inject(bedTimeActivityFragment: BedTimeActivityFragment)
 
+
     //Exposed to sub-graphs.
     fun navigator(): INavigator
     fun preferenceRepository(): IPreferenceRepository
@@ -133,4 +125,6 @@ interface ApplicationComponent {
     fun addCallDetailsFromTerminalInteract(): AddCallDetailsFromTerminalInteract
     fun synchronizeTerminalSMSInteract(): SynchronizeTerminalSMSInteract
     fun synchronizeTerminalContactsInteract(): SynchronizeTerminalContactsInteract
+    fun getAddressFromCurrentLocationInteract(): GetAddressFromCurrentLocationInteract
+    fun soundManager(): ISoundManager
 }

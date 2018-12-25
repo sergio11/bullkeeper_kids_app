@@ -7,7 +7,9 @@ import android.view.WindowManager
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.DaggerSosComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.SosComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
@@ -17,11 +19,19 @@ import javax.inject.Inject
 /**
  * Sos Activity
  */
-class SosActivity : BaseActivity(), HasComponent<ApplicationComponent> {
+class SosActivity : BaseActivity(),
+        HasComponent<SosComponent>, ISosActivityHandler {
 
 
-    private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
-        (application as AndroidApplication).appComponent
+    /**
+     * Sos Component
+     */
+    private val sosComponent: SosComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerSosComponent
+                .builder()
+                .applicationComponent((application as AndroidApplication).appComponent)
+                .activityModule(ActivityModule(this))
+                .build()
     }
 
 
@@ -44,15 +54,15 @@ class SosActivity : BaseActivity(), HasComponent<ApplicationComponent> {
     /**
      * Component
      */
-    override val component: ApplicationComponent
-        get() = appComponent
+    override val component: SosComponent
+        get() = sosComponent
 
     /**
      * On Create
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appComponent.inject(this)
+        sosComponent.inject(this)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         backIcon.setOnClickListener{
             navigator.showHome(this)
