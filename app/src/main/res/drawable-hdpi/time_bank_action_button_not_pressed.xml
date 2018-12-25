@@ -3,6 +3,6 @@
     android:shape="oval">
     <solid android:color="@color/commonWhite"/>
     <stroke
-        android:width="@dimen/pick_me_up_btn_stroke"
-        android:color="@color/greenSuccess" />
+        android:width="@dimen/sos_btn_stroke"
+        android:color="@color/darkPurple" />
 </shape>

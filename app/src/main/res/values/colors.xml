@@ -33,4 +33,8 @@
     <color name="facebook_color">#3a5998</color>
     <!-- Facebook Color Dark -->
     <color name="facebook_color_dark">#22355b</color>
+    <!-- Normal Purple -->
+    <color name="normalPurple">#551A8B</color>
+    <!-- Dark Purple -->
+    <color name="darkPurple">#2A0D45</color>
 </resources>

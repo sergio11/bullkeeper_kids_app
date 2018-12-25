@@ -3,7 +3,6 @@ package com.sanchez.sanchez.bullkeeper_kids.core.sounds
 import androidx.annotation.RawRes
 import com.sanchez.sanchez.bullkeeper_kids.R
 
-
 /**
  * Sound Manager
  */
@@ -19,6 +18,8 @@ interface ISoundManager {
             get() = R.raw.sos_alarm
         val PICK_ME_UP_SOUND: Int
             get() = R.raw.pick_me_up_sound
+        val TIME_BANK_SOUND: Int
+            get() = R.raw.time_bank_sound
     }
 
     /**

@@ -82,5 +82,15 @@
     <dimen name="sos_btn_height">250dp</dimen>
     <dimen name="sos_btn_stroke">5dp</dimen>
 
+    <!-- PickMeUp btn dimens -->
+    <dimen name="pick_me_up_btn_width">250dp</dimen>
+    <dimen name="pick_me_up_btn_height">250dp</dimen>
+    <dimen name="pick_me_up_btn_stroke">5dp</dimen>
+
+    <!-- TimeBank btn dimens -->
+    <dimen name="time_bank_btn_width">250dp</dimen>
+    <dimen name="time_bank_btn_height">250dp</dimen>
+    <dimen name="time_bank_btn_stroke">5dp</dimen>
+
 
 </resources>

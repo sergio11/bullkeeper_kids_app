@@ -70,4 +70,9 @@ interface INavigator {
      */
     fun showPickMeUpScreen(activity: Activity)
 
+    /**
+     * Show Time Bank Screen
+     */
+    fun showTimeBankScreen(activity: Activity)
+
 }

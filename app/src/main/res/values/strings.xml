@@ -205,6 +205,13 @@
     <string name="pick_me_up_toolbar_title">PickMeUp</string>
     <string name="pick_me_up_your_current_location">Your current location</string>
     <string name="pick_me_up_button_text">PickMeUp \n Tap To Activate</string>
-    <string name="pick_me_up_button_activate_text">Pickup in progress, wait please …</string>
+    <string name="pick_me_up_button_activate_text">Pickup in progress, please wait …</string>
+
+    <!-- Time Bank Screen -->
+    <string name="time_bank_toolbar_title">TimeBank</string>
+    <string name="time_bank_your_current_location">Your current location</string>
+    <string name="time_bank_button_text" formatted="false">%02d HRS : %02d MINS \n left in your time bank</string>
+    <string name="time_bank_button_activate_text">Saving on \n time bank …</string>
+    <string name="time_bank_description">You can utilize these minutes in your fun time</string>
 
 </resources>

@@ -125,6 +125,12 @@
         <item name="android:background">@drawable/pick_me_up_action_button_state</item>
     </style>
 
+    <!-- TimeBank Action button Style -->
+    <style name="TimeBankActionButton" parent="@style/CommonActionButton">
+        <item name="android:textColor">@color/time_bank_btn_text_color</item>
+        <item name="android:background">@drawable/time_bank_action_button_state</item>
+    </style>
+
     <!-- Common Title -->
     <style name="CommonTitle">
         <item name="android:textColor">@color/commonWhite</item>

@@ -10,52 +10,37 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <!-- Current Location Icon -->
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/car_solid"
+            android:src="@drawable/piggy_bank_solid"
             android:layout_margin="@dimen/common_margin"
             android:contentDescription="@string/content_not_be_loaded"
             />
 
-        <!-- Activate PickMeUp -->
+        <!-- Save On Time Bank -->
         <Button
-            android:id="@+id/activatePickMeUp"
-            style="@style/PickMeUpActionButton"
-            android:layout_width="@dimen/pick_me_up_btn_width"
-            android:layout_height="@dimen/pick_me_up_btn_height"
+            android:id="@+id/saveOnTimeBank"
+            style="@style/TimeBankActionButton"
+            android:layout_width="@dimen/time_bank_btn_width"
+            android:layout_height="@dimen/time_bank_btn_height"
             android:layout_margin="@dimen/common_margin"
-            android:text="@string/pick_me_up_button_text"/>
+            android:text="-"/>
 
-        <!-- Current Location Icon -->
+
         <ImageView
-            android:id="@+id/currentLocationIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/current_location_icon"
+            android:src="@drawable/smile_white_solid"
             android:layout_margin="@dimen/common_margin"
             android:contentDescription="@string/content_not_be_loaded"
             />
 
-        <!-- Current Location Title  -->
         <TextView
-            android:id="@+id/currentLocationTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_margin"
-            android:text="@string/sos_your_current_location"
-            android:gravity="center"
-            style="@style/CommonTitle"/>
-
-
-        <!-- Current Location Text  -->
-        <TextView
-            android:id="@+id/currentLocationText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/common_margin"
-            android:text="-"
+            android:text="@string/time_bank_description"
             android:gravity="center"
             android:textColor="@color/commonWhite"
             style="@style/CommonStrongText.Big"/>

@@ -16,6 +16,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
 import javax.inject.Inject
 
@@ -128,5 +129,11 @@ class NavigatorImpl
      */
     override fun showPickMeUpScreen(activity: Activity) =
             activity.startActivity(PickMeUpActivity.callingIntent(activity))
+
+    /**
+     * Show Time Bank Screen
+     */
+    override fun showTimeBankScreen(activity: Activity) =
+            activity.startActivity(TimeBankActivity.callingIntent(activity))
 
 }

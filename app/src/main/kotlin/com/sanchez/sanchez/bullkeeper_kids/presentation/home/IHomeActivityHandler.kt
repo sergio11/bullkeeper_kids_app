@@ -14,4 +14,9 @@ interface IHomeActivityHandler {
      * Show Pick Me Up Screen
      */
     fun showPickMeUpScreen()
+
+    /**
+     * Show Time Bank Screen
+     */
+    fun showTimeBankScreen()
 }

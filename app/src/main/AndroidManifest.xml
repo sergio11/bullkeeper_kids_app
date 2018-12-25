@@ -162,6 +162,13 @@
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
 
+        <!-- Time Bank Activity -->
+        <activity
+            android:name=".presentation.timebank.TimeBankActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
+
+
 
     </application>
 

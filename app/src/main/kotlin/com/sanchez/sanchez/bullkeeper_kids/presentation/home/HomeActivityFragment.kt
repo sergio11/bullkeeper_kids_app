@@ -50,7 +50,7 @@ class HomeActivityFragment : BaseFragment() {
 
         // Time Bank Action
         timeBankAction.setOnClickListener {
-            context!!.showShortMessage("Time Banck Clicked")
+            activityHandler.showTimeBankScreen()
         }
 
         // SOS Action

@@ -23,6 +23,8 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivit
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivityFragment
+import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankUpActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import com.squareup.picasso.Picasso
@@ -90,6 +92,16 @@ interface ApplicationComponent {
      * Inject into Pick Me Up Fragment
      */
     fun inject(pickMeUpActivityFragment: PickMeUpActivityFragment)
+
+    /**
+     * Inject into Time Bank Activity
+     */
+    fun inject(timeBankActivity: TimeBankActivity)
+
+    /**
+     * Inject into Time Bank Up Activity Fragment
+     */
+    fun inject(timeBankUpActivityFragment: TimeBankUpActivityFragment)
 
     //Exposed to sub-graphs.
     fun navigator(): INavigator

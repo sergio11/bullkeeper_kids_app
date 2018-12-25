@@ -10,6 +10,7 @@ import androidx.annotation.RawRes
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.APP_BLOCKED_SOUND
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.PICK_ME_UP_SOUND
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.SOS_ALARM_SOUND
+import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.TIME_BANK_SOUND
 import timber.log.Timber
 
 /**
@@ -57,7 +58,8 @@ class SoundPoolManagerImpl(
         soundMap = hashMapOf(
                 Pair(APP_BLOCKED_SOUND, soundPool.load(context, APP_BLOCKED_SOUND, 1)),
                 Pair(SOS_ALARM_SOUND, soundPool.load(context, SOS_ALARM_SOUND, 1)),
-                Pair(PICK_ME_UP_SOUND, soundPool.load(context, PICK_ME_UP_SOUND, 1))
+                Pair(PICK_ME_UP_SOUND, soundPool.load(context, PICK_ME_UP_SOUND, 1)),
+                Pair(TIME_BANK_SOUND, soundPool.load(context, TIME_BANK_SOUND, 1))
         )
 
     }
