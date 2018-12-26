@@ -78,7 +78,9 @@
     <string name="third_page_text_messages_title">Text messages</string>
     <string name="third_page_text_messages_description">BullKeeper Kids synchronizes all SMS present in the device for further analysis, as well as the new SMS received after the installation of the application.</string>
     <string name="third_page_text_messages_reason">Bull Keeper Kids needs to obtain the content of the received SMS to analyze its content in a preventive way and detect possible threats.</string>
-
+    <string name="third_page_storage_title">Storage system</string>
+    <string name="third_page_storage_description">Bullkeeper kids needs access to the storage system to control resources stored in the device.</string>
+    <string name="third_page_storage_reason">Bullkeeper Kids needs access to the storage system to ensure maximum control and protection</string>
 
     <string name="third_page_permission_enabled">Enabled</string>
     <string name="third_page_permission_disabled">Disabled</string>

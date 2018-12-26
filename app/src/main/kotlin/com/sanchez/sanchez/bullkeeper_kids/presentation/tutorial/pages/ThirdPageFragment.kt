@@ -29,6 +29,12 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
     private lateinit var appTutorialHandler: IAppTutorialHandler
 
     /**
+     * Permission Manager
+     */
+    @Inject
+    internal lateinit var permissionManager: IPermissionManager
+
+    /**
      * Get Layout Res Id
      */
     override fun getLayoutResId(): Int = R.layout.third_page_fragment_layout
@@ -45,12 +51,16 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
         appTutorialHandler = context
     }
 
+    /**
+     *
+     */
     override fun whenPhaseIsHidden(pagePosition: Int, currentPosition: Int) {
         Timber.d("When Phase Is Hidden")
 
         if(currentPosition > pagePosition) {
             if(locationHistorySwitch?.isOn == false || callsHistorySwitch?.isOn == false
-                    || contactsListSwitch?.isOn == false || textMessageSwitch?.isOn == false) {
+                    || contactsListSwitch?.isOn == false || textMessageSwitch?.isOn == false
+                || storageSwitch?.isOn == false || storageSwitch?.isOn == false) {
 
                 appTutorialHandler.showNoticeDialog(R.string.third_page_review_permission_request, object : NoticeDialogFragment.NoticeDialogListener {
                     override fun onAccepted(dialog: DialogFragment) {
@@ -68,11 +78,7 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
         Timber.d("When Phase Is Showed")
     }
 
-    /**
-     * Permission Manager
-     */
-    @Inject
-    internal lateinit var permissionManager: IPermissionManager
+
 
     /**
      * Initialize Injector
@@ -150,6 +156,20 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
             }
         }
 
+        // Storage Switch
+        storageSwitch.isOn =
+                !permissionManager.shouldAskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+
+        storageSwitch.isEnabled =
+                permissionManager.shouldAskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+        storageSwitch.setOnToggledListener { toggleableView, isOn ->
+            if(isOn && permissionManager.shouldAskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissionManager.checkSinglePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        getString(R.string.third_page_storage_reason))
+            }
+        }
 
     }
 
@@ -191,6 +211,14 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
                 textMessageSwitch.isEnabled = !status
             }
 
+            /**
+             * Write External Storage
+             */
+            Manifest.permission.WRITE_EXTERNAL_STORAGE -> {
+                storageSwitch.isOn = status
+                storageSwitch.isEnabled = !status
+            }
+
         }
     }
 
@@ -230,7 +258,8 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
                 TransformItem.create(R.id.locationHistory, Direction.RIGHT_TO_LEFT, 0.07f),
                 TransformItem.create(R.id.callsHistory, Direction.LEFT_TO_RIGHT, 0.07f),
                 TransformItem.create(R.id.contactsList, Direction.RIGHT_TO_LEFT, 0.07f),
-                TransformItem.create(R.id.textMessage, Direction.LEFT_TO_RIGHT, 0.07f)
+                TransformItem.create(R.id.textMessage, Direction.LEFT_TO_RIGHT, 0.07f),
+                TransformItem.create(R.id.storage, Direction.RIGHT_TO_LEFT, 0.07f)
         )
     }
 }

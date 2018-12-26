@@ -299,6 +299,73 @@
             <!-- End Text Message -->
 
 
+            <!-- Start Storage -->
+            <RelativeLayout
+                android:id="@+id/storage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Storage Icon -->
+                <ImageView
+                    android:id="@+id/storageIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/message_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Storage Title -->
+                <TextView
+                    android:id="@+id/storageTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/storageIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/storageDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_storage_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Storage Description -->
+                <TextView
+                    android:id="@+id/storageDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/storageIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_storage_description"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Storage Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/storageSwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    android:layout_below="@id/storageDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite"/>
+
+            </RelativeLayout>
+            <!-- End Storage -->
+
+
         </LinearLayout>
 
 
