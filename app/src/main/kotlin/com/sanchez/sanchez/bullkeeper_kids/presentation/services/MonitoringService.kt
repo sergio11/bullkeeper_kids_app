@@ -46,6 +46,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.phonenumber.GetBlockedPhoneNumbersInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.scheduledblocks.SynchronizeScheduledBlocksInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import org.joda.time.LocalTime
 import java.lang.Exception
@@ -229,6 +230,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var scheduledBlocksRepositoryImpl: ScheduledBlocksRepositoryImpl
 
+    /**
+     * Unlink Terminal
+     */
+    @Inject
+    internal lateinit var unlinkTerminalInteract: UnlinkTerminalInteract
+
 
     /**
      * Receivers
@@ -339,6 +346,10 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     override fun onDestroy() {
         Log.d(TAG, "On Destroy Monitoring Service")
         cleanResources()
+        if(preferenceRepository.getPrefKidIdentity()
+                != IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE &&
+                preferenceRepository.getPrefTerminalIdentity() !=
+                    IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)
         sendBroadcast(Intent(this,
                 AwakenMonitoringServiceBroadcastReceiver::class.java))
     }
@@ -713,6 +724,23 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Unlink Terminal
+     */
+    private fun unlinkTerminal(){
+        Timber.d("Unlink Terminal")
+        unlinkTerminalInteract(UseCase.None()){
+            it.either(fnL = fun(_: Failure){
+                Timber.d("Unlink Terminal Failed")
+            }, fnR = fun(_){
+                Timber.d("Unlink Terminal Success")
+                navigator.showLogin(this)
+                stopSelf()
+            })
+        }
+
+    }
+
+    /**
      * Request Location Updates
      */
     @SuppressLint("MissingPermission")
@@ -857,6 +885,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     inner class MonitoringServiceUncaughtExceptionHandler(private val context: Context) : Thread.UncaughtExceptionHandler {
         override fun uncaughtException(t: Thread, e: Throwable) {
+            Timber.d("Monitoring Service Exception Handler -> %s", e.message)
             cleanResources()
             val i = Intent(context, AwakenMonitoringServiceBroadcastReceiver::class.java)
             val pendingIntent = PendingIntent.getBroadcast(context, 0, i, 0)

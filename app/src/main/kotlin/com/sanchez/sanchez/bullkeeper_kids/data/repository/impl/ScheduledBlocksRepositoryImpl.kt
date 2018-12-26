@@ -44,4 +44,16 @@ class ScheduledBlocksRepositoryImpl: SupportRepositoryImpl<ScheduledBlockEntity>
         realm.close()
         return scheduledBlockist
     }
+
+    /**
+     * Delete All
+     */
+    override fun deleteAll() {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction {
+            it.delete(ScheduledBlockEntity::class.java)
+        }
+        realm.close()
+    }
+
 }

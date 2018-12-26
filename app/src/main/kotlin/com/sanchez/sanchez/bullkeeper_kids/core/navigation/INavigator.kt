@@ -21,6 +21,11 @@ interface INavigator {
     fun showLogin(activity: Activity)
 
     /**
+     * Show Login
+     */
+    fun showLogin(service: Service)
+
+    /**
      * Show Home
      */
     fun showHome(activity: Activity)

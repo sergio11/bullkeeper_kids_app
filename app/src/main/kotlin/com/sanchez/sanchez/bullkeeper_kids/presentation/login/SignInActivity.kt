@@ -38,8 +38,11 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler,
      *
      */
     companion object {
-        fun callingIntent(context: Context) =
-                Intent(context, SignInActivity::class.java)
+        fun callingIntent(context: Context): Intent {
+            val intent = Intent(context, SignInActivity::class.java)
+            intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            return intent
+        }
     }
 
     /**

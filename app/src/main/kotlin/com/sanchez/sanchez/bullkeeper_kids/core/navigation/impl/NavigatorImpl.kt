@@ -28,6 +28,7 @@ class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
 
 
+
     /**
      * Show Usage Access Settings
      */
@@ -50,6 +51,12 @@ class NavigatorImpl
             false -> showAppTutorial(activity)
         }
     }
+
+    /**
+     * Show Login
+     */
+    override fun showLogin(service: Service) =
+            service.startActivity(SignInActivity.callingIntent(service))
 
     /**
      * Show Home

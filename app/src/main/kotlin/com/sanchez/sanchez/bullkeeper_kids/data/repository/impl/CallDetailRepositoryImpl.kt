@@ -9,6 +9,18 @@ import timber.log.Timber
  * Call Repository
  */
 class CallDetailRepositoryImpl: SupportRepositoryImpl<CallDetailEntity>(), ICallDetailRepository {
+
+    /**
+     * Delete All
+     */
+    override fun deleteAll() {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction {
+            it.delete(CallDetailEntity::class.java)
+        }
+        realm.close()
+    }
+
     /**
      * Delete
      */

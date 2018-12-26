@@ -51,6 +51,17 @@ class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(),
     }
 
     /**
+     * Delete All
+     */
+    override fun deleteAll() {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction {
+            it.delete(AppInstalledEntity::class.java)
+        }
+        realm.close()
+    }
+
+    /**
      * Find By Package Name
      */
     override fun findByPackageName(packageName: String): AppInstalledEntity? {

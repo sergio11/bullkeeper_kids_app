@@ -27,6 +27,11 @@ interface ISupportRepository<T> {
     fun delete(modelList: List<T>)
 
     /**
+     * Delete All
+     */
+    fun deleteAll()
+
+    /**
      * List
      */
     fun list(): List<T>

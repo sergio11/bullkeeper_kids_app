@@ -10,6 +10,7 @@ import timber.log.Timber
  */
 class ContactRepositoryImpl: SupportRepositoryImpl<ContactEntity>(), IContactRepository {
 
+
     /**
      * Delete
      */
@@ -31,6 +32,17 @@ class ContactRepositoryImpl: SupportRepositoryImpl<ContactEntity>(), IContactRep
      */
     override fun delete(modelList: List<ContactEntity>) {
         for(model in modelList) delete(model)
+    }
+
+    /**
+     * Delete All
+     */
+    override fun deleteAll() {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction {
+            it.delete(ContactEntity::class.java)
+        }
+        realm.close()
     }
 
     /**

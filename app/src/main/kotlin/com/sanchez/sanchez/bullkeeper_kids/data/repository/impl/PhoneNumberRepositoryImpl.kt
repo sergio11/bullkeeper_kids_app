@@ -10,6 +10,7 @@ import timber.log.Timber
  */
 class PhoneNumberRepositoryImpl: SupportRepositoryImpl<PhoneNumberBlockedEntity>(), IPhoneNumberRepository {
 
+
     /**
      * Delete
      */
@@ -30,6 +31,17 @@ class PhoneNumberRepositoryImpl: SupportRepositoryImpl<PhoneNumberBlockedEntity>
      */
     override fun delete(modelList: List<PhoneNumberBlockedEntity>) {
         for(model in modelList) delete(model)
+    }
+
+    /**
+     * Delete All
+     */
+    override fun deleteAll() {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction {
+            it.delete(PhoneNumberBlockedEntity::class.java)
+        }
+        realm.close()
     }
 
     /**

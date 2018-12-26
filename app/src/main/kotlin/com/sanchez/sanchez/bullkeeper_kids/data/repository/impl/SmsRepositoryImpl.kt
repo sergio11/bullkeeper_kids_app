@@ -36,6 +36,17 @@ class SmsRepositoryImpl: SupportRepositoryImpl<SmsEntity>(), ISmsRepository {
     }
 
     /**
+     * Delete All
+     */
+    override fun deleteAll() {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction {
+            it.delete(SmsEntity::class.java)
+        }
+        realm.close()
+    }
+
+    /**
      * List
      */
     override fun list(): List<SmsEntity> {

@@ -13,7 +13,8 @@ import javax.inject.Inject
  */
 class SaveTerminalInteract
     @Inject constructor(retrofit: Retrofit,
-                        private val terminalService: ITerminalService): UseCase<TerminalEntity, SaveTerminalInteract.Params>(retrofit) {
+                        private val terminalService: ITerminalService):
+        UseCase<TerminalEntity, SaveTerminalInteract.Params>(retrofit) {
 
     /**
      * On Executed

@@ -14,6 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class PackageUsageStatsRepositoryImpl: IPackageUsageStatsRepository {
 
+
     val TAG = "PACKAGE_USAGE"
 
     /**
@@ -46,6 +47,17 @@ class PackageUsageStatsRepositoryImpl: IPackageUsageStatsRepository {
         // Remove package into writable transaction
         realm.executeTransaction {
             packageToDelete?.deleteFromRealm()
+        }
+        realm.close()
+    }
+
+    /**
+     * Delete All
+     */
+    override fun deleteAll() {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction {
+            it.delete(PackageUsageStatsEntity::class.java)
         }
         realm.close()
     }
