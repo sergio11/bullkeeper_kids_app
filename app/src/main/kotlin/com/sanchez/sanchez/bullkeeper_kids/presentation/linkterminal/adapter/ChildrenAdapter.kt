@@ -76,8 +76,8 @@ class ChildrenAdapter
 
             // Set Profile Image
             piccaso.load(element.kid?.profileImage)
-                    .placeholder(R.drawable.child_white_solid)
-                    .error(R.drawable.child_white_solid)
+                    .placeholder(R.drawable.kid_default)
+                    .error(R.drawable.kid_default)
                     .into(childImageImageView)
 
 

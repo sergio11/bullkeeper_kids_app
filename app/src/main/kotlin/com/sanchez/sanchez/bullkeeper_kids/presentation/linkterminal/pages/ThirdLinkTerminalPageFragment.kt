@@ -179,8 +179,8 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
             schoolNameTextView.text = currentSonEntity?.school?.name
 
             picasso.load(currentSonEntity?.profileImage)
-                    .placeholder(R.drawable.child_white_solid)
-                    .error(R.drawable.child_white_solid)
+                    .placeholder(R.drawable.kid_default)
+                    .error(R.drawable.kid_default)
                     .into(childImageImageView)
 
             linkTerminal.setOnClickListener {

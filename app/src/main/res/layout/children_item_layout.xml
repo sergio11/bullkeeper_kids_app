@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_marginBottom="5dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <!-- Foreground -->
@@ -36,9 +35,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:contentDescription="@string/content_not_be_loaded"
-                android:src="@drawable/child_white_solid"
-                app:civ_border_color="@color/commonWhite"
-                app:civ_border_width="@dimen/common_image_stroke_width" />
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/kid_default" />
 
         </FrameLayout>
 

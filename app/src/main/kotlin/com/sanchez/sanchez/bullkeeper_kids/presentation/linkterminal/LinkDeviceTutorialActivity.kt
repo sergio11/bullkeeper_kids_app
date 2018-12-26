@@ -24,7 +24,6 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportActivity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.*
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.ILinkDeviceTutorialHandler
-import kotlinx.android.synthetic.main.fifth_link_terminal_page_fragment_layout.*
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -21,7 +21,6 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.SupportRecycler
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.decoration.ItemOffsetDecoration
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.children.GetSelfChildrenInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.SupervisedChildrenEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.adapter.ChildrenAdapter
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.ILinkDeviceTutorialHandler

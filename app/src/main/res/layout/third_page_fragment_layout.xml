@@ -311,7 +311,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:contentDescription="@string/content_not_be_loaded"
-                    android:src="@drawable/message_solid"
+                    android:src="@drawable/storage_white_solid"
                     android:layout_margin="@dimen/common_margin"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"/>
