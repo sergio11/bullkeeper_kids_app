@@ -214,6 +214,75 @@ class SynchronizeInstalledPackagesInteract
         return appsUploadedList.size
     }
 
+    /**
+     * Remove Apps
+     */
+    private suspend fun removeApps(appsToRemove: List<AppInstalledEntity>): Int {
+        Preconditions.checkNotNull(appsToRemove, "Apps To Remove can not be null")
+        Preconditions.checkState(!appsToRemove.isEmpty(), "App to Remove can not be empty")
+
+        val kidId = preferenceRepository.getPrefKidIdentity()
+        val terminalId = preferenceRepository.getPrefTerminalIdentity()
+
+        var totalAppsDeleted  = 0
+
+        // Delete Apps Installed
+        val response = appsService.deleteAppsInstalled(
+                kidId, terminalId, appsToRemove.filter { it.sync == 1 && it.serverId != null }
+                    .map { it.serverId!! }
+        ).await()
+
+        response.httpStatus?.let {
+
+            if (it == "OK") {
+                totalAppsDeleted = appsToRemove.size
+                // save all as removed = true
+                appsToRemove.onEach { it.removed = true }
+                appsInstalledRepository.save(appsToRemove)
+                appsInstalledRepository.delete(appsToRemove)
+            }
+
+        }
+
+        return totalAppsDeleted
+
+    }
+
+    /**
+     * Sync App Rules
+     */
+    private suspend fun syncAppRules(){
+
+        Timber.d("SYNC_APPS: Sync App Rules")
+
+        val kidId = preferenceRepository.getPrefKidIdentity()
+        val terminalId = preferenceRepository.getPrefTerminalIdentity()
+
+        // Get App Rules
+        val response = appsService
+                .getAppRulesForAppsInTheTerminal(kidId, terminalId).await()
+
+        response.httpStatus?.let {
+            if (it == "OK") {
+
+                response.data?.let { appRulesList ->
+
+                    // Get Packages
+                    val appsInstalled = appsInstalledRepository.findByPackageNameIn(appRulesList
+                            .filter { !it.packageName.isNullOrEmpty()  }.map { it.packageName!! }
+                            .toTypedArray())
+
+                    Timber.d("SYNC_APPS: Apps Installed to update -> ${appsInstalled.size}")
+
+                    appsInstalledRepository.save(appsInstalled.onEach {appRulesList.find { appRuleDTO ->  appRuleDTO.packageName == it.packageName }
+                            ?.let {appRuleDTO -> it.appRule = appRuleDTO.appRule }})
+
+                }
+            }
+        }
+
+    }
+
 
     /**
      * On Executed
@@ -228,6 +297,7 @@ class SynchronizeInstalledPackagesInteract
 
         var totalAppsSync = 0
 
+        // Apps To Save
         if(appsToSave.isNotEmpty()) {
 
             appsInstalledRepository.save(appsToSave)
@@ -236,10 +306,16 @@ class SynchronizeInstalledPackagesInteract
 
         }
 
+        // Apps To Remove
         if(appsToRemove.isNotEmpty()) {
             appsInstalledRepository.save(appsToRemove)
             Timber.d("Apps to remove -> %d", appsToRemove.size)
+            totalAppsSync += removeApps(appsToRemove)
         }
+
+
+        // Sync App Rules
+        syncAppRules()
 
         return totalAppsSync
     }

@@ -112,7 +112,7 @@ class SynchronizeTerminalContactsInteract
 
         cur?.close()
 
-        return contactList
+        return contactList.distinctBy { it.id }
     }
 
     /**
@@ -277,6 +277,39 @@ class SynchronizeTerminalContactsInteract
         return contactsUpload.size
     }
 
+    /**
+     * Delete Contacts
+     */
+    private suspend fun deleteContacts(contactsToDelete: List<ContactEntity>): Int{
+        Preconditions.checkNotNull(contactsToDelete, "Contacts to delete can not be null")
+        Preconditions.checkState(!contactsToDelete.isEmpty(), "Contacts to delete can not be empty")
+
+        val kid = preferenceRepository.getPrefKidIdentity()
+        val terminal = preferenceRepository.getPrefTerminalIdentity()
+
+        var totalContactsDeleted  = 0
+
+        val response = contactsService.deleteContactsFromTerminal(
+                kid, terminal, contactsToDelete.filter { it.sync == 1 && it.serverId != null }
+                .map { it.serverId!! }
+        ).await()
+
+        response.httpStatus?.let {
+
+            if (it == "OK") {
+                totalContactsDeleted = contactsToDelete.size
+                // save all as removed = true
+                contactsToDelete.onEach { it.remove = 1 }
+                contactRepositoryImpl.save(contactsToDelete)
+                contactRepositoryImpl.delete(contactsToDelete)
+            }
+
+        }
+
+        return totalContactsDeleted
+
+    }
+
 
     /**
      * On Execute
@@ -291,16 +324,18 @@ class SynchronizeTerminalContactsInteract
 
         var totalContactsSync = 0
 
+        // Upload Contacts
         if(contactToUpload.isNotEmpty()) {
             contactRepositoryImpl.save(contactToUpload)
             Timber.d("$TAG Total contacts to upload -> %d", contactToUpload.size)
-            totalContactsSync = uploadContactsToSync(contactToUpload)
+            totalContactsSync += uploadContactsToSync(contactToUpload)
         }
 
-
+        // Delete Contacts
         if (contactToRemove.isNotEmpty()) {
             contactRepositoryImpl.save(contactToRemove)
             Timber.d("$TAG Total contacts to remove -> %d", contactToRemove.size)
+            totalContactsSync += deleteContacts(contactToRemove)
         }
 
         return totalContactsSync

@@ -1,6 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.data.repository.impl
 
 
+import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import io.realm.Realm
@@ -10,7 +11,8 @@ import timber.log.Timber
  * Package Installed Repository Impl
  */
 
-class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(), IAppsInstalledRepository {
+class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(),
+        IAppsInstalledRepository {
 
     /**
      * List
@@ -57,6 +59,21 @@ class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(), 
         val realmResult = realm.where(AppInstalledEntity::class.java)
                 .equalTo("packageName", packageName).findFirst()
         var packageInstalled: AppInstalledEntity? = null
+        if(realmResult != null)
+            packageInstalled = realm.copyFromRealm(realmResult)
+        realm.close()
+        return packageInstalled
+    }
+
+    /**
+     * Find By Package Name In
+     */
+    override fun findByPackageNameIn(values: Array<String>): List<AppInstalledEntity> {
+        Preconditions.checkNotNull(values, "Values can not be null")
+        val realm = Realm.getDefaultInstance()
+        val realmResult = realm.where(AppInstalledEntity::class.java)
+                .`in`("packageName", values).findAll()
+        var packageInstalled: List<AppInstalledEntity> = arrayListOf()
         if(realmResult != null)
             packageInstalled = realm.copyFromRealm(realmResult)
         realm.close()

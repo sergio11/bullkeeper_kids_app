@@ -1,6 +1,5 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms
 
-
 import android.content.Context
 import android.net.Uri
 import com.fernandocejas.arrow.checks.Preconditions
@@ -82,54 +81,6 @@ class SynchronizeTerminalSMSInteract
         c.close()
 
         return lstSms
-    }
-
-    /**
-     * Upload SMS to sync
-     */
-    private suspend fun uploadSmsToSync(smsToSync: List<SmsEntity>): Int {
-        Preconditions.checkNotNull(smsToSync, "Sms to sync can not be null")
-        Preconditions.checkState(!smsToSync.isEmpty(), "Sms to sync can not be empty")
-
-        val kid = preferenceRepository.getPrefKidIdentity()
-        val terminal = preferenceRepository.getPrefTerminalIdentity()
-
-        val smsUploaded = arrayListOf<SmsEntity>()
-
-        smsToSync.asSequence().batch(BATCH_SIZE).forEach { group ->
-
-            val response = smsService
-                    .saveSmsInTheTerminal(kid, terminal, group.map { SaveSmsDTO(it.address,
-                            it.message, it.readState, it.time, it.folderName, it.id,
-                            kid, terminal) })
-                    .await()
-
-            response.httpStatus?.let {
-
-                if(it == "OK") {
-
-                    response.data?.forEach {smsDTO ->
-                        group.map {
-                            if(it.id == smsDTO.localId) {
-                                it.serverId = smsDTO.identity
-                                it.sync = 1
-                            }
-                        }
-                    }
-
-                    // Save Sync SMS
-                    smsRepositoryImpl.save(group)
-                    // Add To List
-                    smsUploaded.addAll(group)
-                } else {
-                    Timber.d("No Success Sync SMS")
-                }
-
-            }
-        }
-
-        return smsUploaded.size
-
     }
 
     /**
@@ -229,6 +180,87 @@ class SynchronizeTerminalSMSInteract
     }
 
     /**
+     * Upload SMS to sync
+     */
+    private suspend fun uploadSmsToSync(smsToSync: List<SmsEntity>): Int {
+        Preconditions.checkNotNull(smsToSync, "Sms to sync can not be null")
+        Preconditions.checkState(!smsToSync.isEmpty(), "Sms to sync can not be empty")
+
+        val kid = preferenceRepository.getPrefKidIdentity()
+        val terminal = preferenceRepository.getPrefTerminalIdentity()
+
+        val smsUploaded = arrayListOf<SmsEntity>()
+
+        smsToSync.asSequence().batch(BATCH_SIZE).forEach { group ->
+
+            val response = smsService
+                    .saveSmsInTheTerminal(kid, terminal, group.map { SaveSmsDTO(it.address,
+                            it.message, it.readState, it.time, it.folderName, it.id,
+                            kid, terminal) })
+                    .await()
+
+            response.httpStatus?.let {
+
+                if(it == "OK") {
+
+                    response.data?.forEach {smsDTO ->
+                        group.map {
+                            if(it.id == smsDTO.localId) {
+                                it.serverId = smsDTO.identity
+                                it.sync = 1
+                            }
+                        }
+                    }
+
+                    // Save Sync SMS
+                    smsRepositoryImpl.save(group)
+                    // Add To List
+                    smsUploaded.addAll(group)
+                } else {
+                    Timber.d("No Success Sync SMS")
+                }
+
+            }
+        }
+
+        return smsUploaded.size
+
+    }
+
+    /**
+     * Remove SMS
+     */
+    private suspend fun removeSms(smsToRemove: List<SmsEntity>): Int{
+        Preconditions.checkNotNull(smsToRemove, "Sms to remove can not be null")
+        Preconditions.checkState(!smsToRemove.isEmpty(), "Sms to remove can not be empty")
+
+        val kid = preferenceRepository.getPrefKidIdentity()
+        val terminal = preferenceRepository.getPrefTerminalIdentity()
+
+        var smsRemoved = 0
+
+        val response = smsService.deleteSmsFromTerminal(
+                kid, terminal, smsToRemove.filter { it.sync == 1 && it.serverId != null }
+                .map { it.serverId!! }
+        ).await()
+
+        response.httpStatus?.let {
+
+            if (it == "OK") {
+                smsRemoved = smsToRemove.size
+                // save all as removed = true
+                smsToRemove.onEach { it.remove = 1 }
+                smsRepositoryImpl.save(smsToRemove)
+                smsRepositoryImpl.delete(smsToRemove)
+            }
+
+        }
+
+        return smsRemoved
+
+    }
+
+    /**
      * On Execute
      */
     override suspend fun onExecuted(params: None): Int {
@@ -239,15 +271,18 @@ class SynchronizeTerminalSMSInteract
 
         var totalSmsSync = 0
 
+        // Upload Sms
         if(smsToUpload.isNotEmpty()) {
             smsRepositoryImpl.save(smsToUpload)
             Timber.d("SMS to upload -> %d", smsToUpload.size)
             totalSmsSync += uploadSmsToSync(smsToUpload)
         }
 
+        // Remove Sms
         if(smsToRemove.isNotEmpty()) {
             smsRepositoryImpl.save(smsToRemove)
             Timber.d("SMS to remove -> %d", smsToRemove.size)
+            totalSmsSync += removeSms(smsToRemove)
         }
 
         return totalSmsSync

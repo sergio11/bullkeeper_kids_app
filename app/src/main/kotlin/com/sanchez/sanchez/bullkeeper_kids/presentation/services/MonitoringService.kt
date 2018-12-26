@@ -135,6 +135,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var synchronizeScheduledBlocksInteract: SynchronizeScheduledBlocksInteract
 
+    /**
+     * Synchronize Installed Packages Interact
+     */
+    @Inject
+    internal lateinit var synchronizeInstalledPackagesInteract:
+            SynchronizeInstalledPackagesInteract
+
 
     /**
      * Local Notification Service
@@ -142,17 +149,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var localNotificationService: ILocalNotificationService
 
-    /**
-     * Get Blocked Packages Interact
-     */
-    @Inject
-    internal lateinit var getBlockedPackagesInteract: GetBlockedPackagesInteract
 
-    /**
-     * Get All Packages Installed Interact
-     */
-    @Inject
-    internal lateinit var getAllAppsInstalledInteract: GetAllAppsInstalledInteract
 
     /**
      * Usage Stats Service
@@ -165,14 +162,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     @Inject
     internal lateinit var navigator: INavigator
-
-
-    /**
-     * Synchronize Installed Packages Interact
-     */
-    @Inject
-    internal lateinit var synchronizeInstalledPackagesInteract:
-            SynchronizeInstalledPackagesInteract
 
     /**
      * Sync Usage Stats Interact

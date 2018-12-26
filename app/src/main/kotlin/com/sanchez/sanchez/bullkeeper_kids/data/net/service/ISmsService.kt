@@ -8,6 +8,7 @@ import retrofit2.http.*
 
 /**
  * SMS Service
+ * POST /api/v1/children/{kid}/terminal/{terminal}/sms/delete DELETE_SMS_FROM_TERMINAL
  */
 interface ISmsService {
 
@@ -46,4 +47,15 @@ interface ISmsService {
             @Path("terminal") terminal: String,
             @Body sms: List<SaveSmsDTO>
     ): Deferred<APIResponse<List<SmsDTO>>>
+
+    /**
+     * Delete SMS from terminal
+     */
+    @POST("children/{kid}/terminal/{terminal}/sms/delete")
+    fun deleteSmsFromTerminal(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String,
+            @Body smsList: List<String>
+    ): Deferred<APIResponse<String>>
+
 }

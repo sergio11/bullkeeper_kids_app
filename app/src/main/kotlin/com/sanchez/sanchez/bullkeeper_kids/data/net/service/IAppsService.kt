@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.data.net.service
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveAppInstalledDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.AppInstalledDTO
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.AppRuleDTO
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
 
@@ -14,6 +15,8 @@ import retrofit2.http.*
  * POST /api/v1/children/{kid}/terminal/{terminal}/apps SAVE_APPS_INSTALLED_IN_THE_TERMINAL
  * POST /api/v1/children/{kid}/terminal/{terminal}/apps/add ADD_APP_INSTALLED
  * DELETE /api/v1/children/{kid}/terminal/{terminal}/apps/{app} DELETE_APP_INSTALLED_BY_ID
+ * POST /api/v1/children/{kid}/terminal/{terminal}/apps/delete DELETE_APPS_INSTALLED
+ * GET /api/v1/children/{kid}/terminal/{terminal}/apps/rules GET_APP_RULES_FOR_APPS_IN_THE_TERMINAL
  */
 interface IAppsService {
 
@@ -63,5 +66,23 @@ interface IAppsService {
             @Path("terminal") terminal: String,
             @Body app: SaveAppInstalledDTO
     ): Deferred<APIResponse<AppInstalledDTO>>
+
+    /**
+     * Delete Apps Installed
+     */
+    @POST("children/{kid}/terminal/{terminal}/apps/delete")
+    fun deleteAppsInstalled(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String,
+            @Body appsList: List<String>) : Deferred<APIResponse<String>>
+
+    /**
+     * Get App Rules for apps in the terminal
+     */
+    @GET("children/{kid}/terminal/{terminal}/apps/rules")
+    fun getAppRulesForAppsInTheTerminal(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String
+    ) : Deferred<APIResponse<List<AppRuleDTO>>>
 
 }

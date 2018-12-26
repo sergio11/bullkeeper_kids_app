@@ -231,6 +231,41 @@ class SynchronizeTerminalCallHistoryInteract
     }
 
     /**
+     * Delete Call Details
+     */
+    private suspend fun deleteCallDetails(callsToRemove: List<CallDetailEntity>): Int {
+        Preconditions.checkNotNull(callsToRemove, "Calls To Upload")
+        Preconditions.checkState(!callsToRemove.isEmpty(), "Calls To Upload can not be empty")
+
+        val kidId = preferenceRepository.getPrefKidIdentity()
+        val terminalId = preferenceRepository.getPrefTerminalIdentity()
+
+        var totalCallsDeleted  = 0
+
+        val response = callService.deleteCallDetailsFromTerminal(
+                kidId, terminalId, callsToRemove.filter { it.sync == 1 && it.serverId != null }
+                .map { it.serverId!! }
+        ).await()
+
+        response.httpStatus?.let {
+
+            if (it == "OK") {
+                totalCallsDeleted = callsToRemove.size
+                // save all as removed = true
+                callsToRemove.onEach { it.remove = 1 }
+                callDetailsRepositoryImpl.save(callsToRemove)
+                callDetailsRepositoryImpl.delete(callsToRemove)
+            }
+
+        }
+
+        return totalCallsDeleted
+
+    }
+
+
+
+    /**
      * On Execute
      */
     override suspend fun onExecuted(params: None): Int {
@@ -242,6 +277,7 @@ class SynchronizeTerminalCallHistoryInteract
 
         var totalCallsSync = 0
 
+        // Calls To Upload
         if(callsToUpload.isNotEmpty()) {
             // Save Call Details
             callDetailsRepositoryImpl.save(callsToUpload)
@@ -250,10 +286,12 @@ class SynchronizeTerminalCallHistoryInteract
             totalCallsSync += uploadCallDetails(callsToUpload)
         }
 
+        // Remove Calls
         if(callsToRemove.isNotEmpty()) {
             // Save Call Details
             callDetailsRepositoryImpl.save(callsToRemove)
             Timber.d("%s Calls To Remove -> %s", TAG, callsToRemove.size)
+            totalCallsSync += deleteCallDetails(callsToRemove)
         }
 
         return totalCallsSync

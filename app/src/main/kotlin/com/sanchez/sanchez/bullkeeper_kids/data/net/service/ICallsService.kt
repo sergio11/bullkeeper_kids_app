@@ -8,6 +8,7 @@ import retrofit2.http.*
 
 /**
  * Calls Service
+ * POST /api/v1/children/{kid}/terminal/{terminal}/calls/delete DELETE_CALL_DETAILS_FROM_TERMINAL
  */
 interface ICallsService {
 
@@ -57,4 +58,14 @@ interface ICallsService {
             @Body calls: SaveCallDetailDTO
 
     ): Deferred<APIResponse<CallDetailDTO>>
+
+    /**
+     * Delete Call Details From Terminal
+     */
+    @POST("children/{kid}/terminal/{terminal}/calls/delete")
+    fun deleteCallDetailsFromTerminal(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String,
+            @Body callsList: List<String>
+    ): Deferred<APIResponse<String>>
 }

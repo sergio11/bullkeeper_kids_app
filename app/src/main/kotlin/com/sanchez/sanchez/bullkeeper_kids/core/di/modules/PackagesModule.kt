@@ -6,7 +6,6 @@ import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPackageUsageStatsRep
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.AppsInstalledRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.PackageUsageStatsRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetAllAppsInstalledInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.GetBlockedPackagesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynPackageUsageStatsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.SynchronizeInstalledPackagesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -46,14 +45,6 @@ class PackagesModule {
     @Singleton
     fun provideAppsService(retrofit: Retrofit) : IAppsService
         = retrofit.create(IAppsService::class.java)
-
-    /**
-     * Provide Get Blocked Packages Interact
-     */
-    @Provides
-    @Singleton
-    fun provideGetBlockedPackagesInteract(retrofit: Retrofit, appsInstalledRepository: IAppsInstalledRepository):
-            GetBlockedPackagesInteract = GetBlockedPackagesInteract(retrofit, appsInstalledRepository)
 
     /**
      * Provide Get All Packages Installed Interact
