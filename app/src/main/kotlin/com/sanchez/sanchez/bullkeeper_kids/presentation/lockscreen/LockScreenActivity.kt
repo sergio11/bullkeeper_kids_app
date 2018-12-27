@@ -18,6 +18,7 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.app.Activity
 import android.app.ActivityManager
+import android.view.WindowManager
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import timber.log.Timber
@@ -34,6 +35,31 @@ class LockScreenActivity : AppCompatActivity() {
      */
     private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as AndroidApplication).appComponent
+    }
+
+    companion object {
+
+        /**
+         * Args
+         */
+        const val PACKAGE_NAME_ARG = "PACKAGE_NAME_ARG"
+        const val APP_NAME_ARG = "APP_NAME_ARG"
+        const val APP_ICON_ARG = "ICON_ARG"
+        const val APP_RULE_ARG = "APP_RULE_ARG"
+
+        /**
+         * Calling Intent
+         */
+        fun callingIntent(context: Context, packageName: String?, appName: String?,
+                          icon: String?, appRule: String?): Intent {
+            val intent = Intent(context, LockScreenActivity::class.java)
+            intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(PACKAGE_NAME_ARG, packageName)
+            intent.putExtra(APP_NAME_ARG, appName)
+            intent.putExtra(APP_ICON_ARG, icon)
+            intent.putExtra(APP_RULE_ARG, appRule)
+            return intent
+        }
     }
 
     /**
@@ -55,31 +81,11 @@ class LockScreenActivity : AppCompatActivity() {
     @Inject
     internal lateinit var navigator: INavigator
 
+    /**
+     * App Blocked Stream Id
+     */
+    private var appBlockedStreamId = -1
 
-    companion object {
-
-        /**
-         * Args
-         */
-        const val PACKAGE_NAME_ARG = "PACKAGE_NAME_ARG"
-        const val APP_NAME_ARG = "APP_NAME_ARG"
-        const val APP_ICON_ARG = "ICON_ARG"
-        const val APP_RULE_ARG = "APP_RULE_ARG"
-
-        /**
-         * Calling Intent
-         */
-        fun callingIntent(context: Context, packageName: String?, appName: String?,
-                          icon: String?, appRule: String?): Intent {
-            val intent = Intent(context, LockScreenActivity::class.java)
-            intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.putExtra(PACKAGE_NAME_ARG, packageName)
-            intent.putExtra(APP_NAME_ARG, appName)
-            intent.putExtra(APP_ICON_ARG, icon)
-            intent.putExtra(APP_RULE_ARG, appRule)
-            return intent
-        }
-    }
 
     /**
      *
@@ -99,6 +105,7 @@ class LockScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lock_screen)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         appComponent.inject(this)
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this)
         val mIntentFilter = IntentFilter()
@@ -116,7 +123,23 @@ class LockScreenActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         Timber.d("LOCK: On New Intent called")
         intent?.let { showAppBlockedDetail(it) }
+    }
 
+    /**
+     * On Resume
+     */
+    override fun onResume() {
+        super.onResume()
+        // Play Emergency Sound
+        appBlockedStreamId = soundManager.playSound(ISoundManager.APP_BLOCKED_SOUND, true)
+    }
+
+    /**
+     * On Stop
+     */
+    override fun onStop() {
+        super.onStop()
+        soundManager.stopSound(appBlockedStreamId)
     }
 
     /**
@@ -152,8 +175,6 @@ class LockScreenActivity : AppCompatActivity() {
             navigator.showHome(this)
         }
 
-        // Play Emergency Sound
-        soundManager.playSound(ISoundManager.APP_BLOCKED_SOUND)
     }
 
     /**

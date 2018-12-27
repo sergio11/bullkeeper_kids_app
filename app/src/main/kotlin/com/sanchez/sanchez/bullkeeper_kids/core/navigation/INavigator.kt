@@ -2,8 +2,8 @@ package com.sanchez.sanchez.bullkeeper_kids.core.navigation
 
 import android.app.Activity
 import android.app.Service
+import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
 
 /**
  * Navigator
@@ -84,5 +84,15 @@ interface INavigator {
      * Show Bed Time Screen
      */
     fun showBedTimeScreen(activity: Activity)
+
+    /**
+     * Show Phone Number Blocked Screen
+     */
+    fun showPhoneNumberBlockedScreen(ctx: Context, phoneNumber: String, blockedAt: String)
+
+    /**
+     * Show Phone Number Blocked Screen
+     */
+    fun showPhoneNumberBlockedScreen(ctx: Context)
 
 }

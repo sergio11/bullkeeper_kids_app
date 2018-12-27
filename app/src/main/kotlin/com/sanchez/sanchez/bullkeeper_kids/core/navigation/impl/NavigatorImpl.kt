@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.navigation.impl
 import android.app.Activity
 import android.app.Service
 import android.app.admin.DevicePolicyManager
+import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import com.sanchez.sanchez.bullkeeper_kids.R
@@ -15,6 +16,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalConten
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
@@ -26,7 +28,6 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
-
 
 
     /**
@@ -150,4 +151,15 @@ class NavigatorImpl
     override fun showBedTimeScreen(activity: Activity) =
             activity.startActivity(BedTimeActivity.callingIntent(activity))
 
+    /**
+     * Show Phone Number Blocked Screen
+     */
+    override fun showPhoneNumberBlockedScreen(ctx: Context, phoneNumber: String, blockedAt: String) =
+            ctx.startActivity(PhoneNumberBlockedActivity.callingIntent(ctx, phoneNumber, blockedAt))
+
+    /**
+     * Show Phone Number Blocked Screen
+     */
+    override fun showPhoneNumberBlockedScreen(ctx: Context) =
+            ctx.startActivity(PhoneNumberBlockedActivity.callingIntent(ctx))
 }

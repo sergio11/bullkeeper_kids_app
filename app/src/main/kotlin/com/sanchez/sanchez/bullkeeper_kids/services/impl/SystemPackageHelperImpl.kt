@@ -35,7 +35,8 @@ class SystemPackageHelperImpl
             val isSystemApp = applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
 
             if((isSystemApp && !getSysPackages) ||
-                    (discardAppPackage && app.packageName == context.packageName))
+                    (discardAppPackage && app.packageName == context.packageName) ||
+                    app.packageName.toLowerCase().contains("launcher"))
                 continue
 
             val newInfo = SystemPackageInfo()

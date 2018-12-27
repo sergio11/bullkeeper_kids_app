@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.annotation.RawRes
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.APP_BLOCKED_SOUND
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.BED_TIME_SOUND
+import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.PHONE_NUMBER_BLOCKED_SOUND
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.PICK_ME_UP_SOUND
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.SOS_ALARM_SOUND
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager.Companion.TIME_BANK_SOUND
@@ -61,7 +62,8 @@ class SoundPoolManagerImpl(
                 Pair(SOS_ALARM_SOUND, soundPool.load(context, SOS_ALARM_SOUND, 1)),
                 Pair(PICK_ME_UP_SOUND, soundPool.load(context, PICK_ME_UP_SOUND, 1)),
                 Pair(TIME_BANK_SOUND, soundPool.load(context, TIME_BANK_SOUND, 1)),
-                Pair(BED_TIME_SOUND, soundPool.load(context, BED_TIME_SOUND, 1))
+                Pair(BED_TIME_SOUND, soundPool.load(context, BED_TIME_SOUND, 1)),
+                Pair(PHONE_NUMBER_BLOCKED_SOUND,  soundPool.load(context, PHONE_NUMBER_BLOCKED_SOUND, 1))
         )
 
     }

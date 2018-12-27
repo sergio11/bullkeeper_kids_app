@@ -70,7 +70,7 @@ class SynchronizeTerminalCallHistoryInteract
             historyCalls.add(callDetail)
         }
         cursor.close()
-        return historyCalls
+        return historyCalls.filter { !it.phoneNumber.isNullOrEmpty() }
     }
 
     /**

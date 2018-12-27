@@ -23,6 +23,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChang
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
@@ -105,6 +106,11 @@ interface ApplicationComponent {
      * Inject into Bed Time Activity Fragment
      */
     fun inject(bedTimeActivityFragment: BedTimeActivityFragment)
+
+    /**
+     * Inject into Phone Number Blocked Activity
+     */
+    fun inject(phoneNumberBlockedActivity: PhoneNumberBlockedActivity)
 
 
     //Exposed to sub-graphs.

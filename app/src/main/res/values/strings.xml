@@ -226,4 +226,10 @@
     <string name="bed_time_screen_sos">SOS</string>
 
 
+    <!-- Phone Number Blocked Screen -->
+    <string name="phone_number_blocked_screen_close_btn">Close</string>
+    <string name="phone_number_blocked_content" formatted="false">You can not call or receive calls from number %s, this number is restricted by the rules of your home</string>
+    <string name="phone_number_blocked_blocked_at" formatted="false">Lock Established at %s </string>
+    <string name="phone_number_blocked_unknown_emitter">Bull Keeper kids prevents receiving calls from unknown emitters</string>
+
 </resources>

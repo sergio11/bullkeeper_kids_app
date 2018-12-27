@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
     <uses-permission
@@ -176,6 +177,12 @@
             android:name=".presentation.bedtime.BedTimeActivity"
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
+
+        <!-- Phone Number Blocked -->
+        <activity android:name=".presentation.phonenumberblocked.PhoneNumberBlockedActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
+
 
     </application>
 

@@ -22,6 +22,8 @@ interface ISoundManager {
             get() = R.raw.time_bank_sound
         val BED_TIME_SOUND: Int
             get() = R.raw.bed_time_sound
+        val PHONE_NUMBER_BLOCKED_SOUND: Int
+            get() = R.raw.phone_number_blocked_sound
     }
 
     /**

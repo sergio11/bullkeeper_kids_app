@@ -24,7 +24,7 @@
         app:layout_constraintBottom_toTopOf="@id/childImageImageView"/>
 
     <!-- Child Image -->
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/childImageImageView"
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -45,7 +45,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_margin"
-        android:gravity="center"
+        android:gravity="start|center_vertical"
         android:padding="0dp"
         android:textAlignment="center"
         android:textColor="@color/commonWhite"
@@ -62,7 +62,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_margin"
-        android:gravity="center"
+        android:gravity="start|center_vertical"
         android:textAlignment="center"
         android:textColor="@color/commonWhite"
         app:layout_constraintBottom_toTopOf="@id/divider"

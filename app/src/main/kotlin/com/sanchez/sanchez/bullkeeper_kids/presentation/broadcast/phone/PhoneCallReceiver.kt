@@ -19,10 +19,13 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
      */
     override fun onReceive(context: Context, intent: Intent) {
 
+        Timber.d("CallReceiver: Count -> ${++count}")
+
         //We listen to two intents.
         // The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         if (intent.action == "android.intent.action.NEW_OUTGOING_CALL") {
             savedNumber = intent.extras!!.getString("android.intent.extra.PHONE_NUMBER")
+            Timber.d("CallReceiver: NEW_OUTGOING_CALL -> %s", savedNumber)
         } else {
             val stateStr = intent.extras!!.getString(TelephonyManager.EXTRA_STATE)
             val number = intent.extras!!.getString(TelephonyManager.EXTRA_INCOMING_NUMBER)
@@ -32,12 +35,7 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
                 TelephonyManager.EXTRA_STATE_RINGING ->  TelephonyManager.CALL_STATE_RINGING
                 else -> 0
             }
-
-            if((state == TelephonyManager.CALL_STATE_OFFHOOK || state == TelephonyManager.CALL_STATE_RINGING)
-                && number == "644384296")
-                endCall(context)
-            else
-                onCallStateChanged(context, state, number)
+            onCallStateChanged(context, state, number)
         }
     }
 
@@ -52,7 +50,7 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
     /**
      * End Call
      */
-    private fun endCall(context: Context) {
+    protected fun endCall(context: Context) {
 
         try {
             Timber.d("PhoneCallReceiver: End Call")
@@ -66,6 +64,7 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
             telephonyService.endCall()
         } catch (e: Exception) {
             e.printStackTrace()
+            Timber.d(e.message)
             Timber.d("End Call Exception")
         }
 
@@ -84,13 +83,16 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
                 isIncoming = true
                 callStartTime = Date()
                 savedNumber = number
+                Timber.d("CallReceiver: CALL_STATE_RINGING -> %s", savedNumber)
                 onIncomingCallStarted(context, number, callStartTime!!)
             }
             TelephonyManager.CALL_STATE_OFFHOOK ->
-                //Transition of ringing->offhook are pickups of incoming calls.  Nothing done on them
+                //Transition of ringing->offhook are pickups of incoming calls.
+                // Nothing done on them
                 if (lastState != TelephonyManager.CALL_STATE_RINGING) {
                     isIncoming = false
                     callStartTime = Date()
+                    Timber.d("CallReceiver: CALL_STATE_OFFHOOK -> %s", savedNumber)
                     onOutgoingCallStarted(context, savedNumber, callStartTime!!)
                 }
             TelephonyManager.CALL_STATE_IDLE ->
@@ -107,11 +109,13 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
 
     companion object {
 
-        //The receiver will be recreated whenever android feels like it.  We need a static variable to remember data between instantiations
-
+        //The receiver will be recreated whenever android feels like it.
+        // We need a static variable to remember data between instantiations
+        private var count = 0
         private var lastState = TelephonyManager.CALL_STATE_IDLE
         private var callStartTime: Date? = null
         private var isIncoming: Boolean = false
-        private var savedNumber: String? = null  //because the passed incoming is only valid in ringing
+        //because the passed incoming is only valid in ringing
+        private var savedNumber: String? = null
     }
 }

@@ -27,6 +27,7 @@ class GetBlockedPhoneNumbersInteract
 
         val kid = preferenceRepository.getPrefKidIdentity()
         val terminal = preferenceRepository.getPrefTerminalIdentity()
+
         // Get Phone Number Blocked
         val response = phoneNumberService.getPhoneNumberBlocked(kid, terminal).await()
 

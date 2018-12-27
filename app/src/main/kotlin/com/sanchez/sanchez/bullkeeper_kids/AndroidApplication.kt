@@ -53,6 +53,10 @@ class AndroidApplication : Application(){
     val callReceiverComponent: CallReceiverComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         DaggerCallReceiverComponent
                 .builder()
+                .applicationModule(ApplicationModule(this))
+                .globalServiceModule(GlobalServiceModule(this))
+                .callDetailsModule(CallDetailsModule())
+                .netModule(NetModule(this))
                 .build()
     }
 
