@@ -60,6 +60,19 @@ class AndroidApplication : Application(){
                 .build()
     }
 
+    /**
+     * SMS Receiver Component
+     */
+    val smsReceiverComponent: SMSReceiverComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerSMSReceiverComponent
+                .builder()
+                .applicationModule(ApplicationModule(this))
+                .globalServiceModule(GlobalServiceModule(this))
+                .smsModule(SmsModule())
+                .netModule(NetModule(this))
+                .build()
+    }
+
 
     companion object {
 
