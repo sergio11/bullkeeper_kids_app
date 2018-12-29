@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.app.Application
 import android.content.Context
+import android.os.Handler
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.impl.NavigatorImpl
@@ -25,6 +26,12 @@ class ApplicationModule(private val application: AndroidApplication) {
      */
     @Provides @Singleton
     fun provideApplication(): Application = application
+
+    /**
+     * Provide Handler
+     */
+    @Provides @Singleton
+    fun provideHandler(): Handler = Handler()
 
     /**
      * Provide Application

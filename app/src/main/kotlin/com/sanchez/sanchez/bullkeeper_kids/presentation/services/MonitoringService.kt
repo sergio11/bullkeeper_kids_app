@@ -21,6 +21,7 @@ import android.app.PendingIntent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.*
+import android.provider.ContactsContract
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -49,6 +50,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.scheduledblocks.Sy
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.ServerEventTypeEnum
+import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
@@ -254,6 +256,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     internal lateinit var objectMapper: ObjectMapper
 
     /**
+     * Contacts Observer
+     */
+    @Inject
+    internal lateinit var contactsObserver: ContactsObserver
+
+
+    /**
      * Receivers
      * =====================
      */
@@ -423,6 +432,22 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         syncTerminalContacts()
         syncTerminalSMS()
         syncScheduledBlocks()
+        startContactObserver()
+    }
+
+    /**
+     * Start Contact Observer
+     */
+    private fun startContactObserver(){
+        try{
+            //Registering contact observer
+            application.contentResolver
+                    .registerContentObserver(ContactsContract.Contacts.CONTENT_URI,
+                            true, contactsObserver)
+            Timber.d("Contact Observer registered")
+        }catch (ex: Exception){
+            ex.printStackTrace()
+        }
     }
 
     /**

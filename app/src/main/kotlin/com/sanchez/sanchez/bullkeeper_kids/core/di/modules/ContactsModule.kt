@@ -1,9 +1,11 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
+import android.os.Handler
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IContactsService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ContactRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import dagger.Module
 import dagger.Provides
@@ -44,4 +46,15 @@ class ContactsModule {
             preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit)
             = SynchronizeTerminalContactsInteract(context, contactsService, contactRepositoryImpl, preferenceRepository, retrofit)
+
+    /**
+     * Provide Contacts Observer
+     */
+    @Provides
+    @Singleton
+    fun provideContactsObserver(
+            handler: Handler,
+            synchronizeTerminalContactsInteract: SynchronizeTerminalContactsInteract
+    ) = ContactsObserver(handler, synchronizeTerminalContactsInteract)
+
 }
