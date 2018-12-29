@@ -18,8 +18,8 @@ interface IAppsInstalledRepository: ISupportRepository<AppInstalledEntity> {
     fun findByPackageNameIn(values: Array<String>): List<AppInstalledEntity>
 
     /**
-     * Get Blocked Packages
+     * Update App Rule
      */
-    //fun getBlockedPackages(): List<SystemPackageInfo>
+    fun updateAppRule(app: String, appRule: String)
 
 }

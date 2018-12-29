@@ -141,4 +141,36 @@ class PreferenceRepositoryImpl
         mPref.edit().putString(IPreferenceRepository.PREF_CURRENT_LONGITUDE, longitude).apply()
     }
 
+    /**
+     * Is Bed Time Enabled
+     */
+    override fun isBedTimeEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_BED_TIME,
+                IPreferenceRepository.BED_TIME_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Bed Time Enabled
+     */
+    override fun setBedTimeEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_CURRENT_LONGITUDE,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Lock Screen Enabled
+     */
+    override fun isLockScreenEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_LOCK_SCREEN,
+                IPreferenceRepository.LOCK_SCREEN_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Lock Screen Enabled
+     */
+    override fun setLockScreenEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_LOCK_SCREEN,
+                isEnabled).apply()
+    }
+
 }

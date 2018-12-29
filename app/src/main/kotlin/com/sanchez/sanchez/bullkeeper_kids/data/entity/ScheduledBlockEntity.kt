@@ -25,5 +25,9 @@ open class ScheduledBlockEntity(
         // End At
         var endAt: String? = null,
         // Weekly Frequency
-        var weeklyFrequency: String? = null
+        var weeklyFrequency: String? = null,
+        // Allow Calls
+        var allowCalls: Boolean? = null,
+        // Description
+        var description: String? = null
 ) : RealmObject(), Serializable

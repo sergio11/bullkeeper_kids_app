@@ -41,7 +41,8 @@ class SynchronizeScheduledBlocksInteract
             ScheduledBlockEntity(it.identity,
                     it.name, it.enable, it.repeatable,
                     it.image, it.kid, it.startAt?.toString(fmt),
-                    it.endAt?.toString(fmt), it.weeklyFrequency?.joinToString(","))
+                    it.endAt?.toString(fmt), it.weeklyFrequency?.joinToString(","),
+                    it.allowCalls, it.description)
         }?.let { scheduledBlocksToSave ->
             scheduledBlocksRepository.save(scheduledBlocksToSave)
         }

@@ -48,6 +48,11 @@ class LockScreenActivity : AppCompatActivity() {
         const val APP_RULE_ARG = "APP_RULE_ARG"
 
         /**
+         * Event
+         */
+        const val UNLOCK_APP_ACTION = "com.sanchez.sergio.unlock.app"
+
+        /**
          * Calling Intent
          */
         fun callingIntent(context: Context, packageName: String?, appName: String?,
@@ -93,7 +98,7 @@ class LockScreenActivity : AppCompatActivity() {
     private var mLocalBroadcastManager: LocalBroadcastManager? = null
     private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == "com.sanchez.sergio.unlock") {
+            if (intent.action == UNLOCK_APP_ACTION) {
                 finish()
             }
         }
@@ -109,7 +114,7 @@ class LockScreenActivity : AppCompatActivity() {
         appComponent.inject(this)
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this)
         val mIntentFilter = IntentFilter()
-        mIntentFilter.addAction("com.sanchez.sergio.unlock")
+        mIntentFilter.addAction(UNLOCK_APP_ACTION)
         mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
         Timber.d("LOCK: On Create Called")
         showAppBlockedDetail(intent)

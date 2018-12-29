@@ -44,6 +44,14 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_CURRENT_LONGITUDE = "current_longitude"
         const val CURRENT_LONGITUDE_DEFAULT_VALUE = ""
 
+        // Bed Time Status
+        const val PREF_BED_TIME = "bed_time"
+        const val BED_TIME_DEFAULT_VALUE = true
+
+        // Lock Screen Status
+        const val PREF_LOCK_SCREEN = "lock_screen"
+        const val LOCK_SCREEN_DEFAULT_VALUE = false
+
     }
 
     /**
@@ -131,5 +139,29 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param longitude
      */
     fun setCurrentLongitude(longitude: String)
+
+    /**
+     * Is Bed Time Enabled
+     * @return
+     */
+    fun isBedTimeEnabled(): Boolean
+
+    /**
+     * Set Bed Time Enabled
+     * @param longitude
+     */
+    fun setBedTimeEnabled(isEnabled: Boolean)
+
+    /**
+     * Is Lock Screen Enabled
+     * @return
+     */
+    fun isLockScreenEnabled(): Boolean
+
+    /**
+     * Set Lock Screen Enabled
+     * @param longitude
+     */
+    fun setLockScreenEnabled(isEnabled: Boolean)
 
 }

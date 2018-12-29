@@ -12,7 +12,8 @@ import javax.inject.Singleton
 @Component(
         modules = [
             ApplicationModule::class, GlobalServiceModule::class,
-            NetModule::class, CallDetailsModule::class, PhoneNumberBlockedModule::class])
+            NetModule::class, CallDetailsModule::class, PhoneNumberBlockedModule::class,
+        ScheduledBlocksModule::class])
 interface CallReceiverComponent {
 
     /**

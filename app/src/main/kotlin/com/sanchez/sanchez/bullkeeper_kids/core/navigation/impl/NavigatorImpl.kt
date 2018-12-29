@@ -148,8 +148,8 @@ class NavigatorImpl
     /**
      * Show Bed Time
      */
-    override fun showBedTimeScreen(activity: Activity) =
-            activity.startActivity(BedTimeActivity.callingIntent(activity))
+    override fun showBedTimeScreen(ctx: Context) =
+            ctx.startActivity(BedTimeActivity.callingIntent(ctx))
 
     /**
      * Show Phone Number Blocked Screen

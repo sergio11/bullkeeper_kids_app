@@ -3,11 +3,13 @@ package com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.phone
 import android.content.Context
 import android.content.Intent
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
+import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.CallReceiverComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPhoneNumberRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import timber.log.Timber
 import java.util.*
@@ -38,6 +40,12 @@ class CallReceiver: PhoneCallReceiver() {
     internal lateinit var phoneNumberBlockedRepository: IPhoneNumberRepository
 
     /**
+     * Scheduled Block Repository Impl
+     */
+    @Inject
+    internal lateinit var scheduledBlocksRepositoryImpl: ScheduledBlocksRepositoryImpl
+
+    /**
      * Navigator
      */
     @Inject
@@ -57,14 +65,33 @@ class CallReceiver: PhoneCallReceiver() {
      */
     private fun checkPhoneNumber(ctx: Context, phoneNumber: String) {
         Timber.d("CallReceiver: Check Phone Number")
-        phoneNumberBlockedRepository.findByPhoneNumber(phoneNumber)?.let {
-            Timber.d("CallReceiver: Phone Number to lock -> %s at -> %s", it.phoneNumber, it.blockedAt)
+
+        val scheduledBlockEnable = scheduledBlocksRepositoryImpl.getScheduledBlockEnableForThisMoment(
+                ctx.getString(R.string.joda_local_time_format_server_response)
+        )
+
+        // Check All Calls
+        if(scheduledBlockEnable?.allowCalls != null
+            && !scheduledBlockEnable.allowCalls!!) {
+
             // End Call
             endCall(ctx)
-            // Show Phone Blocked Screen
-            if(!it.phoneNumber.isNullOrEmpty() && !it.blockedAt.isNullOrEmpty())
-                navigator.showPhoneNumberBlockedScreen(ctx, it.phoneNumber!!, it.blockedAt!!)
+
+        } else {
+
+            phoneNumberBlockedRepository.findByPhoneNumber(phoneNumber)?.let {
+                Timber.d("CallReceiver: Phone Number to lock -> %s at -> %s", it.phoneNumber, it.blockedAt)
+                // End Call
+                endCall(ctx)
+                // Show Phone Blocked Screen
+                if(!it.phoneNumber.isNullOrEmpty() && !it.blockedAt.isNullOrEmpty())
+                    navigator.showPhoneNumberBlockedScreen(ctx, it.phoneNumber!!, it.blockedAt!!)
+            }
+
         }
+
+
+
     }
 
     /**

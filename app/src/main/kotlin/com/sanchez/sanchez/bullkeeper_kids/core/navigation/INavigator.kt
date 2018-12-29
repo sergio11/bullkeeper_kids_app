@@ -83,7 +83,7 @@ interface INavigator {
     /**
      * Show Bed Time Screen
      */
-    fun showBedTimeScreen(activity: Activity)
+    fun showBedTimeScreen(ctx: Context)
 
     /**
      * Show Phone Number Blocked Screen

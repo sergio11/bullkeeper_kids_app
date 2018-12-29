@@ -1,8 +1,11 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.view.WindowManager
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
@@ -34,9 +37,30 @@ class BedTimeActivity : BaseActivity(),
     companion object {
 
         /**
+         * Event
+         */
+        const val DISABLE_BED_TIME_ACTION = "com.sanchez.sergio.disable.bedtime"
+
+        /**
          * Calling Intent
          */
-        fun callingIntent(context: Context) = Intent(context, BedTimeActivity::class.java)
+        fun callingIntent(context: Context): Intent {
+            val intent = Intent(context, BedTimeActivity::class.java)
+            intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            return intent
+        }
+    }
+
+    /**
+     *
+     */
+    private var mLocalBroadcastManager: LocalBroadcastManager? = null
+    private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == DISABLE_BED_TIME_ACTION) {
+                finish()
+            }
+        }
     }
 
 
@@ -53,6 +77,10 @@ class BedTimeActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this)
+        val mIntentFilter = IntentFilter()
+        mIntentFilter.addAction(DISABLE_BED_TIME_ACTION)
+        mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
     }
 
 

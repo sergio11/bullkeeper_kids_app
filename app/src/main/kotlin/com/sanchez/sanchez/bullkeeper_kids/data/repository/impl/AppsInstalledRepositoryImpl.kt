@@ -14,6 +14,7 @@ import timber.log.Timber
 class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(),
         IAppsInstalledRepository {
 
+
     /**
      * List
      */
@@ -92,27 +93,21 @@ class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(),
 
     }
 
-
     /**
-     * Get Blocked Packages
+     * Update App Rule
      */
-    /*override fun getBlockedPackages(): List<AppInstalledEntity> {
+    override fun updateAppRule(app: String, appRule: String) {
         val realm = Realm.getDefaultInstance()
-        val packagesBlocked = realm.where(AppInstalledEntity::class.java)
-                .equalTo("isBlocked", true).findAll()
-        for (packageBlocked in packagesBlocked) {
-            val systemPackageInfo = SystemPackageInfo()
-            systemPackageInfo.appName = packageBlocked.appName
-            systemPackageInfo.packageName = packageBlocked.packageName
-            systemPackageInfo.firstInstallTime = packageBlocked.firstInstallTime
-            systemPackageInfo.lastUpdateTime = packageBlocked.lastUpdateTime
-            systemPackageInfo.versionCode = packageBlocked.versionCode
-            systemPackageInfo.versionName = packageBlocked.versionName
-            systemPackageInfo.isBlocked = packageBlocked.isBlocked
-            systemPackageInfoList.add(systemPackageInfo)
-        }
+        realm.where(AppInstalledEntity::class.java)
+                .equalTo("serverId", app)
+                .findFirst()?.let {appInstalled ->
+                    appInstalled.appRule = appRule
+                    realm.executeTransaction { realm ->
+                        realm.insertOrUpdate(appInstalled)
+                    }
+                }
         realm.close()
-        return systemPackageInfoList
-    }*/
+
+    }
 
 }

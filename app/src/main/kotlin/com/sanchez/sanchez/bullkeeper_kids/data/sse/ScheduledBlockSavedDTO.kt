@@ -1,14 +1,14 @@
-package com.sanchez.sanchez.bullkeeper_kids.data.net.models.response
+package com.sanchez.sanchez.bullkeeper_kids.data.sse
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.joda.time.LocalTime
 
 /**
- * Scheduled Block DTO
+ * Scheduled Block Saved DTO
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class ScheduledBlockDTO (
+data class ScheduledBlockSavedDTO(
 
         /**
          * Identity

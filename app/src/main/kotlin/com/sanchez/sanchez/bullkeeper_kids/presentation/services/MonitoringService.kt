@@ -23,6 +23,7 @@ import android.location.Location
 import android.os.*
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import com.google.android.gms.location.*
 import com.here.oksse.ServerSentEvent
@@ -32,12 +33,12 @@ import okhttp3.Response
 import timber.log.Timber
 import com.here.oksse.OkSse
 import com.sanchez.sanchez.bullkeeper_kids.R
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.toIntArray
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.toLocalTime
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppRuleEnum
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.ScheduledBlockEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
@@ -47,10 +48,13 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.phonenumber.GetBlo
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.scheduledblocks.SynchronizeScheduledBlocksInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTerminalInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.ServerEventTypeEnum
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import org.joda.time.LocalTime
+import org.joda.time.format.DateTimeFormat
 import java.lang.Exception
-import java.util.*
 
 /**
  * @author Sergio Sánchez Sánchez
@@ -64,6 +68,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private val TAG = MonitoringService::class.java.simpleName
 
     private val NOTIFICATION_ID = 6669999
+
+    /**
+     * Bed Time Const
+     */
+
+    private val START_BED_TIME_HOUR = 23
+    private val END_BED_TIME_HOUR = 7
 
     /**
      * Service Component
@@ -236,6 +247,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var unlinkTerminalInteract: UnlinkTerminalInteract
 
+    /**
+     * Object Mapper
+     */
+    @Inject
+    internal lateinit var objectMapper: ObjectMapper
 
     /**
      * Receivers
@@ -263,8 +279,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      *
      */
 
+    // Current App Locked
     private var currentAppLocked: String? = null
 
+    // Is Bed Time Enabled
+    private var isBedTimeEnabled: Boolean = false
+
+    // Server Sent Event
     private var serverSentEvent: ServerSentEvent? = null
 
 
@@ -405,9 +426,36 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Send Unlock App Action
+     */
+    private fun sendUnLockAppAction(){
+        if(!currentAppLocked.isNullOrEmpty()) {
+            currentAppLocked = null
+            val localBroadcastManager = LocalBroadcastManager
+                    .getInstance(this@MonitoringService)
+            localBroadcastManager.sendBroadcast(Intent(
+                    LockScreenActivity.UNLOCK_APP_ACTION))
+        }
+    }
+
+    /**
+     * Send Disable Bed Time Action
+     */
+    private fun sendDisableBedTimeAction(){
+        if(isBedTimeEnabled) {
+            isBedTimeEnabled = false
+            val localBroadcastManager = LocalBroadcastManager
+                    .getInstance(this@MonitoringService)
+            localBroadcastManager.sendBroadcast(Intent(
+                    BedTimeActivity.DISABLE_BED_TIME_ACTION))
+        }
+    }
+
+    /**
      * Init Task
      */
     private fun initTask(){
+
 
         /**
          * Init Check Foreground App Task
@@ -421,79 +469,80 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 // Get Current Foreground App
                 val currentAppForeground = usageStatsService.getCurrentForegroundApp()
                 Timber.d("CHECK_FOREGROUND Current App Foreground -> %s", currentAppForeground)
-                if (!currentAppForeground.isNullOrEmpty() &&
-                        currentAppForeground != packageName ) {
+                if (!currentAppForeground.isNullOrEmpty()
+                        && (!currentAppLocked.isNullOrEmpty() || currentAppForeground != packageName)){
 
-                    // Get information about the application in the BD
-                    Timber.d("CHECK_FOREGROUND -> Current App in foreground -> %s ", currentAppForeground)
+                    val startBedTime = LocalTime(START_BED_TIME_HOUR, 0)
+                    val endBedTime = LocalTime(END_BED_TIME_HOUR, 0)
+                    val currentTime = LocalTime.now()
 
-                    val appInstalledEntity =
-                            appsInstalledRepository.findByPackageName(currentAppForeground)
+                    if(currentTime.isAfter(startBedTime)
+                            && currentTime.isBefore(endBedTime)) {
+                        sendUnLockAppAction()
+                        if(preferenceRepository.isBedTimeEnabled()) {
+                            isBedTimeEnabled = true
+                            navigator.showBedTimeScreen(this)
+                        } else {
+                            // Disable Bed Time is needed
+                            sendDisableBedTimeAction()
+                        }
+                    } else {
 
+                        // Disable Bed Time is needed
+                        sendDisableBedTimeAction()
 
-                    appInstalledEntity?.let {
+                        // Get information about the application in the BD
+                        Timber.d("CHECK_FOREGROUND -> Current App in foreground -> %s ", currentAppForeground)
 
-                        if(it.appRule != null) {
+                        val appInstalledEntity =
+                                appsInstalledRepository.findByPackageName(currentAppForeground)
 
-                            try {
+                        appInstalledEntity?.let {
 
-                                val appRuleEnum = AppRuleEnum.valueOf(it.appRule!!)
+                            if(it.appRule != null) {
 
-                                when(appRuleEnum) {
+                                try {
 
-                                    /**
-                                     * App Rule Per Scheduler
-                                     */
-                                    AppRuleEnum.PER_SCHEDULER -> {
-                                        Timber.d("CHECK_FOREGROUND -> PER_SCHEDULER rule applied to the current application ")
+                                    val appRuleEnum = AppRuleEnum.valueOf(it.appRule!!)
 
-                                        val scheduledBlocks =
-                                                scheduledBlocksRepositoryImpl.list()
+                                    when(appRuleEnum) {
 
-                                        var anyScheduledBlockEnable = false
-
-                                        for(scheduledBlock in scheduledBlocks) {
-
-                                            if(scheduledBlock.enable) {
-
-                                                // Start At
-                                                val startAt = scheduledBlock.startAt?.toLocalTime(
-                                                        getString(R.string.joda_local_time_format_server_response))
-                                                // End At
-                                                val endAt = scheduledBlock.endAt?.toLocalTime(
-                                                        getString(R.string.joda_local_time_format_server_response))
-
-                                                // Weekly Frequency
-                                                val weeklyFrequency = scheduledBlock.weeklyFrequency?.toIntArray()
-
-                                                val calendar = Calendar.getInstance()
-                                                calendar.firstDayOfWeek = Calendar.MONDAY
-
-                                                if(weeklyFrequency?.getOrNull(calendar.get(Calendar.DAY_OF_WEEK)) == 1) {
-
-                                                    val currentLocalTime = LocalTime.now()
-
-                                                    if(currentLocalTime.isAfter(startAt) && currentLocalTime.isBefore(endAt)) {
-                                                        Timber.d("CHECK_FOREGROUND -> Scheduled Block Enable %s", scheduledBlock.name)
-                                                        anyScheduledBlockEnable = true
-                                                        break
-                                                    }
-
-                                                }
+                                        /**
+                                         * App Rule Per Scheduler
+                                         */
+                                        AppRuleEnum.PER_SCHEDULER -> {
+                                            Timber.d("CHECK_FOREGROUND -> PER_SCHEDULER rule applied to the current application ")
 
 
+                                            val anyScheduledBlockEnable =
+                                                    scheduledBlocksRepositoryImpl.anyScheduledBlockEnableForThisMoment(
+                                                            getString(R.string.joda_local_time_format_server_response))
+
+
+                                            if(anyScheduledBlockEnable) {
+                                                sendUnLockAppAction()
+                                            } else {
+                                                Timber.d("CHECK_FOREGROUND -> Lock Current Foreground app: %s", currentAppForeground)
+                                                currentAppLocked = currentAppForeground
+                                                navigator.showLockScreen(this, it.packageName,
+                                                        it.appName, it.icon, it.appRule)
                                             }
 
                                         }
 
-                                        if(anyScheduledBlockEnable) {
-                                            currentAppLocked = null
-                                            val localBroadcastManager = LocalBroadcastManager
-                                                    .getInstance(this@MonitoringService)
-                                            localBroadcastManager.sendBroadcast(Intent(
-                                                    "com.sanchez.sergio.unlock"))
-                                        } else {
-                                            Timber.d("CHECK_FOREGROUND -> Lock Current Foreground app: %s", currentAppForeground)
+                                        /**
+                                         * Always Allowed
+                                         */
+                                        AppRuleEnum.ALWAYS_ALLOWED -> {
+                                            Timber.d("CHECK_FOREGROUND -> ALWAYS_ALLOWED rule applied to the current application ")
+                                            sendUnLockAppAction()
+                                        }
+
+                                        /**
+                                         * Never Allowed
+                                         */
+                                        AppRuleEnum.NEVER_ALLOWED -> {
+                                            Timber.d("CHECK_FOREGROUND -> NEVER_ALLOWED rule applied to the current application ")
                                             currentAppLocked = currentAppForeground
                                             navigator.showLockScreen(this, it.packageName,
                                                     it.appName, it.icon, it.appRule)
@@ -501,40 +550,16 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
                                     }
 
-                                    /**
-                                     * Always Allowed
-                                     */
-                                    AppRuleEnum.ALWAYS_ALLOWED -> {
-                                        Timber.d("CHECK_FOREGROUND -> ALWAYS_ALLOWED rule applied to the current application ")
 
-                                        currentAppLocked = null
-                                        val localBroadcastManager = LocalBroadcastManager
-                                                .getInstance(this@MonitoringService)
-                                        localBroadcastManager.sendBroadcast(Intent(
-                                                "com.sanchez.sergio.unlock"))
-
-                                    }
-
-                                    /**
-                                     * Never Allowed
-                                     */
-                                    AppRuleEnum.NEVER_ALLOWED -> {
-                                        Timber.d("CHECK_FOREGROUND -> NEVER_ALLOWED rule applied to the current application ")
-                                        currentAppLocked = currentAppForeground
-                                        navigator.showLockScreen(this, it.packageName,
-                                                it.appName, it.icon, it.appRule)
-                                    }
-
+                                } catch (ex: Exception) {
+                                    Timber.d("CHECK_FOREGROUND -> ex: %s", ex.message)
+                                    ex.printStackTrace()
                                 }
 
-
-                            } catch (ex: Exception) {
-                                Timber.d("CHECK_FOREGROUND -> ex: %s", ex.message)
-                                ex.printStackTrace()
                             }
 
-                        }
 
+                        }
 
                     }
 
@@ -569,7 +594,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
             mHandler.postDelayed(checkApplicationsUsageStatistics, CHECK_APPLICATIONS_USAGE_STATISTICS)
         }
-
 
         /**
          * Notify Heart Beat Task
@@ -800,6 +824,94 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
 
     /**
+     * Delete All Scheduled Block Event Handler
+     */
+    private fun deleteAllScheduledBlockEventHandler(event: DeleteAllScheduledBlockDTO){
+        Timber.d("SSE: Delete All Scheduled Block Event Handler")
+        event.kid?.let { scheduledBlocksRepositoryImpl.deleteByKid(it) }
+
+    }
+
+    /**
+     * Delete Scheduled Block Event Handler
+     */
+    private fun deleteScheduledBlockEventHandler(event: DeleteScheduledBlockDTO){
+        Timber.d("SSE: Delete Scheduled Block Event Handler")
+        if(event.kid != null && event.block != null)
+            scheduledBlocksRepositoryImpl.deleteByKidAndBlock(event.kid!!, event.block!!)
+    }
+
+    /**
+     * Scheduled Block Image Change Event Handler
+     */
+    private fun scheduledBlockImageChangeEventHandler(event: ScheduledBlockImageChangedDTO) {
+        Timber.d("SSE: Scheduled Block Image Change Event Handler")
+        if(event.block != null && event.image != null)
+            scheduledBlocksRepositoryImpl.updateImage(event.block!!, event.image!!)
+    }
+
+    /**
+     * Scheduled Block Saved Event Handler
+     */
+    private fun scheduledBlockSavedEventHandler(event: ScheduledBlockSavedDTO) {
+        Timber.d("SSE: Scheduled Block Saved Event Handler")
+        val fmt = DateTimeFormat.forPattern(
+                getString(R.string.joda_local_time_format_server_response))
+        scheduledBlocksRepositoryImpl.save(ScheduledBlockEntity(event.identity,
+                event.name, event.enable, event.repeatable,
+                event.image, event.kid, event.startAt?.toString(fmt),
+                event.endAt?.toString(fmt), event.weeklyFrequency?.joinToString(",")))
+    }
+
+    /**
+     * Scheduled Block Status Changed Event
+     */
+    private fun scheduledBlockStatusChangedEventHandler(event: ScheduledBlockStatusChangedDTO){
+        Timber.d("SSE: Scheduled Block Status Changed Event")
+        event.scheduledBlockStatusList.forEach {
+            if(it.identity != null && it.enable != null)
+            scheduledBlocksRepositoryImpl.updateStatus(it.identity!!, it.enable!!)
+        }
+
+    }
+
+    /**
+     * App Rules List Saved Event Handler
+     */
+    private fun  appRulesListSavedEventHandler(event: AppRulesListSavedDTO){
+        Timber.d("SSE: Scheduled Block Status Changed Event")
+        event.appRulesList.forEach {
+            if(it.identity != null && it.type != null)
+                appsInstalledRepository.updateAppRule(it.identity!!, it.type!!)
+        }
+    }
+
+    /**
+     * App Rules Saved Event Handler
+     */
+    private fun appRulesSavedEventHandler(event: AppRulesSavedDTO) {
+        Timber.d("SSE: App Rules Saved Event Handler")
+        if(event.app != null && event.type != null)
+            appsInstalledRepository.updateAppRule(event.app!!, event.type!!)
+    }
+
+    /**
+     * Change bed time status
+     */
+    private fun changeBedTimeStatusHandler(event: ChangeBedTimeStatusDTO) {
+        Timber.d("SSE: Change Bed Time Status")
+        event.enabled?.let { preferenceRepository.setBedTimeEnabled(it) }
+    }
+
+    /**
+     * Change Lock Screen Status
+     */
+    private fun changeLockScreenStatusHandler(event: ChangeLockScreenStatusDTO) {
+        Timber.d("SSE: Change Lock Screen Status")
+        event.enabled?.let { preferenceRepository.setLockScreenEnabled(it) }
+    }
+
+    /**
      * Start Listen SSE
      */
     private fun startListenSse() {
@@ -813,7 +925,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
             Timber.d("Start Listen SSE")
             val eventSubscriptionRequest = Request.Builder()
                     .url(apiEndPointsHelper.getEventSubscriptionUrl(preferenceRepository
-                            .getPrefCurrentUserIdentity()))
+                            .getPrefTerminalIdentity()))
                     .build()
             serverSentEvent = okSse.newServerSentEvent(eventSubscriptionRequest, this)
         }
@@ -869,7 +981,74 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * On Message
      */
     override fun onMessage(sse: ServerSentEvent?, id: String?, event: String?, message: String?) {
-        Timber.d("ServerSentEventHandler: On Message -> %s", message)
+        Timber.d("SSE: On Message -> id: %s", id)
+        Timber.d("SSE: On Message -> event: %s", event)
+        Timber.d("SSE: On Message -> message: %s", message)
+
+        message?.let {eventMessage ->
+            val jsonNode = objectMapper.readTree(eventMessage)
+            if(jsonNode.has("eventType")) {
+                val eventType = jsonNode.get("eventType").asText()
+                try {
+
+                    when(ServerEventTypeEnum.valueOf(eventType)) {
+                        // Delete All Scheduled Block Event
+                        ServerEventTypeEnum.DELETE_ALL_SCHEDULED_BLOCK_EVENT -> deleteAllScheduledBlockEventHandler(
+                                objectMapper.readValue(eventMessage,
+                                        DeleteAllScheduledBlockDTO::class.java))
+                        // Delete Scheduled Block Event
+                        ServerEventTypeEnum.DELETE_SCHEDULED_BLOCK_EVENT -> deleteScheduledBlockEventHandler(
+                                objectMapper.readValue(eventMessage,
+                                        DeleteScheduledBlockDTO::class.java)
+                        )
+                        // Scheduled Block Image Changed Event
+                        ServerEventTypeEnum.SCHEDULED_BLOCK_IMAGE_CHANGED_EVENT -> scheduledBlockImageChangeEventHandler(
+                                objectMapper.readValue(eventMessage,
+                                        ScheduledBlockImageChangedDTO::class.java)
+                        )
+                        // Scheduled Block Saved Event
+                        ServerEventTypeEnum.SCHEDULED_BLOCK_SAVED_EVENT -> scheduledBlockSavedEventHandler(
+                                objectMapper.readValue(eventMessage,
+                                        ScheduledBlockSavedDTO::class.java)
+                        )
+                        // Scheduled Block Status Change Event
+                        ServerEventTypeEnum.SCHEDULED_BLOCK_STATUS_CHANGED_EVENT -> scheduledBlockStatusChangedEventHandler(
+                                objectMapper.readValue(eventMessage,
+                                        ScheduledBlockStatusChangedDTO::class.java)
+                        )
+                        // App Rules List Saved Event
+                        ServerEventTypeEnum.APP_RULES_LIST_SAVED_EVENT -> appRulesListSavedEventHandler(
+                                objectMapper.readValue(eventMessage,
+                                        AppRulesListSavedDTO::class.java)
+                        )
+                        // App Rules Saved Event
+                        ServerEventTypeEnum.APP_RULES_SAVED_EVENT -> appRulesSavedEventHandler(
+                                objectMapper.readValue(eventMessage,
+                                        AppRulesSavedDTO::class.java)
+                        )
+                        // Change Bed Time Status Event
+                        ServerEventTypeEnum.CHANGE_BED_TIME_STATUS_EVENT -> changeBedTimeStatusHandler(
+                                objectMapper.readValue(eventMessage,
+                                        ChangeBedTimeStatusDTO::class.java)
+                        )
+                        // Change Lock Screen Status Event
+                        ServerEventTypeEnum.CHANGE_LOCK_SCREEN_STATUS_EVENT ->
+                            changeLockScreenStatusHandler(
+                                objectMapper.readValue(eventMessage,
+                                        ChangeLockScreenStatusDTO::class.java)
+                        )
+                        // Unlink Terminal Event
+                        ServerEventTypeEnum.UNLINK_TERMINAL_EVENT ->
+                            unlinkTerminal()
+                        // Unknown Event
+                        else -> Timber.d("SSE: Unknow Event")
+
+                    }
+                } catch(ex: Exception) {
+                    ex.printStackTrace()
+                }
+            }
+        }
     }
 
     /**

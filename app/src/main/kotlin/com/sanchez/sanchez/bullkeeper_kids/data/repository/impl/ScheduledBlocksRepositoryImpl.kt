@@ -1,9 +1,13 @@
 package com.sanchez.sanchez.bullkeeper_kids.data.repository.impl
 
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toIntArray
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toLocalTime
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.ScheduledBlockEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IScheduledBlocksRepository
 import io.realm.Realm
+import org.joda.time.LocalTime
 import timber.log.Timber
+import java.util.*
 
 /**
  * Scheduled Blocks Repository
@@ -55,5 +59,113 @@ class ScheduledBlocksRepositoryImpl: SupportRepositoryImpl<ScheduledBlockEntity>
         }
         realm.close()
     }
+
+    /**
+     * Delete By Kid
+     */
+    override fun deleteByKid(kid: String) {
+        val realm = Realm.getDefaultInstance()
+        val scheduledBlockByKid =
+                realm.where(ScheduledBlockEntity::class.java)
+                .equalTo("kid", kid)
+                .findAll()
+        realm.executeTransaction {
+            scheduledBlockByKid?.deleteAllFromRealm()
+        }
+        realm.close()
+    }
+
+    /**
+     * Delete By Kid And Block
+     */
+    override fun deleteByKidAndBlock(kid: String, block: String) {
+        val realm = Realm.getDefaultInstance()
+        val scheduledBlockByKid =
+                realm.where(ScheduledBlockEntity::class.java)
+                        .equalTo("kid", kid)
+                        .equalTo("id", block)
+                        .findAll()
+        realm.executeTransaction {
+            scheduledBlockByKid?.deleteAllFromRealm()
+        }
+        realm.close()
+    }
+
+    /**
+     * Update Status
+     */
+    override fun updateStatus(id: String, status: Boolean) {
+        val realm = Realm.getDefaultInstance()
+        realm.where(ScheduledBlockEntity::class.java)
+                .equalTo("id", id)
+                .findFirst()?.let {block ->
+                    block.enable = status
+                    realm.executeTransaction { realm ->
+                        realm.insertOrUpdate(block)
+                    }
+                }
+        realm.close()
+    }
+
+    /**
+     * Update Image
+     */
+    override fun updateImage(id: String, image: String) {
+        val realm = Realm.getDefaultInstance()
+        realm.where(ScheduledBlockEntity::class.java)
+                .equalTo("id", id)
+                .findFirst()?.let {block ->
+                    block.image = image
+                    realm.executeTransaction { realm ->
+                        realm.insertOrUpdate(block)
+                    }
+                }
+        realm.close()
+    }
+
+    /**
+     * Any Scheduled Block Enable
+     */
+    override fun anyScheduledBlockEnable(now: LocalTime, localTimeFormat: String): Boolean
+        = getScheduledBlockEnableFor(LocalTime.now(), localTimeFormat) != null
+
+    /**
+     * Any Scheduled Block Enable For This Moment
+     */
+    override fun anyScheduledBlockEnableForThisMoment(localTimeFormat: String): Boolean
+        = anyScheduledBlockEnable(LocalTime.now(), localTimeFormat)
+
+    /**
+     * Get Scheduled Block Enable For
+     */
+    override fun getScheduledBlockEnableFor(moment: LocalTime, localTimeFormat: String): ScheduledBlockEntity? {
+        val scheduledBlocks = list()
+        var scheduledBlockEnabled: ScheduledBlockEntity? = null
+        for(scheduledBlock in scheduledBlocks) {
+            if(scheduledBlock.enable) {
+                // Start At
+                val startAt = scheduledBlock.startAt?.toLocalTime(localTimeFormat)
+                // End At
+                val endAt = scheduledBlock.endAt?.toLocalTime(localTimeFormat)
+                // Weekly Frequency
+                val weeklyFrequency = scheduledBlock.weeklyFrequency?.toIntArray()
+                val calendar = Calendar.getInstance()
+                calendar.firstDayOfWeek = Calendar.MONDAY
+                if(weeklyFrequency?.getOrNull(calendar.get(Calendar.DAY_OF_WEEK)) == 1) {
+                    if(moment.isAfter(startAt) && moment.isBefore(endAt)) {
+                        scheduledBlockEnabled = scheduledBlock
+                        break
+                    }
+                }
+            }
+        }
+        return scheduledBlockEnabled
+    }
+
+    /**
+     * Get Scheduled Block Enable For This Moment
+     */
+    override fun getScheduledBlockEnableForThisMoment(localTimeFormat: String): ScheduledBlockEntity?
+        = getScheduledBlockEnableFor(LocalTime.now(), localTimeFormat)
 
 }
