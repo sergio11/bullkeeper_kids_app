@@ -19,6 +19,8 @@
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
@@ -78,6 +80,13 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
+
+        <!-- Disabled App Screen Activity -->
+        <activity android:name=".presentation.disabledapplication.DisabledAppScreenActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
+
 
         <!-- Awaken Monitoring Service -->
         <receiver

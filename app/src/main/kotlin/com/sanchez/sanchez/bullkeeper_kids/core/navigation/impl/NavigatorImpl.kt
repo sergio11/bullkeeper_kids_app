@@ -11,6 +11,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
+import com.sanchez.sanchez.bullkeeper_kids.presentation.disabledapplication.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
@@ -28,7 +29,6 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
-
 
     /**
      * Show Usage Access Settings
@@ -162,4 +162,11 @@ class NavigatorImpl
      */
     override fun showPhoneNumberBlockedScreen(ctx: Context) =
             ctx.startActivity(PhoneNumberBlockedActivity.callingIntent(ctx))
+
+    /**
+     * Show Disabled App Screen
+     */
+    override fun showDisabledAppScreen(ctx: Context, packageName: String?,
+                                       appName: String?, icon: String?, appRule: String?) =
+            ctx.startActivity(DisabledAppScreenActivity.callingIntent(ctx, packageName, appName, icon, appRule))
 }

@@ -20,6 +20,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.*
 import android.provider.ContactsContract
 import android.support.v4.content.ContextCompat
@@ -53,6 +54,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.models.ServerEventTypeEnum
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.disabledapplication.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
@@ -93,7 +95,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * Check Applications Usage Statistics Interval
      */
-    private val CHECK_APPLICATIONS_USAGE_STATISTICS: Long = 300000
+    private val CHECK_APPLICATIONS_USAGE_STATISTICS: Long = 5000
 
     /**
      * Heart Beat Notification Interval
@@ -291,6 +293,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     // Current App Locked
     private var currentAppLocked: String? = null
 
+    // Current Disabled App
+    private var currentDisabledApp: String? = null
+
     // Is Bed Time Enabled
     private var isBedTimeEnabled: Boolean = false
 
@@ -464,6 +469,19 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Send Enable App Action
+     */
+    private fun sendEnableAppAction(){
+        if(!currentDisabledApp.isNullOrEmpty()) {
+            currentDisabledApp = null
+            val localBroadcastManager = LocalBroadcastManager
+                    .getInstance(this@MonitoringService)
+            localBroadcastManager.sendBroadcast(Intent(
+                    DisabledAppScreenActivity.ENABLE_APP_ACTION))
+        }
+    }
+
+    /**
      * Send Disable Bed Time Action
      */
     private fun sendDisableBedTimeAction(){
@@ -495,7 +513,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 val currentAppForeground = usageStatsService.getCurrentForegroundApp()
                 Timber.d("CHECK_FOREGROUND Current App Foreground -> %s", currentAppForeground)
                 if (!currentAppForeground.isNullOrEmpty()
-                        && (!currentAppLocked.isNullOrEmpty() || currentAppForeground != packageName)){
+                        && (!currentAppLocked.isNullOrEmpty() ||
+                                !currentDisabledApp.isNullOrEmpty() ||
+                                currentAppForeground != packageName)){
 
                     val startBedTime = LocalTime(START_BED_TIME_HOUR, 0)
                     val endBedTime = LocalTime(END_BED_TIME_HOUR, 0)
@@ -504,6 +524,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                     if(currentTime.isAfter(startBedTime)
                             && currentTime.isBefore(endBedTime)) {
                         sendUnLockAppAction()
+                        sendEnableAppAction()
                         if(preferenceRepository.isBedTimeEnabled()) {
                             isBedTimeEnabled = true
                             navigator.showBedTimeScreen(this)
@@ -524,30 +545,63 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
                         appInstalledEntity?.let {
 
-                            if(it.appRule != null) {
+                            if(it.disabled) {
 
-                                try {
-
-                                    val appRuleEnum = AppRuleEnum.valueOf(it.appRule!!)
-
-                                    when(appRuleEnum) {
-
-                                        /**
-                                         * App Rule Per Scheduler
-                                         */
-                                        AppRuleEnum.PER_SCHEDULER -> {
-                                            Timber.d("CHECK_FOREGROUND -> PER_SCHEDULER rule applied to the current application ")
+                                sendUnLockAppAction()
+                                Timber.d("CHECK_FOREGROUND -> Disabled Current Foreground app: %s", currentAppForeground)
+                                currentDisabledApp = currentAppForeground
+                                navigator.showDisabledAppScreen(this, it.packageName,
+                                        it.appName, it.icon, it.appRule)
 
 
-                                            val anyScheduledBlockEnable =
-                                                    scheduledBlocksRepositoryImpl.anyScheduledBlockEnableForThisMoment(
-                                                            getString(R.string.joda_local_time_format_server_response))
+                            } else {
+
+                                sendEnableAppAction()
+
+                                if(it.appRule != null) {
+
+                                    try {
+
+                                        val appRuleEnum = AppRuleEnum.valueOf(it.appRule!!)
+
+                                        when(appRuleEnum) {
+
+                                            /**
+                                             * App Rule Per Scheduler
+                                             */
+                                            AppRuleEnum.PER_SCHEDULER -> {
+                                                Timber.d("CHECK_FOREGROUND -> PER_SCHEDULER rule applied to the current application ")
 
 
-                                            if(anyScheduledBlockEnable) {
+                                                val anyScheduledBlockEnable =
+                                                        scheduledBlocksRepositoryImpl.anyScheduledBlockEnableForThisMoment(
+                                                                getString(R.string.joda_local_time_format_server_response))
+
+
+                                                if(anyScheduledBlockEnable) {
+                                                    sendUnLockAppAction()
+                                                } else {
+                                                    Timber.d("CHECK_FOREGROUND -> Lock Current Foreground app: %s", currentAppForeground)
+                                                    currentAppLocked = currentAppForeground
+                                                    navigator.showLockScreen(this, it.packageName,
+                                                            it.appName, it.icon, it.appRule)
+                                                }
+
+                                            }
+
+                                            /**
+                                             * Always Allowed
+                                             */
+                                            AppRuleEnum.ALWAYS_ALLOWED -> {
+                                                Timber.d("CHECK_FOREGROUND -> ALWAYS_ALLOWED rule applied to the current application ")
                                                 sendUnLockAppAction()
-                                            } else {
-                                                Timber.d("CHECK_FOREGROUND -> Lock Current Foreground app: %s", currentAppForeground)
+                                            }
+
+                                            /**
+                                             * Never Allowed
+                                             */
+                                            AppRuleEnum.NEVER_ALLOWED -> {
+                                                Timber.d("CHECK_FOREGROUND -> NEVER_ALLOWED rule applied to the current application ")
                                                 currentAppLocked = currentAppForeground
                                                 navigator.showLockScreen(this, it.packageName,
                                                         it.appName, it.icon, it.appRule)
@@ -555,40 +609,21 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
                                         }
 
-                                        /**
-                                         * Always Allowed
-                                         */
-                                        AppRuleEnum.ALWAYS_ALLOWED -> {
-                                            Timber.d("CHECK_FOREGROUND -> ALWAYS_ALLOWED rule applied to the current application ")
-                                            sendUnLockAppAction()
-                                        }
 
-                                        /**
-                                         * Never Allowed
-                                         */
-                                        AppRuleEnum.NEVER_ALLOWED -> {
-                                            Timber.d("CHECK_FOREGROUND -> NEVER_ALLOWED rule applied to the current application ")
-                                            currentAppLocked = currentAppForeground
-                                            navigator.showLockScreen(this, it.packageName,
-                                                    it.appName, it.icon, it.appRule)
-                                        }
-
+                                    } catch (ex: Exception) {
+                                        Timber.d("CHECK_FOREGROUND -> ex: %s", ex.message)
+                                        ex.printStackTrace()
                                     }
 
-
-                                } catch (ex: Exception) {
-                                    Timber.d("CHECK_FOREGROUND -> ex: %s", ex.message)
-                                    ex.printStackTrace()
                                 }
 
                             }
-
-
                         }
 
                     }
 
                 }
+
 
             } else {
                 Log.d(TAG, "Usage Stats Not Allowed generate alert")

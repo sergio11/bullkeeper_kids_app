@@ -53,6 +53,7 @@ ext {
     playServicesVersion = '16.0.1'
     playServicesMapsVersion = '16.0.0'
 
+
   mainApplication = [
           kotlin:                     "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
           kotlinCoroutines:           "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version",
@@ -95,7 +96,8 @@ ext {
           oksse:                      "com.github.heremaps:oksse:${oksseVersion}",
           playServicesBase:           "com.google.android.gms:play-services-base:${playServicesVersion}",
           playServicesLocation:       "com.google.android.gms:play-services-location:${playServicesMapsVersion}",
-          customactivityoncrash: "cat.ereza:customactivityoncrash:${customactivityoncrashVersion}"
+          customactivityoncrash:      "cat.ereza:customactivityoncrash:${customactivityoncrashVersion}"
+
   ]
 
   unitTesting = [

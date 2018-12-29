@@ -23,5 +23,4 @@ interface ISystemPackageHelper {
      */
     fun getInstalledApps(getSysPackages: Boolean, discardAppPackage: Boolean = true): ArrayList<SystemPackageInfo>
 
-
 }

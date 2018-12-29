@@ -232,4 +232,9 @@
     <string name="phone_number_blocked_blocked_at" formatted="false">Lock Established at %s </string>
     <string name="phone_number_blocked_unknown_emitter">Bull Keeper kids prevents receiving calls from unknown emitters</string>
 
+    <!-- App Disabled Screen -->
+    <string name="app_disabled_uninstall_app">Uninstall</string>
+    <string name="app_disabled_screen_content_screen" formatted="false">The application %s has been disabled, may not be used under any circumstances. Please, complete the removal process.</string>
+
+
 </resources>

@@ -41,6 +41,11 @@ interface INavigator {
     fun showLockScreen(service: Service, packageName: String?, appName: String?, icon: String?, appRule: String?)
 
     /**
+     * Show Disabled App Screen
+     */
+    fun showDisabledAppScreen(ctx: Context, packageName: String?, appName: String?, icon: String?, appRule: String?)
+
+    /**
      * Show Enable
      */
     fun showEnableAdminDeviceFeatures(activity: Activity, resultCode: Int)

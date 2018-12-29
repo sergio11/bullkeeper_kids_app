@@ -11,9 +11,11 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IAppsService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
+import org.jsoup.Jsoup
 import retrofit2.Retrofit
 import timber.log.Timber
 import javax.inject.Inject
+
 
 /**
  * Synchronize Installed Packages Interact
@@ -30,7 +32,10 @@ class SynchronizeInstalledPackagesInteract
 
 
     companion object {
-        val BATCH_SIZE = 5
+
+        const val BATCH_SIZE = 5
+        const val GOOGLE_URL = "https://play.google.com/store/apps/details?id="
+        const val ERROR = "error"
     }
 
     /**
@@ -77,6 +82,19 @@ class SynchronizeInstalledPackagesInteract
 
 
         return appsToSave
+    }
+
+    /**
+     * Get Category
+     */
+    private fun getCategory(query_url: String): String {
+        return try {
+            val doc = Jsoup.connect(query_url).get()
+            val link = doc.select("a[class=\"hrTbp R8zArc\"]")
+            return if(link.text().isNullOrEmpty()) ERROR else link.text()
+        } catch (e: Exception) {
+            ERROR
+        }
     }
 
     /**
@@ -174,14 +192,18 @@ class SynchronizeInstalledPackagesInteract
         val terminalId = preferenceRepository.getPrefTerminalIdentity()
 
         val appsUploadedList = arrayListOf<AppInstalledEntity>()
-
+        /**
+         * .onEach {
+        it.category = getCategory(GOOGLE_URL + it.packageName)
+        }
+         */
         appsToUpload.asSequence().batch(BATCH_SIZE).forEach { group ->
 
             val response = appsService
                     .saveAppsInstalledInTheTerminal(kidId, terminalId, group.mapTo (arrayListOf()) {
                         SaveAppInstalledDTO(it.packageName, it.firstInstallTime, it.lastUpdateTime,
                                 it.versionName, it.versionCode, it.appName, AppRuleEnum.PER_SCHEDULER.name, kidId,
-                                terminalId, it.icon)
+                                terminalId, it.icon, it.category)
                     })
                     .await()
 
@@ -194,6 +216,7 @@ class SynchronizeInstalledPackagesInteract
                             if(it.packageName == appDTO.packageName) {
                                 it.serverId = appDTO.identity
                                 it.sync = 1
+                                it.category = appDTO.category
                                 it.removed = false
                             }
                         }

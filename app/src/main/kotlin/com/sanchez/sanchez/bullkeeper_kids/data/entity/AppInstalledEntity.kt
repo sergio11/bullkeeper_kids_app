@@ -24,6 +24,10 @@ open class AppInstalledEntity(
         var appRule: String? = AppRuleEnum.PER_SCHEDULER.name,
         // App Icon
         var icon: String? = null,
+        // App Category
+        var category: String? = null,
+        // Disabled
+        var disabled: Boolean = false,
         // Sync
         var sync: Int = 0,
         // Server Id

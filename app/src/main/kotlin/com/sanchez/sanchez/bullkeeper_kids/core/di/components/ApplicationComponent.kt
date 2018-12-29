@@ -20,6 +20,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
+import com.sanchez.sanchez.bullkeeper_kids.presentation.disabledapplication.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
@@ -111,6 +112,11 @@ interface ApplicationComponent {
      * Inject into Phone Number Blocked Activity
      */
     fun inject(phoneNumberBlockedActivity: PhoneNumberBlockedActivity)
+
+    /**
+     * Inject into Disabled App Screen Activity
+     */
+    fun inject(disabledAppScreenActivity: DisabledAppScreenActivity)
 
 
     //Exposed to sub-graphs.

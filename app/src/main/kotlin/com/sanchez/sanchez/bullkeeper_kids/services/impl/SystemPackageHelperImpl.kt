@@ -14,7 +14,6 @@ import android.graphics.drawable.Drawable
 import timber.log.Timber
 import android.content.pm.ApplicationInfo
 
-
 /**
  * System Package Helper Impl
  */
@@ -118,5 +117,6 @@ class SystemPackageHelperImpl
             it.packageName == packageName
         }
     }
+
 
 }

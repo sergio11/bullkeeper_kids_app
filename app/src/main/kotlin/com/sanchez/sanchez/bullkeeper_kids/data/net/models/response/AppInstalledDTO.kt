@@ -75,7 +75,13 @@ data class AppInstalledDTO(
          * Icon Encoded String
          */
         @JsonProperty("icon_encoded_string")
-        var icon: String? = null
+        var icon: String? = null,
+
+        /**
+         * Category
+         */
+        @JsonProperty("category")
+        var category: String? = null
 
 
 )

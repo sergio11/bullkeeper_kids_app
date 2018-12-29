@@ -65,6 +65,12 @@ data class SaveAppInstalledDTO (
          * Icon Encoded String
          */
         @get:JsonProperty("icon_encoded_string")
-        var icon: String? = null
+        var icon: String? = null,
+
+        /**
+         * App Category
+         */
+        @get:JsonProperty("category")
+        var category: String? = null
 
 )
