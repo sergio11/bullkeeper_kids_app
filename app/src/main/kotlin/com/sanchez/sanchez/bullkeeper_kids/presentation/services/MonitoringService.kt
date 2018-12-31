@@ -958,13 +958,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
             appsInstalledRepository.updateAppRule(event.app!!, event.type!!)
     }
 
-    /**
-     * Change Lock Screen Status
-     */
-    private fun changeLockScreenStatusHandler(event: ChangeLockScreenStatusDTO) {
-        Timber.d("SSE: Change Lock Screen Status")
-        event.enabled?.let { preferenceRepository.setLockScreenEnabled(it) }
-    }
 
     /**
      * Bed Time Status Changed Handler
@@ -987,8 +980,18 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Terminal Screen Status Changed Handler
      */
     private fun terminalScreenStatusChangedHandler(event: TerminalScreenStatusChangedDTO) {
-        Timber.d("SSE: Bed Time Status Changed Handler")
+        Timber.d("SSE: Terminal Screen status Changed Handler")
         event.enabled?.let { preferenceRepository.setLockScreenEnabled(it) }
+    }
+
+    /**
+     * App Disabled Status Changed Handler
+     */
+    private fun appDisabledStatusChangedHandler(event: AppDisabledStatusChangedDTO) {
+        Timber.d("SSE: App Disabled Status Changed Handler")
+        if(event.app != null && event.disabled != null)
+            appsInstalledRepository.updateAppDisabledStatus(event.app!!,
+                    event.disabled!!)
     }
 
     /**
@@ -1106,12 +1109,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                 objectMapper.readValue(eventMessage,
                                         AppRulesSavedDTO::class.java)
                         )
-                        // Change Lock Screen Status Event
-                        ServerEventTypeEnum.CHANGE_LOCK_SCREEN_STATUS_EVENT ->
-                            changeLockScreenStatusHandler(
-                                objectMapper.readValue(eventMessage,
-                                        ChangeLockScreenStatusDTO::class.java)
-                        )
                         // Unlink Terminal Event
                         ServerEventTypeEnum.UNLINK_TERMINAL_EVENT ->
                             unlinkTerminal()
@@ -1130,6 +1127,10 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             terminalScreenStatusChangedHandler(
                                     objectMapper.readValue(eventMessage,
                                             TerminalScreenStatusChangedDTO::class.java))
+                        ServerEventTypeEnum.APP_DISABLED_STATUS_CHANGED ->
+                            appDisabledStatusChangedHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            AppDisabledStatusChangedDTO::class.java))
                         // Unknown Event
                         else -> Timber.d("SSE: Unknow Event")
 

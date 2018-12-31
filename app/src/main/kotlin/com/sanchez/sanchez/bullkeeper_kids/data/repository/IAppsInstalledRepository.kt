@@ -22,4 +22,9 @@ interface IAppsInstalledRepository: ISupportRepository<AppInstalledEntity> {
      */
     fun updateAppRule(app: String, appRule: String)
 
+    /**
+     * Update App Disabled Status
+     */
+    fun updateAppDisabledStatus(app: String, disabled: Boolean)
+
 }

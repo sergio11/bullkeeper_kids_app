@@ -15,6 +15,7 @@ class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(),
         IAppsInstalledRepository {
 
 
+
     /**
      * List
      */
@@ -108,6 +109,22 @@ class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(),
                 }
         realm.close()
 
+    }
+
+    /**
+     * Update App Disabled Status
+     */
+    override fun updateAppDisabledStatus(app: String, disabled: Boolean) {
+        val realm = Realm.getDefaultInstance()
+        realm.where(AppInstalledEntity::class.java)
+                .equalTo("serverId", app)
+                .findFirst()?.let {appInstalled ->
+                    appInstalled.disabled = disabled
+                    realm.executeTransaction { realm ->
+                        realm.insertOrUpdate(appInstalled)
+                    }
+                }
+        realm.close()
     }
 
 }
