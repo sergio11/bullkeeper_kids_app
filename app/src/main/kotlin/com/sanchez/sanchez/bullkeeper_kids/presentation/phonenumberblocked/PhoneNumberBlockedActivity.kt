@@ -146,6 +146,8 @@ class PhoneNumberBlockedActivity : AppCompatActivity() {
      */
     override fun onResume() {
         super.onResume()
+        if(blockedStreamId != -1)
+            soundManager.stopSound(blockedStreamId)
         // Play Phone Number Blocked Sound
         blockedStreamId = soundManager.playSound(ISoundManager.PHONE_NUMBER_BLOCKED_SOUND, true)
     }

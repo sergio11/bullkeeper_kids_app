@@ -1,9 +1,11 @@
 package com.sanchez.sanchez.bullkeeper_kids.data.net.service
 
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveAppInstalledDTO
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveAppStatsDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.AppInstalledDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.AppRuleDTO
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.AppStatsDTO
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
 
@@ -17,6 +19,7 @@ import retrofit2.http.*
  * DELETE /api/v1/children/{kid}/terminal/{terminal}/apps/{app} DELETE_APP_INSTALLED_BY_ID
  * POST /api/v1/children/{kid}/terminal/{terminal}/apps/delete DELETE_APPS_INSTALLED
  * GET /api/v1/children/{kid}/terminal/{terminal}/apps/rules GET_APP_RULES_FOR_APPS_IN_THE_TERMINAL
+ * POST /api/v1/children/{kid}/terminal/{terminal}/apps/stats SAVE_STATS_FOR_ALL_APPS_INSTALLED_IN_THE_TERMINAL
  */
 interface IAppsService {
 
@@ -84,5 +87,26 @@ interface IAppsService {
             @Path("kid")  kid: String,
             @Path("terminal") terminal: String
     ) : Deferred<APIResponse<List<AppRuleDTO>>>
+
+
+    /**
+     * Save Stats For All Apps Installed In The Terminal
+     */
+    @POST("children/{kid}/terminal/{terminal}/apps/stats")
+    fun saveStatsForAllAppsInstalledInTheTerminal(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String,
+            @Body appStats: List<SaveAppStatsDTO>
+    ): Deferred<APIResponse<List<AppStatsDTO>>>
+
+
+    /**
+     * Delete Apps Stats
+     */
+    @POST("children/{kid}/terminal/{terminal}/apps/stats/delete")
+    fun deleteAppStats(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String,
+            @Body appStats: List<String>) : Deferred<APIResponse<String>>
 
 }

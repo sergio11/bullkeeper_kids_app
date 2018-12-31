@@ -8,7 +8,7 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION_CODES.LOLLIPOP_MR1
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageUsageStats
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.SystemPackageUsageStatsEntity
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import java.util.*
 import javax.inject.Inject
@@ -42,10 +42,21 @@ class UsageStatsServiceImpl
     }
 
     /**
+     * The [Comparator] to sort a collection of [UsageStats] sorted by the timestamp
+     * last time the app was used in the descendant order.
+     */
+    private class LastTimeLaunchedComparatorDesc : Comparator<UsageStats> {
+
+        override fun compare(left: UsageStats, right: UsageStats): Int {
+            return java.lang.Long.compare(right.lastTimeUsed, left.lastTimeUsed)
+        }
+    }
+
+    /**
      * Get Daily Stats From A Year
      */
     @TargetApi(LOLLIPOP_MR1)
-    override fun getDailyStatsFromAYear(): List<SystemPackageUsageStats> {
+    override fun getDailyStatsFromAYear(): List<SystemPackageUsageStatsEntity> {
         val usm = getUsageStatsManager()
         val calendar = Calendar.getInstance()
         val endTime = calendar.timeInMillis
@@ -53,10 +64,10 @@ class UsageStatsServiceImpl
         val startTime = calendar.timeInMillis
         val usageStats = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,
                 startTime, endTime)
-
-        val systemPackageUsageStatsList = ArrayList<SystemPackageUsageStats>()
+        Collections.sort(usageStats, LastTimeLaunchedComparatorDesc())
+        val systemPackageUsageStatsList = ArrayList<SystemPackageUsageStatsEntity>()
         for(usageStat in usageStats) {
-            val systemPackageUsageStats = SystemPackageUsageStats()
+            val systemPackageUsageStats = SystemPackageUsageStatsEntity()
             systemPackageUsageStats.firstTimeStamp = usageStat.firstTimeStamp
             systemPackageUsageStats.lastTimeStamp = usageStat.lastTimeStamp
             systemPackageUsageStats.lastTimeUsed = usageStat.lastTimeUsed

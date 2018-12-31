@@ -29,7 +29,7 @@ class SynchronizeTerminalSMSInteract
     val TAG = "SYNC_TERMINAL_SMS"
 
     companion object {
-        val BATCH_SIZE = 5
+        val BATCH_SIZE = 15
     }
 
     /**

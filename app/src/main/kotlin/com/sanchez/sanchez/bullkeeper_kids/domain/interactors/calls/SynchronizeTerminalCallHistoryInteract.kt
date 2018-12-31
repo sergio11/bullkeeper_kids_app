@@ -31,7 +31,7 @@ class SynchronizeTerminalCallHistoryInteract
     val TAG = "SYNC_TERMINAL_CALL_HISTORY"
 
     companion object {
-        val BATCH_SIZE = 5
+        val BATCH_SIZE = 15
     }
 
     /**
@@ -187,7 +187,7 @@ class SynchronizeTerminalCallHistoryInteract
      * Upload Call Details
      */
     private suspend fun uploadCallDetails(callsToUpload: List<CallDetailEntity>): Int {
-        Preconditions.checkNotNull(callsToUpload, "Calls To Upload")
+        Preconditions.checkNotNull(callsToUpload, "Calls To Upload can not be null")
         Preconditions.checkState(!callsToUpload.isEmpty(), "Calls To Upload can not be empty")
 
         val kid = preferenceRepository.getPrefKidIdentity()
@@ -205,7 +205,6 @@ class SynchronizeTerminalCallHistoryInteract
             response.httpStatus?.let {
 
                 if(it == "OK") {
-
                     response.data?.forEach {callDetailDTO ->
                         group.map {
                             if(it.id == callDetailDTO.localId) {
@@ -234,8 +233,8 @@ class SynchronizeTerminalCallHistoryInteract
      * Delete Call Details
      */
     private suspend fun deleteCallDetails(callsToRemove: List<CallDetailEntity>): Int {
-        Preconditions.checkNotNull(callsToRemove, "Calls To Upload")
-        Preconditions.checkState(!callsToRemove.isEmpty(), "Calls To Upload can not be empty")
+        Preconditions.checkNotNull(callsToRemove, "Calls To Remove can not be null")
+        Preconditions.checkState(!callsToRemove.isEmpty(), "Calls To remove can not be empty")
 
         val kidId = preferenceRepository.getPrefKidIdentity()
         val terminalId = preferenceRepository.getPrefTerminalIdentity()

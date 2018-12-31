@@ -33,7 +33,7 @@ class SynchronizeInstalledPackagesInteract
 
     companion object {
 
-        const val BATCH_SIZE = 5
+        const val BATCH_SIZE = 15
         const val GOOGLE_URL = "https://play.google.com/store/apps/details?id="
         const val ERROR = "error"
     }

@@ -135,6 +135,8 @@ class LockScreenActivity : AppCompatActivity() {
      */
     override fun onResume() {
         super.onResume()
+        if(appBlockedStreamId != -1)
+            soundManager.stopSound(appBlockedStreamId)
         // Play Emergency Sound
         appBlockedStreamId = soundManager.playSound(ISoundManager.APP_BLOCKED_SOUND, true)
     }

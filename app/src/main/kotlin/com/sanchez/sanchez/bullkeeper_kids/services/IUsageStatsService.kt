@@ -1,7 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.services
 
 
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.SystemPackageUsageStats
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.SystemPackageUsageStatsEntity
 
 
 /**
@@ -18,7 +18,7 @@ interface IUsageStatsService {
     /**
      * Get Daily Stats From Year
      */
-    fun getDailyStatsFromAYear(): List<SystemPackageUsageStats>
+    fun getDailyStatsFromAYear(): List<SystemPackageUsageStatsEntity>
 
     /**
      * Get Current Foreground App

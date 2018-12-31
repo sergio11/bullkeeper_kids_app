@@ -20,7 +20,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.net.Uri
 import android.os.*
 import android.provider.ContactsContract
 import android.support.v4.content.ContextCompat
@@ -95,7 +94,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * Check Applications Usage Statistics Interval
      */
-    private val CHECK_APPLICATIONS_USAGE_STATISTICS: Long = 5000
+    private val CHECK_APPLICATIONS_USAGE_STATISTICS: Long = 30000
 
     /**
      * Heart Beat Notification Interval
@@ -183,7 +182,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Sync Usage Stats Interact
      */
     @Inject
-    internal lateinit var syncUsageStatsInteract: SynPackageUsageStatsInteract
+    internal lateinit var syncUsageStatsInteract: SyncPackageUsageStatsInteract
 
     /**
      * Api End Points Helper

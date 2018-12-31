@@ -132,6 +132,8 @@ class DisabledAppScreenActivity : AppCompatActivity() {
      */
     override fun onResume() {
         super.onResume()
+        if(appDisabledStreamId != -1)
+            soundManager.stopSound(appDisabledStreamId)
         appDisabledStreamId = soundManager.playSound(ISoundManager.APP_BLOCKED_SOUND, true)
     }
 
