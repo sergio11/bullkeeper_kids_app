@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * Change Bed Time DTO
+ * Terminal Screen Status Changed DTO
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class ChangeBedTimeStatusDTO(
+data class TerminalScreenStatusChangedDTO(
 
         /**
-         * Identity
+         * Kid
          */
         @JsonProperty("kid")
         var kid: String? = null,
@@ -22,8 +22,9 @@ data class ChangeBedTimeStatusDTO(
         var terminal: String? = null,
 
         /**
-         * Is Enabled
+         * Enabled
          */
-        @JsonProperty("is_enabled")
+        @JsonProperty("enabled")
         var enabled: Boolean? = null
+
 )

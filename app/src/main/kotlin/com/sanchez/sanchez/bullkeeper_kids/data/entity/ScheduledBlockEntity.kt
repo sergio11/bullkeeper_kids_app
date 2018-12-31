@@ -16,6 +16,8 @@ open class ScheduledBlockEntity(
         var enable: Boolean = false,
         // Repeatable
         var repeatable: Boolean = false,
+        // Create At
+        var createAt: String? = null,
         // Image
         var image: String? = null,
         // Kid

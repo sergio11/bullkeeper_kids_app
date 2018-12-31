@@ -41,6 +41,12 @@ data class ScheduledBlockDTO (
         var allowCalls: Boolean = false,
 
         /**
+         * Create At
+         */
+        @JsonProperty("create_at")
+        var createAt: String? = null,
+
+        /**
          * Description
          */
         @JsonProperty("description")

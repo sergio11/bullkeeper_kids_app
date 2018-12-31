@@ -12,6 +12,7 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(context: Context): IPreferenceRepository {
 
+
     /**
      * Preferences
      */
@@ -173,4 +174,19 @@ class PreferenceRepositoryImpl
                 isEnabled).apply()
     }
 
+    /**
+     * Is Camera Enabled
+     */
+    override fun isCameraEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_CAMERA_SCREEN,
+                IPreferenceRepository.LOCK_CAMERA_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Camera Enabled
+     */
+    override fun setCameraEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_CAMERA_SCREEN,
+                isEnabled).apply()
+    }
 }

@@ -22,7 +22,6 @@ class FirstLinkTerminalViewModel
             private val preferenceRepository: IPreferenceRepository)
     : BaseViewModel()  {
 
-
     /**
      * Terminal Succes
      */
@@ -82,6 +81,10 @@ class FirstLinkTerminalViewModel
         terminalEntity.kidId?.let{
             preferenceRepository.setPrefKidIdentity(it)
         }
+
+        preferenceRepository.setCameraEnabled(terminalEntity.lockCameraEnabled)
+        preferenceRepository.setLockScreenEnabled(terminalEntity.lockScreenEnabled)
+        preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
 
         terminalSuccess.value = terminalEntity
     }

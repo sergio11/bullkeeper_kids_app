@@ -32,7 +32,9 @@ class GetSelfChildrenInteract
         = terminalsDTO?.map { terminalDTO -> TerminalEntity(terminalDTO.identity,
             terminalDTO.appVersionName, terminalDTO.appVersionCode, terminalDTO.osVersion,
             terminalDTO.sdkVersion, terminalDTO.manufacturer, terminalDTO.marketName, terminalDTO.model,
-            terminalDTO.codeName, terminalDTO.deviceName)  }
+            terminalDTO.codeName, terminalDTO.deviceName, terminalDTO.deviceId,
+            terminalDTO.kidId, terminalDTO.bedTimeEnabled, terminalDTO.lockScreenEnabled,
+            terminalDTO.lockCameraEnabled)  }
 
     /**
      * On Executed

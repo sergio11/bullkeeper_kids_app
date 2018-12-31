@@ -916,10 +916,14 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         Timber.d("SSE: Scheduled Block Saved Event Handler")
         val fmt = DateTimeFormat.forPattern(
                 getString(R.string.joda_local_time_format_server_response))
-        scheduledBlocksRepositoryImpl.save(ScheduledBlockEntity(event.identity,
-                event.name, event.enable, event.repeatable,
-                event.image, event.kid, event.startAt?.toString(fmt),
-                event.endAt?.toString(fmt), event.weeklyFrequency?.joinToString(",")))
+        scheduledBlocksRepositoryImpl.save(ScheduledBlockEntity(
+                id = event.identity,
+                name = event.name, enable = event.enable,
+                repeatable = event.repeatable,
+                image = event.image, kid = event.kid,
+                startAt = event.startAt?.toString(fmt),
+                endAt = event.endAt?.toString(fmt),
+                weeklyFrequency = event.weeklyFrequency?.joinToString(",")))
     }
 
     /**
@@ -955,18 +959,35 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
-     * Change bed time status
-     */
-    private fun changeBedTimeStatusHandler(event: ChangeBedTimeStatusDTO) {
-        Timber.d("SSE: Change Bed Time Status")
-        event.enabled?.let { preferenceRepository.setBedTimeEnabled(it) }
-    }
-
-    /**
      * Change Lock Screen Status
      */
     private fun changeLockScreenStatusHandler(event: ChangeLockScreenStatusDTO) {
         Timber.d("SSE: Change Lock Screen Status")
+        event.enabled?.let { preferenceRepository.setLockScreenEnabled(it) }
+    }
+
+    /**
+     * Bed Time Status Changed Handler
+     */
+    private fun bedTimeStatusChangedHandler(event: TerminalBedTimeStatusChangedDTO) {
+        Timber.d("SSE: Bed Time Status Changed Handler")
+        event.enabled?.let { preferenceRepository.setBedTimeEnabled(it) }
+    }
+
+    /**
+     * Terminal Camera Status Changed Handler
+     */
+    private fun terminalCameraStatusChangedHandler(event: TerminalCameraStatusChangedDTO) {
+        Timber.d("SSE: Terminal Camera Status Changed Handler")
+        event.enabled?.let { preferenceRepository.setCameraEnabled(it) }
+    }
+
+
+    /**
+     * Terminal Screen Status Changed Handler
+     */
+    private fun terminalScreenStatusChangedHandler(event: TerminalScreenStatusChangedDTO) {
+        Timber.d("SSE: Bed Time Status Changed Handler")
         event.enabled?.let { preferenceRepository.setLockScreenEnabled(it) }
     }
 
@@ -1085,11 +1106,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                 objectMapper.readValue(eventMessage,
                                         AppRulesSavedDTO::class.java)
                         )
-                        // Change Bed Time Status Event
-                        ServerEventTypeEnum.CHANGE_BED_TIME_STATUS_EVENT -> changeBedTimeStatusHandler(
-                                objectMapper.readValue(eventMessage,
-                                        ChangeBedTimeStatusDTO::class.java)
-                        )
                         // Change Lock Screen Status Event
                         ServerEventTypeEnum.CHANGE_LOCK_SCREEN_STATUS_EVENT ->
                             changeLockScreenStatusHandler(
@@ -1099,6 +1115,21 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         // Unlink Terminal Event
                         ServerEventTypeEnum.UNLINK_TERMINAL_EVENT ->
                             unlinkTerminal()
+                        // Terminal Bed Time Status Changed
+                        ServerEventTypeEnum.TERMINAL_BED_TIME_STATUS_CHANGED ->
+                            bedTimeStatusChangedHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            TerminalBedTimeStatusChangedDTO::class.java))
+                        // Terminal Camera Status Changed
+                        ServerEventTypeEnum.TERMINAL_CAMERA_STATUS_CHANGED ->
+                            terminalCameraStatusChangedHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            TerminalCameraStatusChangedDTO::class.java))
+                        // Terminal Screen Status Changed
+                        ServerEventTypeEnum.TERMINAL_SCREEN_STATUS_CHANGED ->
+                            terminalScreenStatusChangedHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            TerminalScreenStatusChangedDTO::class.java))
                         // Unknown Event
                         else -> Timber.d("SSE: Unknow Event")
 

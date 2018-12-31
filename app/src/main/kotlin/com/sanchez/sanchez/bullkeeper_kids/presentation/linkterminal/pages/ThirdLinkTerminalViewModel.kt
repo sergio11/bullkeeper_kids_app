@@ -92,6 +92,10 @@ class ThirdLinkTerminalViewModel
             preferenceRepository.setPrefKidIdentity(it)
         }
 
+        preferenceRepository.setCameraEnabled(terminalEntity.lockCameraEnabled)
+        preferenceRepository.setLockScreenEnabled(terminalEntity.lockScreenEnabled)
+        preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
+
         terminalSaved.value = terminalEntity
     }
 

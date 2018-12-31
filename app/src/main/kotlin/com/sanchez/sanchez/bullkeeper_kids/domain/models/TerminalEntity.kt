@@ -60,5 +60,20 @@ data class TerminalEntity(
         /**
          * Kid Id
          */
-        var kidId: String? = null
+        var kidId: String? = null,
+
+        /**
+         * Bed Time Enabled
+         */
+        var bedTimeEnabled: Boolean = true,
+
+        /**
+         * Lock Screen Enabled
+         */
+        var lockScreenEnabled: Boolean = false,
+
+        /**
+         * Lock Camera Enabled
+         */
+        var lockCameraEnabled: Boolean = false
 )

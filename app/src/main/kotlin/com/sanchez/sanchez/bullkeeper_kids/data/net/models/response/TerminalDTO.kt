@@ -80,5 +80,23 @@ data class TerminalDTO(
          * Kid Id
          */
         @JsonProperty("kid")
-        var kidId: String? = null
+        var kidId: String? = null,
+
+        /**
+         * Bed Time Enabled
+         */
+        @JsonProperty("bed_time_enabled")
+        var bedTimeEnabled: Boolean = true,
+
+        /**
+         * Lock Screen Enabled
+         */
+        @JsonProperty("lock_screen_enabled")
+        var lockScreenEnabled: Boolean = false,
+
+        /**
+         * Lock Camera Enabled
+         */
+        @JsonProperty("lock_camera_enabled")
+        var lockCameraEnabled: Boolean = false
 )

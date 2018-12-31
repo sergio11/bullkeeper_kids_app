@@ -38,11 +38,19 @@ class SynchronizeScheduledBlocksInteract
                 appContext.getString(R.string.joda_local_time_format_server_response))
 
         response.data?.map {
-            ScheduledBlockEntity(it.identity,
-                    it.name, it.enable, it.repeatable,
-                    it.image, it.kid, it.startAt?.toString(fmt),
-                    it.endAt?.toString(fmt), it.weeklyFrequency?.joinToString(","),
-                    it.allowCalls, it.description)
+            ScheduledBlockEntity(
+                    id = it.identity,
+                    name = it.name,
+                    enable = it.enable,
+                    repeatable = it.repeatable,
+                    createAt = it.createAt,
+                    image = it.image,
+                    kid = it.kid,
+                    startAt = it.startAt?.toString(fmt),
+                    endAt = it.endAt?.toString(fmt),
+                    weeklyFrequency = it.weeklyFrequency?.joinToString(","),
+                    allowCalls = it.allowCalls,
+                    description = it.description)
         }?.let { scheduledBlocksToSave ->
             scheduledBlocksRepository.save(scheduledBlocksToSave)
         }

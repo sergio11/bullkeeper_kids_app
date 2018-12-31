@@ -52,6 +52,10 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_LOCK_SCREEN = "lock_screen"
         const val LOCK_SCREEN_DEFAULT_VALUE = false
 
+        // Lock Camera
+        const val PREF_CAMERA_SCREEN = "lock_camera"
+        const val LOCK_CAMERA_DEFAULT_VALUE = false
+
     }
 
     /**
@@ -163,5 +167,17 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param longitude
      */
     fun setLockScreenEnabled(isEnabled: Boolean)
+
+    /**
+     * Is Camera Enabled
+     * @return
+     */
+    fun isCameraEnabled(): Boolean
+
+    /**
+     * Set Camera Enabled
+     * @param longitude
+     */
+    fun setCameraEnabled(isEnabled: Boolean)
 
 }

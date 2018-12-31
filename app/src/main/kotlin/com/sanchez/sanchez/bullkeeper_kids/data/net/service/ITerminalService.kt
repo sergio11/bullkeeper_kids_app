@@ -28,5 +28,4 @@ interface ITerminalService {
             @Path("kid")  kid: String,
             @Path("terminal") terminal: String) : Deferred<APIResponse<TerminalDTO>>
 
-
 }
