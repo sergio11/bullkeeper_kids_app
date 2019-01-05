@@ -2,7 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring
 
 import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
-import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveCurrentLocation
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveCurrentLocationDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.CurrentLocationDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ILocationService
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -32,7 +32,7 @@ class SaveCurrentLocationInteract
 
         val kid = preferenceRepository.getPrefKidIdentity()
         val response = locationService.saveCurrentLocation(kid,
-                SaveCurrentLocation(params.latitude, params.longitude)).await()
+                SaveCurrentLocationDTO(params.latitude, params.longitude)).await()
 
         return response.data!!
     }

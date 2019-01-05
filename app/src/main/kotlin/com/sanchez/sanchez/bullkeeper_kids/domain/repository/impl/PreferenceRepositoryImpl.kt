@@ -12,7 +12,6 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(context: Context): IPreferenceRepository {
 
-
     /**
      * Preferences
      */
@@ -188,5 +187,35 @@ class PreferenceRepositoryImpl
     override fun setCameraEnabled(isEnabled: Boolean) {
         mPref.edit().putBoolean(IPreferenceRepository.PREF_CAMERA_SCREEN,
                 isEnabled).apply()
+    }
+
+    /**
+     * Get SOS Request Expired At
+     */
+    override fun getSosRequestExpiredAt(): String {
+        return mPref.getString(IPreferenceRepository.PREF_SOS_REQUEST_EXPIRED_AT,
+                IPreferenceRepository.SOS_REQUEST_EXPIRED_AT_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set SOS Request Expired At
+     */
+    override fun setSosRequestExpiredAt(expiredAt: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_SOS_REQUEST_EXPIRED_AT, expiredAt).apply()
+    }
+
+    /**
+     * Get Pick Me Up Request Expired At
+     */
+    override fun getPickMeUpRequestExpiredAt(): String {
+        return mPref.getString(IPreferenceRepository.PREF_PICKME_UP_EXPIRED_AT,
+                IPreferenceRepository.PICKME_UP_EXPIRED_AT_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Pick Me Up Request Expired At
+     */
+    override fun setPickMeUpRequestExpiredAt(expiredAt: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_PICKME_UP_EXPIRED_AT, expiredAt).apply()
     }
 }

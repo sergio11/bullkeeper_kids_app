@@ -8,11 +8,16 @@ import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.SosComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.showLongMessage
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toStringFormat
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.kidrequest.SendRequestInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import kotlinx.android.synthetic.main.fragment_sos.*
 import java.lang.IllegalArgumentException
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -39,6 +44,12 @@ class SosActivityFragment : BaseFragment() {
     internal lateinit var sosViewModel: SosViewModel
 
     /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
+
+    /**
      * Layout Id
      */
     override fun layoutId(): Int = R.layout.fragment_sos
@@ -47,6 +58,7 @@ class SosActivityFragment : BaseFragment() {
      * Sos Stream Id
      */
     var sosStreamId: Int = -1
+
 
     /**
      * On Attach
@@ -68,11 +80,16 @@ class SosActivityFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeInjector()
 
+        /**
+         * Activate SOS
+         */
         activateSos.setOnClickListener {
-            context!!.showLongMessage("Activate SOS")
             sosStreamId = soundManager.playSound(ISoundManager.SOS_ALARM_SOUND, true)
             activateSos.isEnabled = false
-            activateSos.text = getString(R.string.sos_button_activate_text)
+            activateSos.text = getString(R.string.sos_button_in_progress_text)
+
+            sosViewModel.activateSos()
+
         }
 
         // Create the observer which updates the UI.
@@ -90,8 +107,40 @@ class SosActivityFragment : BaseFragment() {
             currentLocationText.text = getString(R.string.sos_current_address_not_determined)
         }
 
+        // Create the observer which updates the UI.
+        val sosRequestExpiredAtObserver = Observer<Date> { expiredAt ->
+
+            expiredAt?.let {
+                preferenceRepository.setSosRequestExpiredAt(it.toStringFormat(
+                        getString(R.string.date_time_format)
+                ))
+            }
+
+            activateSos.isEnabled = false
+            activateSos.text = getString(R.string.sos_button_no_expired_text)
+
+        }
+
+        // Create the observer which updates the UI.
+        val sosRequestFailureObserver = Observer<Failure> { failure ->
+            when(failure){
+                is SendRequestInteract.PreviousRequestHasNotExpiredException -> {
+                    activateSos.isEnabled = false
+                    activateSos.text = getString(R.string.sos_button_no_expired_text)
+                }
+                else -> {
+                    activateSos.isEnabled = true
+                    activateSos.text = getString(R.string.sos_button_text)
+                    activityHandler.showNoticeDialog(R.string.request_generic_error_occurred)
+                }
+            }
+        }
+
         sosViewModel.addressFromCurrentLocation.observe(this, addressFromCurrentLocationObserver)
         sosViewModel.addressFailure.observe(this, addressFromCurrentLocationFailureObserver)
+        sosViewModel.sosRequestFailure.observe(this, sosRequestFailureObserver)
+        sosViewModel.sosRequestExpiredAt.observe(this, sosRequestExpiredAtObserver)
+
     }
 
     /**
@@ -101,6 +150,19 @@ class SosActivityFragment : BaseFragment() {
         super.onStart()
         activityHandler.showProgressDialog(R.string.generic_loading_text)
         sosViewModel.getAddressFromCurrentLocation()
+
+        val expiredAt = preferenceRepository.getSosRequestExpiredAt()
+
+        if(!expiredAt.isEmpty() && expiredAt
+                        .ToDateTime(getString(R.string.date_time_format)).after(Date())) {
+            activateSos.isEnabled = false
+            activateSos.text = getString(R.string.sos_button_no_expired_text)
+
+        } else {
+            activateSos.isEnabled = true
+            activateSos.text = getString(R.string.sos_button_text)
+        }
+
     }
 
     /**

@@ -3,9 +3,9 @@ package com.sanchez.sanchez.bullkeeper_kids.data.net.models.request
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * Save Current Location
+ * Save Current Location dto
  */
-data class SaveCurrentLocation (
+data class SaveCurrentLocationDTO (
 
         /**
          * Latitude

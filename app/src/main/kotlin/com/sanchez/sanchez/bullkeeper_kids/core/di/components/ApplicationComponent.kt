@@ -25,8 +25,6 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
@@ -76,17 +74,6 @@ interface ApplicationComponent {
      * Inject into Lock Sceen
      */
     fun inject(lockScreenActivity: LockScreenActivity)
-
-
-    /**
-     * Inject into Pick Me Up Activity
-     */
-    fun inject(pickMeUpActivity: PickMeUpActivity)
-
-    /**
-     * Inject into Pick Me Up Fragment
-     */
-    fun inject(pickMeUpActivityFragment: PickMeUpActivityFragment)
 
     /**
      * Inject into Time Bank Activity

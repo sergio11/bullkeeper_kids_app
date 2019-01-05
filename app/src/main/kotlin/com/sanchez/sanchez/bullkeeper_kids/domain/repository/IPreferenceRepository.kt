@@ -56,6 +56,15 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_CAMERA_SCREEN = "lock_camera"
         const val LOCK_CAMERA_DEFAULT_VALUE = false
 
+
+        // SOS Request Expired At
+        const val PREF_SOS_REQUEST_EXPIRED_AT = "sos_request_expired_at"
+        const val SOS_REQUEST_EXPIRED_AT_DEFAULT_VALUE = ""
+
+        // PickMe Up Expired At
+        const val PREF_PICKME_UP_EXPIRED_AT = "pickme_up_expired_at"
+        const val PICKME_UP_EXPIRED_AT_DEFAULT_VALUE = ""
+
     }
 
     /**
@@ -179,5 +188,30 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param longitude
      */
     fun setCameraEnabled(isEnabled: Boolean)
+
+
+    /**
+     * Get SOS Request Expired At
+     * @return
+     */
+    fun getSosRequestExpiredAt(): String
+
+    /**
+     * Set Sos Request Expired At
+     * @param expiredAt
+     */
+    fun setSosRequestExpiredAt(expiredAt: String)
+
+    /**
+     * Get PickMeUp Request Expired At
+     * @return
+     */
+    fun getPickMeUpRequestExpiredAt(): String
+
+    /**
+     * Set PickMe Up Request Expired At
+     * @param expiredAt
+     */
+    fun setPickMeUpRequestExpiredAt(expiredAt: String)
 
 }

@@ -8,11 +8,15 @@ import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.PickMeUpComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.showLongMessage
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toStringFormat
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.kidrequest.SendRequestInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import kotlinx.android.synthetic.main.fragment_pick_me_up.*
 import java.lang.IllegalArgumentException
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -37,6 +41,12 @@ class PickMeUpActivityFragment : BaseFragment() {
      */
     @Inject
     internal lateinit var pickMeUpViewModel: PickMeUpViewModel
+
+    /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
 
 
     /**
@@ -71,10 +81,12 @@ class PickMeUpActivityFragment : BaseFragment() {
         initializeInjector()
 
         activatePickMeUp.setOnClickListener {
-            context!!.showLongMessage("Activate PickMeUp")
             pickMeUpStreamId = soundManager.playSound(ISoundManager.PICK_ME_UP_SOUND)
             activatePickMeUp.isEnabled = false
-            activatePickMeUp.text = getString(R.string.pick_me_up_button_activate_text)
+            activatePickMeUp.text = getString(R.string.pick_me_up_button_in_progress_text)
+
+            pickMeUpViewModel.activatePickMeUp()
+
         }
 
         // Create the observer which updates the UI.
@@ -92,9 +104,40 @@ class PickMeUpActivityFragment : BaseFragment() {
             currentLocationText.text = getString(R.string.sos_current_address_not_determined)
         }
 
+        // Create the observer which updates the UI.
+        val pickMeUpRequestFailureObserver = Observer<Failure> { failure ->
+            when(failure){
+                is SendRequestInteract.PreviousRequestHasNotExpiredException -> {
+                    activatePickMeUp.isEnabled = false
+                    activatePickMeUp.text = getString(R.string.pick_me_up_button_no_expired_text)
+                }
+                else -> {
+                    activityHandler.showNoticeDialog(R.string.request_generic_error_occurred)
+                    activatePickMeUp.isEnabled = true
+                    activatePickMeUp.text = getString(R.string.pick_me_up_button_text)
+                }
+            }
+        }
+
+        // Create the observer which updates the UI.
+        val pickMeUpRequestExpiredAtObserver = Observer<Date> { expiredAt ->
+
+
+            expiredAt?.let {
+                preferenceRepository.setPickMeUpRequestExpiredAt(
+                        it.toStringFormat(getString(R.string.date_time_format))
+                )
+            }
+
+            activatePickMeUp.isEnabled = false
+            activatePickMeUp.text = getString(R.string.pick_me_up_button_no_expired_text)
+
+        }
+
         pickMeUpViewModel.addressFromCurrentLocation.observe(this, addressFromCurrentLocationObserver)
         pickMeUpViewModel.addressFailure.observe(this, addressFromCurrentLocationFailureObserver)
-
+        pickMeUpViewModel.pickMeUpRequestFailure.observe(this, pickMeUpRequestFailureObserver)
+        pickMeUpViewModel.pickMeUpRequestExpiredAt.observe(this, pickMeUpRequestExpiredAtObserver)
     }
 
     /**
@@ -104,6 +147,18 @@ class PickMeUpActivityFragment : BaseFragment() {
         super.onStart()
         activityHandler.showProgressDialog(R.string.generic_loading_text)
         pickMeUpViewModel.getAddressFromCurrentLocation()
+
+        val expiredAt = preferenceRepository.getPickMeUpRequestExpiredAt()
+
+        if(!expiredAt.isEmpty() && expiredAt
+                        .ToDateTime(getString(R.string.date_time_format)).after(Date())) {
+            activatePickMeUp.isEnabled = false
+            activatePickMeUp.text = getString(R.string.pick_me_up_button_no_expired_text)
+
+        } else {
+            activatePickMeUp.isEnabled = true
+            activatePickMeUp.text = getString(R.string.pick_me_up_button_text)
+        }
 
     }
 

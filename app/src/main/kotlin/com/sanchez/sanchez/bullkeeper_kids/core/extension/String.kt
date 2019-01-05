@@ -1,10 +1,13 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.extension
 
+import com.sanchez.sanchez.bullkeeper_kids.R
 import org.joda.time.LocalDateTime
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 fun String.Companion.empty() = ""
@@ -21,6 +24,15 @@ fun String.toLocalTime(dateFormat: String): LocalTime? {
         ex.printStackTrace()
     }
     return localTime
+}
+
+/**
+ * To Date Time
+ */
+fun String.ToDateTime(dateFormat: String): Date {
+    // Simple Date Format
+    val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+    return sdf.parse(this)
 }
 
 /**

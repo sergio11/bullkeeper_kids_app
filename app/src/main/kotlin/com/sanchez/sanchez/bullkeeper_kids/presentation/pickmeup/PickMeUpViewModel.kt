@@ -5,7 +5,11 @@ import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseViewModel
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.kidrequest.SendRequestInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.location.GetAddressFromCurrentLocationInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.RequestTypeEnum
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -13,8 +17,8 @@ import javax.inject.Inject
  */
 class PickMeUpViewModel
     @Inject constructor(
-            private val getAddressFromCurrentLocationInteract:
-            GetAddressFromCurrentLocationInteract) : BaseViewModel()  {
+            private val sendRequestInteract: SendRequestInteract,
+            private val getAddressFromCurrentLocationInteract: GetAddressFromCurrentLocationInteract) : BaseViewModel()  {
 
 
     /**
@@ -27,6 +31,17 @@ class PickMeUpViewModel
      */
     var addressFailure: MutableLiveData<Failure> = MutableLiveData()
 
+
+    /**
+     * Pick Me Up Request Failure
+     */
+    var pickMeUpRequestFailure: MutableLiveData<Failure> = MutableLiveData()
+
+    /**
+     * Pick Me Up Request Expired At
+     */
+    var pickMeUpRequestExpiredAt: MutableLiveData<Date> = MutableLiveData()
+
     /**
      * Get Address From Current Location
      */
@@ -34,6 +49,15 @@ class PickMeUpViewModel
         // Get All Packages Installed
         getAddressFromCurrentLocationInteract(UseCase.None()){
             it.either(::onAddressFromCurrentLocationFailed, ::onAddressFromCurrentLocationSuccess)
+        }
+    }
+
+    /**
+     * Activate Pick Me Up
+     */
+    fun activatePickMeUp(){
+        sendRequestInteract(SendRequestInteract.Params(RequestTypeEnum.PICKMEUP.name)){
+            it.either(::onPickMeUpRequestFailed, ::onPickMeUpRequestSuccess)
         }
     }
 
@@ -54,4 +78,19 @@ class PickMeUpViewModel
 
     }
 
+    /**
+     * On Pick Me Up Request Failed
+     */
+    private fun onPickMeUpRequestFailed(failure: Failure) {
+        Preconditions.checkNotNull(failure, "Failure can not be null")
+        pickMeUpRequestFailure.value = failure
+    }
+
+    /**
+     * On Pick Me Up Request Success
+     */
+    private fun onPickMeUpRequestSuccess(expiredAt: Date) {
+        Preconditions.checkNotNull(expiredAt, "Expired At can not be null")
+        pickMeUpRequestExpiredAt.value = expiredAt
+    }
 }

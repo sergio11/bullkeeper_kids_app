@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.components
 
 
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
+import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.KidRequestModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.SosModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
@@ -13,7 +14,7 @@ import dagger.Component
  */
 @PerActivity
 @Component(dependencies = [ApplicationComponent::class],
-        modules = [ActivityModule::class, SosModule::class])
+        modules = [ActivityModule::class, KidRequestModule::class, SosModule::class])
 interface SosComponent: ActivityComponent {
 
     /**

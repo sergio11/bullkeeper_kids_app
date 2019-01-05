@@ -1,6 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.data.net.service
 
-import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveCurrentLocation
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveCurrentLocationDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.CurrentLocationDTO
 import kotlinx.coroutines.Deferred
@@ -19,6 +19,6 @@ interface ILocationService {
     @POST("children/{kid}/location")
     fun saveCurrentLocation(
             @Path("kid")  kid: String,
-            @Body currentLocation: SaveCurrentLocation
+            @Body currentLocationDTO: SaveCurrentLocationDTO
     ): Deferred<APIResponse<CurrentLocationDTO>>
 }
