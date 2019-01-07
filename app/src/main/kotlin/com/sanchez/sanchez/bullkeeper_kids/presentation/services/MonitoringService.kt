@@ -401,8 +401,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         if (startedFromNotification) {
             stopSelf()
         }
-        // Tells the system to not try to recreate the service after it has been killed.
-        return Service.START_NOT_STICKY
+        // Tells the system try  recreate the service after it has been killed.
+        return Service.START_STICKY
     }
 
     /**
@@ -510,7 +510,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
             if (usageStatsService.isUsageStatsAllowed()) {
                 // Get Current Foreground App
                 val currentAppForeground = usageStatsService.getCurrentForegroundApp()
-                Timber.d("CHECK_FOREGROUND Current App Foreground -> %s", currentAppForeground)
+                Timber.d("CFAT: Current App Foreground -> %s", currentAppForeground)
                 if (!currentAppForeground.isNullOrEmpty()
                         && (!currentAppLocked.isNullOrEmpty() ||
                                 !currentDisabledApp.isNullOrEmpty() ||
@@ -522,12 +522,15 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
                     if(currentTime.isAfter(startBedTime)
                             && currentTime.isBefore(endBedTime)) {
+                        Timber.d("CFAT: Bet Time active")
                         sendUnLockAppAction()
                         sendEnableAppAction()
                         if(preferenceRepository.isBedTimeEnabled()) {
+                            Timber.d("CFAT: Bet Time enabled")
                             isBedTimeEnabled = true
                             navigator.showBedTimeScreen(this)
                         } else {
+                            Timber.d("CFAT: Bet Time disabled")
                             // Disable Bed Time is needed
                             sendDisableBedTimeAction()
                         }
@@ -537,20 +540,33 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         sendDisableBedTimeAction()
 
                         // Get information about the application in the BD
-                        Timber.d("CHECK_FOREGROUND -> Current App in foreground -> %s ", currentAppForeground)
+                        Timber.d("CFAT: Current App in foreground -> %s ", currentAppForeground)
 
+
+                        // Get App To Check
+                        val appToCheck: String = when {
+                            !currentAppLocked.isNullOrEmpty()
+                                    && currentAppForeground == packageName -> currentAppLocked!!
+                            !currentDisabledApp.isNullOrEmpty()
+                                    && currentAppForeground == packageName -> currentDisabledApp!!
+                            else -> currentAppForeground
+                        }
+
+                        // Get Last Data from app
                         val appInstalledEntity =
-                                appsInstalledRepository.findByPackageName(currentAppForeground)
+                                appsInstalledRepository.findByPackageName(appToCheck)
 
                         appInstalledEntity?.let {
 
                             if(it.disabled) {
 
                                 sendUnLockAppAction()
-                                Timber.d("CHECK_FOREGROUND -> Disabled Current Foreground app: %s", currentAppForeground)
-                                currentDisabledApp = currentAppForeground
-                                navigator.showDisabledAppScreen(this, it.packageName,
-                                        it.appName, it.icon, it.appRule)
+                                Timber.d("CFAT: Disabled Current Foreground app: %s", it.packageName)
+                                if(currentDisabledApp.isNullOrEmpty() || currentAppForeground == it.packageName) {
+                                    currentDisabledApp = it.packageName
+                                    navigator.showDisabledAppScreen(this, it.packageName,
+                                            it.appName, it.icon, it.appRule)
+                                }
 
 
                             } else {
@@ -569,7 +585,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                              * App Rule Per Scheduler
                                              */
                                             AppRuleEnum.PER_SCHEDULER -> {
-                                                Timber.d("CHECK_FOREGROUND -> PER_SCHEDULER rule applied to the current application ")
+                                                Timber.d("CFAT: PER_SCHEDULER rule applied to the current application ")
 
 
                                                 val anyScheduledBlockEnable =
@@ -580,10 +596,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                                 if(anyScheduledBlockEnable) {
                                                     sendUnLockAppAction()
                                                 } else {
-                                                    Timber.d("CHECK_FOREGROUND -> Lock Current Foreground app: %s", currentAppForeground)
-                                                    currentAppLocked = currentAppForeground
-                                                    navigator.showLockScreen(this, it.packageName,
-                                                            it.appName, it.icon, it.appRule)
+                                                    Timber.d("CFAT: Lock Current Foreground app: %s", currentAppForeground)
+                                                    if(currentAppLocked.isNullOrEmpty() || currentAppForeground == it.packageName) {
+                                                        currentAppLocked = it.packageName
+                                                        navigator.showLockScreen(this, it.packageName,
+                                                                it.appName, it.icon, it.appRule)
+                                                    }
+
                                                 }
 
                                             }
@@ -592,7 +611,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                              * Always Allowed
                                              */
                                             AppRuleEnum.ALWAYS_ALLOWED -> {
-                                                Timber.d("CHECK_FOREGROUND -> ALWAYS_ALLOWED rule applied to the current application ")
+                                                Timber.d("CFAT: ALWAYS_ALLOWED rule applied to the current application ")
                                                 sendUnLockAppAction()
                                             }
 
@@ -600,17 +619,20 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                              * Never Allowed
                                              */
                                             AppRuleEnum.NEVER_ALLOWED -> {
-                                                Timber.d("CHECK_FOREGROUND -> NEVER_ALLOWED rule applied to the current application ")
-                                                currentAppLocked = currentAppForeground
-                                                navigator.showLockScreen(this, it.packageName,
-                                                        it.appName, it.icon, it.appRule)
+                                                Timber.d("CFAT: NEVER_ALLOWED rule applied to the current application ")
+                                                if(currentAppLocked.isNullOrEmpty() || currentAppForeground == it.packageName) {
+                                                    currentAppLocked = it.packageName
+                                                    navigator.showLockScreen(this, it.packageName,
+                                                            it.appName, it.icon, it.appRule)
+                                                }
+
                                             }
 
                                         }
 
 
                                     } catch (ex: Exception) {
-                                        Timber.d("CHECK_FOREGROUND -> ex: %s", ex.message)
+                                        Timber.d("CFAT: ex: %s", ex.message)
                                         ex.printStackTrace()
                                     }
 
@@ -942,10 +964,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * App Rules List Saved Event Handler
      */
     private fun  appRulesListSavedEventHandler(event: AppRulesListSavedDTO){
-        Timber.d("SSE: Scheduled Block Status Changed Event")
+        Timber.d("SSE: App Rules List Saved")
         event.appRulesList.forEach {
-            if(it.identity != null && it.type != null)
+            if(it.identity != null && it.type != null) {
+                Timber.d("SSE: Update App Rules: app: %s, type : %s", it.identity!!, it.type!!)
                 appsInstalledRepository.updateAppRule(it.identity!!, it.type!!)
+            }
         }
     }
 
@@ -1070,8 +1094,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
         message?.let {eventMessage ->
             val jsonNode = objectMapper.readTree(eventMessage)
-            if(jsonNode.has("eventType")) {
-                val eventType = jsonNode.get("eventType").asText()
+            if(jsonNode.has("event_type")) {
+                val eventType = jsonNode.get("event_type").asText()
                 try {
 
                     when(ServerEventTypeEnum.valueOf(eventType)) {

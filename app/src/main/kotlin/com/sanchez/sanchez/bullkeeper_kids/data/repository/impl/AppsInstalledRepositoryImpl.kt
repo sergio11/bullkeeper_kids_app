@@ -102,8 +102,8 @@ class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(),
         realm.where(AppInstalledEntity::class.java)
                 .equalTo("serverId", app)
                 .findFirst()?.let {appInstalled ->
-                    appInstalled.appRule = appRule
                     realm.executeTransaction { realm ->
+                        appInstalled.appRule = appRule
                         realm.insertOrUpdate(appInstalled)
                     }
                 }
@@ -119,8 +119,8 @@ class AppsInstalledRepositoryImpl: SupportRepositoryImpl<AppInstalledEntity>(),
         realm.where(AppInstalledEntity::class.java)
                 .equalTo("serverId", app)
                 .findFirst()?.let {appInstalled ->
-                    appInstalled.disabled = disabled
                     realm.executeTransaction { realm ->
+                        appInstalled.disabled = disabled
                         realm.insertOrUpdate(appInstalled)
                     }
                 }

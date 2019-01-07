@@ -99,8 +99,8 @@ class ScheduledBlocksRepositoryImpl: SupportRepositoryImpl<ScheduledBlockEntity>
         realm.where(ScheduledBlockEntity::class.java)
                 .equalTo("id", id)
                 .findFirst()?.let {block ->
-                    block.enable = status
                     realm.executeTransaction { realm ->
+                        block.enable = status
                         realm.insertOrUpdate(block)
                     }
                 }
@@ -115,8 +115,8 @@ class ScheduledBlocksRepositoryImpl: SupportRepositoryImpl<ScheduledBlockEntity>
         realm.where(ScheduledBlockEntity::class.java)
                 .equalTo("id", id)
                 .findFirst()?.let {block ->
-                    block.image = image
                     realm.executeTransaction { realm ->
+                        block.image = image
                         realm.insertOrUpdate(block)
                     }
                 }

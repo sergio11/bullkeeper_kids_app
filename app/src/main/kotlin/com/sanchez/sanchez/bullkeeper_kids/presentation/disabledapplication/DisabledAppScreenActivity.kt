@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.Instrumentation
 import android.net.Uri
 import android.view.WindowManager
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
@@ -37,6 +38,11 @@ class DisabledAppScreenActivity : AppCompatActivity() {
     }
 
     companion object {
+
+        /**
+         * Request Uninstall Package
+         */
+        const val  REQUEST_UNINSTALL_PACKAGE = 1122
 
         /**
          * Args
@@ -175,9 +181,9 @@ class DisabledAppScreenActivity : AppCompatActivity() {
         unInstallApp.setOnClickListener {
             val am = getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
             am.killBackgroundProcesses(packageName)
-            startActivity(Intent(Intent.ACTION_UNINSTALL_PACKAGE).apply {
+            startActivityForResult(Intent(Intent.ACTION_UNINSTALL_PACKAGE).apply {
                 data = Uri.parse("package:$packageName")
-            })
+            }, REQUEST_UNINSTALL_PACKAGE)
         }
 
     }
@@ -195,6 +201,16 @@ class DisabledAppScreenActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mLocalBroadcastManager?.unregisterReceiver(mBroadcastReceiver)
+    }
+
+    /**
+     * On Activity Result
+     */
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_UNINSTALL_PACKAGE && resultCode == Activity.RESULT_OK) {
+            finish()
+        }
     }
 
 }

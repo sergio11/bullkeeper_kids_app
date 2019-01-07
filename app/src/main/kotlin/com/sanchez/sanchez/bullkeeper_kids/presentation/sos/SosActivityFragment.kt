@@ -15,6 +15,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.kidrequest.SendRequestInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import kotlinx.android.synthetic.main.fragment_sos.*
+import timber.log.Timber
 import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -152,6 +153,8 @@ class SosActivityFragment : BaseFragment() {
         sosViewModel.getAddressFromCurrentLocation()
 
         val expiredAt = preferenceRepository.getSosRequestExpiredAt()
+
+        Timber.d("SOS: Expired At -> %s", expiredAt)
 
         if(!expiredAt.isEmpty() && expiredAt
                         .ToDateTime(getString(R.string.date_time_format)).after(Date())) {
