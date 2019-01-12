@@ -112,6 +112,7 @@ class PickMeUpActivityFragment : BaseFragment() {
                     activatePickMeUp.text = getString(R.string.pick_me_up_button_no_expired_text)
                 }
                 else -> {
+                    soundManager.stopSound(pickMeUpStreamId)
                     activityHandler.showNoticeDialog(R.string.request_generic_error_occurred)
                     activatePickMeUp.isEnabled = true
                     activatePickMeUp.text = getString(R.string.pick_me_up_button_text)

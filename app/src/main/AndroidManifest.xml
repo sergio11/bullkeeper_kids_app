@@ -73,6 +73,9 @@
         <!-- Monitoring Service -->
         <service android:name=".presentation.services.MonitoringService" />
 
+        <!-- Geofence Transition Service -->
+        <service android:name=".presentation.services.GeofenceTransitionService" />
+
         <!-- Lock Screen Activity -->
         <activity
             android:name=".presentation.lockscreen.LockScreenActivity"

@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Component(modules = [ ApplicationModule::class, GlobalServiceModule::class,
     PackagesModule::class, NetModule::class, MonitoringModule::class,
     PhoneNumberBlockedModule::class, SmsModule::class, CallDetailsModule::class,
-    ContactsModule::class, ScheduledBlocksModule::class])
+    ContactsModule::class, ScheduledBlocksModule::class, GeofencesModule::class])
 interface ServiceComponent {
 
     /**

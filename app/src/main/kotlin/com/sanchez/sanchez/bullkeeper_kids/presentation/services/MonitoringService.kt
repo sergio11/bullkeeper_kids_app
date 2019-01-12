@@ -42,6 +42,9 @@ import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksR
 import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.RemoveGeofenceInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SyncGeofencesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.SaveCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.*
@@ -262,6 +265,24 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var contactsObserver: ContactsObserver
 
+    /**
+     * Sync Geofences Interact
+     */
+    @Inject
+    internal lateinit var syncGeofencesInteract: SyncGeofencesInteract
+
+    /**
+     * Add Geofence Interact
+     */
+    @Inject
+    internal lateinit var saveGeofenceInteract: SaveGeofenceInteract
+
+    /**
+     * Remove Geofence Interact
+     */
+    @Inject
+    internal lateinit var removeGeofenceInteract: RemoveGeofenceInteract
+
 
     /**
      * Receivers
@@ -436,6 +457,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         syncTerminalContacts()
         syncTerminalSMS()
         syncScheduledBlocks()
+        syncGeofences()
         startContactObserver()
     }
 
@@ -761,6 +783,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         }
     }
 
+
     /**
      * Sync Terminal Apps
      */
@@ -824,6 +847,19 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 Timber.d("Sync Scheduled Blocks Failed")
             }, fnR = fun(_: Unit){
                 Timber.d("Sync Scheduled Blocks successfully")
+            })
+        }
+    }
+
+    /**
+     * Sync Geofences
+     */
+    private fun syncGeofences(){
+        syncGeofencesInteract(UseCase.None()){
+            it.either(fnL = fun(_: Failure){
+                Timber.d("Sync Geofences Failed")
+            }, fnR = fun(total: Int){
+                Timber.d("Sync Geofences successfully, total -> %d", total)
             })
         }
     }
@@ -1019,6 +1055,42 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Geofence Saved Event Handler
+     */
+    private fun geofenceSavedEventHandler(geofenceSavedDTO: GeofenceSavedDTO) {
+        Timber.d("SSE: Geofence Saved Event")
+        saveGeofenceInteract(SaveGeofenceInteract.Params(
+                geofenceSavedDTO.identity, geofenceSavedDTO.name,
+                geofenceSavedDTO.address, geofenceSavedDTO.lat,
+                geofenceSavedDTO.log, geofenceSavedDTO.radius,
+                geofenceSavedDTO.expirationDuration, geofenceSavedDTO.type,
+                geofenceSavedDTO.kid, geofenceSavedDTO.createAt,
+                geofenceSavedDTO.updateAt
+        )){
+            it.either(fun(_: Failure){
+                Timber.d("Save Geofence Failed")
+            }, fun(_: Unit) {
+                Timber.d("Save Geofence Success")
+            })
+        }
+    }
+
+    /**
+     * Geofence Deleted Event Handler
+     */
+    private fun geofenceDeletedEventHandler(geofenceDeletedDTO: GeofenceDeletedDTO) {
+        Timber.d("SSE: Geofence Deleted Event")
+        removeGeofenceInteract(RemoveGeofenceInteract.Params(
+                arrayListOf(geofenceDeletedDTO.identity))){
+            it.either(fun(_: Failure){
+                Timber.d("Delete Geofence Failed")
+            }, fun(_: Unit) {
+                Timber.d("Delete Geofence Success")
+            })
+        }
+    }
+
+    /**
      * Start Listen SSE
      */
     private fun startListenSse() {
@@ -1155,6 +1227,16 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             appDisabledStatusChangedHandler(
                                     objectMapper.readValue(eventMessage,
                                             AppDisabledStatusChangedDTO::class.java))
+                        ServerEventTypeEnum.GEOFENCE_SAVED_EVENT -> {
+                            geofenceSavedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            GeofenceSavedDTO::class.java))
+                        }
+                        ServerEventTypeEnum.GEOFENCE_DELETED_EVENT -> {
+                            geofenceDeletedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            GeofenceDeletedDTO::class.java))
+                        }
                         // Unknown Event
                         else -> Timber.d("SSE: Unknow Event")
 

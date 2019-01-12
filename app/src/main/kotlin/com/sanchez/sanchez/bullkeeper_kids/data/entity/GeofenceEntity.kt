@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.data.entity
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import java.io.Serializable
+import java.util.*
 
 /**
  * Proximity Event
@@ -13,14 +14,22 @@ open class GeofenceEntity(
         @PrimaryKey var identity: String? = "",
         // Name
         var name: String? = "",
+        // Address
+        var address: String? = "",
         // Latitude
-        var lat: Double = 0.0,
+        var lat: Double? = 0.0,
         // Longitude
-        var log: Double = 0.0,
+        var log: Double? = 0.0,
         // Radius
-        var radius: Float = 0.0f,
-        // Duration
-        var duration: Long = -1,
+        var radius: Float? = 0.0f,
+        // Expiration Duration
+        var expirationDuration: Long? = -1,
         // Transition Type
-        var transitionType: String = TransitionTypeEnum.TRANSITION_ENTER.name
+        var transitionType: String? = TransitionTypeEnum.TRANSITION_ENTER.name,
+        // Kid
+        var kid: String? = null,
+        // Create At
+        var createAt: Date? = null,
+        // Update At
+        var updateAt: Date? = null
 ) : RealmObject(), Serializable

@@ -130,6 +130,7 @@ class SosActivityFragment : BaseFragment() {
                     activateSos.text = getString(R.string.sos_button_no_expired_text)
                 }
                 else -> {
+                    soundManager.stopSound(sosStreamId)
                     activateSos.isEnabled = true
                     activateSos.text = getString(R.string.sos_button_text)
                     activityHandler.showNoticeDialog(R.string.request_generic_error_occurred)
