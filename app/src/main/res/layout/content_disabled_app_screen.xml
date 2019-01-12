@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="100dp"
-    tools:context=".presentation.disabledapplication.DisabledAppScreenActivity"
+    tools:context=".presentation.lockscreen.DisabledAppScreenActivity"
     tools:showIn="@layout/activity_disabled_app_screen">
 
 

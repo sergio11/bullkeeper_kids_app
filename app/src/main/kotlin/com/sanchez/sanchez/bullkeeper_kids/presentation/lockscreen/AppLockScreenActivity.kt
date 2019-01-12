@@ -25,10 +25,9 @@ import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 /**
- * Lock Screen Activity
+ * App Lock Screen Activity
  */
-class LockScreenActivity : AppCompatActivity() {
-
+class AppLockScreenActivity : AppCompatActivity() {
 
     /**
      * App Component
@@ -40,8 +39,20 @@ class LockScreenActivity : AppCompatActivity() {
     companion object {
 
         /**
+         * Lock Type
+         */
+        enum class LockTypeEnum {
+
+            FUN_TIME_DISABLED,
+            FUN_TIME_UNAVAILABLE,
+            NO_SCHEDULED_BLOCK_ENABLE,
+            APP_NOT_ALLOWED
+        }
+
+        /**
          * Args
          */
+        const val LOCK_TYPE_ARG = "LOCK_TYPE_ARG"
         const val PACKAGE_NAME_ARG = "PACKAGE_NAME_ARG"
         const val APP_NAME_ARG = "APP_NAME_ARG"
         const val APP_ICON_ARG = "ICON_ARG"
@@ -55,10 +66,11 @@ class LockScreenActivity : AppCompatActivity() {
         /**
          * Calling Intent
          */
-        fun callingIntent(context: Context, packageName: String?, appName: String?,
+        fun callingIntent(context: Context, appLockType: AppLockScreenActivity.Companion.LockTypeEnum, packageName: String?, appName: String?,
                           icon: String?, appRule: String?): Intent {
-            val intent = Intent(context, LockScreenActivity::class.java)
+            val intent = Intent(context, AppLockScreenActivity::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(LOCK_TYPE_ARG, appLockType)
             intent.putExtra(PACKAGE_NAME_ARG, packageName)
             intent.putExtra(APP_NAME_ARG, appName)
             intent.putExtra(APP_ICON_ARG, icon)
@@ -159,7 +171,7 @@ class LockScreenActivity : AppCompatActivity() {
         val appName = intent.getStringExtra(APP_NAME_ARG)
         val appIcon = intent.getStringExtra(APP_ICON_ARG)
         val appRule = intent.getStringExtra(APP_RULE_ARG)
-
+        val lockType = intent.getSerializableExtra(LOCK_TYPE_ARG)
 
         // Set App Icon
         if(!appIcon.isNullOrEmpty()) {
@@ -172,12 +184,23 @@ class LockScreenActivity : AppCompatActivity() {
         }
 
         // Set Content
-        contentText.text = String.format(Locale.getDefault(),
-                getString(R.string.lock_screen_content_screen), appName)
+        contentText.text = when(lockType) {
+            LockTypeEnum.FUN_TIME_DISABLED ->  String.format(Locale.getDefault(),
+                    getString(R.string.lock_screen_fun_time_not_enabled), appName)
+            LockTypeEnum.APP_NOT_ALLOWED ->  String.format(Locale.getDefault(),
+                        getString(R.string.lock_screen_content_screen), appName)
+            LockTypeEnum.NO_SCHEDULED_BLOCK_ENABLE -> String.format(Locale.getDefault(),
+                    getString(R.string.lock_screen_content_screen), appName)
+            LockTypeEnum.FUN_TIME_UNAVAILABLE -> String.format(Locale.getDefault(),
+                    getString(R.string.lock_screen_fun_time_unavailable), appName)
+            else -> String.format(Locale.getDefault(),
+                    getString(R.string.lock_screen_content_screen), appName)
+        }
 
         // Close App Handler
         closeApp.setOnClickListener {
-            val am = getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
+            val am = getSystemService(Activity.ACTIVITY_SERVICE)
+                    as ActivityManager
             am.killBackgroundProcesses(packageName)
             navigator.showHome(this)
         }

@@ -195,7 +195,9 @@
 
 
     <!-- Lock Screen -->
+    <string name="lock_screen_fun_time_not_enabled" formatted="false">You can not use %s because the fun time is not enabled.</string>
     <string name="lock_screen_content_screen" formatted="false">Bullkeeper blocked %s because it\'s restricted by your house rules.</string>
+    <string name="lock_screen_fun_time_unavailable" formatted="false">You do not have enough fun time to use %s</string>
     <string name="lock_screen_close_app">Close App</string>
 
 

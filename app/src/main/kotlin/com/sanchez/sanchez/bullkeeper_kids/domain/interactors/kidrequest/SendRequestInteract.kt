@@ -10,6 +10,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.RetrofitException
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.RequestTypeEnum
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import retrofit2.Retrofit
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
@@ -35,9 +36,21 @@ class SendRequestInteract
         val kid = preferenceRepository.getPrefKidIdentity()
         val terminal = preferenceRepository.getPrefTerminalIdentity()
 
-        // Latitude or longitude
-        val latitude = preferenceRepository.getCurrentLatitude().toDoubleOrNull()
-        val longitude = preferenceRepository.getCurrentLongitude().toDoubleOrNull()
+        var latitude = 0.0
+        var longitude = 0.0
+
+        try {
+
+            if(!preferenceRepository.getCurrentLatitude().isEmpty())
+                latitude = preferenceRepository.getCurrentLatitude().toDouble()
+
+            if(!preferenceRepository.getCurrentLongitude().isEmpty())
+                longitude = preferenceRepository.getCurrentLongitude().toDouble()
+
+        } catch (ex: Exception) {
+            preferenceRepository.setCurrentLatitude(IPreferenceRepository.CURRENT_LATITUDE_DEFAULT_VALUE)
+            preferenceRepository.setCurrentLongitude(IPreferenceRepository.CURRENT_LONGITUDE_DEFAULT_VALUE)
+        }
 
         // Create Request
         val sosRequest = AddKidRequestDTO()

@@ -2,6 +2,8 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IScheduledBlocksService
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppAllowedByScheduledRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.AppAllowedByScheduledRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.scheduledblocks.SynchronizeScheduledBlocksInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -33,6 +35,14 @@ class ScheduledBlocksModule {
         = ScheduledBlocksRepositoryImpl()
 
     /**
+     * Provide App Allowed By Scheduled Repository
+     */
+    @Provides
+    @Singleton
+    fun provideAppAllowedByScheduledRepository(): IAppAllowedByScheduledRepository
+        = AppAllowedByScheduledRepositoryImpl()
+
+    /**
      * Provide Synchronize Scheduled Blocks Interact
      */
     @Provides
@@ -42,8 +52,9 @@ class ScheduledBlocksModule {
             retrofit: Retrofit,
             scheduledBlocksService: IScheduledBlocksService,
             scheduledBlocksRepository: ScheduledBlocksRepositoryImpl,
+            appAllowedByScheduledRepository: IAppAllowedByScheduledRepository,
             preferenceRepository: IPreferenceRepository)
         = SynchronizeScheduledBlocksInteract(appContext, retrofit, scheduledBlocksService,
-            scheduledBlocksRepository, preferenceRepository)
+            scheduledBlocksRepository, appAllowedByScheduledRepository, preferenceRepository)
 
 }

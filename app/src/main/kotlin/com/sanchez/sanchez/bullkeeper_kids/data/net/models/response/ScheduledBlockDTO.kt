@@ -77,8 +77,14 @@ data class ScheduledBlockDTO (
         var endAt: LocalTime? = null,
 
         /**
+         * Apps Allowed
+         */
+        @JsonProperty("apps_allowed")
+        var appsAllowed: List<AppAllowedByScheduledDTO>? = null,
+
+        /**
          * Weekly Frequency
          */
         @JsonProperty("weekly_frequency")
-        var weeklyFrequency: IntArray? = null)
-{}
+        var weeklyFrequency: IntArray? = null
+){}

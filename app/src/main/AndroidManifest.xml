@@ -78,14 +78,21 @@
 
         <!-- Lock Screen Activity -->
         <activity
-            android:name=".presentation.lockscreen.LockScreenActivity"
-            android:label="@string/title_activity_lock_screen"
+            android:name=".presentation.lockscreen.AppLockScreenActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
 
+        <!-- Scheduled Block Active Screen Activity -->
+        <activity
+            android:name=".presentation.lockscreen.ScheduledBlockActiveScreenActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+
+
         <!-- Disabled App Screen Activity -->
-        <activity android:name=".presentation.disabledapplication.DisabledAppScreenActivity"
+        <activity android:name=".presentation.lockscreen.DisabledAppScreenActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />

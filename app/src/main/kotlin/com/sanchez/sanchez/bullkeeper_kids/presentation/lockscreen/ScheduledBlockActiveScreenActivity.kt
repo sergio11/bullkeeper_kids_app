@@ -1,4 +1,4 @@
-package com.sanchez.sanchez.bullkeeper_kids.presentation.disabledapplication
+package com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen
 
 import android.content.Context
 import android.content.Intent
@@ -11,24 +11,24 @@ import android.content.IntentFilter
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.content_lock_screen.*
 import java.util.*
 import javax.inject.Inject
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.app.Activity
 import android.app.ActivityManager
-import android.app.Instrumentation
-import android.net.Uri
 import android.view.WindowManager
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
-import kotlinx.android.synthetic.main.content_disabled_app_screen.*
+import kotlinx.android.synthetic.main.content_scheduled_block_active_screen.view.*
+import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 /**
- * Disabled App Screen Activity
+ * Scheduled Block Active Screen
  */
-class DisabledAppScreenActivity : AppCompatActivity() {
+class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
 
     /**
      * App Component
@@ -40,34 +40,31 @@ class DisabledAppScreenActivity : AppCompatActivity() {
     companion object {
 
         /**
-         * Request Uninstall Package
-         */
-        const val  REQUEST_UNINSTALL_PACKAGE = 1122
-
-        /**
          * Args
          */
-        const val PACKAGE_NAME_ARG = "PACKAGE_NAME_ARG"
-        const val APP_NAME_ARG = "APP_NAME_ARG"
-        const val APP_ICON_ARG = "ICON_ARG"
-        const val APP_RULE_ARG = "APP_RULE_ARG"
+        const val NAME_ARG = "NAME_ARG"
+        const val IMAGE_ARG = "IMAGE_ARG"
+        const val START_AT_ARG = "START_AT_ARG"
+        const val END_AT_ARG = "END_AT_ARG"
+        const val DESCRIPTION_ARG = "DESCRIPTION_ARG"
 
         /**
          * Event
          */
-        const val ENABLE_APP_ACTION = "com.sanchez.sergio.enable.app"
+        const val UNLOCK_APP_ACTION = "com.sanchez.sergio.unlock.app"
 
         /**
          * Calling Intent
          */
-        fun callingIntent(context: Context, packageName: String?, appName: String?,
-                          icon: String?, appRule: String?): Intent {
-            val intent = Intent(context, DisabledAppScreenActivity::class.java)
+        fun callingIntent(context: Context, name: String?, image: String?, startAt: String?,
+                          endAt: String?, description: String?): Intent {
+            val intent = Intent(context, ScheduledBlockActiveScreenActivity::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra(PACKAGE_NAME_ARG, packageName)
-            intent.putExtra(APP_NAME_ARG, appName)
-            intent.putExtra(APP_ICON_ARG, icon)
-            intent.putExtra(APP_RULE_ARG, appRule)
+            intent.putExtra(NAME_ARG, name)
+            intent.putExtra(IMAGE_ARG, image)
+            intent.putExtra(START_AT_ARG, startAt)
+            intent.putExtra(END_AT_ARG, endAt)
+            intent.putExtra(DESCRIPTION_ARG, description)
             return intent
         }
     }
@@ -92,9 +89,9 @@ class DisabledAppScreenActivity : AppCompatActivity() {
     internal lateinit var navigator: INavigator
 
     /**
-     * App Disabled Stream Id
+     * App Blocked Stream Id
      */
-    private var appDisabledStreamId = -1
+    private var appBlockedStreamId = -1
 
 
     /**
@@ -103,7 +100,7 @@ class DisabledAppScreenActivity : AppCompatActivity() {
     private var mLocalBroadcastManager: LocalBroadcastManager? = null
     private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == ENABLE_APP_ACTION) {
+            if (intent.action == UNLOCK_APP_ACTION) {
                 finish()
             }
         }
@@ -114,14 +111,15 @@ class DisabledAppScreenActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_disabled_app_screen)
+        setContentView(R.layout.activity_scheduled_block_active_screen)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         appComponent.inject(this)
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this)
         val mIntentFilter = IntentFilter()
-        mIntentFilter.addAction(ENABLE_APP_ACTION)
+        mIntentFilter.addAction(UNLOCK_APP_ACTION)
         mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
-        showDisabledAppDetail(intent)
+        Timber.d("LOCK: On Create Called")
+        showAppBlockedDetail(intent)
 
     }
 
@@ -130,7 +128,8 @@ class DisabledAppScreenActivity : AppCompatActivity() {
      */
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.let { showDisabledAppDetail(it) }
+        Timber.d("LOCK: On New Intent called")
+        intent?.let { showAppBlockedDetail(it) }
     }
 
     /**
@@ -138,9 +137,10 @@ class DisabledAppScreenActivity : AppCompatActivity() {
      */
     override fun onResume() {
         super.onResume()
-        if(appDisabledStreamId != -1)
-            soundManager.stopSound(appDisabledStreamId)
-        appDisabledStreamId = soundManager.playSound(ISoundManager.APP_BLOCKED_SOUND, true)
+        if(appBlockedStreamId != -1)
+            soundManager.stopSound(appBlockedStreamId)
+        // Play Emergency Sound
+        appBlockedStreamId = soundManager.playSound(ISoundManager.APP_BLOCKED_SOUND, true)
     }
 
     /**
@@ -148,42 +148,32 @@ class DisabledAppScreenActivity : AppCompatActivity() {
      */
     override fun onStop() {
         super.onStop()
-        soundManager.stopSound(appDisabledStreamId)
+        soundManager.stopSound(appBlockedStreamId)
     }
 
     /**
-     * Show Disabled App Detail
+     * Show App Blocked Detail
      */
-    private fun showDisabledAppDetail(intent: Intent){
+    private fun showAppBlockedDetail(intent: Intent){
 
         // Get Args
-        val packageName = intent.getStringExtra(PACKAGE_NAME_ARG)
-        val appName = intent.getStringExtra(APP_NAME_ARG)
-        val appIcon = intent.getStringExtra(APP_ICON_ARG)
-        val appRule = intent.getStringExtra(APP_RULE_ARG)
+        val name = intent.getStringExtra(NAME_ARG)
+        val image = intent.getStringExtra(IMAGE_ARG)
+        val startAt = intent.getStringExtra(START_AT_ARG)
+        val endAt = intent.getStringExtra(END_AT_ARG)
+        val description = intent.getStringExtra(DESCRIPTION_ARG)
 
-
-        // Set App Icon
-        if(!appIcon.isNullOrEmpty()) {
-            val decodedString = Base64.decode(appIcon,
-                    Base64.DEFAULT)
-            val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-            appDisabledIcon.setImageBitmap(decodedByte)
-        } else {
-            appDisabledIcon.setImageResource(R.drawable.app_icon_default)
-        }
-
-        // Set Content
-        contentText.text = String.format(Locale.getDefault(),
-                getString(R.string.app_disabled_screen_content_screen), appName)
+        contentText.name.text = name
+        contentText.description.text = description
+        contentText.time.text = String.format("%s - %s", Locale.getDefault(),
+                startAt, endAt)
 
         // Close App Handler
-        unInstallApp.setOnClickListener {
-            val am = getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
+        closeApp.setOnClickListener {
+            val am = getSystemService(Activity.ACTIVITY_SERVICE)
+                    as ActivityManager
             am.killBackgroundProcesses(packageName)
-            startActivityForResult(Intent(Intent.ACTION_UNINSTALL_PACKAGE).apply {
-                data = Uri.parse("package:$packageName")
-            }, REQUEST_UNINSTALL_PACKAGE)
+            navigator.showHome(this)
         }
 
     }
@@ -201,16 +191,6 @@ class DisabledAppScreenActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mLocalBroadcastManager?.unregisterReceiver(mBroadcastReceiver)
-    }
-
-    /**
-     * On Activity Result
-     */
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_UNINSTALL_PACKAGE && resultCode == Activity.RESULT_OK) {
-            finish()
-        }
     }
 
 }

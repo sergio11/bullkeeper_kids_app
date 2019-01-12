@@ -18,7 +18,7 @@
         android:layout_marginTop="8dp" />
 
     <!-- Content -->
-    <include layout="@layout/content_disabled_app_screen" />
+    <include layout="@layout/content_scheduled_block_active_screen" />
 
 
 </android.support.design.widget.CoordinatorLayout>

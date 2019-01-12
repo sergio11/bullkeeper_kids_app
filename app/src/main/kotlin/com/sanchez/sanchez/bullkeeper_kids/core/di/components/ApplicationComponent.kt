@@ -20,9 +20,10 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
-import com.sanchez.sanchez.bullkeeper_kids.presentation.disabledapplication.DisabledAppScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.ScheduledBlockActiveScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
@@ -73,7 +74,7 @@ interface ApplicationComponent {
     /**
      * Inject into Lock Sceen
      */
-    fun inject(lockScreenActivity: LockScreenActivity)
+    fun inject(appLockScreenActivity: AppLockScreenActivity)
 
     /**
      * Inject into Time Bank Activity
@@ -104,6 +105,11 @@ interface ApplicationComponent {
      * Inject into Disabled App Screen Activity
      */
     fun inject(disabledAppScreenActivity: DisabledAppScreenActivity)
+
+    /**
+     * Inject into Scheduled Block Active Screen Activity
+     */
+    fun inject(scheduledBlockActiveScreenActivity: ScheduledBlockActiveScreenActivity)
 
 
     //Exposed to sub-graphs.

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.lockscreen.LockScreenActivity"
+    tools:context=".presentation.lockscreen.AppLockScreenActivity"
     android:background="@drawable/background_13">
 
     <!-- Include Toolbar -->

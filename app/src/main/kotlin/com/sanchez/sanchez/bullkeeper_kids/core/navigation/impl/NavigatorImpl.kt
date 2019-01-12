@@ -11,12 +11,13 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
-import com.sanchez.sanchez.bullkeeper_kids.presentation.disabledapplication.DisabledAppScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.ScheduledBlockActiveScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
@@ -29,6 +30,7 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
+
 
     /**
      * Show Usage Access Settings
@@ -82,10 +84,10 @@ class NavigatorImpl
     /**
      * Show Lock Screen
      */
-    override fun showLockScreen(service: Service, packageName: String?, appName: String?,
+    override fun showLockScreen(service: Service, appLockType: AppLockScreenActivity.Companion.LockTypeEnum, packageName: String?, appName: String?,
                                 icon: String?, appRule: String?) =
             service.startActivity(
-                    LockScreenActivity.callingIntent(service, packageName, appName, icon, appRule))
+                    AppLockScreenActivity.callingIntent(service, appLockType, packageName, appName, icon, appRule))
 
     /**
      * Show Enable Admin Device Features
@@ -169,4 +171,14 @@ class NavigatorImpl
     override fun showDisabledAppScreen(ctx: Context, packageName: String?,
                                        appName: String?, icon: String?, appRule: String?) =
             ctx.startActivity(DisabledAppScreenActivity.callingIntent(ctx, packageName, appName, icon, appRule))
+
+
+    /**
+     * Show Scheduled Block Active
+     */
+    override fun showScheduledBlockActive(ctx: Context, name: String?, image: String?,
+                                          startAt: String?, endAt: String?,
+                                          description: String?)
+        = ctx.startActivity(ScheduledBlockActiveScreenActivity.callingIntent(ctx,
+            name, image, startAt, endAt, description))
 }

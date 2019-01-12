@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Service
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 
 /**
  * Navigator
@@ -38,7 +39,13 @@ interface INavigator {
     /**
      * Show Lock Screen
      */
-    fun showLockScreen(service: Service, packageName: String?, appName: String?, icon: String?, appRule: String?)
+    fun showLockScreen(service: Service, appLockType: AppLockScreenActivity.Companion.LockTypeEnum, packageName: String?, appName: String?, icon: String?, appRule: String?)
+
+    /**
+     * Show Scheduled Block Active
+     */
+    fun showScheduledBlockActive(ctx: Context, name: String?, image: String?, startAt: String?,
+                                 endAt: String?, description: String?)
 
     /**
      * Show Disabled App Screen

@@ -40,6 +40,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.entity.FunTimeDayScheduledEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.ScheduledBlockEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.FunTimeScheduledDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppAllowedByScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IFunTimeDayScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
@@ -61,8 +62,8 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.models.ServerEventTypeEnum
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.disabledapplication.DisabledAppScreenActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import java.lang.Exception
@@ -302,6 +303,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var funTimeDayScheduledRepository: IFunTimeDayScheduledRepository
 
+    /**
+     * Apps Allowed By Scheduled Repository
+     */
+    @Inject
+    internal lateinit var appsAllowedByScheduledRepository: IAppAllowedByScheduledRepository
+
 
     /**
      * Receivers
@@ -505,7 +512,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
             val localBroadcastManager = LocalBroadcastManager
                     .getInstance(this@MonitoringService)
             localBroadcastManager.sendBroadcast(Intent(
-                    LockScreenActivity.UNLOCK_APP_ACTION))
+                    AppLockScreenActivity.UNLOCK_APP_ACTION))
         }
     }
 
@@ -536,6 +543,37 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Lock Current App
+     */
+    private fun lockCurrentApp(currentAppForeground: String,
+                               appInstalled: AppInstalledEntity,
+                               appLockType: AppLockScreenActivity.Companion.LockTypeEnum) {
+        Timber.d("CFAT: Lock Current Foreground app: %s", currentAppForeground)
+        if(currentAppLocked.isNullOrEmpty() || currentAppForeground == appInstalled.packageName) {
+            currentAppLocked = appInstalled.packageName
+            navigator.showLockScreen(this, appLockType, appInstalled.packageName,
+                    appInstalled.appName, appInstalled.icon, appInstalled.appRule)
+        }
+    }
+
+    /**
+     * Lock By Scheduled Block Enabled
+     */
+    private fun lockByScheduledBlockEnabled(currentAppForeground: String,
+                                            appInstalled: AppInstalledEntity,
+                                            scheduledBlockEntity: ScheduledBlockEntity) {
+
+        Timber.d("CFAT: Lock Current Foreground app: %s", currentAppForeground)
+        if(currentAppLocked.isNullOrEmpty() || currentAppForeground == appInstalled.packageName) {
+            currentAppLocked = appInstalled.packageName
+            navigator.showScheduledBlockActive(this, scheduledBlockEntity.name,
+                    scheduledBlockEntity.image, scheduledBlockEntity.startAt, scheduledBlockEntity.endAt,
+                    scheduledBlockEntity.description)
+        }
+    }
+
+
+    /**
      * App Disabled Staten Handler
      */
     private fun appDisabledStateHandler(
@@ -562,7 +600,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         Timber.d("CFAT: FUN_TIME rule applied to the current application ")
 
         if(currentScheduledBlockEnable != null) {
-            // TODO: Lock App, scheduled block is active
+            lockByScheduledBlockEnabled(currentAppForeground,
+                    appInstalled, currentScheduledBlockEnable)
         } else {
             if(preferenceRepository.isFunTimeEnabled()) {
                 val format = SimpleDateFormat("EEEE", Locale.US)
@@ -572,11 +611,15 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                     if(it.enabled && !it.paused) {
                         // Allowed
                     } else {
-                        // Not Allowed
+                        // Fun Time No Avaliable
+                        lockCurrentApp(currentAppForeground, appInstalled,
+                                AppLockScreenActivity.Companion.LockTypeEnum.FUN_TIME_UNAVAILABLE)
                     }
                 }
             } else {
-                // TODO: NO Fun Time Enable
+                // Fun Time Disabled
+                lockCurrentApp(currentAppForeground, appInstalled,
+                        AppLockScreenActivity.Companion.LockTypeEnum.FUN_TIME_DISABLED)
             }
         }
     }
@@ -587,20 +630,30 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun perScheduledAppRuleHandler(currentAppForeground: String, appInstalled: AppInstalledEntity) {
         Timber.d("CFAT: PER_SCHEDULER rule applied to the current application ")
 
-        val anyScheduledBlockEnable =
-                scheduledBlocksRepositoryImpl.anyScheduledBlockEnableForThisMoment(
+        val currentScheduledBlockEnable =
+                scheduledBlocksRepositoryImpl.getScheduledBlockEnableForThisMoment(
                         getString(R.string.joda_local_time_format_server_response))
 
-        if(anyScheduledBlockEnable) {
-            sendUnLockAppAction()
-        } else {
+        if(currentScheduledBlockEnable != null) {
 
-            Timber.d("CFAT: Lock Current Foreground app: %s", currentAppForeground)
-            if(currentAppLocked.isNullOrEmpty() || currentAppForeground == appInstalled.packageName) {
-                currentAppLocked = appInstalled.packageName
-                navigator.showLockScreen(this, appInstalled.packageName,
-                        appInstalled.appName, appInstalled.icon, appInstalled.appRule)
+            if(appsAllowedByScheduledRepository.anyAppAllowed(
+                    scheduledBlock = currentScheduledBlockEnable.id!!
+            ) && !appsAllowedByScheduledRepository.isAppAllowed(
+                            app = appInstalled.packageName!!,
+                            scheduledBlock = currentScheduledBlockEnable.id!!
+                    )) {
+
+                lockByScheduledBlockEnabled(currentAppForeground,
+                        appInstalled, currentScheduledBlockEnable)
+
+            } else {
+                sendUnLockAppAction()
             }
+
+        } else {
+            // No Scheduled Block Enable
+            lockCurrentApp(currentAppForeground, appInstalled,
+                    AppLockScreenActivity.Companion.LockTypeEnum.NO_SCHEDULED_BLOCK_ENABLE)
         }
     }
 
@@ -617,11 +670,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun neverAllowedAppRuleHandler(currentAppForeground: String, appInstalled: AppInstalledEntity){
         Timber.d("CFAT: NEVER_ALLOWED rule applied to the current application ")
-        if(currentAppLocked.isNullOrEmpty() || currentAppForeground == appInstalled.packageName) {
-            currentAppLocked = appInstalled.packageName
-            navigator.showLockScreen(this, appInstalled.packageName,
-                    appInstalled.appName, appInstalled.icon, appInstalled.appRule)
-        }
+        lockCurrentApp(currentAppForeground, appInstalled,
+                AppLockScreenActivity.Companion.LockTypeEnum.APP_NOT_ALLOWED)
     }
 
     /**
@@ -982,7 +1032,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         // Last Location
         fusedLocationClient.lastLocation
                 .addOnSuccessListener { location : Location? ->
-                    location?.let { saveCurrentLocation(it) }
+                    location?.let {
+                        saveCurrentLocation(it) }
                 }
 
 
