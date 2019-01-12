@@ -34,14 +34,19 @@ import okhttp3.Response
 import timber.log.Timber
 import com.here.oksse.OkSse
 import com.sanchez.sanchez.bullkeeper_kids.R
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppRuleEnum
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.FunTimeDayScheduledEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.ScheduledBlockEntity
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.FunTimeScheduledDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IFunTimeDayScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.funtime.SyncFunTimeInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.RemoveGeofenceInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SyncGeofencesInteract
@@ -61,6 +66,8 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.LockScreenAct
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @author Sergio Sánchez Sánchez
@@ -283,6 +290,18 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var removeGeofenceInteract: RemoveGeofenceInteract
 
+    /**
+     * Sync Fun Time Interact
+     */
+    @Inject
+    internal lateinit var syncFunTimeInteract: SyncFunTimeInteract
+
+    /**
+     * Fun Time Day Scheduled Repository
+     */
+    @Inject
+    internal lateinit var funTimeDayScheduledRepository: IFunTimeDayScheduledRepository
+
 
     /**
      * Receivers
@@ -348,7 +367,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * Clean Resources
      */
-    fun cleanResources() {
+    private fun cleanResources() {
         unregisterReceiver(appStatusChangedReceiver)
         unregisterReceiver(screenStatusReceiver)
         disableAppForegroundMonitoring()
@@ -458,6 +477,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         syncTerminalSMS()
         syncScheduledBlocks()
         syncGeofences()
+        syncFunTime()
         startContactObserver()
     }
 
@@ -512,6 +532,95 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                     .getInstance(this@MonitoringService)
             localBroadcastManager.sendBroadcast(Intent(
                     BedTimeActivity.DISABLE_BED_TIME_ACTION))
+        }
+    }
+
+    /**
+     * App Disabled Staten Handler
+     */
+    private fun appDisabledStateHandler(
+            currentAppForeground: String,
+            appInstalled: AppInstalledEntity) {
+        sendUnLockAppAction()
+        Timber.d("CFAT: Disabled Current Foreground app: %s", appInstalled.packageName)
+        if(currentDisabledApp.isNullOrEmpty() || currentAppForeground == appInstalled.packageName) {
+            currentDisabledApp = appInstalled.packageName
+            navigator.showDisabledAppScreen(this, appInstalled.packageName,
+                    appInstalled.appName, appInstalled.icon, appInstalled.appRule)
+        }
+    }
+
+    /**
+     * Fun Time App Rule Handler
+     */
+    private fun funTimeAppRuleHandler(currentAppForeground: String, appInstalled: AppInstalledEntity) {
+
+        val currentScheduledBlockEnable =
+                scheduledBlocksRepositoryImpl.getScheduledBlockEnableForThisMoment(
+                        getString(R.string.joda_local_time_format_server_response))
+
+        Timber.d("CFAT: FUN_TIME rule applied to the current application ")
+
+        if(currentScheduledBlockEnable != null) {
+            // TODO: Lock App, scheduled block is active
+        } else {
+            if(preferenceRepository.isFunTimeEnabled()) {
+                val format = SimpleDateFormat("EEEE", Locale.US)
+                val dayOfWeek = format.format(Calendar.getInstance().time)
+                        .toUpperCase()
+                funTimeDayScheduledRepository.getFunTimeDayScheduledForDay(dayOfWeek)?.let {
+                    if(it.enabled && !it.paused) {
+                        // Allowed
+                    } else {
+                        // Not Allowed
+                    }
+                }
+            } else {
+                // TODO: NO Fun Time Enable
+            }
+        }
+    }
+
+    /**
+     * Per Scheduled App Rule Handler
+     */
+    private fun perScheduledAppRuleHandler(currentAppForeground: String, appInstalled: AppInstalledEntity) {
+        Timber.d("CFAT: PER_SCHEDULER rule applied to the current application ")
+
+        val anyScheduledBlockEnable =
+                scheduledBlocksRepositoryImpl.anyScheduledBlockEnableForThisMoment(
+                        getString(R.string.joda_local_time_format_server_response))
+
+        if(anyScheduledBlockEnable) {
+            sendUnLockAppAction()
+        } else {
+
+            Timber.d("CFAT: Lock Current Foreground app: %s", currentAppForeground)
+            if(currentAppLocked.isNullOrEmpty() || currentAppForeground == appInstalled.packageName) {
+                currentAppLocked = appInstalled.packageName
+                navigator.showLockScreen(this, appInstalled.packageName,
+                        appInstalled.appName, appInstalled.icon, appInstalled.appRule)
+            }
+        }
+    }
+
+    /**
+     * Always Allowed App Rule Handler
+     */
+    private fun alwaysAllowedAppRuleHandler(currentAppForeground: String, appInstalled: AppInstalledEntity){
+        Timber.d("CFAT: ALWAYS_ALLOWED rule applied to the current application ")
+        sendUnLockAppAction()
+    }
+
+    /**
+     * Never Allowed App Rule Handler
+     */
+    private fun neverAllowedAppRuleHandler(currentAppForeground: String, appInstalled: AppInstalledEntity){
+        Timber.d("CFAT: NEVER_ALLOWED rule applied to the current application ")
+        if(currentAppLocked.isNullOrEmpty() || currentAppForeground == appInstalled.packageName) {
+            currentAppLocked = appInstalled.packageName
+            navigator.showLockScreen(this, appInstalled.packageName,
+                    appInstalled.appName, appInstalled.icon, appInstalled.appRule)
         }
     }
 
@@ -578,80 +687,27 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         val appInstalledEntity =
                                 appsInstalledRepository.findByPackageName(appToCheck)
 
-                        appInstalledEntity?.let {
+                        appInstalledEntity?.let {appInstalledEntity->
 
-                            if(it.disabled) {
-
-                                sendUnLockAppAction()
-                                Timber.d("CFAT: Disabled Current Foreground app: %s", it.packageName)
-                                if(currentDisabledApp.isNullOrEmpty() || currentAppForeground == it.packageName) {
-                                    currentDisabledApp = it.packageName
-                                    navigator.showDisabledAppScreen(this, it.packageName,
-                                            it.appName, it.icon, it.appRule)
-                                }
-
+                            if(appInstalledEntity.disabled) {
+                                appDisabledStateHandler(currentAppForeground, appInstalledEntity)
 
                             } else {
 
                                 sendEnableAppAction()
 
-                                if(it.appRule != null) {
+                                if(appInstalledEntity.appRule != null) {
 
                                     try {
 
-                                        val appRuleEnum = AppRuleEnum.valueOf(it.appRule!!)
+                                        val appRuleEnum = AppRuleEnum.valueOf(appInstalledEntity.appRule!!)
 
                                         when(appRuleEnum) {
-
-                                            /**
-                                             * App Rule Per Scheduler
-                                             */
-                                            AppRuleEnum.PER_SCHEDULER -> {
-                                                Timber.d("CFAT: PER_SCHEDULER rule applied to the current application ")
-
-
-                                                val anyScheduledBlockEnable =
-                                                        scheduledBlocksRepositoryImpl.anyScheduledBlockEnableForThisMoment(
-                                                                getString(R.string.joda_local_time_format_server_response))
-
-
-                                                if(anyScheduledBlockEnable) {
-                                                    sendUnLockAppAction()
-                                                } else {
-                                                    Timber.d("CFAT: Lock Current Foreground app: %s", currentAppForeground)
-                                                    if(currentAppLocked.isNullOrEmpty() || currentAppForeground == it.packageName) {
-                                                        currentAppLocked = it.packageName
-                                                        navigator.showLockScreen(this, it.packageName,
-                                                                it.appName, it.icon, it.appRule)
-                                                    }
-
-                                                }
-
-                                            }
-
-                                            /**
-                                             * Always Allowed
-                                             */
-                                            AppRuleEnum.ALWAYS_ALLOWED -> {
-                                                Timber.d("CFAT: ALWAYS_ALLOWED rule applied to the current application ")
-                                                sendUnLockAppAction()
-                                            }
-
-                                            /**
-                                             * Never Allowed
-                                             */
-                                            AppRuleEnum.NEVER_ALLOWED -> {
-                                                Timber.d("CFAT: NEVER_ALLOWED rule applied to the current application ")
-                                                if(currentAppLocked.isNullOrEmpty() || currentAppForeground == it.packageName) {
-                                                    currentAppLocked = it.packageName
-                                                    navigator.showLockScreen(this, it.packageName,
-                                                            it.appName, it.icon, it.appRule)
-                                                }
-
-                                            }
-
+                                            AppRuleEnum.PER_SCHEDULER -> perScheduledAppRuleHandler(currentAppForeground, appInstalledEntity)
+                                            AppRuleEnum.FUN_TIME -> funTimeAppRuleHandler(currentAppForeground, appInstalledEntity)
+                                            AppRuleEnum.ALWAYS_ALLOWED -> alwaysAllowedAppRuleHandler(currentAppForeground, appInstalledEntity)
+                                            AppRuleEnum.NEVER_ALLOWED -> neverAllowedAppRuleHandler(currentAppForeground, appInstalledEntity)
                                         }
-
 
                                     } catch (ex: Exception) {
                                         Timber.d("CFAT: ex: %s", ex.message)
@@ -860,6 +916,20 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 Timber.d("Sync Geofences Failed")
             }, fnR = fun(total: Int){
                 Timber.d("Sync Geofences successfully, total -> %d", total)
+            })
+        }
+    }
+
+
+    /**
+     * Sync Fun Time
+     */
+    private fun syncFunTime(){
+        syncFunTimeInteract(UseCase.None()){
+            it.either(fnL = fun(_: Failure){
+                Timber.d("Sync Fun Time Failed")
+            }, fnR = fun(_: Unit){
+                Timber.d("Sync Fun Time successfully")
             })
         }
     }
@@ -1091,6 +1161,88 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Fun Time Updated Event Handler
+     */
+    private fun funTimeUpdatedEventHandler(funTimeScheduledDTO: FunTimeScheduledDTO) {
+        Timber.d("SSE: Fun Time Updated Event Handler")
+        preferenceRepository.setFunTimeEnabled(funTimeScheduledDTO.enabled)
+        // Save Fun Time Day Scheduled
+        funTimeDayScheduledRepository.save(Arrays.asList(
+                // Add Monday
+                FunTimeDayScheduledEntity(
+                        day = funTimeScheduledDTO.monday.day,
+                        enabled = funTimeScheduledDTO.monday.enabled,
+                        totalHours = funTimeScheduledDTO.monday.totalHours,
+                        paused = funTimeScheduledDTO.monday.paused,
+                        pausedAt = funTimeScheduledDTO.monday.pausedAt
+                ),
+                // Add Thursday
+                FunTimeDayScheduledEntity(
+                        day = funTimeScheduledDTO.thursday.day,
+                        enabled = funTimeScheduledDTO.thursday.enabled,
+                        totalHours = funTimeScheduledDTO.thursday.totalHours,
+                        paused = funTimeScheduledDTO.thursday.paused,
+                        pausedAt = funTimeScheduledDTO.thursday.pausedAt
+                ),
+                // Add Wednesday
+                FunTimeDayScheduledEntity(
+                        day = funTimeScheduledDTO.wednesday.day,
+                        enabled = funTimeScheduledDTO.wednesday.enabled,
+                        totalHours = funTimeScheduledDTO.wednesday.totalHours,
+                        paused = funTimeScheduledDTO.wednesday.paused,
+                        pausedAt = funTimeScheduledDTO.wednesday.pausedAt
+                ),
+                // Add Tuesday
+                FunTimeDayScheduledEntity(
+                        day = funTimeScheduledDTO.tuesday.day,
+                        enabled = funTimeScheduledDTO.tuesday.enabled,
+                        totalHours = funTimeScheduledDTO.tuesday.totalHours,
+                        paused = funTimeScheduledDTO.tuesday.paused,
+                        pausedAt = funTimeScheduledDTO.tuesday.pausedAt
+                ),
+                // Add Friday
+                FunTimeDayScheduledEntity(
+                        day = funTimeScheduledDTO.friday.day,
+                        enabled = funTimeScheduledDTO.friday.enabled,
+                        totalHours = funTimeScheduledDTO.friday.totalHours,
+                        paused = funTimeScheduledDTO.friday.paused,
+                        pausedAt = funTimeScheduledDTO.friday.pausedAt
+                ),
+                // Add Saturday
+                FunTimeDayScheduledEntity(
+                        day = funTimeScheduledDTO.saturday.day,
+                        enabled = funTimeScheduledDTO.saturday.enabled,
+                        totalHours = funTimeScheduledDTO.saturday.totalHours,
+                        paused = funTimeScheduledDTO.saturday.paused,
+                        pausedAt = funTimeScheduledDTO.saturday.pausedAt
+                ),
+                // Add Sunday
+                FunTimeDayScheduledEntity(
+                        day = funTimeScheduledDTO.sunday.day,
+                        enabled = funTimeScheduledDTO.sunday.enabled,
+                        totalHours = funTimeScheduledDTO.sunday.totalHours,
+                        paused = funTimeScheduledDTO.sunday.paused,
+                        pausedAt = funTimeScheduledDTO.sunday.pausedAt
+                )
+        ))
+
+    }
+
+    /**
+     * Fun Time Day Scheduled Updated Event
+     */
+    private fun funTimeDayScheduledUpdatedEventHandler(funTimeDayScheduledChangedDTO: FunTimeDayScheduledChangedDTO) {
+        Timber.d("SSE: Fun Time Updated Event Handler")
+        funTimeDayScheduledRepository.save(FunTimeDayScheduledEntity(
+                day = funTimeDayScheduledChangedDTO.day,
+                enabled = funTimeDayScheduledChangedDTO.enabled,
+                totalHours = funTimeDayScheduledChangedDTO.totalHours,
+                paused = funTimeDayScheduledChangedDTO.paused,
+                pausedAt = funTimeDayScheduledChangedDTO.pausedAt
+        ))
+    }
+
+    /**
      * Start Listen SSE
      */
     private fun startListenSse() {
@@ -1223,19 +1375,33 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             terminalScreenStatusChangedHandler(
                                     objectMapper.readValue(eventMessage,
                                             TerminalScreenStatusChangedDTO::class.java))
+                        // App Disabled Status Changed
                         ServerEventTypeEnum.APP_DISABLED_STATUS_CHANGED ->
                             appDisabledStatusChangedHandler(
                                     objectMapper.readValue(eventMessage,
                                             AppDisabledStatusChangedDTO::class.java))
+                        // Geofence Save Event
                         ServerEventTypeEnum.GEOFENCE_SAVED_EVENT -> {
                             geofenceSavedEventHandler(
                                     objectMapper.readValue(eventMessage,
                                             GeofenceSavedDTO::class.java))
                         }
+                        // Geofence Deleted Event
                         ServerEventTypeEnum.GEOFENCE_DELETED_EVENT -> {
                             geofenceDeletedEventHandler(
                                     objectMapper.readValue(eventMessage,
                                             GeofenceDeletedDTO::class.java))
+                        }
+                        // Fun Time Updated Event
+                        ServerEventTypeEnum.FUN_TIME_UPDATED_EVENT -> {
+                            funTimeUpdatedEventHandler(objectMapper.readValue(eventMessage,
+                                    FunTimeScheduledDTO::class.java))
+                        }
+                        // Fun Time Day Scheduled Updated Event
+                        ServerEventTypeEnum.FUN_TIME_DAY_SCHEDULED_UPDATED_EVENT -> {
+                            funTimeDayScheduledUpdatedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            FunTimeDayScheduledChangedDTO::class.java))
                         }
                         // Unknown Event
                         else -> Timber.d("SSE: Unknow Event")

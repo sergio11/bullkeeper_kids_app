@@ -107,30 +107,30 @@ class SyncGeofencesInteract
         val response =
                 geofencesService.getGeofencesByKid(kid).await()
 
-        response.data?.map {
+        val serverGeofenceList = response.data?.map {
             GeofenceEntity(it.identity,
                     it.name, it.address, it.lat, it.log,
                     it.radius, it.expirationDuration, it.type, it.kid)
-        }?.toList()?.let {serverGeofenceList ->
-            if(serverGeofenceList.isNullOrEmpty() && localGeofencesSavedList.isNotEmpty()) {
-                geofencesRepository.deleteAll()
-                geofencesToRemove.addAll(localGeofencesSavedList)
-            } else if(serverGeofenceList.isNotEmpty() && localGeofencesSavedList.isNullOrEmpty()) {
-                geofencesRepository.save(serverGeofenceList)
-                geofencesToSave.addAll(serverGeofenceList)
-            } else {
+        }?.toList()
 
-                // Get Geofences To Remove
-                geofencesToRemove.addAll(
-                        getGeofencesToRemove(localGeofencesSavedList, serverGeofenceList))
-                // Delete Geofences
-                geofencesRepository.delete(geofencesToRemove)
-                // Get Geofences To Create
-                geofencesToSave.addAll(
-                        getGeofencesToCreate(localGeofencesSavedList, serverGeofenceList))
+        if(serverGeofenceList.isNullOrEmpty() && localGeofencesSavedList.isNotEmpty()) {
+            geofencesRepository.deleteAll()
+            geofencesToRemove.addAll(localGeofencesSavedList)
+        } else if(serverGeofenceList != null && serverGeofenceList.isNotEmpty() && localGeofencesSavedList.isNullOrEmpty()) {
+            geofencesRepository.save(serverGeofenceList)
+            geofencesToSave.addAll(serverGeofenceList)
+        } else {
 
-                geofencesRepository.save(geofencesToSave)
-            }
+            // Get Geofences To Remove
+            geofencesToRemove.addAll(
+                    getGeofencesToRemove(localGeofencesSavedList, serverGeofenceList!!))
+            // Delete Geofences
+            geofencesRepository.delete(geofencesToRemove)
+            // Get Geofences To Create
+            geofencesToSave.addAll(
+                    getGeofencesToCreate(localGeofencesSavedList, serverGeofenceList!!))
+
+            geofencesRepository.save(geofencesToSave)
         }
 
         return Pair(geofencesToSave, geofencesToRemove)

@@ -56,7 +56,6 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_CAMERA_SCREEN = "lock_camera"
         const val LOCK_CAMERA_DEFAULT_VALUE = false
 
-
         // SOS Request Expired At
         const val PREF_SOS_REQUEST_EXPIRED_AT = "sos_request_expired_at"
         const val SOS_REQUEST_EXPIRED_AT_DEFAULT_VALUE = ""
@@ -65,6 +64,9 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_PICKME_UP_EXPIRED_AT = "pickme_up_expired_at"
         const val PICKME_UP_EXPIRED_AT_DEFAULT_VALUE = ""
 
+        // Fun Time
+        const val PREF_FUN_TIME = "fun_time"
+        const val FUN_TIME_DEFAULT_VALUE = false
     }
 
     /**
@@ -213,5 +215,18 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param expiredAt
      */
     fun setPickMeUpRequestExpiredAt(expiredAt: String)
+
+
+    /**
+     * Is Fun Time Enabled
+     * @return
+     */
+    fun isFunTimeEnabled(): Boolean
+
+    /**
+     * Set Fun Time Enabled
+     * @param is Enabled
+     */
+    fun setFunTimeEnabled(isEnabled: Boolean)
 
 }

@@ -218,4 +218,21 @@ class PreferenceRepositoryImpl
     override fun setPickMeUpRequestExpiredAt(expiredAt: String) {
         mPref.edit().putString(IPreferenceRepository.PREF_PICKME_UP_EXPIRED_AT, expiredAt).apply()
     }
+
+    /**
+     * Is Fun Time Enabled
+     */
+    override fun isFunTimeEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_FUN_TIME,
+                IPreferenceRepository.FUN_TIME_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Fun Time Enabled
+     */
+    override fun setFunTimeEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_FUN_TIME,
+                isEnabled).apply()
+    }
+
 }
