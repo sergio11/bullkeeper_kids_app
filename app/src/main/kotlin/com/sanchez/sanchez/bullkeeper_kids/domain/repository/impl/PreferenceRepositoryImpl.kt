@@ -12,6 +12,7 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(context: Context): IPreferenceRepository {
 
+
     /**
      * Preferences
      */
@@ -233,6 +234,54 @@ class PreferenceRepositoryImpl
     override fun setFunTimeEnabled(isEnabled: Boolean) {
         mPref.edit().putBoolean(IPreferenceRepository.PREF_FUN_TIME,
                 isEnabled).apply()
+    }
+
+    /**
+     * Get Remaining Fun Time
+     */
+    override fun getRemainingFunTime(): Int {
+        return mPref.getInt(IPreferenceRepository.PREF_REMAINING_FUN_TIME,
+                IPreferenceRepository.REMAINING_FUN_TIME_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Remaining Fun Time
+     */
+    override fun setRemainingFunTime(remainingFunTime: Int) {
+        mPref.edit().putInt(IPreferenceRepository.PREF_REMAINING_FUN_TIME,
+                remainingFunTime).apply()
+    }
+
+    /**
+     * Get Time Bank
+     */
+    override fun getTimeBank(): Int {
+        return mPref.getInt(IPreferenceRepository.PREF_TIME_BANK,
+                IPreferenceRepository.TIME_BANK_DEFAUL_VALUE)
+    }
+
+    /**
+     * Set Time Bank
+     */
+    override fun setTimeBank(timeSaved: Int) {
+        mPref.edit().putInt(IPreferenceRepository.PREF_TIME_BANK,
+                timeSaved).apply()
+    }
+
+    /**
+     * Get Current Fun Time Day Scheduled
+     */
+    override fun getCurrentFunTimeDayScheduled(): String {
+        return mPref.getString(IPreferenceRepository.PREF_CURRENT_FUN_TIME_DAY_SCHEDULED,
+                IPreferenceRepository.CURRENT_FUN_TIME_DAY_SCHEDULED_VALUE)
+    }
+
+    /**
+     * Set Current Fun Time Day Scheduled
+     */
+    override fun setCurrentFunTimeDayScheduled(dayScheduled: String) {
+        mPref.edit().putString(IPreferenceRepository.PREF_CURRENT_FUN_TIME_DAY_SCHEDULED,
+                dayScheduled).apply()
     }
 
 }

@@ -28,10 +28,11 @@ class SyncFunTimeInteract
 
         // Get Kid Identity
         val kid = preferencesRepository.getPrefKidIdentity()
+        val terminal = preferencesRepository.getPrefTerminalIdentity()
 
         // Get Fun Time Scheduled
         val response = funTimeService
-                .getFunTimeScheduled(kid).await()
+                .getFunTimeScheduled(kid, terminal).await()
 
         response.httpStatus?.let {
             if (it == "OK") {
@@ -45,57 +46,43 @@ class SyncFunTimeInteract
                             FunTimeDayScheduledEntity(
                                     day = funTimeScheduledDTO.monday.day,
                                     enabled = funTimeScheduledDTO.monday.enabled,
-                                    totalHours = funTimeScheduledDTO.monday.totalHours,
-                                    paused = funTimeScheduledDTO.monday.paused,
-                                    pausedAt = funTimeScheduledDTO.monday.pausedAt
+                                    totalHours = funTimeScheduledDTO.monday.totalHours
                             ),
                             // Add Thursday
                             FunTimeDayScheduledEntity(
                                     day = funTimeScheduledDTO.thursday.day,
                                     enabled = funTimeScheduledDTO.thursday.enabled,
-                                    totalHours = funTimeScheduledDTO.thursday.totalHours,
-                                    paused = funTimeScheduledDTO.thursday.paused,
-                                    pausedAt = funTimeScheduledDTO.thursday.pausedAt
+                                    totalHours = funTimeScheduledDTO.thursday.totalHours
                             ),
                             // Add Wednesday
                             FunTimeDayScheduledEntity(
                                     day = funTimeScheduledDTO.wednesday.day,
                                     enabled = funTimeScheduledDTO.wednesday.enabled,
-                                    totalHours = funTimeScheduledDTO.wednesday.totalHours,
-                                    paused = funTimeScheduledDTO.wednesday.paused,
-                                    pausedAt = funTimeScheduledDTO.wednesday.pausedAt
+                                    totalHours = funTimeScheduledDTO.wednesday.totalHours
                             ),
                             // Add Tuesday
                             FunTimeDayScheduledEntity(
                                     day = funTimeScheduledDTO.tuesday.day,
                                     enabled = funTimeScheduledDTO.tuesday.enabled,
-                                    totalHours = funTimeScheduledDTO.tuesday.totalHours,
-                                    paused = funTimeScheduledDTO.tuesday.paused,
-                                    pausedAt = funTimeScheduledDTO.tuesday.pausedAt
+                                    totalHours = funTimeScheduledDTO.tuesday.totalHours
                             ),
                             // Add Friday
                             FunTimeDayScheduledEntity(
                                     day = funTimeScheduledDTO.friday.day,
                                     enabled = funTimeScheduledDTO.friday.enabled,
-                                    totalHours = funTimeScheduledDTO.friday.totalHours,
-                                    paused = funTimeScheduledDTO.friday.paused,
-                                    pausedAt = funTimeScheduledDTO.friday.pausedAt
+                                    totalHours = funTimeScheduledDTO.friday.totalHours
                             ),
                             // Add Saturday
                             FunTimeDayScheduledEntity(
                                     day = funTimeScheduledDTO.saturday.day,
                                     enabled = funTimeScheduledDTO.saturday.enabled,
-                                    totalHours = funTimeScheduledDTO.saturday.totalHours,
-                                    paused = funTimeScheduledDTO.saturday.paused,
-                                    pausedAt = funTimeScheduledDTO.saturday.pausedAt
+                                    totalHours = funTimeScheduledDTO.saturday.totalHours
                             ),
                             // Add Sunday
                             FunTimeDayScheduledEntity(
                                     day = funTimeScheduledDTO.sunday.day,
                                     enabled = funTimeScheduledDTO.sunday.enabled,
-                                    totalHours = funTimeScheduledDTO.sunday.totalHours,
-                                    paused = funTimeScheduledDTO.sunday.paused,
-                                    pausedAt = funTimeScheduledDTO.sunday.pausedAt
+                                    totalHours = funTimeScheduledDTO.sunday.totalHours
                             )
                     ))
 

@@ -25,17 +25,5 @@ data class FunTimeDayScheduledChangedDTO(
          * Total Hours
          */
         @JsonProperty("total_hours")
-        var totalHours: Int = 0,
-
-        /**
-         * Paused
-         */
-        @JsonProperty("paused")
-        var paused: Boolean = false,
-
-        /**
-         * Paused At
-         */
-        @JsonProperty("paused_at")
-        var pausedAt: String? = null
+        var totalHours: Long = 0
 )

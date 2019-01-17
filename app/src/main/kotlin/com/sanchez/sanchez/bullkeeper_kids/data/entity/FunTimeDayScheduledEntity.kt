@@ -13,9 +13,5 @@ open class FunTimeDayScheduledEntity(
         // Enabled
         var enabled: Boolean = false,
         // Total Hours
-        var totalHours: Int = 0,
-        // Paused
-        var paused: Boolean = false,
-        // Paused At
-        var pausedAt: String? = null
+        var totalHours: Long = 0
 ) : RealmObject(), Serializable

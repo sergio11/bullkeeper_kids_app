@@ -47,6 +47,7 @@ class AppLockScreenActivity : AppCompatActivity() {
             FUN_TIME_UNAVAILABLE,
             NO_SCHEDULED_BLOCK_ENABLE,
             APP_NOT_ALLOWED
+
         }
 
         /**

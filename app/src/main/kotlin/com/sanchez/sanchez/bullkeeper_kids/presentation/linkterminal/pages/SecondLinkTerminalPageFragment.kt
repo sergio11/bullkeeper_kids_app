@@ -120,7 +120,7 @@ class SecondLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialComp
         recyclerView.addItemDecoration(itemOffsetDecoration)
         // Set Animator
         recyclerView.itemAnimator = DefaultItemAnimator()
-        childrenAdapter = ChildrenAdapter(currentActivity, ArrayList(), picasso)
+        childrenAdapter = ChildrenAdapter(currentActivity, ArrayList<SupervisedChildrenEntity>(), picasso)
         recyclerView.adapter = childrenAdapter
         childrenAdapter.setOnSupportRecyclerViewListener(this)
 

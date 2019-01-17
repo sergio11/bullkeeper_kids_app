@@ -600,16 +600,42 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         Timber.d("CFAT: FUN_TIME rule applied to the current application ")
 
         if(currentScheduledBlockEnable != null) {
+            // Fun time not available with an active "Scheduled Block"
             lockByScheduledBlockEnabled(currentAppForeground,
                     appInstalled, currentScheduledBlockEnable)
         } else {
+            // Check Fun Time is enabled
             if(preferenceRepository.isFunTimeEnabled()) {
                 val format = SimpleDateFormat("EEEE", Locale.US)
                 val dayOfWeek = format.format(Calendar.getInstance().time)
                         .toUpperCase()
                 funTimeDayScheduledRepository.getFunTimeDayScheduledForDay(dayOfWeek)?.let {
-                    if(it.enabled && !it.paused) {
-                        // Allowed
+
+                    if(!it.day.isNullOrEmpty() && it.enabled) {
+
+                        // Current Day Scheduled
+                        val currentDayScheduled = preferenceRepository
+                                .getCurrentFunTimeDayScheduled()
+                        // Check Current Day Scheduled
+                        if(currentDayScheduled != it.day) {
+                            preferenceRepository.setCurrentFunTimeDayScheduled(it.day!!)
+                            // Save Remaining Fun Time in seconds
+                            preferenceRepository.setRemainingFunTime(it.totalHours * 60 * 60)
+                        }
+
+                        // Get Remaining Fun Time
+                        var remainingFunTimeSaved = preferenceRepository.getRemainingFunTime()
+
+                        if(remainingFunTimeSaved <= 0) {
+                            // Fun Time exhausted
+                            lockCurrentApp(currentAppForeground, appInstalled,
+                                    AppLockScreenActivity.Companion.LockTypeEnum.FUN_TIME_UNAVAILABLE)
+                        } else {
+                            //
+                            preferenceRepository.setRemainingFunTime(remainingFunTimeSaved -
+                                    (CHECK_FOREGROUND_APP_INTERVAL / 1000))
+                        }
+
                     } else {
                         // Fun Time No Avaliable
                         lockCurrentApp(currentAppForeground, appInstalled,
@@ -723,7 +749,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         // Get information about the application in the BD
                         Timber.d("CFAT: Current App in foreground -> %s ", currentAppForeground)
 
-
                         // Get App To Check
                         val appToCheck: String = when {
                             !currentAppLocked.isNullOrEmpty()
@@ -737,26 +762,26 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         val appInstalledEntity =
                                 appsInstalledRepository.findByPackageName(appToCheck)
 
-                        appInstalledEntity?.let {appInstalledEntity->
+                        appInstalledEntity?.let {appInstalled->
 
-                            if(appInstalledEntity.disabled) {
-                                appDisabledStateHandler(currentAppForeground, appInstalledEntity)
+                            if(appInstalled.disabled) {
+                                appDisabledStateHandler(currentAppForeground, appInstalled)
 
                             } else {
 
                                 sendEnableAppAction()
 
-                                if(appInstalledEntity.appRule != null) {
+                                if(appInstalled.appRule != null) {
 
                                     try {
 
-                                        val appRuleEnum = AppRuleEnum.valueOf(appInstalledEntity.appRule!!)
+                                        val appRuleEnum = AppRuleEnum.valueOf(appInstalled.appRule!!)
 
                                         when(appRuleEnum) {
-                                            AppRuleEnum.PER_SCHEDULER -> perScheduledAppRuleHandler(currentAppForeground, appInstalledEntity)
-                                            AppRuleEnum.FUN_TIME -> funTimeAppRuleHandler(currentAppForeground, appInstalledEntity)
-                                            AppRuleEnum.ALWAYS_ALLOWED -> alwaysAllowedAppRuleHandler(currentAppForeground, appInstalledEntity)
-                                            AppRuleEnum.NEVER_ALLOWED -> neverAllowedAppRuleHandler(currentAppForeground, appInstalledEntity)
+                                            AppRuleEnum.PER_SCHEDULER -> perScheduledAppRuleHandler(currentAppForeground, appInstalled)
+                                            AppRuleEnum.FUN_TIME -> funTimeAppRuleHandler(currentAppForeground, appInstalled)
+                                            AppRuleEnum.ALWAYS_ALLOWED -> alwaysAllowedAppRuleHandler(currentAppForeground, appInstalled)
+                                            AppRuleEnum.NEVER_ALLOWED -> neverAllowedAppRuleHandler(currentAppForeground, appInstalled)
                                         }
 
                                     } catch (ex: Exception) {
@@ -1217,66 +1242,123 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun funTimeUpdatedEventHandler(funTimeScheduledDTO: FunTimeScheduledDTO) {
         Timber.d("SSE: Fun Time Updated Event Handler")
         preferenceRepository.setFunTimeEnabled(funTimeScheduledDTO.enabled)
+
+        if(!funTimeScheduledDTO.monday.day.isNullOrEmpty())
+            checkCurrentFunTimeDayScheduledFor(funTimeScheduledDTO.monday.day!!,
+                    funTimeScheduledDTO.monday.totalHours)
+
+        if(!funTimeScheduledDTO.tuesday.day.isNullOrEmpty())
+            checkCurrentFunTimeDayScheduledFor(funTimeScheduledDTO.tuesday.day!!,
+                    funTimeScheduledDTO.tuesday.totalHours)
+
+        if(!funTimeScheduledDTO.wednesday.day.isNullOrEmpty())
+            checkCurrentFunTimeDayScheduledFor(funTimeScheduledDTO.wednesday.day!!,
+                    funTimeScheduledDTO.wednesday.totalHours)
+
+        if(!funTimeScheduledDTO.thursday.day.isNullOrEmpty())
+            checkCurrentFunTimeDayScheduledFor(funTimeScheduledDTO.thursday.day!!,
+                    funTimeScheduledDTO.thursday.totalHours)
+
+        if(!funTimeScheduledDTO.friday.day.isNullOrEmpty())
+            checkCurrentFunTimeDayScheduledFor(funTimeScheduledDTO.friday.day!!,
+                    funTimeScheduledDTO.friday.totalHours)
+
+        if(!funTimeScheduledDTO.saturday.day.isNullOrEmpty())
+            checkCurrentFunTimeDayScheduledFor(funTimeScheduledDTO.saturday.day!!,
+                    funTimeScheduledDTO.saturday.totalHours)
+
+        if(!funTimeScheduledDTO.sunday.day.isNullOrEmpty())
+            checkCurrentFunTimeDayScheduledFor(funTimeScheduledDTO.sunday.day!!,
+                    funTimeScheduledDTO.sunday.totalHours)
+        
         // Save Fun Time Day Scheduled
         funTimeDayScheduledRepository.save(Arrays.asList(
                 // Add Monday
                 FunTimeDayScheduledEntity(
                         day = funTimeScheduledDTO.monday.day,
                         enabled = funTimeScheduledDTO.monday.enabled,
-                        totalHours = funTimeScheduledDTO.monday.totalHours,
-                        paused = funTimeScheduledDTO.monday.paused,
-                        pausedAt = funTimeScheduledDTO.monday.pausedAt
+                        totalHours = funTimeScheduledDTO.monday.totalHours
                 ),
                 // Add Thursday
                 FunTimeDayScheduledEntity(
                         day = funTimeScheduledDTO.thursday.day,
                         enabled = funTimeScheduledDTO.thursday.enabled,
-                        totalHours = funTimeScheduledDTO.thursday.totalHours,
-                        paused = funTimeScheduledDTO.thursday.paused,
-                        pausedAt = funTimeScheduledDTO.thursday.pausedAt
+                        totalHours = funTimeScheduledDTO.thursday.totalHours
                 ),
                 // Add Wednesday
                 FunTimeDayScheduledEntity(
                         day = funTimeScheduledDTO.wednesday.day,
                         enabled = funTimeScheduledDTO.wednesday.enabled,
-                        totalHours = funTimeScheduledDTO.wednesday.totalHours,
-                        paused = funTimeScheduledDTO.wednesday.paused,
-                        pausedAt = funTimeScheduledDTO.wednesday.pausedAt
+                        totalHours = funTimeScheduledDTO.wednesday.totalHours
                 ),
                 // Add Tuesday
                 FunTimeDayScheduledEntity(
                         day = funTimeScheduledDTO.tuesday.day,
                         enabled = funTimeScheduledDTO.tuesday.enabled,
-                        totalHours = funTimeScheduledDTO.tuesday.totalHours,
-                        paused = funTimeScheduledDTO.tuesday.paused,
-                        pausedAt = funTimeScheduledDTO.tuesday.pausedAt
+                        totalHours = funTimeScheduledDTO.tuesday.totalHours
                 ),
                 // Add Friday
                 FunTimeDayScheduledEntity(
                         day = funTimeScheduledDTO.friday.day,
                         enabled = funTimeScheduledDTO.friday.enabled,
-                        totalHours = funTimeScheduledDTO.friday.totalHours,
-                        paused = funTimeScheduledDTO.friday.paused,
-                        pausedAt = funTimeScheduledDTO.friday.pausedAt
+                        totalHours = funTimeScheduledDTO.friday.totalHours
                 ),
                 // Add Saturday
                 FunTimeDayScheduledEntity(
                         day = funTimeScheduledDTO.saturday.day,
                         enabled = funTimeScheduledDTO.saturday.enabled,
-                        totalHours = funTimeScheduledDTO.saturday.totalHours,
-                        paused = funTimeScheduledDTO.saturday.paused,
-                        pausedAt = funTimeScheduledDTO.saturday.pausedAt
+                        totalHours = funTimeScheduledDTO.saturday.totalHours
                 ),
                 // Add Sunday
                 FunTimeDayScheduledEntity(
                         day = funTimeScheduledDTO.sunday.day,
                         enabled = funTimeScheduledDTO.sunday.enabled,
-                        totalHours = funTimeScheduledDTO.sunday.totalHours,
-                        paused = funTimeScheduledDTO.sunday.paused,
-                        pausedAt = funTimeScheduledDTO.sunday.pausedAt
+                        totalHours = funTimeScheduledDTO.sunday.totalHours
                 )
         ))
 
+    }
+
+
+    /**
+     * Check Current Fun Time Day Scheduled For
+     */
+    private fun checkCurrentFunTimeDayScheduledFor(day: String, totalHours: Long) {
+
+        val currentFunTimeDayScheduled = preferenceRepository.getCurrentFunTimeDayScheduled()
+
+        if (currentFunTimeDayScheduled == day) {
+
+            // Get Fun Time Day Scheduled For Day
+            funTimeDayScheduledRepository.getFunTimeDayScheduledForDay(day)?.let { dayScheduledSaved ->
+
+                // Get Remaining Fun Time
+                var remainingFunTime = preferenceRepository.getRemainingFunTime()
+
+
+                if (dayScheduledSaved.totalHours != totalHours) {
+
+                    // subtract seconds
+                    if (dayScheduledSaved.totalHours > totalHours) {
+
+                        if (remainingFunTime > 0) {
+                            remainingFunTime = Math.max(0, remainingFunTime - ((dayScheduledSaved.totalHours -
+                                    totalHours) * 60 * 60))
+                        }
+
+                    } else {
+
+                        remainingFunTime += ((totalHours -
+                                dayScheduledSaved.totalHours) * 60 * 60)
+
+                    }
+
+                    preferenceRepository.setRemainingFunTime(remainingFunTime)
+
+                }
+
+            }
+        }
     }
 
     /**
@@ -1284,12 +1366,14 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun funTimeDayScheduledUpdatedEventHandler(funTimeDayScheduledChangedDTO: FunTimeDayScheduledChangedDTO) {
         Timber.d("SSE: Fun Time Updated Event Handler")
+
+        if(!funTimeDayScheduledChangedDTO.day.isNullOrEmpty())
+            checkCurrentFunTimeDayScheduledFor(funTimeDayScheduledChangedDTO.day!!, funTimeDayScheduledChangedDTO.totalHours)
+
         funTimeDayScheduledRepository.save(FunTimeDayScheduledEntity(
                 day = funTimeDayScheduledChangedDTO.day,
                 enabled = funTimeDayScheduledChangedDTO.enabled,
-                totalHours = funTimeDayScheduledChangedDTO.totalHours,
-                paused = funTimeDayScheduledChangedDTO.paused,
-                pausedAt = funTimeDayScheduledChangedDTO.pausedAt
+                totalHours = funTimeDayScheduledChangedDTO.totalHours
         ))
     }
 

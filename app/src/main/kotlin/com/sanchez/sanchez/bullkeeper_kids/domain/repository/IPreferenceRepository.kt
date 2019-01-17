@@ -67,6 +67,19 @@ interface IPreferenceRepository: IAuthTokenAware {
         // Fun Time
         const val PREF_FUN_TIME = "fun_time"
         const val FUN_TIME_DEFAULT_VALUE = false
+
+        // Current Fun Time Day Scheduled
+        const val PREF_CURRENT_FUN_TIME_DAY_SCHEDULED = "fun_time_day_scheduled"
+        const val CURRENT_FUN_TIME_DAY_SCHEDULED_VALUE = ""
+
+        // Remaining fun time
+        const val PREF_REMAINING_FUN_TIME = "remaining_fun_time"
+        const val REMAINING_FUN_TIME_DEFAULT_VALUE = 0
+
+        // Time Bank
+        const val PREF_TIME_BANK = "time_bank"
+        const val TIME_BANK_DEFAUL_VALUE = 0
+
     }
 
     /**
@@ -228,5 +241,43 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param is Enabled
      */
     fun setFunTimeEnabled(isEnabled: Boolean)
+
+    /**
+     * Get Current Fun Time Day Scheduled
+     * @return
+     */
+    fun getCurrentFunTimeDayScheduled(): String
+
+    /**
+     * Set Current Fun Time Day Scheduled
+     * @param dayScheduled
+     */
+    fun setCurrentFunTimeDayScheduled(dayScheduled: String)
+
+
+    /**
+     * Get Remaining Fun Time
+     * @return
+     */
+    fun getRemainingFunTime(): Long
+
+    /**
+     * Set Remaining Fun Time
+     * @param remainingFunTime
+     */
+    fun setRemainingFunTime(remainingFunTime: Long)
+
+    /**
+     * Get Time Bank
+     * @return
+     */
+    fun getTimeBank(): Long
+
+    /**
+     * Set Time Bank
+     * @param timeSaved
+     */
+    fun setTimeBank(timeSaved: Long)
+
 
 }
