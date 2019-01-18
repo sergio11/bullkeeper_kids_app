@@ -74,11 +74,11 @@ interface IPreferenceRepository: IAuthTokenAware {
 
         // Remaining fun time
         const val PREF_REMAINING_FUN_TIME = "remaining_fun_time"
-        const val REMAINING_FUN_TIME_DEFAULT_VALUE = 0
+        const val REMAINING_FUN_TIME_DEFAULT_VALUE = 0L
 
         // Time Bank
         const val PREF_TIME_BANK = "time_bank"
-        const val TIME_BANK_DEFAUL_VALUE = 0
+        const val TIME_BANK_DEFAUL_VALUE = 0L
 
     }
 

@@ -77,6 +77,11 @@ class CallReceiver: PhoneCallReceiver() {
             // End Call
             endCall(ctx)
 
+            // Show Block Scheduled Screen
+            navigator.showScheduledBlockActive(ctx, scheduledBlockEnable.name,
+                    scheduledBlockEnable.image, scheduledBlockEnable.startAt, scheduledBlockEnable.endAt,
+                    scheduledBlockEnable.description)
+
         } else {
 
             phoneNumberBlockedRepository.findByPhoneNumber(phoneNumber)?.let {

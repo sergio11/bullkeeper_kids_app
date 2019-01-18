@@ -9,6 +9,7 @@ import android.provider.Settings
 import android.support.v4.content.ContextCompat
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
+import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
@@ -20,7 +21,9 @@ import javax.inject.Inject
 /**
  * Home Activity
  */
-class HomeActivity : BaseActivity(), IHomeActivityHandler {
+class HomeActivity : BaseActivity(),
+        HasComponent<ApplicationComponent>, IHomeActivityHandler {
+
 
     val TAG = "HOME_ACTIVITY"
 
@@ -47,6 +50,11 @@ class HomeActivity : BaseActivity(), IHomeActivityHandler {
         (application as AndroidApplication).appComponent
     }
 
+    /**
+     * App Component
+     */
+    override val component: ApplicationComponent
+        get() = appComponent
 
     @Inject
     internal lateinit var usageStatsService: IUsageStatsService

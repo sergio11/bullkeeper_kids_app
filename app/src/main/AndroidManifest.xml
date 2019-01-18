@@ -20,6 +20,8 @@
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <!-- Required for API 28 (Android P) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -31,6 +33,7 @@
 
     <!-- Application -->
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:name=".AndroidApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"

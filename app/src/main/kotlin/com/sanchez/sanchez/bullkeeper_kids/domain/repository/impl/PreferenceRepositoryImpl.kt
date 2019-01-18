@@ -239,32 +239,32 @@ class PreferenceRepositoryImpl
     /**
      * Get Remaining Fun Time
      */
-    override fun getRemainingFunTime(): Int {
-        return mPref.getInt(IPreferenceRepository.PREF_REMAINING_FUN_TIME,
+    override fun getRemainingFunTime(): Long {
+        return mPref.getLong(IPreferenceRepository.PREF_REMAINING_FUN_TIME,
                 IPreferenceRepository.REMAINING_FUN_TIME_DEFAULT_VALUE)
     }
 
     /**
      * Set Remaining Fun Time
      */
-    override fun setRemainingFunTime(remainingFunTime: Int) {
-        mPref.edit().putInt(IPreferenceRepository.PREF_REMAINING_FUN_TIME,
+    override fun setRemainingFunTime(remainingFunTime: Long) {
+        mPref.edit().putLong(IPreferenceRepository.PREF_REMAINING_FUN_TIME,
                 remainingFunTime).apply()
     }
 
     /**
      * Get Time Bank
      */
-    override fun getTimeBank(): Int {
-        return mPref.getInt(IPreferenceRepository.PREF_TIME_BANK,
+    override fun getTimeBank(): Long {
+        return mPref.getLong(IPreferenceRepository.PREF_TIME_BANK,
                 IPreferenceRepository.TIME_BANK_DEFAUL_VALUE)
     }
 
     /**
      * Set Time Bank
      */
-    override fun setTimeBank(timeSaved: Int) {
-        mPref.edit().putInt(IPreferenceRepository.PREF_TIME_BANK,
+    override fun setTimeBank(timeSaved: Long) {
+        mPref.edit().putLong(IPreferenceRepository.PREF_TIME_BANK,
                 timeSaved).apply()
     }
 

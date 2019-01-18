@@ -1,151 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:showIn="@layout/activity_home">
+    xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto">
 
-    <!-- Horizontal Divisor -->
-    <View
-        android:id="@+id/verticalDivisor"
-        android:layout_width="2dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/commonWhite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="@dimen/common_margin"/>
-
-    <!-- Vertical Divisor -->
-    <View
-        android:id="@+id/horizontalDivisor"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/commonWhite"
-        android:layout_margin="@dimen/common_margin"/>
-
-
-    <!-- Pick Me Up -->
     <LinearLayout
-        android:id="@+id/pickMeUpAction"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:background="@drawable/home_item_background_state"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/verticalDivisor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/horizontalDivisor">
-
-        <ImageView
-            android:layout_width="95dp"
-            android:layout_height="95dp"
-            android:contentDescription="@string/content_not_be_loaded"
-            android:src="@drawable/car_solid" />
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/funTimeTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/CommonStrongText"
+            android:layout_margin="@dimen/common_margin"
+            android:text="@string/fun_time_not_avaliable_title"
+            android:textAlignment="textStart"
             android:textColor="@color/commonWhite"
-            android:text="@string/menu_pick_me_up"/>
+            style="@style/CommonStrongText.Big"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical">
+
+
+            <at.grabner.circleprogress.CircleProgressView
+                android:id="@+id/funTimeProgress"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                CircleProgressView:cpv_autoTextSize="true"
+                CircleProgressView:cpv_barColor="@color/redDanger"
+                CircleProgressView:cpv_barWidth="35dp"
+                CircleProgressView:cpv_innerContourSize="0dp"
+                CircleProgressView:cpv_maxValue="100"
+                CircleProgressView:cpv_outerContourSize="0dp"
+                CircleProgressView:cpv_rimColor="@color/commonWhite"
+                CircleProgressView:cpv_rimWidth="35dp"
+                CircleProgressView:cpv_seekMode="false"
+                CircleProgressView:cpv_showUnit="true"
+                CircleProgressView:cpv_spinColor="@color/commonWhite"
+                CircleProgressView:cpv_textColor="@color/commonWhite"
+                CircleProgressView:cpv_textScale="1"
+                CircleProgressView:cpv_unit="%"
+                CircleProgressView:cpv_unitColor="@color/commonWhite"
+                CircleProgressView:cpv_unitPosition="right_top"
+                CircleProgressView:cpv_unitScale="1"
+                CircleProgressView:cpv_value="0" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/remainingFunTimeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:textAlignment="textStart"
+                    android:visibility="gone"
+                    android:textColor="@color/commonWhite"
+                    style="@style/CommonStrongText.Big"/>
+
+                <!-- Fun Time Icon -->
+                <ImageView
+                    android:id="@+id/funTimeIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/sad_face_icon"
+                    android:layout_margin="@dimen/common_margin"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    />
+
+                <!-- Fun Time Description -->
+                <TextView
+                    android:id="@+id/funTimeDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:text="@string/fun_time_not_avaliable_description"
+                    android:gravity="center"
+                    android:textColor="@color/commonWhite"
+                    style="@style/CommonStrongText.Medium"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginTop="@dimen/common_margin"
+            xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto">
+
+            <!-- Horizontal Divisor -->
+            <View
+                android:id="@+id/verticalDivisor"
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/common_margin"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/commonWhite"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <!-- Vertical Divisor -->
+            <View
+                android:id="@+id/horizontalDivisor"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_margin="@dimen/common_margin"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/commonWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+
+            <!-- Pick Me Up -->
+            <LinearLayout
+                android:id="@+id/pickMeUpAction"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/home_item_background_state"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/horizontalDivisor"
+                app:layout_constraintEnd_toStartOf="@id/verticalDivisor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/car_solid" />
+
+
+                <TextView
+                    style="@style/CommonStrongText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_pick_me_up"
+                    android:textColor="@color/commonWhite" />
+
+
+            </LinearLayout>
+
+
+            <!-- Time Bank -->
+            <LinearLayout
+                android:id="@+id/timeBankAction"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/home_item_background_state"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/horizontalDivisor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/verticalDivisor"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/piggy_bank_solid" />
+
+                <TextView
+                    style="@style/CommonStrongText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_time_bank"
+                    android:textColor="@color/commonWhite" />
+
+            </LinearLayout>
+
+            <!-- SOS -->
+            <LinearLayout
+                android:id="@+id/sosAction"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/home_item_background_state"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/verticalDivisor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horizontalDivisor">
+
+                <ImageView
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/exclamation_circle_solid" />
+
+                <TextView
+                    style="@style/CommonStrongText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_sos"
+                    android:textColor="@color/commonWhite" />
+
+            </LinearLayout>
+
+            <!-- Profile -->
+            <LinearLayout
+                android:id="@+id/profileAction"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/home_item_background_state"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/verticalDivisor"
+                app:layout_constraintTop_toBottomOf="@id/horizontalDivisor">
+
+                <ImageView
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/user_profile" />
+
+                <TextView
+                    style="@style/CommonStrongText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_profile"
+                    android:textColor="@color/commonWhite" />
+
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
 
 
     </LinearLayout>
-
-
-    <!-- Time Bank -->
-    <LinearLayout
-        android:id="@+id/timeBankAction"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="@drawable/home_item_background_state"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/verticalDivisor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/horizontalDivisor">
-
-        <ImageView
-            android:layout_width="95dp"
-            android:layout_height="95dp"
-            android:contentDescription="@string/content_not_be_loaded"
-            android:src="@drawable/piggy_bank_solid" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/CommonStrongText"
-            android:textColor="@color/commonWhite"
-            android:text="@string/menu_time_bank"/>
-
-    </LinearLayout>
-
-    <!-- SOS -->
-    <LinearLayout
-        android:id="@+id/sosAction"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="@drawable/home_item_background_state"
-        app:layout_constraintTop_toBottomOf="@id/horizontalDivisor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/verticalDivisor"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageView
-            android:layout_width="95dp"
-            android:layout_height="95dp"
-            android:contentDescription="@string/content_not_be_loaded"
-            android:src="@drawable/exclamation_circle_solid"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/CommonStrongText"
-            android:textColor="@color/commonWhite"
-            android:text="@string/menu_sos"/>
-
-    </LinearLayout>
-
-    <!-- Profile -->
-    <LinearLayout
-        android:id="@+id/profileAction"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="@drawable/home_item_background_state"
-        app:layout_constraintTop_toBottomOf="@id/horizontalDivisor"
-        app:layout_constraintStart_toEndOf="@id/verticalDivisor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageView
-            android:layout_width="95dp"
-            android:layout_height="95dp"
-            android:contentDescription="@string/content_not_be_loaded"
-            android:src="@drawable/user_profile"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/CommonStrongText"
-            android:textColor="@color/commonWhite"
-            android:text="@string/menu_profile"/>
-
-    </LinearLayout>
-
-
-
-</android.support.constraint.ConstraintLayout>
+</ScrollView>

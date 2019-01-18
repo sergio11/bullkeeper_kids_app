@@ -22,6 +22,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivityF
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.ScheduledBlockActiveScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
@@ -43,7 +44,7 @@ import javax.inject.Singleton
     ApplicationModule::class, NetModule::class,
     GlobalServiceModule::class, PackagesModule::class,
     CallDetailsModule::class, SmsModule::class,
-    ContactsModule::class])
+    ContactsModule::class, FunTimeModule::class])
 interface ApplicationComponent {
 
     /**
@@ -110,6 +111,11 @@ interface ApplicationComponent {
      * Inject into Scheduled Block Active Screen Activity
      */
     fun inject(scheduledBlockActiveScreenActivity: ScheduledBlockActiveScreenActivity)
+
+    /**
+     * Inject into Home Activity Fragment
+     */
+    fun inject(homeActivityFragment: HomeActivityFragment)
 
 
     //Exposed to sub-graphs.

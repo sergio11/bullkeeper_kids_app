@@ -5,7 +5,6 @@ import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.showLongMessage
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -30,6 +29,7 @@ class TimeBankActivityFragment : BaseFragment() {
     @Inject
     internal lateinit var preferenceRepository: IPreferenceRepository
 
+
     /**
      * Layout Id
      */
@@ -46,19 +46,18 @@ class TimeBankActivityFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeInjector()
-9
+
+
         saveOnTimeBank.text = String.format(Locale.getDefault(),
                 getString(R.string.time_bank_button_text),
                 1, 5)
 
         saveOnTimeBank.setOnClickListener {
-            context!!.showLongMessage("Activate PickMeUp")
             timeBankStreamId = soundManager.playSound(ISoundManager.TIME_BANK_SOUND)
             saveOnTimeBank.isEnabled = false
             saveOnTimeBank.text = getString(R.string.time_bank_button_activate_text)
         }
 
-        //currentLocationText.text = "Calle Carmen Laforet 23 - Ávila"
     }
 
     /**
@@ -74,9 +73,8 @@ class TimeBankActivityFragment : BaseFragment() {
      */
     fun initializeInjector() {
         val applicationComponent = ApplicationComponent::class.java
-                .cast((activity as HasComponent<ApplicationComponent>)
+                .cast((activity as HasComponent<*>)
                         .component)
-
-        applicationComponent.inject(this)
+        applicationComponent?.inject(this)
     }
 }

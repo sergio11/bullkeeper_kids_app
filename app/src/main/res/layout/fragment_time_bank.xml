@@ -24,23 +24,26 @@
             style="@style/TimeBankActionButton"
             android:layout_width="@dimen/time_bank_btn_width"
             android:layout_height="@dimen/time_bank_btn_height"
+            android:enabled="false"
             android:layout_margin="@dimen/common_margin"
             android:text="-"/>
 
 
         <ImageView
+            android:id="@+id/timeBankIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/smile_white_solid"
+            android:src="@drawable/sad_face_icon"
             android:layout_margin="@dimen/common_margin"
             android:contentDescription="@string/content_not_be_loaded"
             />
 
         <TextView
+            android:id="@+id/timeBankDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_margin"
-            android:text="@string/time_bank_description"
+            android:text="@string/time_bank_not_avaliable_description"
             android:gravity="center"
             android:textColor="@color/commonWhite"
             style="@style/CommonStrongText.Big"/>
