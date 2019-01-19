@@ -220,11 +220,13 @@
     <!-- Time Bank Screen -->
     <string name="time_bank_toolbar_title">TimeBank</string>
     <string name="time_bank_your_current_location">Your current location</string>
-    <string name="time_bank_button_text" formatted="false">%02d HRS : %02d MINS \n left in your time bank</string>
-    <string name="time_bank_button_activate_text">Saving on \n time bank …</string>
+    <string name="time_bank_saved_button_text" formatted="false">%s \n left in your time bank</string>
+    <string name="time_bank_restored_button_text" formatted="false">%s \n They can be restored for your fun time</string>
+    <string name="time_bank_button_saved_successfully_text">Successful saved time</string>
+    <string name="time_bank_button_restored_successfully_text">Successfully restored time</string>
     <string name="time_bank_avaliable_description">You can utilize these minutes in your fun time</string>
     <string name="time_bank_not_avaliable_description">Sorry, you can not save or restore time</string>
-
+    <string name="time_bank_not_avaliable_btn">Bank of time not available</string>
     <!-- Bed Time Screen -->
     <string name="bed_time_screen_title">Bed Time</string>
     <string name="bed_time_screen_description">Keep calm and get same sleep - it\'s time for bed!. \n

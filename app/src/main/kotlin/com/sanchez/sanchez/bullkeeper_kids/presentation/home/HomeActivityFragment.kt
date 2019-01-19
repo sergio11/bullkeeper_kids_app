@@ -7,6 +7,7 @@ import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToHoursMinutesSecondsFormat
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IFunTimeDayScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -122,13 +123,8 @@ class HomeActivityFragment : BaseFragment() {
                     if(remainingFunTime > 0) {
                         // Set Fun Time Title
                         funTimeTitle.text = getString(R.string.fun_time_avaliable_title)
-
                         remainingFunTimeTextView.visibility = View.VISIBLE
-                        val hours = remainingFunTime / 3600
-                        val minutes = (remainingFunTime % 3600) / 60
-                        val seconds = remainingFunTime % 60
-                        remainingFunTimeTextView.text =
-                                String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                        remainingFunTimeTextView.text = remainingFunTime.ToHoursMinutesSecondsFormat()
                         funTimeIcon.setImageResource(R.drawable.smile_white_solid)
                         funTimeDescription.text = getString(R.string.fun_time_avaliable_description)
 

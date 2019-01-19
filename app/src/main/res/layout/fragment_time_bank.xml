@@ -26,8 +26,7 @@
             android:layout_height="@dimen/time_bank_btn_height"
             android:enabled="false"
             android:layout_margin="@dimen/common_margin"
-            android:text="-"/>
-
+            android:text="@string/time_bank_not_avaliable_btn"/>
 
         <ImageView
             android:id="@+id/timeBankIcon"
