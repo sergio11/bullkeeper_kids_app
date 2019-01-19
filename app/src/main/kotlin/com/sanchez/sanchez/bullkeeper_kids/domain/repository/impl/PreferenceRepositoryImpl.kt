@@ -12,6 +12,7 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(context: Context): IPreferenceRepository {
 
+
     /**
      * Preferences
      */
@@ -296,6 +297,118 @@ class PreferenceRepositoryImpl
      */
     override fun setSettingsEnabled(isEnabled: Boolean) {
         mPref.edit().putBoolean(IPreferenceRepository.PREF_SETTINGS_ENABLED,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Access Fine Location Enabled
+     */
+    override fun isAccessFineLocationEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_ACCESS_FINE_LOCATION_ENABLED,
+                IPreferenceRepository.ACCESS_FINE_LOCATION_ENABLED_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Access Fine Location Enabled
+     */
+    override fun setAccessFineLocationEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_ACCESS_FINE_LOCATION_ENABLED,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Read Contacts Enabled
+     */
+    override fun isReadContactsEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_READ_CONTACTS_ENABLED,
+                IPreferenceRepository.READ_CONTACTS_ENABLED_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Read Contacts Enabled
+     */
+    override fun setReadContactsEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_READ_CONTACTS_ENABLED,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Read Call Log Enabled
+     */
+    override fun isReadCallLogEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_READ_CALL_LOG_ENABLED,
+                IPreferenceRepository.READ_CALL_LOG_ENABLED_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Read Call Log Enabled
+     */
+    override fun setReadCallLogEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_READ_CALL_LOG_ENABLED,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Read Sms Enabled
+     */
+    override fun isReadSmsEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_READ_SMS_ENABLED,
+                IPreferenceRepository.READ_SMS_ENABLED_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Read Sms Enabled
+     */
+    override fun setReadSmsEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_READ_SMS_ENABLED,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Write External Storage Enabled
+     */
+    override fun isWriteExternalStorageEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_WRITE_EXTERNAL_STORAGE_ENABLED,
+                IPreferenceRepository.WRITE_EXTERNAL_STORAGE_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Write External Storage Enabled
+     */
+    override fun setWriteExternalStorageEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_WRITE_EXTERNAL_STORAGE_ENABLED,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Usage Stats Allowed
+     */
+    override fun isUsageStatsAllowed(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_USAGE_STATS_ALLOWED,
+                IPreferenceRepository.USAGE_STATS_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Usage Stats Allowed
+     */
+    override fun setUsageStatsAllowed(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_USAGE_STATS_ALLOWED,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Admin Access Enabled
+     */
+    override fun isAdminAccessEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_ADMIN_ACCESS_ALLOWED,
+                IPreferenceRepository.ADMIN_ACCESS_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Admin Access Enabled
+     */
+    override fun setAdminAccessEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_ADMIN_ACCESS_ALLOWED,
                 isEnabled).apply()
     }
 

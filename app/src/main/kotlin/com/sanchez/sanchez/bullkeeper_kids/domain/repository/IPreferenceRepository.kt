@@ -84,6 +84,34 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_TIME_BANK = "time_bank"
         const val TIME_BANK_DEFAUL_VALUE = 0L
 
+        // Pref Access Fine Location
+        const val PREF_ACCESS_FINE_LOCATION_ENABLED = "access_fine_location"
+        const val ACCESS_FINE_LOCATION_ENABLED_DEFAULT_VALUE = false
+
+        // Pref Read Contacts
+        const val PREF_READ_CONTACTS_ENABLED = "read_contacts"
+        const val READ_CONTACTS_ENABLED_DEFAULT_VALUE = false
+
+        // Pref Read Call Log Enabled
+        const val PREF_READ_CALL_LOG_ENABLED = "read_call_log"
+        const val READ_CALL_LOG_ENABLED_DEFAULT_VALUE = false
+
+        // Pref Read Sms Enabled
+        const val PREF_READ_SMS_ENABLED = "read_sms"
+        const val READ_SMS_ENABLED_DEFAULT_VALUE = false
+
+        // Pref Write External Storage
+        const val PREF_WRITE_EXTERNAL_STORAGE_ENABLED = "write_external"
+        const val WRITE_EXTERNAL_STORAGE_DEFAULT_VALUE = false
+
+        // Pref Usage Stats
+        const val PREF_USAGE_STATS_ALLOWED = "usage_stats"
+        const val USAGE_STATS_DEFAULT_VALUE = false
+
+        // Pref Admin Access
+        const val PREF_ADMIN_ACCESS_ALLOWED = "admin_access"
+        const val ADMIN_ACCESS_DEFAULT_VALUE = false
+
     }
 
     /**
@@ -293,6 +321,91 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param timeSaved
      */
     fun setTimeBank(timeSaved: Long)
+
+    /**
+     * Is Access Fine Location Enabled
+     * @return
+     */
+    fun isAccessFineLocationEnabled(): Boolean
+
+    /**
+     * Set Access Fine Location Enabled
+     * @param is Enabled
+     */
+    fun setAccessFineLocationEnabled(isEnabled: Boolean)
+
+    /**
+     * Is Read Contacts Enabled
+     * @return
+     */
+    fun isReadContactsEnabled(): Boolean
+
+    /**
+     * Set Read Contacts
+     * @param is Enabled
+     */
+    fun setReadContactsEnabled(isEnabled: Boolean)
+
+
+    /**
+     * Is Read Call Log
+     * @return
+     */
+    fun isReadCallLogEnabled(): Boolean
+
+    /**
+     * Set Read Call Log
+     * @param is Enabled
+     */
+    fun setReadCallLogEnabled(isEnabled: Boolean)
+
+    /**
+     * Is Read Sms
+     * @return
+     */
+    fun isReadSmsEnabled(): Boolean
+
+    /**
+     * Set Read Sms Log
+     * @param is Enabled
+     */
+    fun setReadSmsEnabled(isEnabled: Boolean)
+
+    /**
+     * Is Write External Storage
+     * @return
+     */
+    fun isWriteExternalStorageEnabled(): Boolean
+
+    /**
+     * Set Write External Storage
+     * @param is Enabled
+     */
+    fun setWriteExternalStorageEnabled(isEnabled: Boolean)
+
+    /**
+     * Is Usage Stats Allowed
+     * @return
+     */
+    fun isUsageStatsAllowed(): Boolean
+
+    /**
+     * Set Usage Stats Allowed
+     * @param is Enabled
+     */
+    fun setUsageStatsAllowed(isEnabled: Boolean)
+
+    /**
+     * Is Admin Access Enabled
+     * @return
+     */
+    fun isAdminAccessEnabled(): Boolean
+
+    /**
+     * Set Admin Access Enabled
+     * @param is Enabled
+     */
+    fun setAdminAccessEnabled(isEnabled: Boolean)
 
 
 }

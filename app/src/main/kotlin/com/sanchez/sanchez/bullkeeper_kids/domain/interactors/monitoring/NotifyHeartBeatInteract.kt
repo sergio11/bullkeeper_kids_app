@@ -47,7 +47,16 @@ class NotifyHeartBeatInteract
         val screenStatus = getScreenStatus()
 
         val response = heartBeatService.notifyTerminalHeartbeat(kid, terminal ,
-                NotifyTerminalHeartBeatDTO(kid, screenStatus, terminal)).await()
+                NotifyTerminalHeartBeatDTO(
+                        kid = kid,
+                        screenStatus = screenStatus,
+                        terminal = terminal,
+                        accessFineLocationEnabled = preferenceRepository.isAccessFineLocationEnabled(),
+                        readContactsEnabled = preferenceRepository.isReadContactsEnabled(),
+                        readCallLogEnabled = preferenceRepository.isReadCallLogEnabled(),
+                        writeExternalStorageEnabled = preferenceRepository.isWriteExternalStorageEnabled(),
+                        usageStatsAllowed = preferenceRepository.isUsageStatsAllowed(),
+                        adminAccessEnabled = preferenceRepository.isAdminAccessEnabled())).await()
 
         return response.data!!
     }

@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.home
 
+import android.Manifest
 import android.app.Activity
 import android.app.admin.DevicePolicyManager
 import android.content.Context
@@ -100,13 +101,6 @@ class HomeActivity : BaseActivity(),
                 Intent(this, MonitoringService::class.java))
 
 
-        if (!usageStatsService.isUsageStatsAllowed())
-            startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-
-        devicePolicyManager = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-
-
-
         /**
          * val active = devicePolicyManager
         .isAdminActive(MonitoringDeviceAdminReceiver.getComponentName(this@HomeActivity))
@@ -130,6 +124,36 @@ class HomeActivity : BaseActivity(),
      */
     override fun onResume() {
         super.onResume()
+
+        // Save the status of permissions
+
+        preferenceRepository.setAccessFineLocationEnabled(
+                !permissionManager.shouldAskPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+        )
+
+        preferenceRepository.setReadContactsEnabled(
+                !permissionManager.shouldAskPermission(Manifest.permission.READ_CONTACTS)
+        )
+
+        preferenceRepository.setReadCallLogEnabled(
+                !permissionManager.shouldAskPermission(Manifest.permission.READ_CALL_LOG)
+        )
+
+        preferenceRepository.setReadSmsEnabled(
+                !permissionManager.shouldAskPermission(Manifest.permission.READ_SMS)
+        )
+
+        preferenceRepository.setWriteExternalStorageEnabled(
+                !permissionManager.shouldAskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        )
+
+        preferenceRepository.setUsageStatsAllowed(
+                usageStatsService.isUsageStatsAllowed()
+        )
+
+        preferenceRepository.setAdminAccessEnabled(
+                isDevicePolicyManagerActive()
+        )
 
         if(preferenceRepository.isSettingsEnabled()) {
             appSettings.visibility = View.VISIBLE

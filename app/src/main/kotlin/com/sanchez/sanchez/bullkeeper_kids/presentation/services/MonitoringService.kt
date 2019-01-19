@@ -801,6 +801,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
             } else {
                 Log.d(TAG, "Usage Stats Not Allowed generate alert")
+                preferenceRepository.setUsageStatsAllowed(false)
             }
 
 
@@ -824,6 +825,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         Timber.d("Sync Usage stats success, count -> $count")
                     })
                 }
+            } else {
+                preferenceRepository.setUsageStatsAllowed(false)
             }
 
             mHandler.postDelayed(checkApplicationsUsageStatistics, CHECK_APPLICATIONS_USAGE_STATISTICS)

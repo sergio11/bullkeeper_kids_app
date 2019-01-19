@@ -94,12 +94,14 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
             activityHandler.showNoticeDialog(R.string.sixth_page_admin_is_granted)
             adminAccessSwitch.isEnabled =
                     !activityHandler.isDevicePolicyManagerActive()
+            preferenceRepository.setAdminAccessEnabled(activityHandler.isDevicePolicyManagerActive())
         }
 
         if(requestUsageStatsInProgress && usageStatsService.isUsageStatsAllowed()) {
             activityHandler.showNoticeDialog(R.string.fifth_page_usage_stats_granted)
             deviceStatisticsSwitch.isEnabled =
                     !usageStatsService.isUsageStatsAllowed()
+            preferenceRepository.setUsageStatsAllowed(usageStatsService.isUsageStatsAllowed())
         }
     }
 
@@ -230,6 +232,7 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
             Manifest.permission.ACCESS_FINE_LOCATION -> {
                 locationHistorySwitch.isOn = status
                 locationHistorySwitch.isEnabled = !status
+                preferenceRepository.setAccessFineLocationEnabled(status)
             }
 
             /**
@@ -238,6 +241,7 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
             Manifest.permission.READ_CONTACTS -> {
                 contactsListSwitch.isOn = status
                 contactsListSwitch.isEnabled = !status
+                preferenceRepository.setReadContactsEnabled(status)
             }
 
             /**
@@ -246,6 +250,7 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
             Manifest.permission.READ_CALL_LOG -> {
                 callsHistorySwitch.isOn = status
                 callsHistorySwitch.isEnabled = !status
+                preferenceRepository.setReadCallLogEnabled(status)
             }
 
             /**
@@ -254,6 +259,7 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
             Manifest.permission.READ_SMS -> {
                 textMessageSwitch.isOn = status
                 textMessageSwitch.isEnabled = !status
+                preferenceRepository.setReadSmsEnabled(status)
             }
 
             /**
@@ -262,6 +268,7 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
             Manifest.permission.WRITE_EXTERNAL_STORAGE -> {
                 storageSwitch.isOn = status
                 storageSwitch.isEnabled = !status
+                preferenceRepository.setWriteExternalStorageEnabled(status)
             }
 
         }
