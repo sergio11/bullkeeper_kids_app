@@ -39,7 +39,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -54,7 +55,7 @@
         <activity
             android:name=".presentation.SplashScreenActivity"
             android:noHistory="true"
-            android:theme="@style/AppTheme.Splash"
+            android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,7 +71,7 @@
         <activity
             android:name=".presentation.home.HomeActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait"/>
 
         <!-- Monitoring Service -->
@@ -83,21 +84,21 @@
         <activity
             android:name=".presentation.lockscreen.AppLockScreenActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait"/>
 
         <!-- Scheduled Block Active Screen Activity -->
         <activity
             android:name=".presentation.lockscreen.ScheduledBlockActiveScreenActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait"/>
 
 
         <!-- Disabled App Screen Activity -->
         <activity android:name=".presentation.lockscreen.DisabledAppScreenActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
 
 
@@ -150,7 +151,7 @@
         <!-- Sms Broadcast Receiver -->
         <receiver android:name=".presentation.broadcast.SMSBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.provider.telephony.SMS_RECEIVED"></action>
+                <action android:name="android.provider.telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
@@ -158,18 +159,21 @@
         <!-- App Tutorial Activity -->
         <activity
             android:name=".presentation.tutorial.AppTutorialActivity"
+            android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait"/>
 
         <!-- Link Device Tutorial Activity -->
         <activity
             android:name=".presentation.linkterminal.LinkDeviceTutorialActivity"
+            android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait"/>
 
         <!-- Legal Content Activity -->
         <activity
             android:name=".presentation.legalcontent.LegalContentActivity"
             android:label="@string/title_activity_legal_content"
-            android:screenOrientation="portrait"></activity>
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
 
         <!-- Crash Error Activity -->
         <activity

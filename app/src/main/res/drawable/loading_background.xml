@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@color/primaryColor"/>
+
+    <item android:bottom="16dp" >
+        <bitmap
+            android:gravity="center_horizontal"
+            android:antialias="true"
+            android:dither="true"
+            android:src="@drawable/app_icon_white"/>
+    </item>
+
+</layer-list>

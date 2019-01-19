@@ -17,14 +17,9 @@
         <item name="colorAccent">@color/primaryLightColor</item>
     </style>
 
-    <!-- The launcher theme. -->
-    <style name="AppTheme.Splash">
-        <item name="android:windowBackground">@drawable/home_background_soft_orange</item>
-    </style>
-
     <!-- The Common theme. -->
     <style name="AppTheme.Common">
-        <item name="android:windowBackground">@drawable/home_background_soft_orange</item>
+        <item name="android:windowBackground">@drawable/loading_background</item>
     </style>
 
     <style name="AppTheme.Widget"/>
