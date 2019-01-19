@@ -1,32 +1,42 @@
-package com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.pages
+package com.sanchez.sanchez.bullkeeper_kids.presentation.settings
 
 import android.Manifest
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.view.View
-import com.cleveroad.slidingtutorial.Direction
-import com.cleveroad.slidingtutorial.TransformItem
 import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
-import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AppTutorialComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.SettingsComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.permission.IPermissionManager
-import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
-import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
-import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.IAppTutorialHandler
-import kotlinx.android.synthetic.main.third_page_fragment_layout.*
-import timber.log.Timber
-import java.lang.IllegalStateException
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
+import kotlinx.android.synthetic.main.fragment_settings.*
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 /**
- * Third Page Fragment
+ * Settings Activity Fragment
  */
-class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
-    IPermissionManager.OnCheckPermissionListener {
+class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermissionListener {
 
-    private lateinit var appTutorialHandler: IAppTutorialHandler
+    /**
+     * Settings Activity Handler
+     */
+    private lateinit var activityHandler: ISettingsActivityHandler
+
+    /**
+     * Settings View Model
+     */
+    @Inject
+    internal lateinit var settingsViewModel: SettingsViewModel
+
+    /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
 
     /**
      * Permission Manager
@@ -35,9 +45,31 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
     internal lateinit var permissionManager: IPermissionManager
 
     /**
-     * Get Layout Res Id
+     * Usage Stats Service
      */
-    override fun getLayoutResId(): Int = R.layout.third_page_fragment_layout
+    @Inject
+    internal lateinit var usageStatsService: IUsageStatsService
+
+    /**
+     * State
+     * =============
+     */
+
+    /**
+     * Request Admin Capabilities In Progress
+     */
+    private var requestAdminCapabilitiesInProgress: Boolean = false
+
+    /**
+     * Request Usage Stats In Progress
+     */
+    private var requestUsageStatsInProgress: Boolean = false
+
+    /**
+     * Layout Id
+     */
+    override fun layoutId(): Int = R.layout.fragment_settings
+
 
     /**
      * On Attach
@@ -45,50 +77,30 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        if(context !is IAppTutorialHandler)
-            throw IllegalStateException("The context should implement ILinkDeviceTutorialHandler")
+        if(context !is ISettingsActivityHandler)
+            throw IllegalArgumentException("Context should implement ISettingsActivityHandler")
 
-        appTutorialHandler = context
+        activityHandler = context
+
     }
 
     /**
-     *
+     * On Start
      */
-    override fun whenPhaseIsHidden(pagePosition: Int, currentPosition: Int) {
-        Timber.d("When Phase Is Hidden")
+    override fun onStart() {
+        super.onStart()
 
-        if(currentPosition > pagePosition) {
-            if(locationHistorySwitch?.isOn == false || callsHistorySwitch?.isOn == false
-                    || contactsListSwitch?.isOn == false || textMessageSwitch?.isOn == false
-                || storageSwitch?.isOn == false || storageSwitch?.isOn == false) {
-
-                appTutorialHandler.showNoticeDialog(R.string.third_page_review_permission_request, object : NoticeDialogFragment.NoticeDialogListener {
-                    override fun onAccepted(dialog: DialogFragment) {
-                        appTutorialHandler.requestFocus()
-                    }
-                })
-            }
+        if(requestAdminCapabilitiesInProgress && activityHandler.isDevicePolicyManagerActive()) {
+            activityHandler.showNoticeDialog(R.string.sixth_page_admin_is_granted)
+            adminAccessSwitch.isEnabled =
+                    !activityHandler.isDevicePolicyManagerActive()
         }
-    }
 
-    /**
-     * Whe Phase Is Showed
-     */
-    override fun whenPhaseIsShowed() {
-        Timber.d("When Phase Is Showed")
-    }
-
-
-
-    /**
-     * Initialize Injector
-     */
-    override fun initializeInjector(): AppTutorialComponent? {
-        val appTutorialComponent = AppTutorialComponent::class.java
-        .cast((activity as HasComponent<*>)
-                .component)
-        appTutorialComponent?.inject(this)
-        return appTutorialComponent
+        if(requestUsageStatsInProgress && usageStatsService.isUsageStatsAllowed()) {
+            activityHandler.showNoticeDialog(R.string.fifth_page_usage_stats_granted)
+            deviceStatisticsSwitch.isEnabled =
+                    !usageStatsService.isUsageStatsAllowed()
+        }
     }
 
     /**
@@ -96,6 +108,7 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initializeInjector()
 
         permissionManager.setCheckPermissionListener(this)
 
@@ -168,6 +181,38 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
             if(isOn && permissionManager.shouldAskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 permissionManager.checkSinglePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         getString(R.string.third_page_storage_reason))
+            }
+        }
+
+        // Device Statistics
+        deviceStatisticsSwitch.isOn =
+                usageStatsService.isUsageStatsAllowed()
+
+        deviceStatisticsSwitch.isEnabled =
+                !usageStatsService.isUsageStatsAllowed()
+
+        deviceStatisticsSwitch.setOnToggledListener { toggleableView, isOn ->
+            if(isOn && !usageStatsService.isUsageStatsAllowed()) {
+                requestUsageStatsInProgress = true
+                activityHandler.showUsageAccessSettings()
+            } else {
+                activityHandler.showNoticeDialog(R.string.fifth_page_usage_stats_already_allowed)
+            }
+        }
+
+        // Admin Access Switch
+        adminAccessSwitch.isOn =
+                activityHandler.isDevicePolicyManagerActive()
+
+        adminAccessSwitch.isEnabled =
+                !activityHandler.isDevicePolicyManagerActive()
+
+        adminAccessSwitch.setOnToggledListener { toggleableView, isOn ->
+            if(isOn && !activityHandler.isDevicePolicyManagerActive()) {
+                requestAdminCapabilitiesInProgress = true
+                activityHandler.showDeviceAdminSettings()
+            } else {
+                activityHandler.showNoticeDialog(R.string.sixth_page_admin_is_already_enabled)
             }
         }
 
@@ -250,16 +295,13 @@ class ThirdPageFragment: SupportPageFragment<AppTutorialComponent>(),
     }
 
     /**
-     * Get Transform Items
+     * Initialize Injector
      */
-    override fun getTransformItems(): Array<TransformItem> {
-        return arrayOf(
-                TransformItem.create(R.id.titleText, Direction.LEFT_TO_RIGHT, 0.2f),
-                TransformItem.create(R.id.locationHistory, Direction.RIGHT_TO_LEFT, 0.07f),
-                TransformItem.create(R.id.callsHistory, Direction.LEFT_TO_RIGHT, 0.07f),
-                TransformItem.create(R.id.contactsList, Direction.RIGHT_TO_LEFT, 0.07f),
-                TransformItem.create(R.id.textMessage, Direction.LEFT_TO_RIGHT, 0.07f),
-                TransformItem.create(R.id.storage, Direction.RIGHT_TO_LEFT, 0.07f)
-        )
+    fun initializeInjector() {
+        val settingsComponent = SettingsComponent::class.java
+                .cast((activity as HasComponent<*>)
+                        .component)
+
+        settingsComponent?.inject(this)
     }
 }

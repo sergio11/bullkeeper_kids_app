@@ -17,7 +17,6 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceReposito
 import kotlinx.android.synthetic.main.fragment_sos.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -182,9 +181,9 @@ class SosActivityFragment : BaseFragment() {
      */
     fun initializeInjector() {
         val sosComponent = SosComponent::class.java
-                .cast((activity as HasComponent<SosComponent>)
+                .cast((activity as HasComponent<*>)
                         .component)
 
-        sosComponent.inject(this)
+        sosComponent?.inject(this)
     }
 }

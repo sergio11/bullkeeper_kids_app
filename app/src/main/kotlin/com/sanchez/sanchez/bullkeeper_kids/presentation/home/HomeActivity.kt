@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v4.content.ContextCompat
+import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
@@ -14,8 +15,10 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationCompone
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
+import kotlinx.android.synthetic.main.app_translucent_toolbar.*
 import javax.inject.Inject
 
 /**
@@ -56,13 +59,30 @@ class HomeActivity : BaseActivity(),
     override val component: ApplicationComponent
         get() = appComponent
 
+
+    /**
+     * Dependencies
+     * =================
+     */
+
+    /**
+     * Usage Stats Service
+     */
     @Inject
     internal lateinit var usageStatsService: IUsageStatsService
 
     /**
      * Navigator
      */
-    @Inject internal lateinit var navigator: INavigator
+    @Inject
+    internal lateinit var navigator: INavigator
+
+    /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
+
 
     /**
      * Device Policy Manager
@@ -85,6 +105,8 @@ class HomeActivity : BaseActivity(),
 
         devicePolicyManager = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
 
+
+
         /**
          * val active = devicePolicyManager
         .isAdminActive(MonitoringDeviceAdminReceiver.getComponentName(this@HomeActivity))
@@ -100,8 +122,27 @@ class HomeActivity : BaseActivity(),
         this@HomeActivity.startActivityForResult(intent, ENABLE_DEVICE_ADMIN_FEATURES_CODE)
         }
          */
+
     }
 
+    /**
+     * On Resume
+     */
+    override fun onResume() {
+        super.onResume()
+
+        if(preferenceRepository.isSettingsEnabled()) {
+            appSettings.visibility = View.VISIBLE
+            appSettings.setOnClickListener {
+                navigator.showSettingsScreen(this)
+            }
+
+        } else {
+            appSettings.visibility = View.GONE
+            appSettings.setOnClickListener(null)
+        }
+
+    }
 
     /**
      * Get Layout Resource

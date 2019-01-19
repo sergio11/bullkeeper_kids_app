@@ -48,13 +48,17 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_BED_TIME = "bed_time"
         const val BED_TIME_DEFAULT_VALUE = true
 
-        // Lock Screen Status
-        const val PREF_LOCK_SCREEN = "lock_screen"
-        const val LOCK_SCREEN_DEFAULT_VALUE = false
+        // Screen Enabled
+        const val PREF_SCREEN_ENABLED = "screen_enabled"
+        const val SCREEN_ENABLED_DEFAULT_VALUE = true
 
-        // Lock Camera
-        const val PREF_CAMERA_SCREEN = "lock_camera"
-        const val LOCK_CAMERA_DEFAULT_VALUE = false
+        // Camera Enabled
+        const val PREF_CAMERA_ENABLED = "camera_enabled"
+        const val CAMERA_ENABLED_DEFAULT_VALUE = true
+
+        // Settings Enabled
+        const val PREF_SETTINGS_ENABLED = "settings_enabled"
+        const val SETTINGS_ENABLED_DEFAULT_VALUE = false
 
         // SOS Request Expired At
         const val PREF_SOS_REQUEST_EXPIRED_AT = "sos_request_expired_at"
@@ -181,16 +185,16 @@ interface IPreferenceRepository: IAuthTokenAware {
     fun setBedTimeEnabled(isEnabled: Boolean)
 
     /**
-     * Is Lock Screen Enabled
+     * Is Screen Enabled
      * @return
      */
-    fun isLockScreenEnabled(): Boolean
+    fun isScreenEnabled(): Boolean
 
     /**
-     * Set Lock Screen Enabled
-     * @param longitude
+     * Set Screen Enabled
+     * @param isEnabled
      */
-    fun setLockScreenEnabled(isEnabled: Boolean)
+    fun setScreenEnabled(isEnabled: Boolean)
 
     /**
      * Is Camera Enabled
@@ -200,10 +204,21 @@ interface IPreferenceRepository: IAuthTokenAware {
 
     /**
      * Set Camera Enabled
-     * @param longitude
+     * @param isEnabled
      */
     fun setCameraEnabled(isEnabled: Boolean)
 
+    /**
+     * Is Settings Enabled
+     * @return
+     */
+    fun isSettingsEnabled(): Boolean
+
+    /**
+     * Set Settings Enabled
+     * @param isEnabled
+     */
+    fun setSettingsEnabled(isEnabled: Boolean)
 
     /**
      * Get SOS Request Expired At

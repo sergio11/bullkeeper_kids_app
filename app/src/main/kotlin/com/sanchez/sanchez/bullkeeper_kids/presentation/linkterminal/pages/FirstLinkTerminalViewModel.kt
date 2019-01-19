@@ -83,7 +83,7 @@ class FirstLinkTerminalViewModel
         }
 
         preferenceRepository.setCameraEnabled(terminalEntity.lockCameraEnabled)
-        preferenceRepository.setLockScreenEnabled(terminalEntity.lockScreenEnabled)
+        preferenceRepository.setScreenEnabled(terminalEntity.lockScreenEnabled)
         preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
 
         terminalSuccess.value = terminalEntity

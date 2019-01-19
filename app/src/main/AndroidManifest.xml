@@ -212,6 +212,12 @@
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
 
+        <!-- Settings Activity -->
+        <activity
+            android:name=".presentation.settings.SettingsActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
+
         <!-- Phone Number Blocked -->
         <activity android:name=".presentation.phonenumberblocked.PhoneNumberBlockedActivity"
             android:theme="@style/AppTheme.Common"

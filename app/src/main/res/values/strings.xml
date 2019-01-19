@@ -251,4 +251,8 @@
     <string name="fun_time_avaliable_description">Manage your fun time as you want</string>
     <string name="fun_time_not_avaliable_description">Sorry there is no fun time available</string>
 
+    <!-- Settings -->
+    <string name="settings_toolbar_title">Settings</string>
+
+
 </resources>

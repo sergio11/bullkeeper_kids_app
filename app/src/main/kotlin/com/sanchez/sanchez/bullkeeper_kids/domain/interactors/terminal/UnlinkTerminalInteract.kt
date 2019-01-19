@@ -50,8 +50,8 @@ class UnlinkTerminalInteract
         preferencesRepository.setPrefDeviceId(IPreferenceRepository.CURRENT_DEVICE_ID_DEFAULT_VALUE)
         preferencesRepository.setPrefCurrentUserIdentity(IPreferenceRepository.CURRENT_USER_IDENTITY_DEFAULT_VALUE)
         preferencesRepository.setAuthToken(IPreferenceRepository.AUTH_TOKEN_DEFAULT_VALUE)
-        preferencesRepository.setCameraEnabled(IPreferenceRepository.LOCK_CAMERA_DEFAULT_VALUE)
-        preferencesRepository.setLockScreenEnabled(IPreferenceRepository.LOCK_SCREEN_DEFAULT_VALUE)
+        preferencesRepository.setCameraEnabled(IPreferenceRepository.CAMERA_ENABLED_DEFAULT_VALUE)
+        preferencesRepository.setScreenEnabled(IPreferenceRepository.SCREEN_ENABLED_DEFAULT_VALUE)
         preferencesRepository.setBedTimeEnabled(IPreferenceRepository.BED_TIME_DEFAULT_VALUE)
     }
 

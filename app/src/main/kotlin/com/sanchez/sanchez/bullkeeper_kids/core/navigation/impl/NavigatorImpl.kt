@@ -20,6 +20,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceT
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.ScheduledBlockActiveScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.settings.SettingsActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.sos.SosActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.AppTutorialActivity
@@ -181,4 +182,11 @@ class NavigatorImpl
                                           description: String?)
         = ctx.startActivity(ScheduledBlockActiveScreenActivity.callingIntent(ctx,
             name, image, startAt, endAt, description))
+
+
+    /**
+     * Show Settings Screen
+     */
+    override fun showSettingsScreen(activity: Activity) =
+            activity.startActivity(SettingsActivity.callingIntent(activity))
 }

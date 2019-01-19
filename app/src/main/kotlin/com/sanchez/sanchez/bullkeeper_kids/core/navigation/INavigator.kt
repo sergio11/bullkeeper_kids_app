@@ -107,4 +107,9 @@ interface INavigator {
      */
     fun showPhoneNumberBlockedScreen(ctx: Context)
 
+    /**
+     * Show Settings Screen
+     */
+    fun showSettingsScreen(activity: Activity)
+
 }

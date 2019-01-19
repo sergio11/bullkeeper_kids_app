@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/titleText"
+        style="@style/CommonStrongText"
+        android:layout_width="0dp"
+        android:layout_height="77dp"
+        android:layout_margin="@dimen/common_margin"
+        android:padding="@dimen/common_padding"
+        android:gravity="center"
+        android:text="@string/third_page_title"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"/>
+
+
+    <!-- Access required -->
+    <ScrollView
+        android:id="@+id/accessRequired"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleText"
+        android:layout_marginBottom="80dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Location History -->
+            <RelativeLayout
+                android:id="@+id/locationHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Location History Icon -->
+                <ImageView
+                    android:id="@+id/locationHistoryIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/location_history_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Location History Title -->
+                <TextView
+                    android:id="@+id/locationHistoryTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/locationHistoryIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/locationHistoryDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_location_history_title"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Location History Description -->
+                <TextView
+                    android:id="@+id/locationHistoryDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/locationHistoryIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_location_history_description"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Location History Labeled Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/locationHistorySwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    android:layout_below="@id/locationHistoryDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite"/>
+
+            </RelativeLayout>
+            <!-- End Location History -->
+
+            <!-- Start Calls History -->
+            <RelativeLayout
+                android:id="@+id/callsHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Calls History Icon -->
+                <ImageView
+                    android:id="@+id/callsHistoryIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/phone_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Calls History Title -->
+                <TextView
+                    android:id="@+id/callsHistoryTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/callsHistoryIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/callsHistoryDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_call_logs_title"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Calls History Description -->
+                <TextView
+                    android:id="@+id/callsHistoryDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/callsHistoryIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_call_logs_description"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Calls Labeled Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/callsHistorySwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_below="@id/callsHistoryDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite" />
+
+            </RelativeLayout>
+            <!-- End Calls History -->
+
+            <!-- Contacts List -->
+            <RelativeLayout
+                android:id="@+id/contactsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Contacts List Icon -->
+                <ImageView
+                    android:id="@+id/contactsListIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/users_solid_white"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Contacts List Title -->
+                <TextView
+                    android:id="@+id/contactsListTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/contactsListIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/contactsListDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_contacts_title"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Contacts List Description -->
+                <TextView
+                    android:id="@+id/contactsListDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/contactsListIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_contacts_description"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Contacts List Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/contactsListSwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_below="@id/contactsListDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite" />
+
+            </RelativeLayout>
+            <!-- End Contacts List -->
+
+            <!-- Text Message -->
+            <RelativeLayout
+                android:id="@+id/textMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Text Message Icon -->
+                <ImageView
+                    android:id="@+id/textMessageIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/message_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Text Message Title -->
+                <TextView
+                    android:id="@+id/textMessageTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/textMessageIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/textMessageDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_text_messages_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Text Message Description -->
+                <TextView
+                    android:id="@+id/textMessageDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/textMessageIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_text_messages_description"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Text Message Labeled Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/textMessageSwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    android:layout_below="@id/textMessageDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite"/>
+
+            </RelativeLayout>
+            <!-- End Text Message -->
+
+            <!-- Start Storage -->
+            <RelativeLayout
+                android:id="@+id/storage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Storage Icon -->
+                <ImageView
+                    android:id="@+id/storageIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/storage_white_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Storage Title -->
+                <TextView
+                    android:id="@+id/storageTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/storageIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/storageDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_storage_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Storage Description -->
+                <TextView
+                    android:id="@+id/storageDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/storageIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/third_page_storage_description"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Storage Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/storageSwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    android:layout_below="@id/storageDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite"/>
+
+            </RelativeLayout>
+            <!-- End Storage -->
+
+            <!-- Start Device statistics -->
+            <RelativeLayout
+                android:id="@+id/deviceStatistics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Device statistics Icon -->
+                <ImageView
+                    android:id="@+id/deviceStatisticsIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/robot_solid"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Device statistics Title -->
+                <TextView
+                    android:id="@+id/deviceStatisticsTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/deviceStatisticsIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/deviceStatisticsDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/fifth_page_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Device statistics Description -->
+                <TextView
+                    android:id="@+id/deviceStatisticsDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/deviceStatisticsIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/fifth_page_description"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Device Statistics Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/deviceStatisticsSwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    android:layout_below="@id/deviceStatisticsDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite"/>
+
+            </RelativeLayout>
+            <!-- End Device statistics -->
+
+
+            <!-- Start Admin Access -->
+            <RelativeLayout
+                android:id="@+id/adminAccess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Admin Access Icon -->
+                <ImageView
+                    android:id="@+id/adminAccessIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/admin_access_icon_white"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Admin Access Title -->
+                <TextView
+                    android:id="@+id/adminAccessTitle"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/adminAccessIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/adminAccessDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/sixth_page_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Admin Access Description -->
+                <TextView
+                    android:id="@+id/adminAccessDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/adminAccessIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/sixth_page_description"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Admin Access Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/adminAccessSwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    android:layout_below="@id/adminAccessDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite"/>
+
+            </RelativeLayout>
+            <!-- End Administration -->
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</RelativeLayout>
+
+

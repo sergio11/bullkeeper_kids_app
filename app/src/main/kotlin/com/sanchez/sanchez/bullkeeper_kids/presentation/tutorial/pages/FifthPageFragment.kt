@@ -122,9 +122,9 @@ class FifthPageFragment: SupportPageFragment<AppTutorialComponent>() {
      */
     override fun initializeInjector(): AppTutorialComponent? {
         val appTutorialComponent = AppTutorialComponent::class.java
-                .cast((activity as HasComponent<AppTutorialComponent>)
+                .cast((activity as HasComponent<*>)
                         .component)
-        appTutorialComponent.inject(this)
+        appTutorialComponent?.inject(this)
         return appTutorialComponent
     }
 

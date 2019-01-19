@@ -1187,7 +1187,15 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun terminalScreenStatusChangedHandler(event: TerminalScreenStatusChangedDTO) {
         Timber.d("SSE: Terminal Screen status Changed Handler")
-        event.enabled?.let { preferenceRepository.setLockScreenEnabled(it) }
+        event.enabled?.let { preferenceRepository.setScreenEnabled(it) }
+    }
+
+    /**
+     * Terminal Settings Status Changed Handler
+     */
+    private fun terminalSettingsStatusChangedHandler(event: TerminalSettingsStatusChangedDTO) {
+        Timber.d("SSE: Terminal Settings status Changed Handler")
+        event.enabled?.let { preferenceRepository.setSettingsEnabled(it) }
     }
 
     /**
@@ -1510,6 +1518,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             terminalScreenStatusChangedHandler(
                                     objectMapper.readValue(eventMessage,
                                             TerminalScreenStatusChangedDTO::class.java))
+                        // Terminal Settings Status Changed
+                        ServerEventTypeEnum.TERMINAL_SETTINGS_STATUS_CHANGED ->
+                            terminalSettingsStatusChangedHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            TerminalSettingsStatusChangedDTO::class.java))
                         // App Disabled Status Changed
                         ServerEventTypeEnum.APP_DISABLED_STATUS_CHANGED ->
                             appDisabledStatusChangedHandler(

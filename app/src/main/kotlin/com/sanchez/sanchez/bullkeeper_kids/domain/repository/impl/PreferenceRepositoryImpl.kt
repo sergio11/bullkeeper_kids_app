@@ -12,7 +12,6 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(context: Context): IPreferenceRepository {
 
-
     /**
      * Preferences
      */
@@ -56,7 +55,7 @@ class PreferenceRepositoryImpl
      */
     override fun getPrefCurrentUserIdentity(): String {
         return mPref.getString(IPreferenceRepository.PREF_CURRENT_USER_IDENTITY,
-                IPreferenceRepository.CURRENT_USER_IDENTITY_DEFAULT_VALUE)
+                IPreferenceRepository.CURRENT_USER_IDENTITY_DEFAULT_VALUE)!!
     }
 
     /**
@@ -72,7 +71,7 @@ class PreferenceRepositoryImpl
      */
     override fun getPrefDeviceId(): String {
         return mPref.getString(IPreferenceRepository.PREF_DEVICE_ID,
-                IPreferenceRepository.CURRENT_DEVICE_ID_DEFAULT_VALUE)
+                IPreferenceRepository.CURRENT_DEVICE_ID_DEFAULT_VALUE)!!
     }
 
     /**
@@ -87,7 +86,7 @@ class PreferenceRepositoryImpl
      */
     override fun getPrefTerminalIdentity(): String {
         return mPref.getString(IPreferenceRepository.PREF_TERMINAL_IDENTITY,
-                IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)
+                IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)!!
     }
 
     /**
@@ -102,7 +101,7 @@ class PreferenceRepositoryImpl
      */
     override fun getPrefKidIdentity(): String {
         return mPref.getString(IPreferenceRepository.PREF_KID_IDENTITY,
-                IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE)
+                IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE)!!
     }
 
     /**
@@ -117,7 +116,7 @@ class PreferenceRepositoryImpl
      */
     override fun getCurrentLatitude(): String {
         return mPref.getString(IPreferenceRepository.PREF_CURRENT_LATITUDE,
-                IPreferenceRepository.CURRENT_LATITUDE_DEFAULT_VALUE)
+                IPreferenceRepository.CURRENT_LATITUDE_DEFAULT_VALUE)!!
     }
 
     /**
@@ -132,7 +131,7 @@ class PreferenceRepositoryImpl
      */
     override fun getCurrentLongitude(): String {
         return mPref.getString(IPreferenceRepository.PREF_CURRENT_LONGITUDE,
-                IPreferenceRepository.CURRENT_LONGITUDE_DEFAULT_VALUE)
+                IPreferenceRepository.CURRENT_LONGITUDE_DEFAULT_VALUE)!!
     }
 
     /**
@@ -161,16 +160,16 @@ class PreferenceRepositoryImpl
     /**
      * Is Lock Screen Enabled
      */
-    override fun isLockScreenEnabled(): Boolean {
-        return mPref.getBoolean(IPreferenceRepository.PREF_LOCK_SCREEN,
-                IPreferenceRepository.LOCK_SCREEN_DEFAULT_VALUE)
+    override fun isScreenEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_SCREEN_ENABLED,
+                IPreferenceRepository.SCREEN_ENABLED_DEFAULT_VALUE)
     }
 
     /**
      * Set Lock Screen Enabled
      */
-    override fun setLockScreenEnabled(isEnabled: Boolean) {
-        mPref.edit().putBoolean(IPreferenceRepository.PREF_LOCK_SCREEN,
+    override fun setScreenEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_SCREEN_ENABLED,
                 isEnabled).apply()
     }
 
@@ -178,15 +177,15 @@ class PreferenceRepositoryImpl
      * Is Camera Enabled
      */
     override fun isCameraEnabled(): Boolean {
-        return mPref.getBoolean(IPreferenceRepository.PREF_CAMERA_SCREEN,
-                IPreferenceRepository.LOCK_CAMERA_DEFAULT_VALUE)
+        return mPref.getBoolean(IPreferenceRepository.PREF_CAMERA_ENABLED,
+                IPreferenceRepository.CAMERA_ENABLED_DEFAULT_VALUE)
     }
 
     /**
      * Set Camera Enabled
      */
     override fun setCameraEnabled(isEnabled: Boolean) {
-        mPref.edit().putBoolean(IPreferenceRepository.PREF_CAMERA_SCREEN,
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_CAMERA_ENABLED,
                 isEnabled).apply()
     }
 
@@ -195,7 +194,7 @@ class PreferenceRepositoryImpl
      */
     override fun getSosRequestExpiredAt(): String {
         return mPref.getString(IPreferenceRepository.PREF_SOS_REQUEST_EXPIRED_AT,
-                IPreferenceRepository.SOS_REQUEST_EXPIRED_AT_DEFAULT_VALUE)
+                IPreferenceRepository.SOS_REQUEST_EXPIRED_AT_DEFAULT_VALUE)!!
     }
 
     /**
@@ -210,7 +209,7 @@ class PreferenceRepositoryImpl
      */
     override fun getPickMeUpRequestExpiredAt(): String {
         return mPref.getString(IPreferenceRepository.PREF_PICKME_UP_EXPIRED_AT,
-                IPreferenceRepository.PICKME_UP_EXPIRED_AT_DEFAULT_VALUE)
+                IPreferenceRepository.PICKME_UP_EXPIRED_AT_DEFAULT_VALUE)!!
     }
 
     /**
@@ -273,7 +272,7 @@ class PreferenceRepositoryImpl
      */
     override fun getCurrentFunTimeDayScheduled(): String {
         return mPref.getString(IPreferenceRepository.PREF_CURRENT_FUN_TIME_DAY_SCHEDULED,
-                IPreferenceRepository.CURRENT_FUN_TIME_DAY_SCHEDULED_VALUE)
+                IPreferenceRepository.CURRENT_FUN_TIME_DAY_SCHEDULED_VALUE)!!
     }
 
     /**
@@ -282,6 +281,22 @@ class PreferenceRepositoryImpl
     override fun setCurrentFunTimeDayScheduled(dayScheduled: String) {
         mPref.edit().putString(IPreferenceRepository.PREF_CURRENT_FUN_TIME_DAY_SCHEDULED,
                 dayScheduled).apply()
+    }
+
+    /**
+     * Is Settings Enabled
+     */
+    override fun isSettingsEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_SETTINGS_ENABLED,
+                IPreferenceRepository.SETTINGS_ENABLED_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Settings Enabled
+     */
+    override fun setSettingsEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_SETTINGS_ENABLED,
+                isEnabled).apply()
     }
 
 }
