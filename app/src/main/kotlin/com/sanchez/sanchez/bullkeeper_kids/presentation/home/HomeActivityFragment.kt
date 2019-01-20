@@ -91,8 +91,16 @@ class HomeActivityFragment : BaseFragment() {
             activityHandler.showBedTime()
         }
 
-        showFunTimeStatus()
 
+    }
+
+    /**
+     * On Resume
+     */
+    override fun onResume() {
+        super.onResume()
+
+        showFunTimeStatus()
     }
 
     /**
@@ -128,8 +136,7 @@ class HomeActivityFragment : BaseFragment() {
                         funTimeIcon.setImageResource(R.drawable.smile_white_solid)
                         funTimeDescription.text = getString(R.string.fun_time_avaliable_description)
 
-                        val remainingFunTimePercentage = ( remainingFunTime / (dayScheduled.totalHours*60*60)
-                                * 100).toFloat()
+                        val remainingFunTimePercentage = 1.0f *  remainingFunTime / (dayScheduled.totalHours*60*60) * 100
 
                         funTimeProgress.setValue(remainingFunTimePercentage)
 

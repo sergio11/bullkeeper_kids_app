@@ -63,7 +63,7 @@ class FunTimeDayScheduledRepositoryImpl: SupportRepositoryImpl<FunTimeDaySchedul
      */
     override fun getFunTimeDayScheduledForDay(dayName: String): FunTimeDayScheduledEntity? {
         Preconditions.checkNotNull(dayName, "Day Name can not be null")
-        Preconditions.checkState(dayName.isEmpty(), "Day Name can not be empty")
+        Preconditions.checkState(!dayName.isEmpty(), "Day Name can not be empty")
         Timber.d("Fun Time by day name $dayName")
         val realm = Realm.getDefaultInstance()
         val realmResult = realm.where(FunTimeDayScheduledEntity::class.java)

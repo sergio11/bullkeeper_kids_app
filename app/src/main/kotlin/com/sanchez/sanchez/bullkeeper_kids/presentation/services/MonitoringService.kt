@@ -339,6 +339,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     // Current App Locked
     private var currentAppLocked: String? = null
 
+    // Current Lock Type
+    private var currentLockType: AppLockScreenActivity.Companion.LockTypeEnum? = null
+
     // Current Disabled App
     private var currentDisabledApp: String? = null
 
@@ -548,9 +551,14 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun lockCurrentApp(currentAppForeground: String,
                                appInstalled: AppInstalledEntity,
                                appLockType: AppLockScreenActivity.Companion.LockTypeEnum) {
-        Timber.d("CFAT: Lock Current Foreground app: %s", currentAppForeground)
-        if(currentAppLocked.isNullOrEmpty() || currentAppForeground == appInstalled.packageName) {
+
+        if(currentAppLocked.isNullOrEmpty()
+                || currentAppForeground == appInstalled.packageName
+                || currentLockType != null && !currentLockType?.equals(appLockType)!!) {
+            Timber.d("CFAT: Lock Current Foreground app: %s with lock %s", currentAppForeground,
+                    appLockType.name)
             currentAppLocked = appInstalled.packageName
+            currentLockType = appLockType
             navigator.showLockScreen(this, appLockType, appInstalled.packageName,
                     appInstalled.appName, appInstalled.icon, appInstalled.appRule)
         }
@@ -631,7 +639,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             lockCurrentApp(currentAppForeground, appInstalled,
                                     AppLockScreenActivity.Companion.LockTypeEnum.FUN_TIME_UNAVAILABLE)
                         } else {
-                            //
+
+                            sendUnLockAppAction()
+
                             preferenceRepository.setRemainingFunTime(remainingFunTimeSaved -
                                     (CHECK_FOREGROUND_APP_INTERVAL / 1000))
                         }

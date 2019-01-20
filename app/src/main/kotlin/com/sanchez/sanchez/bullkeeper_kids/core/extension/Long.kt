@@ -28,6 +28,6 @@ fun Long.ToHoursMinutesSecondsFormat(): String {
     val hours = this / 3600
     val minutes = (this % 3600) / 60
     val seconds = this % 60
-    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    return String.format("%02dH:%02dM:%02dS", hours, minutes, seconds)
 }
 
