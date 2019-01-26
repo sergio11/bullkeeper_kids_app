@@ -16,4 +16,9 @@ interface IGeofenceRepository: ISupportRepository<GeofenceEntity> {
      * Delete By Id
      */
     fun deleteById(ids: List<String>)
+
+    /**
+     * Find By Ids
+     */
+    fun findByIds(ids: List<String>): List<GeofenceEntity>
 }

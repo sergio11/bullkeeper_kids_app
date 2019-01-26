@@ -12,7 +12,7 @@ interface ISoundManager {
      * Sound Resources
      */
     companion object {
-        val APP_BLOCKED_SOUND: Int
+        val BLOCKED_SOUND: Int
             get() = R.raw.app_blocked
         val SOS_ALARM_SOUND: Int
             get() = R.raw.sos_alarm

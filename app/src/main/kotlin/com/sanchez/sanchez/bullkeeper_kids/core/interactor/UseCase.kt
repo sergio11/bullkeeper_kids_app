@@ -24,7 +24,7 @@ abstract class UseCase<out Type, in Params> constructor(private val retrofit: Re
      * Run
      */
     suspend fun run(params: Params): Either<Failure, Type> {
-        Preconditions.checkNotNull(params, "SocialToken can not be null")
+        Preconditions.checkNotNull(params, "Params can not be null")
         return try {
             val result = onExecuted(params)
             Either.Right(result)

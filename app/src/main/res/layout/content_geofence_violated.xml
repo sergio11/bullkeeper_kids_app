@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="100dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_geofence_violated">
+
+
+    <ImageView
+        android:id="@+id/geofenceImage"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_margin="@dimen/common_margin"
+        android:layout_marginBottom="95dp"
+        android:src="@drawable/geofence_icon_white"
+        android:contentDescription="@string/content_not_be_loaded"
+        app:layout_constraintBottom_toTopOf="@+id/geofenceName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/geofenceName"
+        style="@style/CommonStrongText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_margin"
+        android:gravity="center"
+        android:padding="@dimen/common_padding"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintBottom_toTopOf="@id/geofenceDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/geofenceImage" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/geofenceDescription"
+        style="@style/CommonStrongText.Big"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_margin"
+        android:gravity="center"
+        android:padding="@dimen/common_padding"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintBottom_toTopOf="@id/close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/geofenceName" />
+
+
+    <Button
+        android:id="@+id/close"
+        style="@style/CommonActionButton"
+        android:layout_width="@dimen/common_action_button_width"
+        android:layout_height="@dimen/common_action_button_height"
+        android:layout_margin="@dimen/common_margin"
+        android:text="@string/geofence_close"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/geofenceDescription" />
+
+
+</android.support.constraint.ConstraintLayout>

@@ -10,7 +10,6 @@ import timber.log.Timber
  */
 class GeofenceRepositoryImpl: SupportRepositoryImpl<GeofenceEntity>(), IGeofenceRepository {
 
-
     /**
      * Find By Id
      */
@@ -40,6 +39,20 @@ class GeofenceRepositoryImpl: SupportRepositoryImpl<GeofenceEntity>(), IGeofence
             geofenceToDelete?.deleteFromRealm()
         }
         realm.close()
+    }
+
+    /**
+     * Find By Ids
+     */
+    override fun findByIds(ids: List<String>): List<GeofenceEntity> {
+        val realm = Realm.getDefaultInstance()
+        // Find Geofence
+        val geofencesList = realm.copyFromRealm(
+                realm.where(GeofenceEntity::class.java)
+                    .`in`("identity", ids.toTypedArray())
+                    .findAll())
+        realm.close()
+        return geofencesList
     }
 
     /**

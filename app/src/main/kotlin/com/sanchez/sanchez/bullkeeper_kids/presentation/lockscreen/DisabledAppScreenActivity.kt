@@ -139,7 +139,7 @@ class DisabledAppScreenActivity : AppCompatActivity() {
         super.onResume()
         if(appDisabledStreamId != -1)
             soundManager.stopSound(appDisabledStreamId)
-        appDisabledStreamId = soundManager.playSound(ISoundManager.APP_BLOCKED_SOUND, true)
+        appDisabledStreamId = soundManager.playSound(ISoundManager.BLOCKED_SOUND, true)
     }
 
     /**

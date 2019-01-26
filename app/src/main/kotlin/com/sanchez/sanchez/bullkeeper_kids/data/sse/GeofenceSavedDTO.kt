@@ -10,6 +10,7 @@ import java.util.*
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class GeofenceSavedDTO(
 
+
         /**
          * Identity
          */
@@ -23,19 +24,13 @@ data class GeofenceSavedDTO(
         var name: String,
 
         /**
-         * address
-         */
-        @JsonProperty("address")
-        var address: String,
-
-        /**
          * Latitude
          */
         @JsonProperty("lat")
         var lat: Double,
 
         /**
-         * Log
+         * Longitude
          */
         @JsonProperty("log")
         var log: Double,
@@ -56,23 +51,5 @@ data class GeofenceSavedDTO(
          * Kid
          */
         @JsonProperty("kid")
-        var kid: String,
-
-        /**
-         * Expiration Duration
-         */
-        @JsonProperty("expiration_duration")
-        var expirationDuration: Long,
-
-        /**
-         * Create At
-         */
-        @JsonProperty("create_at")
-        var createAt: Date,
-
-        /**
-         * Update At
-         */
-        @JsonProperty("update_at")
-        var updateAt: Date
+        var kid: String
 )

@@ -9,6 +9,7 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Tasks
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.GeofenceEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.GeofenceTransitionService
 import com.sanchez.sanchez.bullkeeper_kids.services.IDeviceGeofenceService
@@ -57,7 +58,7 @@ class DeviceGeofenceServiceImpl
         geoBuilder.setRequestId(geofenceEntity.identity)
         geoBuilder.setCircularRegion(geofenceEntity.lat!!,
                 geofenceEntity.log!!, geofenceEntity.radius!!)
-        geoBuilder.setExpirationDuration(geofenceEntity.expirationDuration!!)
+        geoBuilder.setExpirationDuration(-1)
         geoBuilder.setTransitionTypes(when(geofenceEntity.transitionType) {
             "GEOFENCE_TRANSITION_ENTER" -> Geofence.GEOFENCE_TRANSITION_ENTER
             "GEOFENCE_TRANSITION_EXIT" -> Geofence.GEOFENCE_TRANSITION_EXIT
@@ -72,8 +73,10 @@ class DeviceGeofenceServiceImpl
         reqBuilder.addGeofence(geoBuilder.build())
 
         // Add Geofences
-        getGeofencingClient().addGeofences(reqBuilder.build(),
-                geofenceEventHandlerPi).result
+        val task  = getGeofencingClient().addGeofences(reqBuilder.build(),
+                geofenceEventHandlerPi)
+
+        Tasks.await(task)
     }
 
     /**

@@ -101,6 +101,11 @@
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
 
+        <!-- Geofence Violated Activity -->
+        <activity android:name=".presentation.lockscreen.GeofenceViolatedActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
 
         <!-- Awaken Monitoring Service -->
         <receiver

@@ -4,8 +4,9 @@ import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IGeofencesService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.GeofenceRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.DeleteAllGeofenceInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.RemoveGeofenceInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.DeleteGeofenceInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SyncGeofencesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.IDeviceGeofenceService
@@ -76,15 +77,28 @@ class GeofencesModule {
             geofenceRepository, retrofit)
 
     /**
-     * Provide Remove Geofence Interact
+     * Provide Delete Geofence Interact
      */
     @Provides
     @Singleton
-    fun provideRemoveGeofenceInteract(
+    fun provideDeleteGeofenceInteract(
             deviceGeofenceService: IDeviceGeofenceService,
             geofenceRepository: IGeofenceRepository,
             retrofit: Retrofit
-    ): RemoveGeofenceInteract
-        = RemoveGeofenceInteract(deviceGeofenceService,
+    ): DeleteGeofenceInteract
+        = DeleteGeofenceInteract(deviceGeofenceService,
+            geofenceRepository, retrofit)
+
+    /**
+     * Provide Delete All Geofence Interact
+     */
+    @Provides
+    @Singleton
+    fun provideDeleteAllGeofenceInteract(
+            deviceGeofenceService: IDeviceGeofenceService,
+            geofenceRepository: IGeofenceRepository,
+            retrofit: Retrofit
+    ): DeleteAllGeofenceInteract
+            = DeleteAllGeofenceInteract(deviceGeofenceService,
             geofenceRepository, retrofit)
 }

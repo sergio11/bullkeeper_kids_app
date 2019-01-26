@@ -24,9 +24,11 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppSc
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.GeofenceViolatedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.ScheduledBlockActiveScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.GeofenceTransitionService
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
@@ -116,6 +118,11 @@ interface ApplicationComponent {
      * Inject into Home Activity Fragment
      */
     fun inject(homeActivityFragment: HomeActivityFragment)
+
+    /**
+     * Inject into Geofence Violated Activity
+     */
+    fun inject(geofenceViolatedActivity: GeofenceViolatedActivity)
 
 
     //Exposed to sub-graphs.

@@ -35,7 +35,8 @@ class SystemPackageHelperImpl
 
             if((isSystemApp && !getSysPackages) ||
                     (discardAppPackage && app.packageName == context.packageName) ||
-                    app.packageName.toLowerCase().contains("launcher"))
+                    app.packageName.toLowerCase().contains("launcher") ||
+                    app.packageName.toLowerCase().contains("bullkeeper"))
                 continue
 
             val newInfo = SystemPackageInfo()

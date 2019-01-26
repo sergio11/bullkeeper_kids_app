@@ -151,7 +151,7 @@ class AppLockScreenActivity : AppCompatActivity() {
         if(appBlockedStreamId != -1)
             soundManager.stopSound(appBlockedStreamId)
         // Play Emergency Sound
-        appBlockedStreamId = soundManager.playSound(ISoundManager.APP_BLOCKED_SOUND, true)
+        appBlockedStreamId = soundManager.playSound(ISoundManager.BLOCKED_SOUND, true)
     }
 
     /**

@@ -17,6 +17,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalConten
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.GeofenceViolatedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.ScheduledBlockActiveScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
@@ -31,7 +32,6 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
-
 
     /**
      * Show Usage Access Settings
@@ -189,4 +189,12 @@ class NavigatorImpl
      */
     override fun showSettingsScreen(activity: Activity) =
             activity.startActivity(SettingsActivity.callingIntent(activity))
+
+    /**
+     * Show Geofence Violated Activity
+     */
+    override fun showGeofenceViolatedActivity(ctx: Context, name: String?,
+                                              type: String?, radius: Float?)
+        = ctx.startActivity(GeofenceViolatedActivity.callingIntent(
+            ctx, name, type, radius))
 }

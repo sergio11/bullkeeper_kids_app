@@ -4,16 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * Geofence Deleted DTO
+ * All Geofence Deleted DTO
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class GeofenceDeletedDTO(
-
-        /**
-         * Identity
-         */
-        @JsonProperty("identity")
-        var identity: String,
+data class AllGeofenceDeletedDTO(
 
         /**
          * Kid

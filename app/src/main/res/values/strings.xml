@@ -254,5 +254,9 @@
     <!-- Settings -->
     <string name="settings_toolbar_title">Settings</string>
 
-
+    <!-- Geofence -->
+    <string name="geofence_violated_title_default">Geofence Violated</string>
+    <string name="geofence_transition_exit_description">You can not leave this area, an alert will be registered.</string>
+    <string name="geofence_transition_enter_description">You can not enter this area, an alert will be generated.</string>
+    <string name="geofence_close">Close</string>
 </resources>

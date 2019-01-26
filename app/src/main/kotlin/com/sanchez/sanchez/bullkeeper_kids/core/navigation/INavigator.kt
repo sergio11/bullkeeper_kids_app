@@ -112,4 +112,9 @@ interface INavigator {
      */
     fun showSettingsScreen(activity: Activity)
 
+    /**
+     * Show Geofence Violated Activity
+     */
+    fun showGeofenceViolatedActivity(ctx: Context, name: String?, type: String?, radius: Float?)
+
 }

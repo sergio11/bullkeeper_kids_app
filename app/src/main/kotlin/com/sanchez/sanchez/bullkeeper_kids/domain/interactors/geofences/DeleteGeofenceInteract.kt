@@ -8,14 +8,14 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 /**
- * Remove Geofence Interact
+ * Delete Geofence Interact
  */
-class RemoveGeofenceInteract
+class DeleteGeofenceInteract
     @Inject constructor(
             private val deviceGeofenceService: IDeviceGeofenceService,
             private val geofenceRepository: IGeofenceRepository,
             retrofit: Retrofit
-            ): UseCase<Unit, RemoveGeofenceInteract.Params>(retrofit) {
+            ): UseCase<Unit, DeleteGeofenceInteract.Params>(retrofit) {
 
     /**
      *

@@ -6,7 +6,6 @@ import com.sanchez.sanchez.bullkeeper_kids.data.entity.GeofenceEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.IDeviceGeofenceService
 import retrofit2.Retrofit
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -30,26 +29,20 @@ class SaveGeofenceInteract
         if(geofenceSaved != null) {
 
             geofenceSaved.name = params.name
-            geofenceSaved.address = params.address
             geofenceSaved.lat = params.lat
             geofenceSaved.log = params.log
             geofenceSaved.radius = params.radius
-            geofenceSaved.expirationDuration = params.expirationDuration
             geofenceSaved.transitionType = params.transitionType
             geofenceSaved.kid = params.kid
-            geofenceSaved.createAt = params.createAt
-            geofenceSaved.updateAt = params.updateAt
 
         } else {
 
             geofenceSaved = GeofenceEntity(
-                    params.identity, params.name, params.address,
-                    params.lat, params.log, params.radius,
-                    params.expirationDuration, params.transitionType,
-                    params.kid, params.createAt, params.updateAt
+                    params.identity, params.name,
+                    params.lat, params.log, params.radius, params.transitionType,
+                    params.kid
             )
         }
-
 
         // Save Geofence
         geofenceRepository.save(geofenceSaved)
@@ -66,23 +59,15 @@ class SaveGeofenceInteract
             var identity: String,
             // Name
             var name: String,
-            // Address
-            var address: String,
             // Latitude
             var lat: Double,
             // Longitude
             var log: Double,
             // Radius
             var radius: Float,
-            // Expiration Duration
-            var expirationDuration: Long,
             // Transition Type
             var transitionType: String,
             // Kid
-            var kid: String,
-            // Create at
-            var createAt: Date,
-            // Update At
-            var updateAt: Date
+            var kid: String
     )
 }

@@ -11,22 +11,20 @@ import android.content.IntentFilter
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.content_lock_screen.*
-import java.util.*
 import javax.inject.Inject
 import android.app.Activity
 import android.app.ActivityManager
 import android.view.WindowManager
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
-import kotlinx.android.synthetic.main.content_scheduled_block_active_screen.view.*
+import kotlinx.android.synthetic.main.content_geofence_violated.*
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 /**
- * Scheduled Block Active Screen
+ * Geofence Violated Screen
  */
-class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
+class GeofenceViolatedActivity : AppCompatActivity() {
 
     /**
      * App Component
@@ -41,28 +39,23 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
          * Args
          */
         const val NAME_ARG = "NAME_ARG"
-        const val IMAGE_ARG = "IMAGE_ARG"
-        const val START_AT_ARG = "START_AT_ARG"
-        const val END_AT_ARG = "END_AT_ARG"
-        const val DESCRIPTION_ARG = "DESCRIPTION_ARG"
+        const val TYPE_ARG = "TYPE_ARG"
+        const val RADIUS_ARG = "RADIUS_ARG"
 
         /**
          * Event
          */
-        const val UNLOCK_APP_ACTION = "com.sanchez.sergio.unlock.app"
+        const val UNLOCK_GEOFENCE_LOCK = "com.sanchez.sergio.unlock.geofence"
 
         /**
          * Calling Intent
          */
-        fun callingIntent(context: Context, name: String?, image: String?, startAt: String?,
-                          endAt: String?, description: String?): Intent {
-            val intent = Intent(context, ScheduledBlockActiveScreenActivity::class.java)
+        fun callingIntent(context: Context, name: String?, type: String?, radius: Float?): Intent {
+            val intent = Intent(context, GeofenceViolatedActivity::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra(NAME_ARG, name)
-            intent.putExtra(IMAGE_ARG, image)
-            intent.putExtra(START_AT_ARG, startAt)
-            intent.putExtra(END_AT_ARG, endAt)
-            intent.putExtra(DESCRIPTION_ARG, description)
+            intent.putExtra(TYPE_ARG, type)
+            intent.putExtra(RADIUS_ARG, radius)
             return intent
         }
     }
@@ -87,9 +80,9 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
     internal lateinit var navigator: INavigator
 
     /**
-     * App Blocked Stream Id
+     * Geofence Stream Id
      */
-    private var appBlockedStreamId = -1
+    private var geofenceStreamId = -1
 
 
     /**
@@ -98,7 +91,7 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
     private var mLocalBroadcastManager: LocalBroadcastManager? = null
     private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == UNLOCK_APP_ACTION) {
+            if (intent.action == UNLOCK_GEOFENCE_LOCK) {
                 finish()
             }
         }
@@ -109,15 +102,14 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scheduled_block_active_screen)
+        setContentView(R.layout.activity_geofence_violated)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         appComponent.inject(this)
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this)
         val mIntentFilter = IntentFilter()
-        mIntentFilter.addAction(UNLOCK_APP_ACTION)
+        mIntentFilter.addAction(UNLOCK_GEOFENCE_LOCK)
         mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
-        Timber.d("LOCK: On Create Called")
-        showAppBlockedDetail(intent)
+        showGeofenceDetail(intent)
 
     }
 
@@ -127,7 +119,7 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Timber.d("LOCK: On New Intent called")
-        intent?.let { showAppBlockedDetail(it) }
+        intent?.let { showGeofenceDetail(it) }
     }
 
     /**
@@ -135,10 +127,11 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
      */
     override fun onResume() {
         super.onResume()
-        if(appBlockedStreamId != -1)
-            soundManager.stopSound(appBlockedStreamId)
-        // Play Emergency Sound
-        appBlockedStreamId = soundManager.playSound(ISoundManager.BLOCKED_SOUND, true)
+        if(geofenceStreamId != -1)
+            soundManager.stopSound(geofenceStreamId)
+        // Blocked Sound
+        geofenceStreamId = soundManager.playSound(
+                ISoundManager.BLOCKED_SOUND, true)
     }
 
     /**
@@ -146,34 +139,31 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
      */
     override fun onStop() {
         super.onStop()
-        soundManager.stopSound(appBlockedStreamId)
+        soundManager.stopSound(geofenceStreamId)
     }
 
     /**
-     * Show App Blocked Detail
+     * Show Geofence Detail
      */
-    private fun showAppBlockedDetail(intent: Intent){
+    private fun showGeofenceDetail(intent: Intent){
 
         // Get Args
         val name = intent.getStringExtra(NAME_ARG)
-        val image = intent.getStringExtra(IMAGE_ARG)
-        val startAt = intent.getStringExtra(START_AT_ARG)
-        val endAt = intent.getStringExtra(END_AT_ARG)
-        val description = intent.getStringExtra(DESCRIPTION_ARG)
+        val type = intent.getStringExtra(TYPE_ARG)
+        val radius = intent.getDoubleExtra(RADIUS_ARG, 0.0)
 
-        contentText.name.text = name
-        contentText.description.text = description
-        contentText.time.text = String.format("%s - %s", Locale.getDefault(),
-                startAt, endAt)
 
-        // Close App Handler
-        closeApp.setOnClickListener {
-            val am = getSystemService(Activity.ACTIVITY_SERVICE)
-                    as ActivityManager
-            am.killBackgroundProcesses(packageName)
-            navigator.showHome(this)
+        geofenceName.text = if(!name.isNullOrEmpty()) name else
+            getString(R.string.geofence_violated_title_default)
+        geofenceDescription.text = when(type) {
+            "TRANSITION_ENTER" -> getString(R.string.geofence_transition_enter_description)
+            "TRANSITION_EXIT" -> getString(R.string.geofence_transition_exit_description)
+            else -> getString(R.string.geofence_transition_exit_description)
         }
 
+        close.setOnClickListener {
+            navigator.showHome(this)
+        }
     }
 
     /**

@@ -48,8 +48,9 @@ import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.funtime.SyncFunTimeInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.DeleteAllGeofenceInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.RemoveGeofenceInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.DeleteGeofenceInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SyncGeofencesInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.SaveCurrentLocationInteract
@@ -286,10 +287,16 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     internal lateinit var saveGeofenceInteract: SaveGeofenceInteract
 
     /**
-     * Remove Geofence Interact
+     * Delete Geofence Interact
      */
     @Inject
-    internal lateinit var removeGeofenceInteract: RemoveGeofenceInteract
+    internal lateinit var deleteGeofenceInteract: DeleteGeofenceInteract
+
+    /**
+     * Delete All Geofence Interact
+     */
+    @Inject
+    internal lateinit var deleteAllGeofenceInteract: DeleteAllGeofenceInteract
 
     /**
      * Sync Fun Time Interact
@@ -901,6 +908,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Save Current Location
      */
     private fun saveCurrentLocation(location: Location) {
+        Timber.d("LOC: New Location: %f - %f", location.latitude,
+                location.longitude)
         saveCurrentLocationInteract(SaveCurrentLocationInteract.Params(
                 latitude = location.latitude,
                 longitude = location.longitude
@@ -1228,11 +1237,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         Timber.d("SSE: Geofence Saved Event")
         saveGeofenceInteract(SaveGeofenceInteract.Params(
                 geofenceSavedDTO.identity, geofenceSavedDTO.name,
-                geofenceSavedDTO.address, geofenceSavedDTO.lat,
-                geofenceSavedDTO.log, geofenceSavedDTO.radius,
-                geofenceSavedDTO.expirationDuration, geofenceSavedDTO.type,
-                geofenceSavedDTO.kid, geofenceSavedDTO.createAt,
-                geofenceSavedDTO.updateAt
+                geofenceSavedDTO.lat, geofenceSavedDTO.log,
+                geofenceSavedDTO.radius, geofenceSavedDTO.type,
+                geofenceSavedDTO.kid
         )){
             it.either(fun(_: Failure){
                 Timber.d("Save Geofence Failed")
@@ -1247,7 +1254,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun geofenceDeletedEventHandler(geofenceDeletedDTO: GeofenceDeletedDTO) {
         Timber.d("SSE: Geofence Deleted Event")
-        removeGeofenceInteract(RemoveGeofenceInteract.Params(
+        deleteGeofenceInteract(DeleteGeofenceInteract.Params(
                 arrayListOf(geofenceDeletedDTO.identity))){
             it.either(fun(_: Failure){
                 Timber.d("Delete Geofence Failed")
@@ -1255,6 +1262,37 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 Timber.d("Delete Geofence Success")
             })
         }
+    }
+
+    /**
+     * Geofences Deleted Event Handler
+     */
+    private fun geofencesDeletedEventHandler(geofencesDeletedDTO: GeofencesDeletedDTO) {
+        Timber.d("SSE: Geofence Deleted Event")
+        deleteGeofenceInteract(DeleteGeofenceInteract.Params(
+                geofencesDeletedDTO.ids
+        )){
+            it.either(fun(_: Failure){
+                Timber.d("Geofences Deleted Failed")
+            }, fun(_: Unit) {
+                Timber.d("Geofences Deleted Success")
+            })
+        }
+    }
+
+    /**
+     * All Geofence Deleted Event Handler
+     */
+    private fun allGeofenceDeletedEventHandler(allGeofenceDeletedDTO: AllGeofenceDeletedDTO) {
+        Timber.d("SSE: All Geofence Deleted Event")
+        deleteAllGeofenceInteract(UseCase.None()){
+            it.either(fun(_: Failure){
+                Timber.d("All Geofences Deleted Failed")
+            }, fun(_: Unit) {
+                Timber.d("All Geofences Deleted Success")
+            })
+        }
+
     }
 
     /**
@@ -1542,7 +1580,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                     objectMapper.readValue(eventMessage,
                                             AppDisabledStatusChangedDTO::class.java))
                         // Geofence Save Event
-                        ServerEventTypeEnum.GEOFENCE_SAVED_EVENT -> {
+                        ServerEventTypeEnum.GEOFENCE_ADDED_EVENT -> {
                             geofenceSavedEventHandler(
                                     objectMapper.readValue(eventMessage,
                                             GeofenceSavedDTO::class.java))
@@ -1552,6 +1590,20 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             geofenceDeletedEventHandler(
                                     objectMapper.readValue(eventMessage,
                                             GeofenceDeletedDTO::class.java))
+                        }
+                        // Geofence Deleted Event
+                        ServerEventTypeEnum.GEOFENCES_DELETED_EVENT -> {
+                            geofencesDeletedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            GeofencesDeletedDTO::class.java)
+                            )
+                        }
+                        // All Geofence Deleted Event
+                        ServerEventTypeEnum.ALL_GEOFENCE_DELETED_EVENT -> {
+                            allGeofenceDeletedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            AllGeofenceDeletedDTO::class.java)
+                            )
                         }
                         // Fun Time Updated Event
                         ServerEventTypeEnum.FUN_TIME_UPDATED_EVENT -> {

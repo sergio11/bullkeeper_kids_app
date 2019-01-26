@@ -48,6 +48,17 @@ class AndroidApplication : Application(){
     }
 
     /**
+     * Geofence Component
+     */
+    val geofenceComponent: GeofenceComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerGeofenceComponent
+                .builder()
+                .applicationModule(ApplicationModule(this))
+                .globalServiceModule(GlobalServiceModule(this))
+                .build()
+    }
+
+    /**
      * Service Component
      */
     val callReceiverComponent: CallReceiverComponent by lazy(mode = LazyThreadSafetyMode.NONE) {

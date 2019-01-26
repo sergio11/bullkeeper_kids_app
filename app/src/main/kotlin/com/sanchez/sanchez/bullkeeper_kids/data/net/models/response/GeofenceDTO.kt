@@ -59,10 +59,10 @@ data class GeofenceDTO(
         var kid: String? = null,
 
         /**
-         * Expiration Duration
+         * Is Enabled
          */
-        @JsonProperty("expiration_duration")
-        var expirationDuration: Long? = -1,
+        @JsonProperty("is_enabled")
+        var isEnabled: Boolean? = null,
 
         /**
          * Create At
