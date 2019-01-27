@@ -78,7 +78,7 @@ class CallReceiver: PhoneCallReceiver() {
             endCall(ctx)
 
             // Show Block Scheduled Screen
-            navigator.showScheduledBlockActive(ctx, scheduledBlockEnable.name,
+            navigator.showScheduledBlockActive(ctx, scheduledBlockEnable.id, scheduledBlockEnable.name,
                     scheduledBlockEnable.image, scheduledBlockEnable.startAt, scheduledBlockEnable.endAt,
                     scheduledBlockEnable.description)
 

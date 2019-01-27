@@ -155,6 +155,5 @@ class SyncGeofencesInteract
         deviceGeofenceService.addGeofence(geofencesSync.first)
 
         return geofencesSyncTotal
-
     }
 }

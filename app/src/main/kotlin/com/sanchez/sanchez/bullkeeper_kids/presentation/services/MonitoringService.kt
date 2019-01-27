@@ -581,7 +581,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         Timber.d("CFAT: Lock Current Foreground app: %s", currentAppForeground)
         if(currentAppLocked.isNullOrEmpty() || currentAppForeground == appInstalled.packageName) {
             currentAppLocked = appInstalled.packageName
-            navigator.showScheduledBlockActive(this, scheduledBlockEntity.name,
+            navigator.showScheduledBlockActive(this, scheduledBlockEntity.id, scheduledBlockEntity.name,
                     scheduledBlockEntity.image, scheduledBlockEntity.startAt, scheduledBlockEntity.endAt,
                     scheduledBlockEntity.description)
         }

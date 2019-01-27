@@ -11,15 +11,15 @@ import android.content.IntentFilter
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.content_lock_screen.*
-import java.util.*
 import javax.inject.Inject
 import android.app.Activity
 import android.app.ActivityManager
 import android.view.WindowManager
+import com.sanchez.sanchez.bullkeeper_kids.BuildConfig
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
-import kotlinx.android.synthetic.main.content_scheduled_block_active_screen.view.*
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import kotlinx.android.synthetic.main.content_scheduled_block_active_screen.*
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
@@ -40,6 +40,7 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
         /**
          * Args
          */
+        const val IDENTITY_ARG = "IDENTITY_ARG"
         const val NAME_ARG = "NAME_ARG"
         const val IMAGE_ARG = "IMAGE_ARG"
         const val START_AT_ARG = "START_AT_ARG"
@@ -54,10 +55,11 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
         /**
          * Calling Intent
          */
-        fun callingIntent(context: Context, name: String?, image: String?, startAt: String?,
+        fun callingIntent(context: Context, identity: String?, name: String?, image: String?, startAt: String?,
                           endAt: String?, description: String?): Intent {
             val intent = Intent(context, ScheduledBlockActiveScreenActivity::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(IDENTITY_ARG, identity)
             intent.putExtra(NAME_ARG, name)
             intent.putExtra(IMAGE_ARG, image)
             intent.putExtra(START_AT_ARG, startAt)
@@ -85,6 +87,12 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
      */
     @Inject
     internal lateinit var navigator: INavigator
+
+    /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
 
     /**
      * App Blocked Stream Id
@@ -155,15 +163,29 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
     private fun showAppBlockedDetail(intent: Intent){
 
         // Get Args
+        val identity = intent.getStringExtra(IDENTITY_ARG)
         val name = intent.getStringExtra(NAME_ARG)
         val image = intent.getStringExtra(IMAGE_ARG)
         val startAt = intent.getStringExtra(START_AT_ARG)
         val endAt = intent.getStringExtra(END_AT_ARG)
         val description = intent.getStringExtra(DESCRIPTION_ARG)
 
-        contentText.name.text = name
-        contentText.description.text = description
-        contentText.time.text = String.format("%s - %s", Locale.getDefault(),
+        if (!image.isNullOrEmpty()) {
+
+            val kid = preferenceRepository.getPrefKidIdentity()
+
+            picasso.load(String.format("%s/children/%s/scheduled-blocks/%s/image/%s",
+                    BuildConfig.BASE_URL, kid, identity, image))
+                    .error(R.drawable.scheduled_block_default_icon)
+                    .placeholder(R.drawable.scheduled_block_default_icon)
+                    .into(scheduledBlockImage)
+
+        }
+
+
+        scheduledBlockName.text = name
+        scheduledBlockDescription.text = description
+        scheduledBlockTime.text = String.format(getString(R.string.scheduled_block_time_format),
                 startAt, endAt)
 
         // Close App Handler

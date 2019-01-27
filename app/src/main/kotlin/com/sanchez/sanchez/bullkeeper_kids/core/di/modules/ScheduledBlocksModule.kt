@@ -48,13 +48,12 @@ class ScheduledBlocksModule {
     @Provides
     @Singleton
     fun provideSynchronizeScheduledBlocksInteract(
-            appContext: Context,
             retrofit: Retrofit,
             scheduledBlocksService: IScheduledBlocksService,
             scheduledBlocksRepository: ScheduledBlocksRepositoryImpl,
             appAllowedByScheduledRepository: IAppAllowedByScheduledRepository,
             preferenceRepository: IPreferenceRepository)
-        = SynchronizeScheduledBlocksInteract(appContext, retrofit, scheduledBlocksService,
+        = SynchronizeScheduledBlocksInteract(retrofit, scheduledBlocksService,
             scheduledBlocksRepository, appAllowedByScheduledRepository, preferenceRepository)
 
 }

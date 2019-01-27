@@ -44,7 +44,7 @@ interface INavigator {
     /**
      * Show Scheduled Block Active
      */
-    fun showScheduledBlockActive(ctx: Context, name: String?, image: String?, startAt: String?,
+    fun showScheduledBlockActive(ctx: Context, identity: String?, name: String?, image: String?, startAt: String?,
                                  endAt: String?, description: String?)
 
     /**

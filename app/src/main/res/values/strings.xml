@@ -259,4 +259,7 @@
     <string name="geofence_transition_exit_description">You can not leave this area, an alert will be registered.</string>
     <string name="geofence_transition_enter_description">You can not enter this area, an alert will be generated.</string>
     <string name="geofence_close">Close</string>
+
+
+    <string name="scheduled_block_time_format" formatted="false">Duration %s - %s</string>
 </resources>

@@ -18,9 +18,10 @@
         android:layout_margin="@dimen/common_margin"
         android:layout_marginBottom="95dp"
         android:contentDescription="@string/content_not_be_loaded"
+        android:src="@drawable/scheduled_block_default_icon"
         app:civ_border_color="@color/commonWhite"
         app:civ_border_width="@dimen/common_image_stroke_width"
-        app:layout_constraintBottom_toTopOf="@+id/name"
+        app:layout_constraintBottom_toTopOf="@+id/scheduledBlockName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent"
@@ -28,7 +29,7 @@
 
     <!-- Name -->
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/scheduledBlockName"
         style="@style/CommonStrongText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -38,14 +39,14 @@
         android:text="-"
         android:textAlignment="center"
         android:textColor="@color/commonWhite"
-        app:layout_constraintBottom_toTopOf="@id/description"
+        app:layout_constraintBottom_toTopOf="@id/scheduledBlockDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scheduledBlockImage" />
 
     <!-- Description -->
     <TextView
-        android:id="@+id/description"
+        android:id="@+id/scheduledBlockDescription"
         style="@style/CommonStrongText.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -55,14 +56,14 @@
         android:text="-"
         android:textAlignment="center"
         android:textColor="@color/commonWhite"
-        app:layout_constraintBottom_toTopOf="@id/time"
+        app:layout_constraintBottom_toTopOf="@id/scheduledBlockTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/name" />
+        app:layout_constraintTop_toBottomOf="@id/scheduledBlockName" />
 
     <!-- Time -->
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/scheduledBlockTime"
         style="@style/CommonStrongText.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -75,7 +76,7 @@
         app:layout_constraintBottom_toTopOf="@id/closeApp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/description" />
+        app:layout_constraintTop_toBottomOf="@id/scheduledBlockDescription" />
 
     <Button
         android:id="@+id/closeApp"

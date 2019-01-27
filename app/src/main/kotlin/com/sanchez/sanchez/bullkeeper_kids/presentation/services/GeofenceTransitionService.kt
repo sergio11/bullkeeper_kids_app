@@ -7,8 +7,10 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.GeofenceComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceAlertInteract
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,7 +19,6 @@ import javax.inject.Inject
  * Geofence Transition Service
  */
 class GeofenceTransitionService: IntentService("GeofenceTransitionService") {
-
 
     /**
      * Geofence Component
@@ -37,6 +38,12 @@ class GeofenceTransitionService: IntentService("GeofenceTransitionService") {
      */
     @Inject
     internal lateinit var geofenceRepository: IGeofenceRepository
+
+    /**
+     * Save Geofence Alert Interact
+     */
+    @Inject
+    internal lateinit var saveGeofenceAlertInteract: SaveGeofenceAlertInteract
 
     /**
      * Navigator
@@ -94,6 +101,15 @@ class GeofenceTransitionService: IntentService("GeofenceTransitionService") {
 
             navigator.showGeofenceViolatedActivity(this, it.name, it.transitionType,
                     it.radius)
+
+            saveGeofenceAlertInteract(SaveGeofenceAlertInteract.Params(it.kid!!,
+                    it.identity!!, it.transitionType!!)){
+                it.either(fun(_: Failure){
+                    Timber.d("Save Geofence Alert Failed")
+                }, fun(_: Unit){
+                    Timber.d("Save Geofence Alert Success")
+                })
+            }
 
         }
     }

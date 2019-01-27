@@ -177,11 +177,11 @@ class NavigatorImpl
     /**
      * Show Scheduled Block Active
      */
-    override fun showScheduledBlockActive(ctx: Context, name: String?, image: String?,
+    override fun showScheduledBlockActive(ctx: Context, identity: String?, name: String?, image: String?,
                                           startAt: String?, endAt: String?,
                                           description: String?)
         = ctx.startActivity(ScheduledBlockActiveScreenActivity.callingIntent(ctx,
-            name, image, startAt, endAt, description))
+            identity, name, image, startAt, endAt, description))
 
 
     /**
