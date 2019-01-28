@@ -20,6 +20,16 @@ open class PhoneNumberBlockedEntity(
         var blockedAt: String? = null,
 
         /**
+         * Prefix
+         */
+        var prefix: String? = null,
+
+        /**
+         * Number
+         */
+        var number: String? = null,
+
+        /**
          * Phone Number
          */
         var phoneNumber: String? = null

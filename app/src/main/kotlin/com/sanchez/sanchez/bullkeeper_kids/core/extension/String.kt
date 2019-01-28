@@ -1,7 +1,5 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.extension
 
-import com.sanchez.sanchez.bullkeeper_kids.R
-import org.joda.time.LocalDateTime
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter

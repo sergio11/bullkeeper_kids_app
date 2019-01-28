@@ -22,5 +22,13 @@ open class GeofenceEntity(
         // Transition Type
         var transitionType: String? = TransitionTypeEnum.TRANSITION_ENTER.name,
         // Kid
-        var kid: String? = null
+        var kid: String? = null,
+        // Is Enabled
+        var isEnabled: Boolean? = null,
+        // Create At
+        var createAt: String? = null,
+        // Update At
+        var updateAt: String? = null,
+        // Address
+        var address: String? = null
 ) : RealmObject(), Serializable

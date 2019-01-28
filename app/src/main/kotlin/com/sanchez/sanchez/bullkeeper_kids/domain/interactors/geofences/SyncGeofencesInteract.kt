@@ -1,5 +1,9 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences
 
+import android.content.Context
+import com.sanchez.sanchez.bullkeeper_kids.R
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toStringFormat
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.GeofenceEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IGeofencesService
@@ -15,6 +19,7 @@ import javax.inject.Inject
 class SyncGeofencesInteract
     @Inject constructor(
             retrofit: Retrofit,
+            private val appContext: Context,
             private val preferenceRepository: IPreferenceRepository,
             private val geofencesService: IGeofencesService,
             private val geofencesRepository: IGeofenceRepository,
@@ -39,11 +44,13 @@ class SyncGeofencesInteract
                 if(!serverGeofence.identity.isNullOrEmpty() &&
                         serverGeofence.identity.equals(localGeofence.identity)) {
                     geofenceFound = true
-                    /*serverGeofence.updateAt?.let {
-                        if(it.after(localGeofence.updateAt)) {
+                    serverGeofence.updateAt?.let {
+                        if(it.ToDateTime(appContext.getString(R.string.date_time_format_2))
+                                        .after(localGeofence.updateAt
+                                                ?.ToDateTime(appContext.getString(R.string.date_time_format_2)))) {
                             geofencesToCreate.add(serverGeofence)
                         }
-                    }*/
+                    }
                     break
                 }
             }
@@ -72,11 +79,12 @@ class SyncGeofencesInteract
             for(serverGeofence in serverGeofenceList) {
                 if(!localGeofence.identity.isNullOrEmpty() &&
                         localGeofence.identity.equals(serverGeofence.identity)){
-                   /* localGeofence.updateAt?.let {
-                        if(!it.before(serverGeofence.updateAt)){
+                   localGeofence.updateAt?.let {
+                        if(!it.ToDateTime(appContext.getString(R.string.date_time_format_2))
+                                        .before(serverGeofence.updateAt?.ToDateTime(appContext.getString(R.string.date_time_format_2)))){
                             isFound = true
                         }
-                    }*/
+                    }
                     isFound = true
                     break
                 }
@@ -109,8 +117,21 @@ class SyncGeofencesInteract
                 geofencesService.getGeofencesByKid(kid).await()
 
         val serverGeofenceList = response.data?.map {
-            GeofenceEntity(it.identity, it.name, it.lat, it.log,
-                    it.radius, it.type, it.kid)
+            GeofenceEntity(
+                    identity = it.identity,
+                    name = it.name,
+                    lat = it.lat,
+                    log = it.log,
+                    radius = it.radius,
+                    transitionType = it.type,
+                    kid = it.kid,
+                    createAt = it.createAt
+                            ?.toStringFormat(appContext.getString(R.string.date_time_format_2)),
+                    updateAt = it.updateAt
+                            ?.toStringFormat(appContext.getString(R.string.date_time_format_2)),
+                    address = it.address,
+                    isEnabled = it.isEnabled
+            )
         }?.toList()
 
         if(serverGeofenceList.isNullOrEmpty() && localGeofencesSavedList.isNotEmpty()) {

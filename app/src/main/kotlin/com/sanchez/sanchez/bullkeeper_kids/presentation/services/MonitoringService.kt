@@ -34,15 +34,13 @@ import okhttp3.Response
 import timber.log.Timber
 import com.here.oksse.OkSse
 import com.sanchez.sanchez.bullkeeper_kids.R
-import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppInstalledEntity
-import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppRuleEnum
-import com.sanchez.sanchez.bullkeeper_kids.data.entity.FunTimeDayScheduledEntity
-import com.sanchez.sanchez.bullkeeper_kids.data.entity.ScheduledBlockEntity
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.*
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.FunTimeScheduledDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppAllowedByScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IFunTimeDayScheduledRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPhoneNumberRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
@@ -315,6 +313,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     @Inject
     internal lateinit var appsAllowedByScheduledRepository: IAppAllowedByScheduledRepository
+
+    /**
+     * Phone Number Repository
+     */
+    @Inject
+    internal lateinit var phoneNumberRepository: IPhoneNumberRepository
 
 
     /**
@@ -1231,15 +1235,39 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Add Phone Number Blocked Event Handler
+     */
+    private fun addPhoneNumberBlockedEventHandler(event: AddPhoneNumberBlockedDTO){
+        Timber.d("SSE: Add Phone Number Blocked Event Handler")
+        phoneNumberRepository.save(
+                PhoneNumberBlockedEntity(
+                        identity = event.identity,
+                        blockedAt = event.blockedAt,
+                        prefix = event.prefix,
+                        number = event.number,
+                        phoneNumber = event.phoneNumber
+                )
+        )
+    }
+
+    /**
      * Geofence Saved Event Handler
      */
     private fun geofenceSavedEventHandler(geofenceSavedDTO: GeofenceSavedDTO) {
         Timber.d("SSE: Geofence Saved Event")
         saveGeofenceInteract(SaveGeofenceInteract.Params(
-                geofenceSavedDTO.identity, geofenceSavedDTO.name,
-                geofenceSavedDTO.lat, geofenceSavedDTO.log,
-                geofenceSavedDTO.radius, geofenceSavedDTO.type,
-                geofenceSavedDTO.kid
+                identity = geofenceSavedDTO.identity,
+                name = geofenceSavedDTO.name,
+                lat = geofenceSavedDTO.lat,
+                log = geofenceSavedDTO.log,
+                radius = geofenceSavedDTO.radius,
+                transitionType = geofenceSavedDTO.type,
+                kid = geofenceSavedDTO.kid,
+                address = geofenceSavedDTO.address,
+                createAt = geofenceSavedDTO.createAt,
+                updateAt = geofenceSavedDTO.updateAt,
+                isEnabled = geofenceSavedDTO.isEnabled
+
         )){
             it.either(fun(_: Failure){
                 Timber.d("Save Geofence Failed")
@@ -1541,6 +1569,14 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                 objectMapper.readValue(eventMessage,
                                         ScheduledBlockStatusChangedDTO::class.java)
                         )
+
+                        // Add Phone Number Blocked Event
+                        ServerEventTypeEnum.ADD_PHONE_NUMBER_BLOCKED_EVENT ->
+                            addPhoneNumberBlockedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            AddPhoneNumberBlockedDTO::class.java)
+                            )
+
                         // App Rules List Saved Event
                         ServerEventTypeEnum.APP_RULES_LIST_SAVED_EVENT -> appRulesListSavedEventHandler(
                                 objectMapper.readValue(eventMessage,

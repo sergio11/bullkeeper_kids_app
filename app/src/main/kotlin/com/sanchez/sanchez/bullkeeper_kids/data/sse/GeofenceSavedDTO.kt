@@ -24,6 +24,12 @@ data class GeofenceSavedDTO(
         var name: String,
 
         /**
+         * address
+         */
+        @JsonProperty("address")
+        var address: String,
+
+        /**
          * Latitude
          */
         @JsonProperty("lat")
@@ -51,5 +57,23 @@ data class GeofenceSavedDTO(
          * Kid
          */
         @JsonProperty("kid")
-        var kid: String
+        var kid: String,
+
+        /**
+         * Is Enabled
+         */
+        @JsonProperty("is_enabled")
+        var isEnabled: Boolean,
+
+        /**
+         * Create At
+         */
+        @JsonProperty("create_at")
+        var createAt: Date,
+
+        /**
+         * Update At
+         */
+        @JsonProperty("update_at")
+        var updateAt: Date
 )

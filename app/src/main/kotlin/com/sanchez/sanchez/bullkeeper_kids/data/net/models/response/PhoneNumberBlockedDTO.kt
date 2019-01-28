@@ -22,9 +22,21 @@ data class PhoneNumberBlockedDTO(
         var blockedAt: String? = null,
 
         /**
+         * Prefix
+         */
+        @JsonProperty("prefix")
+        var prefix: String? = null,
+
+        /**
+         * Number
+         */
+        @JsonProperty("number")
+        var number: String? = null,
+
+        /**
          * Phone Number
          */
-        @JsonProperty("phone_number")
+        @JsonProperty("phonenumber")
         var phoneNumber: String? = null,
 
         /**

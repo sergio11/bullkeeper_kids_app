@@ -32,8 +32,12 @@ class GetBlockedPhoneNumbersInteract
         val response = phoneNumberService.getPhoneNumberBlocked(kid, terminal).await()
 
         response.data?.map {
-            PhoneNumberBlockedEntity(it.identity,
-                    it.blockedAt, it.phoneNumber)
+            PhoneNumberBlockedEntity(
+                    identity = it.identity,
+                    blockedAt = it.blockedAt,
+                    prefix = it.prefix,
+                    number = it.number,
+                    phoneNumber = it.phoneNumber)
         }?.let { phoneNumbersBlockedToSave ->
             phoneNumberRepository.save(phoneNumbersBlockedToSave)
         }

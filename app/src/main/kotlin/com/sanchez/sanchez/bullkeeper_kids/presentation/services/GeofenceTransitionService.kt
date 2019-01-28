@@ -51,10 +51,6 @@ class GeofenceTransitionService: IntentService("GeofenceTransitionService") {
     @Inject
     internal lateinit var navigator: INavigator
 
-
-    val GEOFENCE_NOTIFICATION_ID = 0
-
-
     /**
      * On Handle Intent
      */
@@ -99,16 +95,19 @@ class GeofenceTransitionService: IntentService("GeofenceTransitionService") {
 
         geofence?.let {
 
-            navigator.showGeofenceViolatedActivity(this, it.name, it.transitionType,
-                    it.radius)
+            if(it.isEnabled == true) {
 
-            saveGeofenceAlertInteract(SaveGeofenceAlertInteract.Params(it.kid!!,
-                    it.identity!!, it.transitionType!!)){
-                it.either(fun(_: Failure){
-                    Timber.d("Save Geofence Alert Failed")
-                }, fun(_: Unit){
-                    Timber.d("Save Geofence Alert Success")
-                })
+                navigator.showGeofenceViolatedActivity(this, it.name, it.transitionType,
+                        it.radius)
+
+                saveGeofenceAlertInteract(SaveGeofenceAlertInteract.Params(it.kid!!,
+                        it.identity!!, it.transitionType!!)){
+                    it.either(fun(_: Failure){
+                        Timber.d("Save Geofence Alert Failed")
+                    }, fun(_: Unit){
+                        Timber.d("Save Geofence Alert Success")
+                    })
+                }
             }
 
         }

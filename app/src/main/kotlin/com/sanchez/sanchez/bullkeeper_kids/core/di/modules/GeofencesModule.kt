@@ -50,13 +50,14 @@ class GeofencesModule {
     @Provides
     @Singleton
     fun provideSyncGeofencesInteract(
+            appContext: Context,
             retrofit: Retrofit,
             preferencesRepository: IPreferenceRepository,
             geofencesService: IGeofencesService,
             geofenceRepository: IGeofenceRepository,
             deviceGeofenceService: IDeviceGeofenceService
     ): SyncGeofencesInteract
-        = SyncGeofencesInteract(retrofit, preferencesRepository,
+        = SyncGeofencesInteract(retrofit, appContext, preferencesRepository,
             geofencesService, geofenceRepository, deviceGeofenceService)
 
 
@@ -66,11 +67,12 @@ class GeofencesModule {
     @Provides
     @Singleton
     fun provideSaveGeofenceInteract(
+            appContext: Context,
             deviceGeofenceService: IDeviceGeofenceService,
             geofenceRepository: IGeofenceRepository,
             retrofit: Retrofit
     ): SaveGeofenceInteract
-        = SaveGeofenceInteract(deviceGeofenceService,
+        = SaveGeofenceInteract(appContext, deviceGeofenceService,
             geofenceRepository, retrofit)
 
     /**
