@@ -12,4 +12,11 @@ interface IPhoneNumberRepository: ISupportRepository<PhoneNumberBlockedEntity> {
      */
     fun findByPhoneNumber(phoneNumber: String): PhoneNumberBlockedEntity?
 
+    /**
+     * Delete By Id Or Phone Number
+     */
+    fun deleteByPhoneNumberOrId(idOrPhoneNumber: String)
+
+
+
 }

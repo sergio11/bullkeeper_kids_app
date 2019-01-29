@@ -70,4 +70,22 @@ class PhoneNumberRepositoryImpl: SupportRepositoryImpl<PhoneNumberBlockedEntity>
         realm.close()
         return phoneNumberBlocked
     }
+
+
+    /**
+     * Delete By Phone Number or Id
+     */
+    override fun deleteByPhoneNumberOrId(idOrPhoneNumber: String) {
+        val realm = Realm.getDefaultInstance()
+        val phoneNumberBlockedToDelete =
+                realm.where(PhoneNumberBlockedEntity::class.java)
+                        .equalTo("identity", idOrPhoneNumber)
+                        .or().equalTo("phoneNumber", idOrPhoneNumber)
+                        .findAll()
+        realm.executeTransaction {
+            phoneNumberBlockedToDelete.deleteAllFromRealm()
+        }
+        realm.close()
+    }
+
 }

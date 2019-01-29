@@ -1251,6 +1251,23 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Delete All Phone Number Blocked Event Handler
+     */
+    private fun deleteAllPhoneNumberBlockedEventHandler(event: DeleteAllPhoneNumberBlockedDTO){
+        Timber.d("SSE: Delete All Phone Number Blocked Event Handler")
+        phoneNumberRepository.deleteAll()
+    }
+
+
+    /**
+     * Delete Phone Number Blocked Event Handler
+     */
+    private fun deletePhoneNumberBlockedEventHandler(event: DeletePhoneNumberBlockedDTO){
+        Timber.d("SSE: Delete Phone Number Blocked Event Handler")
+        event.idOrPhonenumber?.let { phoneNumberRepository.deleteByPhoneNumberOrId(it) }
+    }
+
+    /**
      * Geofence Saved Event Handler
      */
     private fun geofenceSavedEventHandler(geofenceSavedDTO: GeofenceSavedDTO) {
@@ -1577,6 +1594,18 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                             AddPhoneNumberBlockedDTO::class.java)
                             )
 
+                        // Delete All Phone Number Blocked Event
+                        ServerEventTypeEnum.DELETE_ALL_PHONE_NUMBER_BLOCKED_EVENT ->
+                            deleteAllPhoneNumberBlockedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            DeleteAllPhoneNumberBlockedDTO::class.java)
+                            )
+                        // Delete Phone Number Blocked Event
+                        ServerEventTypeEnum.DELETE_PHONE_NUMBER_BLOCKED_EVENT ->
+                            deletePhoneNumberBlockedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            DeletePhoneNumberBlockedDTO::class.java)
+                            )
                         // App Rules List Saved Event
                         ServerEventTypeEnum.APP_RULES_LIST_SAVED_EVENT -> appRulesListSavedEventHandler(
                                 objectMapper.readValue(eventMessage,
