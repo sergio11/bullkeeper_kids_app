@@ -94,6 +94,7 @@ class SynchronizeTerminalContactsInteract
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
                             arrayOf<String>(id), null)
                     while (pCur!!.moveToNext()) {
+
                         val phoneNo = pCur.getString(pCur.getColumnIndex(
                                 ContactsContract.CommonDataKinds.Phone.NUMBER))
 

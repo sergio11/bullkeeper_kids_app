@@ -63,7 +63,9 @@ class PhoneNumberRepositoryImpl: SupportRepositoryImpl<PhoneNumberBlockedEntity>
         Timber.d("Find Phone Number blocked as $phoneNumber")
         val realm = Realm.getDefaultInstance()
         val realmResult = realm.where(PhoneNumberBlockedEntity::class.java)
-                .equalTo("phoneNumber", phoneNumber).findFirst()
+                .equalTo("phoneNumber", phoneNumber)
+                .or().equalTo("number", phoneNumber)
+                .findFirst()
         var phoneNumberBlocked: PhoneNumberBlockedEntity? = null
         if(realmResult != null)
             phoneNumberBlocked = realm.copyFromRealm(realmResult)
