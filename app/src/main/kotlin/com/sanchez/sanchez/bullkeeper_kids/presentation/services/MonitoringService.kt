@@ -1148,11 +1148,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 getString(R.string.joda_local_time_format_server_response))
         scheduledBlocksRepositoryImpl.save(ScheduledBlockEntity(
                 id = event.identity,
-                name = event.name, enable = event.enable,
+                name = event.name,
+                enable = event.enable,
                 repeatable = event.repeatable,
                 image = event.image, kid = event.kid,
                 startAt = event.startAt?.toString(fmt),
                 endAt = event.endAt?.toString(fmt),
+                description = event.description,
                 weeklyFrequency = event.weeklyFrequency?.joinToString(",")))
     }
 

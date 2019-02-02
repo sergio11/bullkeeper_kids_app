@@ -68,7 +68,7 @@ class GetSelfChildrenInteract
             supervisedChildrenEntity.kid?.school?.tfno = supervisedChildren.kid?.schoolDTO?.tfno
             supervisedChildrenEntity.kid?.school?.email = supervisedChildren.kid?.schoolDTO?.email
             supervisedChildren.kid?.profileImage?.let{
-                supervisedChildren.kid?.profileImage = apiEndPointsHelper.getKidProfileUrl(it)
+                supervisedChildrenEntity.kid?.profileImage = apiEndPointsHelper.getKidProfileUrl(it)
             }
             supervisedChildrenEntity.kid?.terminals =    mapTerminals(supervisedChildren.kid?.terminals)
             supervisedChildrenEntities.add(supervisedChildrenEntity)

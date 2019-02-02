@@ -195,7 +195,6 @@ class ScheduledBlockActiveScreenActivity : AppCompatActivity() {
             am.killBackgroundProcesses(packageName)
             navigator.showHome(this)
         }
-
     }
 
     /**
