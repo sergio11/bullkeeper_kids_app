@@ -452,16 +452,21 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * On Start Command
      */
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(TAG, "Monitoring Service started")
 
-        val startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
-                false)
+        intent?.let {
 
-        // We got here because the user decided to remove location updates from the notification.
-        if (startedFromNotification) {
-            stopSelf()
+            val startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
+                    false)
+
+            // We got here because the user decided to remove location updates from the notification.
+            if (startedFromNotification) {
+                stopSelf()
+            }
+
         }
+
         // Tells the system try  recreate the service after it has been killed.
         return Service.START_STICKY
     }
