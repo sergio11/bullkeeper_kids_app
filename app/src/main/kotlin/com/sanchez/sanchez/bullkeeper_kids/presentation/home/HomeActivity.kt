@@ -1,7 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.home
 
 import android.Manifest
-import android.app.Activity
 import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.Intent
@@ -44,7 +43,6 @@ class HomeActivity : BaseActivity(),
         }
     }
 
-    val ENABLE_DEVICE_ADMIN_FEATURES_CODE = 666
 
     /**
      * App Component
@@ -98,23 +96,6 @@ class HomeActivity : BaseActivity(),
 
         ContextCompat.startForegroundService(this,
                 Intent(this, MonitoringService::class.java))
-
-
-        /**
-         * val active = devicePolicyManager
-        .isAdminActive(MonitoringDeviceAdminReceiver.getComponentName(this@HomeActivity))
-
-        if (active) {
-        devicePolicyManager.lockNow()
-        } else {
-        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
-        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN,
-        MonitoringDeviceAdminReceiver.getComponentName(this@HomeActivity))
-        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-        "Additional text explaining why we need this permission")
-        this@HomeActivity.startActivityForResult(intent, ENABLE_DEVICE_ADMIN_FEATURES_CODE)
-        }
-         */
 
     }
 
@@ -174,16 +155,6 @@ class HomeActivity : BaseActivity(),
 
     override fun fragment(): BaseFragment = HomeActivityFragment()
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        if(requestCode == ENABLE_DEVICE_ADMIN_FEATURES_CODE
-            && resultCode == Activity.RESULT_OK) {
-
-            devicePolicyManager.lockNow()
-
-        }
-    }
 
     /**
      * Show Sos Screen

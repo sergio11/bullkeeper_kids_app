@@ -649,6 +649,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
     }
 
+
     /**
      * Fun Time App Rule Handler
      */
@@ -778,95 +779,106 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
             // Check Usage Stats Allowed
             if (usageStatsService.isUsageStatsAllowed()) {
-                // Get Current Foreground App
-                val currentAppForeground = usageStatsService.getCurrentForegroundApp()
-                Timber.d("CFAT: Current App Foreground -> %s", currentAppForeground)
-                if (!currentAppForeground.isNullOrEmpty()
-                        && (!currentAppLocked.isNullOrEmpty() ||
-                                !currentDisabledApp.isNullOrEmpty() ||
-                                currentAppForeground != packageName)){
 
-                    val startBedTime = LocalTime(START_BED_TIME_HOUR, 0)
-                    val endBedTime = LocalTime(END_BED_TIME_HOUR, 0)
-                    val currentTime = LocalTime.now()
 
-                    if(currentTime.isAfter(startBedTime)
-                            && currentTime.isBefore(endBedTime)) {
-                        Timber.d("CFAT: Bet Time active")
-                        sendUnLockAppAction()
-                        sendEnableAppAction()
-                        if(preferenceRepository.isBedTimeEnabled()) {
-                            Timber.d("CFAT: Bet Time enabled")
-                            isBedTimeEnabled = true
-                            navigator.showBedTimeScreen(this)
+                val active = devicePolicyManager
+                        .isAdminActive(MonitoringDeviceAdminReceiver.getComponentName(this))
+
+                preferenceRepository.setAdminAccessEnabled(active)
+
+                if(preferenceRepository.isScreenEnabled() || !active) {
+
+                    // Get Current Foreground App
+                    val currentAppForeground = usageStatsService.getCurrentForegroundApp()
+                    Timber.d("CFAT: Current App Foreground -> %s", currentAppForeground)
+                    if (!currentAppForeground.isNullOrEmpty()
+                            && (!currentAppLocked.isNullOrEmpty() ||
+                                    !currentDisabledApp.isNullOrEmpty() ||
+                                    currentAppForeground != packageName)) {
+
+                        val startBedTime = LocalTime(START_BED_TIME_HOUR, 0)
+                        val endBedTime = LocalTime(END_BED_TIME_HOUR, 0)
+                        val currentTime = LocalTime.now()
+
+                        if (currentTime.isAfter(startBedTime)
+                                && currentTime.isBefore(endBedTime)) {
+                            Timber.d("CFAT: Bet Time active")
+                            sendUnLockAppAction()
+                            sendEnableAppAction()
+                            if (preferenceRepository.isBedTimeEnabled()) {
+                                Timber.d("CFAT: Bet Time enabled")
+                                isBedTimeEnabled = true
+                                navigator.showBedTimeScreen(this)
+                            } else {
+                                Timber.d("CFAT: Bet Time disabled")
+                                // Disable Bed Time is needed
+                                sendDisableBedTimeAction()
+                            }
                         } else {
-                            Timber.d("CFAT: Bet Time disabled")
+
                             // Disable Bed Time is needed
                             sendDisableBedTimeAction()
-                        }
-                    } else {
 
-                        // Disable Bed Time is needed
-                        sendDisableBedTimeAction()
+                            // Get information about the application in the BD
+                            Timber.d("CFAT: Current App in foreground -> %s ", currentAppForeground)
 
-                        // Get information about the application in the BD
-                        Timber.d("CFAT: Current App in foreground -> %s ", currentAppForeground)
+                            // Get App To Check
+                            val appToCheck: String = when {
+                                !currentAppLocked.isNullOrEmpty()
+                                        && currentAppForeground == packageName -> currentAppLocked!!
+                                !currentDisabledApp.isNullOrEmpty()
+                                        && currentAppForeground == packageName -> currentDisabledApp!!
+                                else -> currentAppForeground
+                            }
 
-                        // Get App To Check
-                        val appToCheck: String = when {
-                            !currentAppLocked.isNullOrEmpty()
-                                    && currentAppForeground == packageName -> currentAppLocked!!
-                            !currentDisabledApp.isNullOrEmpty()
-                                    && currentAppForeground == packageName -> currentDisabledApp!!
-                            else -> currentAppForeground
-                        }
+                            // Get Last Data from app
+                            val appInstalledEntity =
+                                    appsInstalledRepository.findByPackageName(appToCheck)
 
-                        // Get Last Data from app
-                        val appInstalledEntity =
-                                appsInstalledRepository.findByPackageName(appToCheck)
+                            appInstalledEntity?.let { appInstalled ->
 
-                        appInstalledEntity?.let {appInstalled->
+                                if (appInstalled.disabled) {
+                                    appDisabledStateHandler(currentAppForeground, appInstalled)
 
-                            if(appInstalled.disabled) {
-                                appDisabledStateHandler(currentAppForeground, appInstalled)
+                                } else {
 
-                            } else {
+                                    sendEnableAppAction()
 
-                                sendEnableAppAction()
+                                    if (appInstalled.appRule != null) {
 
-                                if(appInstalled.appRule != null) {
+                                        try {
 
-                                    try {
+                                            val appRuleEnum = AppRuleEnum.valueOf(appInstalled.appRule!!)
 
-                                        val appRuleEnum = AppRuleEnum.valueOf(appInstalled.appRule!!)
+                                            when (appRuleEnum) {
+                                                AppRuleEnum.PER_SCHEDULER -> perScheduledAppRuleHandler(currentAppForeground, appInstalled)
+                                                AppRuleEnum.FUN_TIME -> funTimeAppRuleHandler(currentAppForeground, appInstalled)
+                                                AppRuleEnum.ALWAYS_ALLOWED -> alwaysAllowedAppRuleHandler(currentAppForeground, appInstalled)
+                                                AppRuleEnum.NEVER_ALLOWED -> neverAllowedAppRuleHandler(currentAppForeground, appInstalled)
+                                            }
 
-                                        when(appRuleEnum) {
-                                            AppRuleEnum.PER_SCHEDULER -> perScheduledAppRuleHandler(currentAppForeground, appInstalled)
-                                            AppRuleEnum.FUN_TIME -> funTimeAppRuleHandler(currentAppForeground, appInstalled)
-                                            AppRuleEnum.ALWAYS_ALLOWED -> alwaysAllowedAppRuleHandler(currentAppForeground, appInstalled)
-                                            AppRuleEnum.NEVER_ALLOWED -> neverAllowedAppRuleHandler(currentAppForeground, appInstalled)
+                                        } catch (ex: Exception) {
+                                            Timber.d("CFAT: ex: %s", ex.message)
+                                            ex.printStackTrace()
                                         }
 
-                                    } catch (ex: Exception) {
-                                        Timber.d("CFAT: ex: %s", ex.message)
-                                        ex.printStackTrace()
                                     }
 
                                 }
-
                             }
+
                         }
 
                     }
 
+                } else {
+                    devicePolicyManager.lockNow()
                 }
-
 
             } else {
                 Log.d(TAG, "Usage Stats Not Allowed generate alert")
                 preferenceRepository.setUsageStatsAllowed(false)
             }
-
 
             mHandler.postDelayed(checkForegroundAppTask, CHECK_FOREGROUND_APP_INTERVAL)
         }
