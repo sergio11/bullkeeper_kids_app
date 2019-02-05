@@ -18,6 +18,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChang
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.*
@@ -61,6 +62,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.models.ServerEventTypeEnum
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 import org.joda.time.LocalTime
@@ -322,6 +324,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
 
     /**
+     * Device Policy Manager
+     */
+    private lateinit var devicePolicyManager: DevicePolicyManager
+
+
+    /**
      * Receivers
      * =====================
      */
@@ -408,6 +416,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         Log.d(TAG, "On Create Monitoring Service")
         Thread.setDefaultUncaughtExceptionHandler(MonitoringServiceUncaughtExceptionHandler(this))
 
+        // Device Policy Manager
+        devicePolicyManager = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+
         // Register App Status Broadcast receiver
         appStatusChangedReceiver = AppStatusChangedReceiver()
         registerReceiver(appStatusChangedReceiver,
@@ -430,8 +441,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         // Start Data Synchronization
         startDataSynchronization()
 
+        // Configure Camera Status
+        configureCameraStatus()
+
         // Start service with notification
         startForeground(NOTIFICATION_ID, getNotification())
+
 
     }
 
@@ -610,6 +625,28 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
             navigator.showDisabledAppScreen(this, appInstalled.packageName,
                     appInstalled.appName, appInstalled.icon, appInstalled.appRule)
         }
+    }
+
+    /**
+     * Configure Camera Status
+     */
+    private fun configureCameraStatus(){
+
+        val active = devicePolicyManager
+                .isAdminActive(MonitoringDeviceAdminReceiver.getComponentName(this))
+
+        if(active) {
+            preferenceRepository.setAdminAccessEnabled(true)
+
+            devicePolicyManager.setCameraDisabled(
+                    MonitoringDeviceAdminReceiver.getComponentName(this),
+                    !preferenceRepository.isCameraEnabled()
+            )
+
+        } else {
+            preferenceRepository.setAdminAccessEnabled(false)
+        }
+
     }
 
     /**
@@ -1211,7 +1248,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun terminalCameraStatusChangedHandler(event: TerminalCameraStatusChangedDTO) {
         Timber.d("SSE: Terminal Camera Status Changed Handler")
-        event.enabled?.let { preferenceRepository.setCameraEnabled(it) }
+        event.enabled?.let {
+            // Set camera status on preferences
+            preferenceRepository.setCameraEnabled(it)
+            // Configure camera
+            configureCameraStatus()
+        }
     }
 
 
@@ -1689,7 +1731,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                             FunTimeDayScheduledChangedDTO::class.java))
                         }
                         // Unknown Event
-                        else -> Timber.d("SSE: Unknow Event")
 
                     }
                 } catch(ex: Exception) {
