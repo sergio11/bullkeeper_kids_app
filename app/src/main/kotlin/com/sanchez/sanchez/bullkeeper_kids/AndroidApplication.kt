@@ -54,6 +54,7 @@ class AndroidApplication : Application(){
         DaggerGeofenceComponent
                 .builder()
                 .applicationModule(ApplicationModule(this))
+                .netModule(NetModule(this))
                 .globalServiceModule(GlobalServiceModule(this))
                 .build()
     }
