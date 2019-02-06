@@ -68,9 +68,6 @@ class NetModule(private val application: AndroidApplication) {
     fun provideObjectMapper(appContext: Context): ObjectMapper {
         val mapper = ObjectMapper()
         val module = SimpleModule()
-        module.addDeserializer(Date::class.java,
-                BirthdayDeserializer(
-                        appContext.getString(R.string.date_format_server_response)))
         module.addDeserializer(LocalTime::class.java,
                 JodaLocalTimeDeserializer(
                         appContext.getString(R.string.joda_local_time_format_server_response)))

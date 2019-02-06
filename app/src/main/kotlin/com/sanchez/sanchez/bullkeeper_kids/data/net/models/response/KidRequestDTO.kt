@@ -27,13 +27,13 @@ data class KidRequestDTO(
          * Request At
          */
         @JsonProperty("request_at")
-        var requestAt: Date? = null,
+        var requestAt: String? = null,
 
         /**
          * Expired At
          */
         @JsonProperty("expired_at")
-        var expiredAt: Date? = null,
+        var expiredAt: String? = null,
 
         /**
          * Location

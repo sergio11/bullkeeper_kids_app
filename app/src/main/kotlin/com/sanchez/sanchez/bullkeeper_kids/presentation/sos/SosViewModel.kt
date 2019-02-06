@@ -91,5 +91,4 @@ class SosViewModel
         Preconditions.checkNotNull(expiredAt, "Expired At can not be null")
         sosRequestExpiredAt.value = expiredAt
     }
-
 }

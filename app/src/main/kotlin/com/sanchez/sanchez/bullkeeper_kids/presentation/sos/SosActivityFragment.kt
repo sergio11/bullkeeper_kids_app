@@ -87,9 +87,7 @@ class SosActivityFragment : BaseFragment() {
             sosStreamId = soundManager.playSound(ISoundManager.SOS_ALARM_SOUND, true)
             activateSos.isEnabled = false
             activateSos.text = getString(R.string.sos_button_in_progress_text)
-
             sosViewModel.activateSos()
-
         }
 
         // Create the observer which updates the UI.

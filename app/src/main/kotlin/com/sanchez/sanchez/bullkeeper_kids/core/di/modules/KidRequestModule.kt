@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
+import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IKidRequestService
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.kidrequest.SendRequestInteract
@@ -29,9 +30,10 @@ class KidRequestModule {
     @Provides
     @PerActivity
     fun provideSendRequestInteract(
+            appContext: Context,
             kidRequestService: IKidRequestService,
             preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit
     ): SendRequestInteract
-        = SendRequestInteract(kidRequestService, preferenceRepository, retrofit)
+        = SendRequestInteract(appContext, kidRequestService, preferenceRepository, retrofit)
 }

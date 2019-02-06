@@ -33,7 +33,7 @@ data class GuardianDTO(
          * Birthdate
          */
         @JsonProperty("birthdate")
-        var birthdate: Date? = null,
+        var birthdate: String? = null,
 
         /**
          * Age

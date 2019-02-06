@@ -26,7 +26,7 @@ data class MessageDTO (
          * Create At
          */
         @JsonProperty("create_at")
-        var createAt: Date? = null,
+        var createAt: String? = null,
 
         /**
          * Conversation

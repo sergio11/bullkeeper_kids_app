@@ -1,13 +1,15 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.kidrequest
 
+import android.content.Context
+import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.AddKidRequestDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveCurrentLocationDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IKidRequestService
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.RetrofitException
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.RequestTypeEnum
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import retrofit2.Retrofit
 import java.lang.Exception
@@ -20,6 +22,7 @@ import javax.inject.Inject
  */
 class SendRequestInteract
     @Inject constructor(
+            private val appContext: Context,
             private val kidRequestService: IKidRequestService,
             private val preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit): UseCase<Date, SendRequestInteract.Params>(retrofit) {
@@ -62,7 +65,9 @@ class SendRequestInteract
         val response =
                 kidRequestService.addRequestForKid(kid, sosRequest).await()
 
-        return response.data?.expiredAt!!
+
+        return response.data?.expiredAt!!.ToDateTime(appContext
+                .getString(R.string.date_time_format))
 
     }
 
