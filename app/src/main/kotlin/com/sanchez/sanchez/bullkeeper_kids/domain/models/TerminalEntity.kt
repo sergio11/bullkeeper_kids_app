@@ -75,5 +75,10 @@ data class TerminalEntity(
         /**
          * Lock Camera Enabled
          */
-        var lockCameraEnabled: Boolean = true
+        var lockCameraEnabled: Boolean = true,
+
+        /**
+         * Settings Enabled
+         */
+        var settingsEnabled: Boolean = false
 )

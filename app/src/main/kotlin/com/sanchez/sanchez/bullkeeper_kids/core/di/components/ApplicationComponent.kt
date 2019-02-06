@@ -20,12 +20,9 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivityFragment
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.GeofenceViolatedActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.ScheduledBlockActiveScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.*
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.GeofenceTransitionService
@@ -123,6 +120,11 @@ interface ApplicationComponent {
      * Inject into Geofence Violated Activity
      */
     fun inject(geofenceViolatedActivity: GeofenceViolatedActivity)
+
+    /**
+     * Inject into Settings Lock Screen Activity
+     */
+    fun inject(settingsLockScreenActivity: SettingsLockScreenActivity)
 
 
     //Exposed to sub-graphs.

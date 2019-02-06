@@ -263,4 +263,10 @@
 
 
     <string name="scheduled_block_time_format" formatted="false">Duration %s - %s</string>
+
+    <!-- Android Settings Package Name -->
+    <string name="android_settings_package_name">com.android.settings</string>
+    <string name="settings_lock_screen_title">You do not have access to this section</string>
+    <string name="settings_lock_screen_description">Access to this section is restricted by parental control rules</string>
+
 </resources>

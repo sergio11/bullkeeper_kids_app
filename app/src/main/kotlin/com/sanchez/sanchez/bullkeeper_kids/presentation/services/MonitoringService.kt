@@ -790,6 +790,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
                     // Get Current Foreground App
                     val currentAppForeground = usageStatsService.getCurrentForegroundApp()
+
                     Timber.d("CFAT: Current App Foreground -> %s", currentAppForeground)
                     if (!currentAppForeground.isNullOrEmpty()
                             && (!currentAppLocked.isNullOrEmpty() ||
@@ -822,49 +823,59 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             // Get information about the application in the BD
                             Timber.d("CFAT: Current App in foreground -> %s ", currentAppForeground)
 
-                            // Get App To Check
-                            val appToCheck: String = when {
-                                !currentAppLocked.isNullOrEmpty()
-                                        && currentAppForeground == packageName -> currentAppLocked!!
-                                !currentDisabledApp.isNullOrEmpty()
-                                        && currentAppForeground == packageName -> currentDisabledApp!!
-                                else -> currentAppForeground
-                            }
+                            if(currentAppForeground
+                                    != getString(R.string.android_settings_package_name)) {
 
-                            // Get Last Data from app
-                            val appInstalledEntity =
-                                    appsInstalledRepository.findByPackageName(appToCheck)
+                                // Get App To Check
+                                val appToCheck: String = when {
+                                    !currentAppLocked.isNullOrEmpty()
+                                            && currentAppForeground == packageName -> currentAppLocked!!
+                                    !currentDisabledApp.isNullOrEmpty()
+                                            && currentAppForeground == packageName -> currentDisabledApp!!
+                                    else -> currentAppForeground
+                                }
 
-                            appInstalledEntity?.let { appInstalled ->
+                                // Get Last Data from app
+                                val appInstalledEntity =
+                                        appsInstalledRepository.findByPackageName(appToCheck)
 
-                                if (appInstalled.disabled) {
-                                    appDisabledStateHandler(currentAppForeground, appInstalled)
+                                appInstalledEntity?.let { appInstalled ->
 
-                                } else {
+                                    if (appInstalled.disabled) {
+                                        appDisabledStateHandler(currentAppForeground, appInstalled)
 
-                                    sendEnableAppAction()
+                                    } else {
 
-                                    if (appInstalled.appRule != null) {
+                                        sendEnableAppAction()
 
-                                        try {
+                                        if (appInstalled.appRule != null) {
 
-                                            val appRuleEnum = AppRuleEnum.valueOf(appInstalled.appRule!!)
+                                            try {
 
-                                            when (appRuleEnum) {
-                                                AppRuleEnum.PER_SCHEDULER -> perScheduledAppRuleHandler(currentAppForeground, appInstalled)
-                                                AppRuleEnum.FUN_TIME -> funTimeAppRuleHandler(currentAppForeground, appInstalled)
-                                                AppRuleEnum.ALWAYS_ALLOWED -> alwaysAllowedAppRuleHandler(currentAppForeground, appInstalled)
-                                                AppRuleEnum.NEVER_ALLOWED -> neverAllowedAppRuleHandler(currentAppForeground, appInstalled)
+                                                val appRuleEnum = AppRuleEnum.valueOf(appInstalled.appRule!!)
+
+                                                when (appRuleEnum) {
+                                                    AppRuleEnum.PER_SCHEDULER -> perScheduledAppRuleHandler(currentAppForeground, appInstalled)
+                                                    AppRuleEnum.FUN_TIME -> funTimeAppRuleHandler(currentAppForeground, appInstalled)
+                                                    AppRuleEnum.ALWAYS_ALLOWED -> alwaysAllowedAppRuleHandler(currentAppForeground, appInstalled)
+                                                    AppRuleEnum.NEVER_ALLOWED -> neverAllowedAppRuleHandler(currentAppForeground, appInstalled)
+                                                }
+
+                                            } catch (ex: Exception) {
+                                                Timber.d("CFAT: ex: %s", ex.message)
+                                                ex.printStackTrace()
                                             }
 
-                                        } catch (ex: Exception) {
-                                            Timber.d("CFAT: ex: %s", ex.message)
-                                            ex.printStackTrace()
                                         }
 
                                     }
-
                                 }
+
+                            } else {
+
+                                if(!preferenceRepository.isSettingsEnabled())
+                                    navigator.showSettingsLockScreenActivity(this)
+
                             }
 
                         }

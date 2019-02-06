@@ -13,8 +13,8 @@ buildscript {
     ext.min_sdk = 21
 
     ext.application_id = 'com.sanchez.sanchez.bullkeeper_kids'
-    ext.version_name = '0.77'
-    ext.version_code = 77
+    ext.version_name = '0.78'
+    ext.version_code = 78
     ext.test_runner = 'android.support.test.runner.AndroidJUnitRunner'
 
     repositories {
@@ -31,8 +31,6 @@ buildscript {
         classpath "io.realm:realm-gradle-plugin:$realm_gradle"
      }
 }
-
-
 
 allprojects {
     repositories {

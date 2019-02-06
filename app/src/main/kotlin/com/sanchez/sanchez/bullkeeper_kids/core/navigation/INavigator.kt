@@ -117,4 +117,10 @@ interface INavigator {
      */
     fun showGeofenceViolatedActivity(ctx: Context, name: String?, type: String?, radius: Float?)
 
+    /**
+     * Show Settings Lock Screen Activity
+     */
+    fun showSettingsLockScreenActivity(ctx: Context)
+
+
 }

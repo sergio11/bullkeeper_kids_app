@@ -98,5 +98,11 @@ data class TerminalDTO(
          * Lock Camera Enabled
          */
         @JsonProperty("camera_enabled")
-        var lockCameraEnabled: Boolean = true
+        var lockCameraEnabled: Boolean = true,
+
+        /**
+         * Settings Enabled
+         */
+        @JsonProperty("settings_enabled")
+        var settingsEnabled: Boolean = false
 )

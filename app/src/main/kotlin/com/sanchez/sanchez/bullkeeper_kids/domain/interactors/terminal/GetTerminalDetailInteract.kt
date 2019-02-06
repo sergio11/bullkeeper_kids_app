@@ -38,16 +38,22 @@ class GetTerminalDetailInteract
         terminalEntity.osVersion = response.data?.osVersion
         terminalEntity.sdkVersion = response.data?.sdkVersion
         terminalEntity.kidId = response.data?.kidId
+
         response.data?.bedTimeEnabled?.let {
             terminalEntity.bedTimeEnabled = it
         }
+
         response.data?.lockScreenEnabled?.let {
             terminalEntity.lockScreenEnabled = it
         }
+
         response.data?.lockCameraEnabled?.let {
             terminalEntity.lockCameraEnabled = it
         }
 
+        response.data?.settingsEnabled?.let {
+            terminalEntity.settingsEnabled = it
+        }
 
         return terminalEntity
 

@@ -228,6 +228,10 @@
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
 
+        <!-- Settings Lock Screen Activity -->
+        <activity android:name=".presentation.lockscreen.SettingsLockScreenActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
 
     </application>
 

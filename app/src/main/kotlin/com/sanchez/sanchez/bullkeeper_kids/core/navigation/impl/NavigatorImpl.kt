@@ -11,14 +11,11 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.GeofenceViolatedActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.ScheduledBlockActiveScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.*
 import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup.PickMeUpActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.settings.SettingsActivity
@@ -32,6 +29,7 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
+
 
     /**
      * Show Usage Access Settings
@@ -50,7 +48,7 @@ class NavigatorImpl
      * Show Login
      */
     override fun showLogin(activity: Activity) {
-        when(preferenceRepository.isTutorialCompleted()) {
+        when (preferenceRepository.isTutorialCompleted()) {
             true -> activity.startActivity(SignInActivity.callingIntent(activity))
             false -> showAppTutorial(activity)
         }
@@ -117,8 +115,7 @@ class NavigatorImpl
     /**
      * Show Legal Content
      */
-    override fun showLegalContent(activity: Activity, legalContentType: LegalContentActivity.LegalTypeEnum)
-        = activity.startActivity(LegalContentActivity.callingIntent(context = activity,
+    override fun showLegalContent(activity: Activity, legalContentType: LegalContentActivity.LegalTypeEnum) = activity.startActivity(LegalContentActivity.callingIntent(context = activity,
             legalTypeEnum = legalContentType))
 
 
@@ -133,7 +130,7 @@ class NavigatorImpl
      * Show Sos Screen
      */
     override fun showSosScreen(activity: Activity) =
-        activity.startActivity(SosActivity.callingIntent(activity))
+            activity.startActivity(SosActivity.callingIntent(activity))
 
 
     /**
@@ -179,8 +176,7 @@ class NavigatorImpl
      */
     override fun showScheduledBlockActive(ctx: Context, identity: String?, name: String?, image: String?,
                                           startAt: String?, endAt: String?,
-                                          description: String?)
-        = ctx.startActivity(ScheduledBlockActiveScreenActivity.callingIntent(ctx,
+                                          description: String?) = ctx.startActivity(ScheduledBlockActiveScreenActivity.callingIntent(ctx,
             identity, name, image, startAt, endAt, description))
 
 
@@ -194,7 +190,12 @@ class NavigatorImpl
      * Show Geofence Violated Activity
      */
     override fun showGeofenceViolatedActivity(ctx: Context, name: String?,
-                                              type: String?, radius: Float?)
-        = ctx.startActivity(GeofenceViolatedActivity.callingIntent(
+                                              type: String?, radius: Float?) = ctx.startActivity(GeofenceViolatedActivity.callingIntent(
             ctx, name, type, radius))
+
+    /**
+     * Show Settings Lock Screen Activity
+     */
+    override fun showSettingsLockScreenActivity(ctx: Context) = ctx.startActivity(SettingsLockScreenActivity.callingIntent(ctx))
+
 }
