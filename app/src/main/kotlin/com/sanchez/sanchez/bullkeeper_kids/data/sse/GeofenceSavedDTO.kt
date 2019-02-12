@@ -56,7 +56,7 @@ data class GeofenceSavedDTO(
         /**
          * Kid
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: String,
 
         /**

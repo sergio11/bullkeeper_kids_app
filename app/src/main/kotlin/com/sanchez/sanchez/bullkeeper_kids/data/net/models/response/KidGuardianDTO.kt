@@ -22,7 +22,7 @@ data class KidGuardianDTO (
         /**
          * Kid
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: KidDTO? = null,
 
         /**

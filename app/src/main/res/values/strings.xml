@@ -269,4 +269,8 @@
     <string name="settings_lock_screen_title">You do not have access to this section</string>
     <string name="settings_lock_screen_description">Access to this section is restricted by parental control rules</string>
 
+    <string name="conversation_message_title">Messages</string>
+    <string name="hint_enter_a_message">Type a message…</string>
+
+
 </resources>

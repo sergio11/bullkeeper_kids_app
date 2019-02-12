@@ -6,59 +6,40 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.Conversation
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.MessageDTO
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
+import retrofit2.http.POST
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+
+
 
 /**
  * Conversation Service
- * DELETE /api/v1/conversations/self/{kid} DELETE_CONVERSATION
- * GET /api/v1/conversations/self/{kid} GET_CONVERSATION_DETAIL
- * DELETE /api/v1/conversations/self/{kid}/messages DELETE_CONVERSATION_MESSAGES
- * GET /api/v1/conversations/self/{kid}/messages GET_CONVERSATION_MESSAGES
- * POST /api/v1/conversations/self/{kid}/messages ADD_MESSAGE
- * DELETE /api/v1/conversations/{id} DELETE_CONVERSATION_BY_ID
- * GET /api/v1/conversations/{id} GET_CONVERSATION_BY_ID
- * DELETE /api/v1/conversations/{id}/messages DELETE_CONVERSATION_MESSAGES
- * GET /api/v1/conversations/{id}/messages GET_CONVERSATION_MESSAGES
- * POST /api/v1/conversations/{id}/messages ADD_MESSAGE
+ * GET -> /api/v1/conversations/{id}
+ * DELETE -> /api/v1/conversations/{id}
+ * GET -> /api/v1/conversations/{id}/messages
+ * DELETE -> /api/v1/conversations/{id}/messages
+ * POST -> /api/v1/conversations/{id}/messages
+ * GET -> /api/v1/conversations/members/self
+ * GET -> /api/v1/conversations/members/{member}
+ * GET -> /api/v1/conversations/members/{memberOne}/{memberTwo}
+ * POST -> /api/v1/conversations/members/{memberOne}/{memberTwo}
+ * DELETE -> /api/v1/conversations/members/{memberOne}/{memberTwo}
+ * GET -> /api/v1/conversations/members/{memberOne}/{memberTwo}/messages
+ * DELETE -> /api/v1/conversations/members/{memberOne}/{memberTwo}/messages
+ * POST -> /api/v1/conversations/members/{memberOne}/{memberTwo}/messages
  */
 interface IConversationService {
 
-    /**
-     * Delete Conversation
-     * @param kid
-     * @return
-     */
-    @DELETE("conversations/self/{kid}")
-    fun deleteConversation(
-            @Path("kid") kid: String): Deferred<APIResponse<String>>
-
 
     /**
-     * Get Conversation
-     * @param kid
+     * Get Conversation By Id
+     * @param id
      * @return
      */
-    @GET("conversations/self/{kid}")
-    fun getConversation(
-            @Path("kid") kid: String): Deferred<APIResponse<ConversationDTO>>
+    @GET("conversations/{id}")
+    fun getConversationById(
+            @Path("id") id: String): Deferred<APIResponse<ConversationDTO>>
 
-    /**
-     * Delete Conversation Messages
-     * @param kid
-     * @return
-     */
-    @DELETE("conversations/self/{kid}/messages")
-    fun deleteConversationMessages(
-            @Path("kid") kid: String,
-            @Query("ids") messageIds: List<String>): Deferred<APIResponse<String>>
-
-    /**
-     * Get Conversation Messages
-     * @param kid
-     * @return
-     */
-    @GET("conversations/self/{kid}/messages")
-    fun getConversationMessages(
-            @Path("kid") kid: String): Deferred<APIResponse<List<MessageDTO>>>
 
     /**
      * Delete Conversation By Id
@@ -70,52 +51,128 @@ interface IConversationService {
             @Path("id") id: String): Deferred<APIResponse<String>>
 
     /**
-     * Get Conversation By Id
-     * @param id
-     * @return
-     */
-    @GET("conversations/{id}")
-    fun getConversationById(
-            @Path("id") id: String): Deferred<APIResponse<ConversationDTO>>
-
-    /**
-     * Delete Messages by conversation id
-     * @param id
-     * @return
-     */
-    @DELETE("conversations/{id}/messages")
-    fun deleteMessagesByConversationId(
-            @Path("id") id: String,
-            @Query("ids") messageIds: List<String>): Deferred<APIResponse<String>>
-
-    /**
-     * Get Messages by conversation id
+     * Get Conversation Messages
      * @param id
      * @return
      */
     @GET("conversations/{id}/messages")
-    fun getMessagesByConversationId(
+    fun getConversationMessages(
             @Path("id") id: String): Deferred<APIResponse<List<MessageDTO>>>
+
+
+    /**
+     * Delete Conversation
+     * @param id
+     * @return
+     */
+    @DELETE("conversations/{id}/messages")
+    fun deleteConversation(
+            @Path("id") id: String): Deferred<APIResponse<String>>
+
+    /**
+     * Delete Conversation Messages
+     * @param id
+     * @param messages
+     * @return
+     */
+    @DELETE("conversations/{id}/messages")
+    fun deleteConversationMessage(
+            @Path("id") id: String,
+            @Query("messages") messages: List<String>
+    ): Deferred<APIResponse<String>>
+
 
     /**
      * Add Message
-     * @param kid
+     * @param id
      * @param message
      * @return
      */
-    @POST("conversations/self/{kid}/messages")
+    @POST("conversations/{id}/messages")
     fun addMessage(
-            @Path("kid") kid: String,
+            @Path("id") id: String,
             @Body message: AddMessageDTO): Deferred<APIResponse<MessageDTO>>
 
+
     /**
-     * Add Message By Conversation Id
-     * @param kid
-     * @param messageDTO
+     * Get Conversations For Self User
      * @return
      */
-    @POST("conversations/{id}/messages")
-    fun addMessageByConversationId(
-            @Path("id") kid: String,
-            @Body messageDTO: AddMessageDTO): Deferred<APIResponse<MessageDTO>>
+    @GET("conversations/members/self")
+    fun getConversationsForSelfUser(): Deferred<APIResponse<List<ConversationDTO>>>
+
+    /**
+     * Get Conversation For Members
+     * @param memberOne
+     * @param memberTwo
+     * @return
+     */
+    @GET("conversations/members/{memberOne}/{memberTwo}")
+    fun getConversationForMembers(
+            @Path("memberOne") memberOne: String,
+            @Path("memberTwo") memberTwo: String
+    ): Deferred<APIResponse<ConversationDTO>>
+
+    /**
+     * Create Conversation
+     * @param memberOne
+     * @param memberTwo
+     * @return
+     */
+    @POST("conversations/members/{memberOne}/{memberTwo}")
+    fun createConversation(
+            @Path("memberOne") memberOne: String,
+            @Path("memberTwo") memberTwo: String
+    ): Deferred<APIResponse<ConversationDTO>>
+
+    /**
+     * Delete Conversatioin For Members
+     * @param memberOne
+     * @param memberTwo
+     * @return
+     */
+    @DELETE("conversations/members/{memberOne}/{memberTwo}")
+    fun deleteConversationForMembers(
+            @Path("memberOne") memberOne: String,
+            @Path("memberTwo") memberTwo: String
+    ): Deferred<APIResponse<String>>
+
+    /**
+     * Get Conversation Messages For Members
+     * @param memberOne
+     * @param memberTwo
+     * @return
+     */
+    @GET("conversations/members/{memberOne}/{memberTwo}/messages")
+    fun getConversationMessagesForMembers(
+            @Path("memberOne") memberOne: String,
+            @Path("memberTwo") memberTwo: String
+    ): Deferred<APIResponse<List<MessageDTO>>>
+
+    /**
+     * Delete Conversation Messages For Members
+     * @param memberOne
+     * @param memberTwo
+     * @return
+     */
+    @DELETE("conversations/members/{memberOne}/{memberTwo}/messages")
+    fun deleteConversationMessagesForMembers(
+            @Path("memberOne") memberOne: String,
+            @Path("memberTwo") memberTwo: String
+    ): Deferred<APIResponse<String>>
+
+    /**
+     * Add Message DTO
+     * @param memberOne
+     * @param memberTwo
+     * @param addMessageDTO
+     * @return
+     */
+    @POST("conversations/members/{memberOne}/{memberTwo}/messages")
+    fun addMessage(
+            @Path("memberOne") memberOne: String,
+            @Path("memberTwo") memberTwo: String,
+            addMessageDTO: AddMessageDTO
+    ): Deferred<APIResponse<MessageDTO>>
+
 }

@@ -48,7 +48,7 @@ data class PhoneNumberBlockedDTO(
         /**
          * Kid
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: String? = null
 
 )

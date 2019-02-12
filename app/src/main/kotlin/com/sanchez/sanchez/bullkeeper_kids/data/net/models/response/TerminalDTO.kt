@@ -79,7 +79,7 @@ data class TerminalDTO(
         /**
          * Kid Id
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kidId: String? = null,
 
         /**

@@ -11,6 +11,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.ConversationMessageListActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
@@ -29,7 +30,6 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
-
 
     /**
      * Show Usage Access Settings
@@ -196,6 +196,12 @@ class NavigatorImpl
     /**
      * Show Settings Lock Screen Activity
      */
-    override fun showSettingsLockScreenActivity(ctx: Context) = ctx.startActivity(SettingsLockScreenActivity.callingIntent(ctx))
+    override fun showSettingsLockScreenActivity(ctx: Context) =
+            ctx.startActivity(SettingsLockScreenActivity.callingIntent(ctx))
 
+    /**
+     * Show Conversation Message List
+     */
+    override fun showConversationMessageList(activity: Activity) =
+            activity.startActivity(ConversationMessageListActivity.callingIntent(activity))
 }

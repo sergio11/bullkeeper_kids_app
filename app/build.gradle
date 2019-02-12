@@ -126,6 +126,7 @@ dependencies {
     implementation applicationDependencies.playServicesLocation
     implementation applicationDependencies.customactivityoncrash
     implementation applicationDependencies.circleView
+    implementation applicationDependencies.chatkit
 
     compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
 

@@ -21,9 +21,9 @@ data class AddKidRequestDTO (
         var location: SaveCurrentLocationDTO? = null,
 
         /**
-         * kid
+         * id
          */
-        @get:JsonProperty("kid")
+        @get:JsonProperty("id")
         var kid: String? = null,
 
         /**

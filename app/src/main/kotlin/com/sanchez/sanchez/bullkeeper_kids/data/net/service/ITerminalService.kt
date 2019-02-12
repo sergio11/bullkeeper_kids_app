@@ -15,17 +15,17 @@ interface ITerminalService {
     /**
      * Save Terminal
      */
-    @POST("children/{kid}/terminal")
-    fun saveTerminal(@Path("kid") kid: String, @Body addTerminalDTO: AddTerminalDTO)
+    @POST("children/{id}/terminal")
+    fun saveTerminal(@Path("id") kid: String, @Body addTerminalDTO: AddTerminalDTO)
             : Deferred<APIResponse<TerminalDTO>>
 
 
     /**
      * Get Terminal Detail
      */
-    @GET("children/{kid}/terminal/{terminal}")
+    @GET("children/{id}/terminal/{terminal}")
     fun getTerminalDetail(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Path("terminal") terminal: String) : Deferred<APIResponse<TerminalDTO>>
 
 

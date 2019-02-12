@@ -52,6 +52,7 @@ ext {
     customactivityoncrashVersion = '2.2.0'
     playServicesVersion = '16.0.1'
     playServicesMapsVersion = '16.0.0'
+    chatkitVersion = '0.3.3'
 
     circleViewVersion = '1.4'
 
@@ -99,7 +100,8 @@ ext {
           playServicesBase:           "com.google.android.gms:play-services-base:${playServicesVersion}",
           playServicesLocation:       "com.google.android.gms:play-services-location:${playServicesMapsVersion}",
           customactivityoncrash:      "cat.ereza:customactivityoncrash:${customactivityoncrashVersion}",
-          circleView:                 "com.github.jakob-grabner:Circle-Progress-View:${circleViewVersion}"
+          circleView:                 "com.github.jakob-grabner:Circle-Progress-View:${circleViewVersion}",
+          chatkit:                    "com.github.stfalcon:chatkit:${chatkitVersion}"
   ]
 
   unitTesting = [

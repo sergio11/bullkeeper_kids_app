@@ -8,42 +8,42 @@ import retrofit2.http.*
 
 /**
  * SMS Service
- * POST /api/v1/children/{kid}/terminal/{terminal}/sms/delete DELETE_SMS_FROM_TERMINAL
+ * POST /api/v1/children/{id}/terminal/{terminal}/sms/delete DELETE_SMS_FROM_TERMINAL
  */
 interface ISmsService {
 
     /**
      * Delete All Apps Installed
      */
-    @DELETE("children/{kid}/terminal/{terminal}/sms")
+    @DELETE("children/{id}/terminal/{terminal}/sms")
     fun deleteAllSmsFromTerminal(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Path("terminal") terminal: String) : Deferred<APIResponse<String>>
 
     /**
      * Get SMS From Terminal
      */
-    @GET("children/{kid}/terminal/{terminal}/sms")
+    @GET("children/{id}/terminal/{terminal}/sms")
     fun getSmsFromTerminal(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Path("terminal") terminal: String
     ) : Deferred<APIResponse<SmsDTO>>
 
     /**
      * Delete SMS By Id
      */
-    @DELETE("children/{kid}/terminal/{terminal}/sms/{sms}")
+    @DELETE("children/{id}/terminal/{terminal}/sms/{sms}")
     fun deleteAppInstalledById(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Path("terminal") terminal: String,
             @Path("sms") sms: String) : Deferred<APIResponse<String>>
 
     /**
      * Save SMS in the terminal
      */
-    @POST("children/{kid}/terminal/{terminal}/sms")
+    @POST("children/{id}/terminal/{terminal}/sms")
     fun saveSmsInTheTerminal(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Path("terminal") terminal: String,
             @Body sms: List<SaveSmsDTO>
     ): Deferred<APIResponse<List<SmsDTO>>>
@@ -51,9 +51,9 @@ interface ISmsService {
     /**
      * Delete SMS from terminal
      */
-    @POST("children/{kid}/terminal/{terminal}/sms/delete")
+    @POST("children/{id}/terminal/{terminal}/sms/delete")
     fun deleteSmsFromTerminal(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Path("terminal") terminal: String,
             @Body smsList: List<String>
     ): Deferred<APIResponse<String>>

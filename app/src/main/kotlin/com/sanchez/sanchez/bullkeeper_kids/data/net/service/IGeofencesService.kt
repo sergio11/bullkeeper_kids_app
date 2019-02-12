@@ -21,9 +21,9 @@ interface IGeofencesService {
      * @param kid
      * @return
      */
-    @GET("children/{kid}/geofences")
+    @GET("children/{id}/geofences")
     fun getGeofencesByKid(
-            @Path("kid") kid: String
+            @Path("id") kid: String
     ): Deferred<APIResponse<List<GeofenceDTO>>>
 
 
@@ -34,9 +34,9 @@ interface IGeofencesService {
      * @param geofenceAlert
      * @return
      */
-    @POST("children/{kid}/geofences/{geofence}/alerts")
+    @POST("children/{id}/geofences/{geofence}/alerts")
     fun saveGeofenceAlert(
-            @Path("kid") kid: String,
+            @Path("id") kid: String,
             @Path("geofence") geofence: String,
             @Body geofenceAlert: SaveGeofenceAlertDTO
     ): Deferred<APIResponse<GeofenceAlertDTO>>

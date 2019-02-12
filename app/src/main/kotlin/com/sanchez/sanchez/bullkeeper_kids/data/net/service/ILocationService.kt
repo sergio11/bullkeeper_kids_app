@@ -16,9 +16,9 @@ interface ILocationService {
     /**
      * Save Current Location
      */
-    @POST("children/{kid}/location")
+    @POST("children/{id}/location")
     fun saveCurrentLocation(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Body currentLocationDTO: SaveCurrentLocationDTO
     ): Deferred<APIResponse<CurrentLocationDTO>>
 }

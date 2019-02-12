@@ -23,15 +23,18 @@ data class ConversationEntity(
         var updateAt: Date? = null,
 
         /**
-         * Kid Guardian
+         * Member One
          */
-        var kidGuardian: KidGuardianEntity? = null,
+        var memberOne: PersonEntity? = null,
+
+        /**
+         * Member Two
+         */
+        var memberTwo: PersonEntity? = null,
 
         /**
          * Message Count
          */
         var messagesCount: Long = 0
 
-
-) {
-}
+)

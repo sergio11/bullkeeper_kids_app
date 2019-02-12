@@ -12,7 +12,7 @@ data class AppDisabledStatusChangedDTO(
         /**
          * Identity
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: String? = null,
 
         /**

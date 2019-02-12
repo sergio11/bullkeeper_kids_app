@@ -45,7 +45,7 @@ data class ContactDTO(
         /**
          * Kid
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: String? = null,
 
         /**

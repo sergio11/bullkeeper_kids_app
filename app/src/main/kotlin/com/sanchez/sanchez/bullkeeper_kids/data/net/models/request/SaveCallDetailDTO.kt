@@ -42,7 +42,7 @@ data class SaveCallDetailDTO (
         /**
          * Kid
          */
-        @get:JsonProperty("kid")
+        @get:JsonProperty("id")
         var kid: String? = null,
 
         /**

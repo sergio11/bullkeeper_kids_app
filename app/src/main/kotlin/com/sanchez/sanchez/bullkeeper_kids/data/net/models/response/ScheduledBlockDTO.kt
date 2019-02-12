@@ -61,7 +61,7 @@ data class ScheduledBlockDTO (
         /**
          * Kid
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: String? = null,
 
         /**

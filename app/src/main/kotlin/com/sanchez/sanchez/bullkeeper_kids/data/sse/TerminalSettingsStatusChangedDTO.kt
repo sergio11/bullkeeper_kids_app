@@ -12,7 +12,7 @@ data class TerminalSettingsStatusChangedDTO(
         /**
          * Kid
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: String? = null,
 
         /**

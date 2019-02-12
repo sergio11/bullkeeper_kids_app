@@ -233,6 +233,11 @@
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
 
+        <!-- Conversation Message List Activity -->
+        <activity android:name=".presentation.conversation.ConversationMessageListActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

@@ -24,6 +24,6 @@ data class SupervisedChildrenDTO(
         /**
          * Kid
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: KidDTO? = null
 )

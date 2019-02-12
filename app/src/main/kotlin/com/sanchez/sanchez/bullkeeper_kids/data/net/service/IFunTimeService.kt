@@ -17,9 +17,9 @@ interface IFunTimeService {
      * @param terminal
      * @return
      */
-    @GET("children/{kid}/terminal/{terminal}/funtime-scheduled")
+    @GET("children/{id}/terminal/{terminal}/funtime-scheduled")
     fun getFunTimeScheduled(
-            @Path("kid") kid: String,
+            @Path("id") kid: String,
             @Path("terminal") terminal: String
     ): Deferred<APIResponse<FunTimeScheduledDTO>>
 }

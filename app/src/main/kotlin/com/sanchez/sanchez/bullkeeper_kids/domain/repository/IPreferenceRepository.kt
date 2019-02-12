@@ -32,7 +32,7 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val CURRENT_DEVICE_ID_DEFAULT_VALUE = ""
 
         // Current User Identity
-        const val PREF_KID_IDENTITY = "kid"
+        const val PREF_KID_IDENTITY = "id"
         const val KID_IDENTITY_DEFAULT_VALUE = ""
 
 

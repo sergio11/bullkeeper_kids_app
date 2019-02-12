@@ -14,9 +14,9 @@ interface IPhoneNumberService {
     /**
      * Get Phone Number Blocked
      */
-    @GET("children/{kid}/terminal/{terminal}/phonenumbers-blocked")
+    @GET("children/{id}/terminal/{terminal}/phonenumbers-blocked")
     fun getPhoneNumberBlocked(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Path("terminal") terminal: String) : Deferred<APIResponse<List<PhoneNumberBlockedDTO>>>
 
 }

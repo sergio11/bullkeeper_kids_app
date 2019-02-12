@@ -7,25 +7,25 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 /**
- * GET /api/v1/children/{kid}/scheduled-blocks GET_ALL_SCHEDULED_BLOCKS
- * GET /api/v1/children/{kid}/scheduled-blocks/{block} GET_SCHEDULED_BLOCK_BY_ID
+ * GET /api/v1/children/{id}/scheduled-blocks GET_ALL_SCHEDULED_BLOCKS
+ * GET /api/v1/children/{id}/scheduled-blocks/{block} GET_SCHEDULED_BLOCK_BY_ID
  */
 interface IScheduledBlocksService {
 
     /**
      * Get All Scheduled Blocks
      */
-    @GET("children/{kid}/scheduled-blocks")
+    @GET("children/{id}/scheduled-blocks")
     fun getAllScheduledBlocks(
-            @Path("kid")  kid: String
+            @Path("id")  kid: String
     ) : Deferred<APIResponse<List<ScheduledBlockDTO>>>
 
     /**
      * Get Scheduled Block By Id
      */
-    @GET("children/{kid}/scheduled-blocks/{block}")
+    @GET("children/{id}/scheduled-blocks/{block}")
     fun getScheduledBlockById(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Path("block") block: String
     ) : Deferred<APIResponse<ScheduledBlockDTO>>
 

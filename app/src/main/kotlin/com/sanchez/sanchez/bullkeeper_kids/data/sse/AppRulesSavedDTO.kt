@@ -12,7 +12,7 @@ data class AppRulesSavedDTO(
         /**
          * Identity
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: String? = null,
 
         /**

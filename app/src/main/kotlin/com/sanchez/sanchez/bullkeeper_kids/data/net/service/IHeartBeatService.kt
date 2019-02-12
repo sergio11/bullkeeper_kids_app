@@ -15,9 +15,9 @@ interface IHeartBeatService {
     /**
      * Notify Terminal Heart Beat
      */
-    @POST("children/{kid}/terminal/{terminal}/heartbeat")
+    @POST("children/{id}/terminal/{terminal}/heartbeat")
     fun notifyTerminalHeartbeat(
-            @Path("kid")  kid: String,
+            @Path("id")  kid: String,
             @Path("terminal") terminal: String,
             @Body heartbeat: NotifyTerminalHeartBeatDTO
     ): Deferred<APIResponse<String>>

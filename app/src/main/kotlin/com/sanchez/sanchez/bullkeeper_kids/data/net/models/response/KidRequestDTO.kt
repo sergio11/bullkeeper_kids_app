@@ -51,7 +51,7 @@ data class KidRequestDTO(
         /**
          * Kid
          */
-        @JsonProperty("kid")
+        @JsonProperty("id")
         var kid: KidDTO? = null,
 
         /**

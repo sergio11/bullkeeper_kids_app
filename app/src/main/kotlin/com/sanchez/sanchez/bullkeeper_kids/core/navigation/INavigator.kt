@@ -122,5 +122,9 @@ interface INavigator {
      */
     fun showSettingsLockScreenActivity(ctx: Context)
 
+    /**
+     * Show Conversation Message List
+     */
+    fun showConversationMessageList(activity: Activity)
 
 }

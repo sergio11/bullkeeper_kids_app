@@ -11,7 +11,7 @@ data class NotifyTerminalHeartBeatDTO (
         /**
          * Kid
          */
-        @get:JsonProperty("kid")
+        @get:JsonProperty("id")
         var kid: String? = null,
 
         /**
