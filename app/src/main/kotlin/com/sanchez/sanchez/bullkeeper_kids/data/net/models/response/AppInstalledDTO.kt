@@ -62,7 +62,7 @@ data class AppInstalledDTO(
         /**
          * Kid
          */
-        @JsonProperty("id")
+        @JsonProperty("kid")
         var kid: String? = null,
 
         /**

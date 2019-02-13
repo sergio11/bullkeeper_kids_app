@@ -17,7 +17,6 @@ import javax.inject.Inject
 class SecondLinkTerminalViewModel
     @Inject constructor(private val getSelfChildrenInteract: GetSelfChildrenInteract) : BaseViewModel()  {
 
-
     /**
      * Live Data
      */
@@ -29,6 +28,8 @@ class SecondLinkTerminalViewModel
      */
     var loadChildrenFailure: MutableLiveData<Failure> = MutableLiveData()
 
+
+    override fun init() {}
 
     /**
      * Methods

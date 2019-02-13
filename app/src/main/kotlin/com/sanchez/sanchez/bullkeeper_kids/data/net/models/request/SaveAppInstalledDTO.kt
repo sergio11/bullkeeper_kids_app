@@ -52,7 +52,7 @@ data class SaveAppInstalledDTO (
         /**
          * Kid
          */
-        @get:JsonProperty("id")
+        @get:JsonProperty("kid")
         var kid: String? = null,
 
         /**

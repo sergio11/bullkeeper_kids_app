@@ -213,9 +213,9 @@
 
             </LinearLayout>
 
-            <!-- Profile -->
+            <!-- Chat -->
             <LinearLayout
-                android:id="@+id/profileAction"
+                android:id="@+id/chatAction"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/home_item_background_state"
@@ -230,13 +230,13 @@
                     android:layout_width="95dp"
                     android:layout_height="95dp"
                     android:contentDescription="@string/content_not_be_loaded"
-                    android:src="@drawable/user_profile" />
+                    android:src="@drawable/chat_icon_solid_white" />
 
                 <TextView
                     style="@style/CommonStrongText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/menu_profile"
+                    android:text="@string/menu_chat"
                     android:textColor="@color/commonWhite" />
 
             </LinearLayout>

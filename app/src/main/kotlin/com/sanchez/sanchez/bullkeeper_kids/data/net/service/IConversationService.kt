@@ -95,11 +95,13 @@ interface IConversationService {
 
 
     /**
-     * Get Conversations For Self User
+     * Get Conversations For Member
      * @return
      */
-    @GET("conversations/members/self")
-    fun getConversationsForSelfUser(): Deferred<APIResponse<List<ConversationDTO>>>
+    @GET("conversations/members/{member}")
+    fun getConversationsForMember(
+            @Path("member") member: String
+    ): Deferred<APIResponse<List<ConversationDTO>>>
 
     /**
      * Get Conversation For Members

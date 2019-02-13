@@ -9,6 +9,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.sanchez.sanchez.bullkeeper_kids.R
 
 
 /**
@@ -199,5 +200,20 @@ abstract class SupportRecyclerViewAdapter<T>
         }
     }
 
+
+    /**
+     * Support Item Swiped View Holder
+     * @param <T>
+    </T> */
+    abstract inner class SupportItemSwipedViewHolder<T>(itemView: View) : SupportItemViewHolder<T>(itemView) {
+
+        val viewBackground: ViewGroup
+        val viewForeground: ViewGroup
+
+        init {
+            this.viewBackground = itemView.findViewById(R.id.item_background)
+            this.viewForeground = itemView.findViewById(R.id.item_foreground)
+        }
+    }
 
 }

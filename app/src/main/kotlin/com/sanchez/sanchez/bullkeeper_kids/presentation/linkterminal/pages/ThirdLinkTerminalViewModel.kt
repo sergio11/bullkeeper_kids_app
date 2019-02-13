@@ -22,7 +22,6 @@ class ThirdLinkTerminalViewModel
                         private val getTerminalDetailInteract: GetTerminalDetailInteract,
                         private val preferenceRepository: IPreferenceRepository) : BaseViewModel()  {
 
-
     /**
      * Live Data
      */
@@ -43,6 +42,8 @@ class ThirdLinkTerminalViewModel
     /**
      * Methods
      */
+
+    override fun init() {}
 
     /**
      * Get Device Information

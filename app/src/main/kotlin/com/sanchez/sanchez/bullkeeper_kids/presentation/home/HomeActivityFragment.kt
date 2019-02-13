@@ -86,9 +86,9 @@ class HomeActivityFragment : BaseFragment() {
             activityHandler.showSosScreen()
         }
 
-        // Profile Action
-        profileAction.setOnClickListener {
-            activityHandler.showBedTime()
+        // Chat Action
+        chatAction.setOnClickListener {
+            activityHandler.showChatAction()
         }
 
 

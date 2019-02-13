@@ -4,7 +4,8 @@ import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IConversationService
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.conversation.*
-import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.ConversationMessageListViewModel
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListViewModel
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.list.ConversationListViewModel
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -83,6 +84,18 @@ class ConversationModule {
     ): GetConversationMessagesInteract
             = GetConversationMessagesInteract(appContext, conversationService, retrofit)
 
+    /**
+     * Provide Get Conversation For Member Interact
+     */
+    @Provides
+    @PerActivity
+    fun provideGetConversationForMemberInteract(
+            appContext: Context,
+            conversationService: IConversationService,
+            retrofit: Retrofit
+    ): GetConversationForMemberInteract
+        = GetConversationForMemberInteract(appContext, conversationService, retrofit)
+
 
     /**
      * Provide Conversation Message List View Model
@@ -93,5 +106,17 @@ class ConversationModule {
             addMessageInteract: AddConversationMessageInteract
     ): ConversationMessageListViewModel
         = ConversationMessageListViewModel(addMessageInteract)
+
+    /**
+     * Provide Conversation List View Model
+     */
+    @Provides
+    @PerActivity
+    fun provideConversationListViewModel(
+            getConversationForMemberInteract: GetConversationForMemberInteract,
+            deleteConversationInteract: DeleteConversationInteract
+    ): ConversationListViewModel
+        = ConversationListViewModel(getConversationForMemberInteract, deleteConversationInteract)
+
 
 }

@@ -1,7 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.home
 
 import android.Manifest
-import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -81,12 +80,6 @@ class HomeActivity : BaseActivity(),
     @Inject
     internal lateinit var preferenceRepository: IPreferenceRepository
 
-
-    /**
-     * Device Policy Manager
-     */
-    private lateinit var devicePolicyManager: DevicePolicyManager
-
     /**
      * On Create
      */
@@ -153,6 +146,9 @@ class HomeActivity : BaseActivity(),
      */
     override fun getLayoutRes(): Int = R.layout.activity_home
 
+    /**
+     * Fragment
+     */
     override fun fragment(): BaseFragment = HomeActivityFragment()
 
 
@@ -172,8 +168,8 @@ class HomeActivity : BaseActivity(),
     override fun showTimeBankScreen() = navigator.showTimeBankScreen(this)
 
     /**
-     * Show Bed Time
+     * Show Chat Action
      */
-    override fun showBedTime() = navigator.showBedTimeScreen(this)
+    override fun showChatAction() = navigator.showConversationList(this)
 
 }

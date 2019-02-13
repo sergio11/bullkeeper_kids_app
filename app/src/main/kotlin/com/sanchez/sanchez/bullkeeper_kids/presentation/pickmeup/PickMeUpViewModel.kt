@@ -20,7 +20,6 @@ class PickMeUpViewModel
             private val sendRequestInteract: SendRequestInteract,
             private val getAddressFromCurrentLocationInteract: GetAddressFromCurrentLocationInteract) : BaseViewModel()  {
 
-
     /**
      * Address From Current Location
      */
@@ -41,6 +40,8 @@ class PickMeUpViewModel
      * Pick Me Up Request Expired At
      */
     var pickMeUpRequestExpiredAt: MutableLiveData<Date> = MutableLiveData()
+
+    override fun init() {}
 
     /**
      * Get Address From Current Location

@@ -33,8 +33,8 @@
     <string name="menu_time_bank">Time Bank</string>
     <!-- SOS -->
     <string name="menu_sos">S.O.S</string>
-    <!-- SOS -->
-    <string name="menu_profile">Profile</string>
+    <!-- Chat -->
+    <string name="menu_chat">Chat</string>
 
     <!-- Sign In -->
     <string name="sign_in_btn">Sign In</string>
@@ -271,6 +271,14 @@
 
     <string name="conversation_message_title">Messages</string>
     <string name="hint_enter_a_message">Type a message…</string>
+    <string name="delete_list_menu_item">Delete</string>
 
+    <string name="snackbar_undo_action">UNDO</string>
+    <string name="conversation_was_deleted">The Conversation was deleted</string>
 
+    <!-- Conversation List -->
+    <string name="no_conversation_found">No Conversations found</string>
+    <string name="error_loading_conversation">Error loading conversation</string>
+    <string name="loading_conversation_message">Loading Conversation …</string>
+    <string name="conversations_title">Conversations</string>
 </resources>

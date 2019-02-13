@@ -16,4 +16,10 @@ abstract class BaseViewModel : ViewModel() {
     protected fun handleFailure(failure: Failure) {
         this.failure.value = failure
     }
+
+
+    /**
+     * Init
+     */
+    abstract fun init()
 }

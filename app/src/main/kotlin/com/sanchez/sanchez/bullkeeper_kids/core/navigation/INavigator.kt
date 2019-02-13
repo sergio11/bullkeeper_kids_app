@@ -127,4 +127,9 @@ interface INavigator {
      */
     fun showConversationMessageList(activity: Activity)
 
+    /**
+     * Show Conversation List
+     */
+    fun showConversationList(activity: Activity)
+
 }

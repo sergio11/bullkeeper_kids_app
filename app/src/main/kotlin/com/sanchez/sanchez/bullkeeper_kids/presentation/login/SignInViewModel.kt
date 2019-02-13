@@ -16,7 +16,6 @@ class SignInViewModel
     @Inject constructor(private val authenticateInteract: AuthenticateInteract,
                         private val preferenceRepository: IPreferenceRepository) : BaseViewModel()  {
 
-
     /**
      * Sig In Success
      */
@@ -26,6 +25,9 @@ class SignInViewModel
      * Sig In Failure
      */
     var sigInFailure: MutableLiveData<Failure> = MutableLiveData()
+
+
+    override fun init(){}
 
 
     /**

@@ -21,7 +21,7 @@ interface IHomeActivityHandler {
     fun showTimeBankScreen()
 
     /**
-     * Show Bed Time
+     * Show Chat Action
      */
-    fun showBedTime()
+    fun showChatAction()
 }

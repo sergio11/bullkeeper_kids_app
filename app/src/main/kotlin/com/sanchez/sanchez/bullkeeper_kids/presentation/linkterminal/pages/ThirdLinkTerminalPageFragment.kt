@@ -79,9 +79,9 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
     override fun initializeInjector(): LinkDeviceTutorialComponent {
         val linkDeviceTutorialComponent =
                 LinkDeviceTutorialComponent::class.java
-                .cast((activity as HasComponent<LinkDeviceTutorialComponent>)
+                .cast((activity as HasComponent<*>)
                         .component)
-        linkDeviceTutorialComponent.inject(this)
+        linkDeviceTutorialComponent?.inject(this)
         return linkDeviceTutorialComponent
     }
 

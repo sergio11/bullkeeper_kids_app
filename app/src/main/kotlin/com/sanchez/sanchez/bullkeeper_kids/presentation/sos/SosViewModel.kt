@@ -19,7 +19,6 @@ class SosViewModel
             private val sendRequestInteract: SendRequestInteract,
             private val getAddressFromCurrentLocationInteract: GetAddressFromCurrentLocationInteract) : BaseViewModel()  {
 
-
     /**
      * Address From Current Location
      */
@@ -40,6 +39,8 @@ class SosViewModel
      * Sos Request Expired At
      */
     var sosRequestExpiredAt: MutableLiveData<Date> = MutableLiveData()
+
+    override fun init() {}
 
     /**
      * Get Address From Current Location

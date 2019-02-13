@@ -234,9 +234,15 @@
             android:screenOrientation="portrait" />
 
         <!-- Conversation Message List Activity -->
-        <activity android:name=".presentation.conversation.ConversationMessageListActivity"
+        <activity android:name=".presentation.conversation.chat.ConversationMessageListActivity"
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
+
+        <!-- Conversation List Activity -->
+        <activity android:name=".presentation.conversation.list.ConversationListActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
+
 
     </application>
 

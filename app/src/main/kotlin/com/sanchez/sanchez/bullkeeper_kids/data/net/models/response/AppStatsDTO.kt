@@ -48,7 +48,7 @@ data class AppStatsDTO(
     /**
      * Kid
      */
-    @JsonProperty("id")
+    @JsonProperty("kid")
     var kid: String? = null,
 
     /**

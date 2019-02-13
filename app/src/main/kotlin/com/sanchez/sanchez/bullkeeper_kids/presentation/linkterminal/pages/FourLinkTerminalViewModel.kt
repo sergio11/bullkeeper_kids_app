@@ -25,7 +25,6 @@ class FourLinkTerminalViewModel
                         private val synchronizeTerminalContactsInteract: SynchronizeTerminalContactsInteract)
     : BaseViewModel()  {
 
-
     // Total Apps Sync
     var totalAppsSync: MutableLiveData<Int> = MutableLiveData()
 
@@ -50,6 +49,8 @@ class FourLinkTerminalViewModel
     // Error Sync Contacts
     var errorSyncContacts: MutableLiveData<Failure> = MutableLiveData()
 
+
+    override fun init() {}
 
     /**
      * Sync Apps

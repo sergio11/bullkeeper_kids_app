@@ -22,6 +22,7 @@ class FirstLinkTerminalViewModel
             private val preferenceRepository: IPreferenceRepository)
     : BaseViewModel()  {
 
+
     /**
      * Terminal Succes
      */
@@ -32,6 +33,8 @@ class FirstLinkTerminalViewModel
      */
     var terminalFailure: MutableLiveData<Failure> = MutableLiveData()
 
+
+    override fun init() {}
 
     /**
      * Check Terminal Status

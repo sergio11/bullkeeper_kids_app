@@ -1,4 +1,4 @@
-package com.sanchez.sanchez.bullkeeper_kids.presentation.conversation
+package com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.list
 
 import android.content.Context
 import android.content.Intent
@@ -15,10 +15,10 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import javax.inject.Inject
 
 /**
- * Conversation Message List Activity
+ * Conversation List Activity
  */
-class ConversationMessageListActivity : BaseActivity(),
-        HasComponent<ConversationComponent>, IConversationMessageListHandler {
+class ConversationListActivity : BaseActivity(),
+        HasComponent<ConversationComponent>, IConversationListHandler {
 
 
     val TAG = "CONVERSATION_MESSAGE_LIST"
@@ -67,13 +67,13 @@ class ConversationMessageListActivity : BaseActivity(),
     /**
      * Get Layout Resource
      */
-    override fun getLayoutRes(): Int = R.layout.activity_conversation_message_list
+    override fun getLayoutRes(): Int = R.layout.activity_conversation_list
 
 
     /**
      * Fragment
      */
-    override fun fragment(): BaseFragment = ConversationMessageListActivityFragment()
+    override fun fragment(): BaseFragment = ConversationListActivityFragment()
 
 
     companion object {
@@ -81,13 +81,8 @@ class ConversationMessageListActivity : BaseActivity(),
         /**
          * Calling Intent
          */
-        fun callingIntent(context: Context): Intent {
-            val intent = Intent(context, ConversationMessageListActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                    or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-            return intent
-        }
+        fun callingIntent(context: Context): Intent
+                = Intent(context, ConversationListActivity::class.java)
     }
 
 }

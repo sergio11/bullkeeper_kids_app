@@ -1,4 +1,4 @@
-package com.sanchez.sanchez.bullkeeper_kids.presentation.conversation
+package com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat
 
 import android.content.Context
 import android.os.Bundle
@@ -54,7 +54,7 @@ class ConversationMessageListActivityFragment : BaseFragment() {
     /**
      * Layout Id
      */
-    override fun layoutId(): Int = R.layout.fragment_conversation_message_list
+    override fun layoutId(): Int = R.layout.fragment_conversation_list
 
 
     /**
