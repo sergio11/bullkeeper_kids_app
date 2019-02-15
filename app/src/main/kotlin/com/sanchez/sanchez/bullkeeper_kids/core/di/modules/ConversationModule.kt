@@ -98,6 +98,18 @@ class ConversationModule {
 
 
     /**
+     * Provide Delete All Conversation For Member Interact
+     */
+    @Provides
+    @PerActivity
+    fun provideDeleteAllConversationForMemberInteract(
+            conversationService: IConversationService,
+            retrofit: Retrofit
+    ): DeleteAllConversationForMemberInteract
+        = DeleteAllConversationForMemberInteract(conversationService, retrofit)
+
+
+    /**
      * Provide Conversation Message List View Model
      */
     @Provides
@@ -114,9 +126,11 @@ class ConversationModule {
     @PerActivity
     fun provideConversationListViewModel(
             getConversationForMemberInteract: GetConversationForMemberInteract,
-            deleteConversationInteract: DeleteConversationInteract
+            deleteConversationInteract: DeleteConversationInteract,
+            deleteAllConversationForMemberInteract: DeleteAllConversationForMemberInteract
     ): ConversationListViewModel
-        = ConversationListViewModel(getConversationForMemberInteract, deleteConversationInteract)
+        = ConversationListViewModel(getConversationForMemberInteract,
+            deleteConversationInteract, deleteAllConversationForMemberInteract)
 
 
 }

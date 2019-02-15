@@ -5,10 +5,12 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.app.DialogFragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
@@ -19,11 +21,13 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.SupportItemTouchHelper
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.SupportRecyclerViewAdapter
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.decoration.ItemOffsetDecoration
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.ConfirmationDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.ConversationEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.LoadingStateEnum
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_conversation_list.*
+import timber.log.Timber
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
@@ -120,7 +124,8 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
         recyclerView.addItemDecoration(itemOffsetDecoration)
         // Set Animator
         recyclerView.itemAnimator = DefaultItemAnimator()
-        adapter = ConversationAdapter(currentActivity, ArrayList(), picasso)
+        val selfUserId = preferenceRepository.getPrefKidIdentity()
+        adapter = ConversationAdapter(currentActivity, ArrayList(), picasso, selfUserId)
         recyclerView.adapter = adapter
         adapter.setOnSupportRecyclerViewListener(this)
 
@@ -128,8 +133,28 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
 
         }
 
+        deleteAllConversations.setOnClickListener {
+
+            activityHandler.showConfirmationDialog(R.string.delete_all_conversations_confirm, object : ConfirmationDialogFragment.ConfirmationDialogListener {
+
+                override fun onAccepted(dialog: DialogFragment) {
+                    val memberOne = preferenceRepository.getPrefKidIdentity()
+                    viewModel.deleteAll(memberOne)
+                }
+
+                override fun onRejected(dialog: DialogFragment) {}
+
+            })
+
+        }
+
+        // adding item touch helper
+        val itemTouchHelperCallback = SupportItemTouchHelper<ConversationAdapter.ConversationViewHolder>(0, ItemTouchHelper.LEFT, this)
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
+
         // Load Conversations
         viewModel.load(kid)
+
     }
 
     /**
@@ -197,6 +222,7 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
             when(loadingState) {
                 // Loading
                 LoadingStateEnum.LOADING -> {
+                    deleteAllConversations.invisible()
                     loadingView.visible()
                     errorOcurred.invisible()
                     noResultsFound.invisible()
@@ -204,6 +230,7 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
                 }
                 // No Data Found
                 LoadingStateEnum.NO_DATA_FOUND -> {
+                    deleteAllConversations.invisible()
                     loadingView.invisible()
                     errorOcurred.invisible()
                     noResultsFound.visible()
@@ -211,13 +238,16 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
                 }
                 // Data Found
                 LoadingStateEnum.DATA_FOUND -> {
+                    deleteAllConversations.visible()
                     loadingView.invisible()
                     errorOcurred.invisible()
                     noResultsFound.invisible()
-                    swipeRefreshLayout.invisible()
+                    swipeRefreshLayout.visible()
+                    swipeRefreshLayout.isRefreshing = false
                 }
                 // Error
                 LoadingStateEnum.ERROR -> {
+                    deleteAllConversations.invisible()
                     loadingView.invisible()
                     errorOcurred.visible()
                     noResultsFound.invisible()
@@ -268,10 +298,11 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
      */
     private fun conversationObserverHandler(){
         // Create the observer which updates the UI.
-        val routeListObserver = Observer<List<ConversationEntity>> { conversationList ->
+        val conversationListObserver = Observer<List<ConversationEntity>> { conversationList ->
             adapter.setData(conversationList as MutableList<ConversationEntity>)
             adapter.notifyDataSetChanged()
+
         }
-        viewModel.conversations.observe(this, routeListObserver)
+        viewModel.conversations.observe(this, conversationListObserver)
     }
 }

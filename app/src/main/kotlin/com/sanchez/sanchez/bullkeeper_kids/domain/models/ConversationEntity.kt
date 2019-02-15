@@ -35,6 +35,16 @@ data class ConversationEntity(
         /**
          * Message Count
          */
-        var messagesCount: Long = 0
+        var messagesCount: Long = 0,
+
+        /**
+         * Unread Messages
+         */
+        var unreadMessages: Long = 0,
+
+        /**
+         * Last Message
+         */
+        var lastMessage: String? = null
 
 )

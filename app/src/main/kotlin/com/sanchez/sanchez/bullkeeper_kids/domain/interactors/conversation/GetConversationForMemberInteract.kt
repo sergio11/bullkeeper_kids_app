@@ -2,9 +2,12 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.conversation
 
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.R
+import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IConversationService
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.RetrofitException
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.*
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -18,6 +21,10 @@ class GetConversationForMemberInteract
         private val conversationService: IConversationService,
         retrofit: Retrofit): UseCase<List<ConversationEntity>, GetConversationForMemberInteract.Params>(retrofit){
 
+
+    private val NO_CONVERSATION_FOUND_CODE_NAME = "NO_CONVERSATION_FOUND"
+
+
     /**
      * On Executed
      */
@@ -25,8 +32,8 @@ class GetConversationForMemberInteract
         conversationService.getConversationsForMember(params.id).await().data?.map { ConversationEntity().apply {
             identity = it.identity
             messagesCount = it.messagesCount
-            createAt = it.createAt?.ToDateTime(context.getString(R.string.date_time_format))
-            updateAt = it.updateAt?.ToDateTime(context.getString(R.string.date_time_format))
+            createAt = it.createAt?.ToDateTime(context.getString(R.string.date_format_server_response))
+            updateAt = it.updateAt?.ToDateTime(context.getString(R.string.date_format_server_response))
             memberOne = PersonEntity().apply {
                 identity = it.memberOne?.identity
                 firstName = it.memberOne?.firstName
@@ -39,7 +46,18 @@ class GetConversationForMemberInteract
                 lastName = it.memberTwo?.lastName
                 profileImage = it.memberTwo?.profileImage
             }
+            lastMessage = it.lastMessage
+            unreadMessages = it.unreadMessages
         } } ?: ArrayList()
+
+    /**
+     * On Api Exception Ocurred
+     */
+    override fun onApiExceptionOcurred(apiException: RetrofitException, response: APIResponse<*>?): Failure {
+        return if(response?.codeName != null
+                && response.codeName.equals(NO_CONVERSATION_FOUND_CODE_NAME))
+            NoConversationFoundFailure() else super.onApiExceptionOcurred(apiException, response)
+    }
 
 
     /**
@@ -53,5 +71,7 @@ class GetConversationForMemberInteract
             var id: String
     )
 
+
+    class NoConversationFoundFailure: Failure.FeatureFailure()
 
 }

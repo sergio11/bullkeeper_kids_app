@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/home_background_soft_orange">
 
     <!-- Include Toolbar -->
@@ -14,15 +15,15 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp" />
 
-    <!-- Include Content Home -->
+    <!-- Include Content -->
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         />
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeightLarge"
+    android:layout_height="120dp"
     android:layout_marginBottom="5dp"
     android:orientation="vertical">
 
@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/deleteConversation"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
@@ -56,10 +56,11 @@
 
             <!-- Conversation Icon -->
             <ImageView
-                android:id="@+id/alertIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/userImage"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_gravity="center"
+                android:src="@drawable/user_default"
                 android:contentDescription="@string/content_not_be_loaded"
                 />
 
@@ -70,26 +71,64 @@
             android:id="@+id/separator"
             android:layout_width="4dp"
             android:layout_height="match_parent"
-            android:background="@color/commonWhite"
+            android:background="@color/primaryDarkColor"
             app:layout_constraintStart_toEndOf="@id/conversationIconContainer"
-            app:layout_constraintEnd_toStartOf="@id/conversationMessage"/>
+            app:layout_constraintEnd_toStartOf="@id/userName"/>
 
 
+        <!-- User Name -->
         <TextView
-            android:id="@+id/conversationMessage"
+            android:id="@+id/userName"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/primaryDarkColor"
+            style="@style/CommonStrongText.Big"
+            android:text="-"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/separator"
+            app:layout_constraintBottom_toTopOf="@id/lastMessage"/>
+
+
+        <!-- Last Message -->
+        <TextView
+            android:id="@+id/lastMessage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:textColor="@color/primaryColor"
+            android:singleLine="true"
             style="@style/CommonStrongText.Medium"
             android:text="-"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userName"
+            app:layout_constraintEnd_toStartOf="@id/unreadMessagesCount"
+            app:layout_constraintStart_toEndOf="@+id/separator"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!-- Unread Message Count -->
+        <TextView
+            android:id="@+id/unreadMessagesCount"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            style="@style/CommonStrongText.Small"
+            android:layout_marginStart="@dimen/common_margin"
+            android:layout_marginEnd="@dimen/common_margin"
+            android:padding="0dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/commonWhite"
+            android:visibility="visible"
+            android:text="-"
+            android:background="@drawable/background_alert_count_warning"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/separator" />
-
-
+            app:layout_constraintStart_toEndOf="@+id/lastMessage"
+            app:layout_constraintTop_toBottomOf="@id/userName"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     </android.support.constraint.ConstraintLayout>

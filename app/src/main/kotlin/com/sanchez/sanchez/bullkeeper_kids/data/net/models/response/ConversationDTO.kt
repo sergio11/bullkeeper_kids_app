@@ -43,6 +43,18 @@ data class ConversationDTO(
         * Messages Count
         */
         @JsonProperty("messages_count")
-        var messagesCount: Long = 0
+        var messagesCount: Long = 0,
+
+        /**
+         * Unread Messages
+         */
+        @JsonProperty("unread_messages")
+        var unreadMessages: Long = 0,
+
+        /**
+         * Last Message
+         */
+        @JsonProperty("last_message")
+        var lastMessage: String? = null
 
 )

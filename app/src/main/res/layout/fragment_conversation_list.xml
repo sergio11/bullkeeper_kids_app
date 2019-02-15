@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent">
 
     <RelativeLayout
         android:id="@+id/containerHeader"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/common_section_translucent_background"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/container">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true">
 
         <TextView
             style="@style/CommonStrongText.Big"
@@ -42,10 +40,19 @@
 
             <ImageView
                 android:id="@+id/addConversation"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_margin="8dp"
                 android:src="@drawable/add_conversation_solid"
+                android:contentDescription="@string/content_not_be_loaded" />
+
+
+            <ImageView
+                android:id="@+id/deleteAllConversations"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/trash_icon_white"
                 android:contentDescription="@string/content_not_be_loaded" />
 
         </LinearLayout>
@@ -55,12 +62,12 @@
 
     <FrameLayout
         android:id="@+id/container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/containerHeader"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/containerHeader">
 
         <!-- Loading -->
         <LinearLayout
@@ -103,8 +110,8 @@
             android:id="@+id/errorOcurred"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="false"
             android:visibility="gone"
+            android:focusable="false"
             android:focusableInTouchMode="false">
 
             <!-- Message -->
@@ -174,4 +181,5 @@
 
     </FrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>
