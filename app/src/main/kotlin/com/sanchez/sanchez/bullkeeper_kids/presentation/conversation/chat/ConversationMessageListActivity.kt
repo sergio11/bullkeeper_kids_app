@@ -73,20 +73,39 @@ class ConversationMessageListActivity : BaseActivity(),
     /**
      * Fragment
      */
-    override fun fragment(): BaseFragment = ConversationMessageListActivityFragment()
+    override fun fragment(): BaseFragment = ConversationMessageListActivityFragment().apply {
+        arguments = intent.extras
+    }
 
 
     companion object {
 
         /**
+         * Args
+         */
+        const val CONVERSATION_ID_ARG = "CONVERSATION_ID_ARG"
+        const val MEMBER_ONE_ARG = "MEMBER_ONE_ARG"
+        const val MEMBER_TWO_ARG = "MEMBER_TWO_ARG"
+
+
+        /**
          * Calling Intent
          */
-        fun callingIntent(context: Context): Intent {
-            val intent = Intent(context, ConversationMessageListActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                    or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-            return intent
+        @JvmStatic
+        fun callingIntent(context: Context, conversation: String): Intent
+            = Intent(context, ConversationMessageListActivity::class.java).apply {
+            putExtra(CONVERSATION_ID_ARG, conversation)
+        }
+
+
+        /**
+         * Calling Intent
+         */
+        @JvmStatic
+        fun callingIntent(context: Context, memberOne: String, memberTwo: String): Intent
+                = Intent(context, ConversationMessageListActivity::class.java).apply {
+            putExtra(MEMBER_ONE_ARG, memberOne)
+            putExtra(MEMBER_TWO_ARG, memberTwo)
         }
     }
 

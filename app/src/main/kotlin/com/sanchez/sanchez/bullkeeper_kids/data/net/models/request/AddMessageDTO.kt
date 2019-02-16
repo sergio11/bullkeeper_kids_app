@@ -8,6 +8,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class AddMessageDTO(
 
         /**
+         * Conversation
+         */
+        @JsonProperty("conversation")
+        var conversation: String? = null,
+
+        /**
          * Text
          */
         @JsonProperty("text")
@@ -25,4 +31,4 @@ data class AddMessageDTO(
         @JsonProperty("to")
         var to: String? = null
 
-) {}
+)

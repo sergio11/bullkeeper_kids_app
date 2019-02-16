@@ -33,6 +33,7 @@ class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
 
 
+
     /**
      * Show Usage Access Settings
      */
@@ -204,8 +205,15 @@ class NavigatorImpl
     /**
      * Show Conversation Message List
      */
-    override fun showConversationMessageList(activity: Activity) =
-            activity.startActivity(ConversationMessageListActivity.callingIntent(activity))
+    override fun showConversationMessageList(activity: Activity, conversation: String)
+        = activity.startActivity(ConversationMessageListActivity.callingIntent(activity, conversation))
+
+    /**
+     * Show Conversation Message List
+     */
+    override fun showConversationMessageList(activity: Activity, memberOne: String, memberTwo: String)
+        = activity.startActivity(ConversationMessageListActivity.callingIntent(activity, memberOne, memberTwo))
+
 
     /**
      * Show Conversation List

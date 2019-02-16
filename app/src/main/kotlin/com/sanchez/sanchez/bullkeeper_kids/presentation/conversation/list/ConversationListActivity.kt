@@ -75,6 +75,12 @@ class ConversationListActivity : BaseActivity(),
      */
     override fun fragment(): BaseFragment = ConversationListActivityFragment()
 
+    /**
+     * Show Conversation Message List
+     */
+    override fun showConversationMessageList(conversation: String) =
+            navigator.showConversationMessageList(this, conversation)
+
 
     companion object {
 

@@ -282,4 +282,13 @@
     <string name="loading_conversation_message">Loading Conversation …</string>
     <string name="conversations_title">Conversations</string>
     <string name="delete_all_conversations_confirm">Do you want to delete all conversations?</string>
+    <string name="delete_all_conversation_messages_confirm">Do you want to delete all messages from the conversation?</string>
+    <string name="delete_conversation_selected_messages_confirm">Do you want to delete the selected messages?</string>
+    <string name="sending_message_wait">sending wait …</string>
+    <string name="load_conversation_error">There was an error loading the conversation</string>
+    <string name="all_messages_deleted">All messages deleted successfully</string>
+    <string name="selected_messages_deleted">Selected messages deleted successfully</string>
+    <string name="error_create_message">The message could not be sent</string>
+    <string name="conversation_message_list_date_header_format">dd MMMM yyyy</string>
+    <string name="error_deleting_messages">Error deleting messages</string>
 </resources>

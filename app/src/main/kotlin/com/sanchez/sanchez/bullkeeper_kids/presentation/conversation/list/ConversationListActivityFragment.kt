@@ -148,6 +148,14 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
 
         }
 
+        noResultsFound.setOnClickListener {
+            viewModel.load(kid)
+        }
+
+        errorOcurred.setOnClickListener {
+            viewModel.load(kid)
+        }
+
         // adding item touch helper
         val itemTouchHelperCallback = SupportItemTouchHelper<ConversationAdapter.ConversationViewHolder>(0, ItemTouchHelper.LEFT, this)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
@@ -206,7 +214,9 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
     /**
      * On Item Click
      */
-    override fun onItemClick(item: ConversationEntity) {}
+    override fun onItemClick(item: ConversationEntity) {
+        item.identity?.let { activityHandler.showConversationMessageList(it) }
+    }
 
     /**
      * On Refresh
@@ -257,14 +267,6 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
         }
 
         viewModel.state.observe(this, stateObserver)
-
-        noResultsFound.setOnClickListener {
-           viewModel.load(kid)
-        }
-
-        errorOcurred.setOnClickListener {
-            viewModel.load(kid)
-        }
     }
 
 

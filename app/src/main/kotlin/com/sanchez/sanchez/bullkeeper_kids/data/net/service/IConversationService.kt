@@ -137,7 +137,7 @@ interface IConversationService {
     ): Deferred<APIResponse<ConversationDTO>>
 
     /**
-     * Delete Conversatioin For Members
+     * Delete Conversation For Members
      * @param memberOne
      * @param memberTwo
      * @return
@@ -145,7 +145,8 @@ interface IConversationService {
     @DELETE("conversations/members/{memberOne}/{memberTwo}")
     fun deleteConversationForMembers(
             @Path("memberOne") memberOne: String,
-            @Path("memberTwo") memberTwo: String
+            @Path("memberTwo") memberTwo: String,
+            @Query("messages") messages: List<String>
     ): Deferred<APIResponse<String>>
 
     /**

@@ -14,13 +14,13 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 /**
- * Get Conversation Messages Interact
+ * Get Conversation Messages for members Interact
  */
-class GetConversationMessagesInteract
+class GetConversationMessagesForMembersInteract
     @Inject constructor(
         private val context: Context,
         private val conversationService: IConversationService,
-        retrofit: Retrofit): UseCase<List<MessageEntity>, GetConversationMessagesInteract.Params>(retrofit){
+        retrofit: Retrofit): UseCase<List<MessageEntity>, GetConversationMessagesForMembersInteract.Params>(retrofit){
 
 
     private val NO_MESSAGES_FOUND_CODE_NAME = "NO_MESSAGES_FOUND"
@@ -29,7 +29,9 @@ class GetConversationMessagesInteract
      * On Executed
      */
     override suspend fun onExecuted(params: Params): List<MessageEntity> =
-            conversationService.getConversationMessages(params.id).await().data?.map {
+            conversationService.getConversationMessagesForMembers(
+                    memberOne = params.memberOne,
+                    memberTwo = params.memberTwo).await().data?.map {
                 MessageEntity().apply {
                     identity = it.identity
                     viewed = it.viewed
@@ -68,9 +70,14 @@ class GetConversationMessagesInteract
     data class Params(
 
             /**
-             * Id
+             * Member One
              */
-            var id: String
+            var memberOne: String,
+
+            /**
+             * Member Two
+             */
+            var memberTwo: String
     )
 
 

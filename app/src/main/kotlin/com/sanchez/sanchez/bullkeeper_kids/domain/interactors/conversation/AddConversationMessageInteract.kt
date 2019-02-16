@@ -23,41 +23,31 @@ class AddConversationMessageInteract
     /**
      * On Executed
      */
-    override suspend fun onExecuted(params: Params): MessageEntity {
+    override suspend fun onExecuted(params: Params): MessageEntity  =
+            conversationService.addMessage(params.conversation,
+                    AddMessageDTO(params.conversation, params.text, params.from, params.to)).await().data.let {
+                MessageEntity().apply {
+                    identity = it?.identity
+                    viewed = it?.viewed ?: false
+                    text = it?.text
+                    conversation = it?.conversation
+                    from = PersonEntity(
+                            identity = it?.from?.identity,
+                            firstName = it?.from?.firstName,
+                            lastName = it?.from?.lastName,
+                            profileImage = it?.from?.profileImage
+                    )
+                    to = PersonEntity(
+                            identity = it?.to?.identity,
+                            firstName = it?.to?.firstName,
+                            lastName = it?.to?.lastName,
+                            profileImage = it?.to?.profileImage
+                    )
+                    createAt = it?.createAt?.ToDateTime(appContext
+                            .getString(R.string.date_format_server_response))
 
-        val response = conversationService.addMessage(params.conversation,
-                AddMessageDTO(params.text, params.from, params.to)).await()
-
-        return response.data?.let {
-
-            val messageEntity = MessageEntity()
-            messageEntity.identity = it.identity
-            messageEntity.viewed = it.viewed
-            messageEntity.text = it.text
-            messageEntity.conversation = it.conversation
-            messageEntity.from = PersonEntity(
-                    identity = it.from?.identity,
-                    firstName = it.from?.firstName,
-                    lastName = it.from?.lastName,
-                    profileImage = it.from?.profileImage
-            )
-            messageEntity.to = PersonEntity(
-                    identity = it.to?.identity,
-                    firstName = it.to?.firstName,
-                    lastName = it.to?.lastName,
-                    profileImage = it.to?.profileImage
-            )
-            // Create At
-            it.createAt?.let {
-                messageEntity.createAt = it.ToDateTime(appContext
-                        .getString(R.string.date_time_format))
+                }
             }
-
-            return messageEntity
-
-        } ?: MessageEntity()
-
-    }
 
 
     /**

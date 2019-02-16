@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mainContainer"
     android:layout_width="match_parent"
@@ -9,27 +9,14 @@
     android:orientation="vertical"
     android:background="@android:color/transparent">
 
-    <!-- Include Toolbar -->
-    <include
-        android:id="@+id/appToolbarInclude"
-        layout="@layout/app_translucent_toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <!-- Conversation Message Header -->
     <RelativeLayout
         android:id="@+id/conversationMessageHeader"
         android:layout_width="0dp"
         android:layout_height="?android:attr/listPreferredItemHeightSmall"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appToolbarInclude"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -68,10 +55,10 @@
             android:layout_alignParentEnd="true">
 
             <!-- Clear Message  -->
-            <ImageButton
+            <ImageView
                 android:id="@+id/clearMessage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
@@ -89,11 +76,10 @@
         android:id="@+id/content"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/conversationMessageHeader"
-        app:layout_constraintVertical_bias="0.508"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/conversationMessageHeader"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -108,17 +94,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/input"
-                app:dateHeaderFormat="dd MMMM yyyy"
+                app:dateHeaderFormat="@string/conversation_message_list_date_header_format"
                 app:dateHeaderTextColor="@color/commonWhite"
                 app:incomingDefaultBubbleColor="@color/primaryDarkColor"
                 app:incomingDefaultBubblePressedColor="@color/primaryDarkColor"
                 app:incomingDefaultBubbleSelectedColor="@color/gray"
                 app:incomingTextColor="@color/commonWhite"
+                app:incomingTimeTextColor="@color/commonWhite"
+                app:incomingTimeTextSize="@dimen/common_strong_small_text_size"
+                app:incomingTimeTextStyle="bold"
                 app:incomingTextSize="18sp"
                 app:outcomingDefaultBubbleColor="@color/commonWhite"
-                app:outcomingDefaultBubblePressedColor="@color/commonWhite"
+                app:outcomingDefaultBubblePressedColor="@color/gray"
                 app:outcomingTextColor="@color/primaryColor"
                 app:outcomingTextSize="18sp"
+                app:outcomingTimeTextColor="@color/primaryDarkColor"
+                app:outcomingTimeTextStyle="bold"
+                app:outcomingTimeTextSize="@dimen/common_strong_small_text_size"
                 app:textAutoLink="all"/>
 
             <View
@@ -136,11 +128,18 @@
                 android:layout_alignParentBottom="true"
                 app:inputCursorDrawable="@drawable/shape_custom_cursor"
                 app:inputHint="@string/hint_enter_a_message"
-                app:inputTextColor="@color/commonWhite"
+                app:inputHintColor="@color/white"
+                app:inputButtonDefaultBgPressedColor="@color/primaryDarkColor"
+                app:inputButtonDefaultBgColor="@color/primaryColor"
+                app:inputButtonDefaultBgDisabledColor="@color/primaryColor"
+                app:inputButtonDefaultIconColor="@color/white"
+                app:inputButtonDefaultIconDisabledColor="@color/white"
+                app:inputButtonDefaultIconPressedColor="@color/white"
+                app:inputTextColor="@color/white"
                 app:showAttachmentButton="false"/>
 
         </RelativeLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

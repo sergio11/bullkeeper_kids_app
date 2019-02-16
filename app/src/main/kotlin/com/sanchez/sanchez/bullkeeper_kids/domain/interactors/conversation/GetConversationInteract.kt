@@ -21,48 +21,32 @@ class GetConversationInteract
     /**
      * On Executed
      */
-    override suspend fun onExecuted(params: Params): ConversationEntity {
-
-        val response =
-                conversationService.getConversationById(params.id).await()
-
-        return response.data?.let {
-
-            val conversationEntity = ConversationEntity()
-            conversationEntity.identity = it.identity
-            conversationEntity.messagesCount = it.messagesCount
-
-            it.createAt?.let {
-                conversationEntity.createAt = it.ToDateTime(
-                        context.getString(R.string.date_time_format)
+    override suspend fun onExecuted(params: Params): ConversationEntity
+        = conversationService.getConversationById(params.id).await().data?.let {
+            ConversationEntity().apply {
+                identity = it.identity
+                messagesCount = it.messagesCount
+                createAt = it.createAt?.ToDateTime(
+                        context.getString(R.string.date_format_server_response)
                 )
-            }
-
-            it.updateAt?.let {
-                conversationEntity.updateAt = it.ToDateTime(
-                        context.getString(R.string.date_time_format)
+                updateAt = it.updateAt?.ToDateTime(
+                        context.getString(R.string.date_format_server_response)
                 )
+                memberOne = PersonEntity().apply {
+                    identity = it.memberOne?.identity
+                    firstName = it.memberOne?.firstName
+                    lastName = it.memberOne?.lastName
+                    profileImage = it.memberOne?.profileImage
+                }
+                memberTwo = PersonEntity().apply {
+                    identity = it.memberTwo?.identity
+                    firstName = it.memberTwo?.firstName
+                    lastName = it.memberTwo?.lastName
+                    profileImage = it.memberTwo?.profileImage
+                }
+
             }
-
-            conversationEntity.memberOne = PersonEntity().apply {
-                identity = it.memberOne?.identity
-                firstName = it.memberOne?.firstName
-                lastName = it.memberOne?.lastName
-                profileImage = it.memberOne?.profileImage
-            }
-
-            conversationEntity.memberTwo = PersonEntity().apply {
-                identity = it.memberTwo?.identity
-                firstName = it.memberTwo?.firstName
-                lastName = it.memberTwo?.lastName
-                profileImage = it.memberTwo?.profileImage
-            }
-
-            return conversationEntity
-
-        } ?: ConversationEntity()
-    }
-
+         } ?: ConversationEntity()
 
     /**
      * Params
