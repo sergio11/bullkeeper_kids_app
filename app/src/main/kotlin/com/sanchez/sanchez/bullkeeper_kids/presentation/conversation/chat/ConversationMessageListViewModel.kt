@@ -19,7 +19,8 @@ class ConversationMessageListViewModel
             private val getConversationMessagesForMembersInteract: GetConversationMessagesForMembersInteract,
             private val deleteConversationMessagesForMembersInteract: DeleteConversationMessagesForMembersInteract,
             private val getConversationInteract: GetConversationInteract,
-            private val getConversationForMembersInteract: GetConversationForMembersInteract
+            private val getConversationForMembersInteract: GetConversationForMembersInteract,
+            private val createConversationForMembersInteract: CreateConversationForMembersInteract
     )
     : BaseViewModel()  {
 
@@ -72,6 +73,7 @@ class ConversationMessageListViewModel
 
     /**
      * Load Conversation Detail
+     * @param conversation
      */
     fun loadConversationDetail(conversation: String){
         result.value = OperationResultEnum.LOADING
@@ -79,18 +81,44 @@ class ConversationMessageListViewModel
             it.either(fnR = fun(conversation: ConversationEntity) {
                 conversationDetail.value = conversation
                 result.postValue(OperationResultEnum.CONVERSATION_DETAIL_LOADED)
-            }, fnL = fun(_: Failure){
-                result.postValue(OperationResultEnum.CONVERSATION_DETAIL_FAILED)
+            }, fnL = fun(failure: Failure){
+                when(failure) {
+                    is GetConversationInteract.ConversationNotFoundFailure -> null
+                    else -> result.postValue(OperationResultEnum.CONVERSATION_DETAIL_FAILED)
+                }
+
             })
         }
     }
 
     /**
      * Load Conversation Detail
+     * @param memberOne
+     * @param memberTwo
      */
     fun loadConversationDetail(memberOne: String, memberTwo: String) {
         result.value = OperationResultEnum.LOADING
         getConversationForMembersInteract(GetConversationForMembersInteract.Params(memberOne, memberTwo)){
+            it.either(fnR = fun(conversation: ConversationEntity) {
+                conversationDetail.value = conversation
+                result.postValue(OperationResultEnum.CONVERSATION_DETAIL_LOADED)
+            }, fnL = fun(failure: Failure){
+                when(failure) {
+                    is GetConversationForMembersInteract.ConversationNotFoundFailure -> createConversation(memberOne, memberTwo)
+                    else -> result.postValue(OperationResultEnum.CONVERSATION_DETAIL_FAILED)
+                }
+            })
+        }
+    }
+
+    /**
+     * Create Conversation
+     * @param memberOne
+     * @param memberTwo
+     */
+    fun createConversation(memberOne: String, memberTwo: String) {
+        result.value = OperationResultEnum.LOADING
+        createConversationForMembersInteract(CreateConversationForMembersInteract.Params(memberOne, memberTwo)) {
             it.either(fnR = fun(conversation: ConversationEntity) {
                 conversationDetail.value = conversation
                 result.postValue(OperationResultEnum.CONVERSATION_DETAIL_LOADED)
@@ -102,6 +130,7 @@ class ConversationMessageListViewModel
 
     /**
      * Load Messages
+     * @param conversation
      */
     fun loadMessages(conversation: String) {
         result.value = OperationResultEnum.LOADING
@@ -124,6 +153,8 @@ class ConversationMessageListViewModel
 
     /**
      * Load Messages
+     * @param memberOne
+     * @param memberTwo
      */
     fun loadMessages(memberOne: String, memberTwo: String) {
         result.value = OperationResultEnum.LOADING
@@ -150,6 +181,8 @@ class ConversationMessageListViewModel
 
     /**
      * Delete All Messages
+     * @param conversation
+     * @param ids
      */
     fun deleteAllMessages(conversation: String, ids: List<String> = ArrayList()){
         result.value = OperationResultEnum.LOADING
@@ -174,6 +207,9 @@ class ConversationMessageListViewModel
 
     /**
      * Delete All Messages
+     * @param memberOne
+     * @param memberTwo
+     * @param ids
      */
     fun deleteAllMessages(memberOne: String, memberTwo: String, ids: List<String> = ArrayList()){
         result.value = OperationResultEnum.LOADING
@@ -198,6 +234,10 @@ class ConversationMessageListViewModel
 
     /**
      * Add Message
+     * @param conversation
+     * @param text
+     * @param from
+     * @param to
      */
     fun addMessage(conversation: String, text: String, from: String, to: String) {
         result.value = OperationResultEnum.LOADING

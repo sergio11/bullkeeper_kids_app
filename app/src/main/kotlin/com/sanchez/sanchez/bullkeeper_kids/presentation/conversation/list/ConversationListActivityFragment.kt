@@ -130,7 +130,7 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
         adapter.setOnSupportRecyclerViewListener(this)
 
         addConversation.setOnClickListener {
-
+            activityHandler.showKidGuardian()
         }
 
         deleteAllConversations.setOnClickListener {

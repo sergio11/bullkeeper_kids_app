@@ -1,7 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
-import android.widget.ImageView
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IConversationService
@@ -97,8 +96,8 @@ class ConversationModule {
             appContext: Context,
             conversationService: IConversationService,
             retrofit: Retrofit
-    ): GetConversationForMemberInteract
-        = GetConversationForMemberInteract(appContext, conversationService, retrofit)
+    ): GetConversationsForMemberInteract
+        = GetConversationsForMemberInteract(appContext, conversationService, retrofit)
 
 
     /**
@@ -150,6 +149,19 @@ class ConversationModule {
         = GetConversationForMembersInteract(appContext, conversationService, retrofit)
 
     /**
+     * Provide Create Conversation For Members Interact
+     */
+    @Provides
+    @PerActivity
+    fun provideCreateConversationForMembersInteract(
+            appContext: Context,
+            conversationService: IConversationService,
+            retrofit: Retrofit
+    ): CreateConversationForMembersInteract
+        = CreateConversationForMembersInteract(appContext, conversationService, retrofit)
+
+
+    /**
      * Provide Image Loader
      * @param picasso
      * @return
@@ -174,11 +186,13 @@ class ConversationModule {
             getConversationMessagesForMembersInteract: GetConversationMessagesForMembersInteract,
             deleteConversationMessagesForMembersInteract: DeleteConversationMessagesForMembersInteract,
             getConversationInteract: GetConversationInteract,
-            getConversationForMembersInteract: GetConversationForMembersInteract
+            getConversationForMembersInteract: GetConversationForMembersInteract,
+            createConversationForMembersInteract: CreateConversationForMembersInteract
     ): ConversationMessageListViewModel
         = ConversationMessageListViewModel(addMessageInteract, getConversationMessagesInteract,
             deleteConversationMessagesInteract, getConversationMessagesForMembersInteract,
-            deleteConversationMessagesForMembersInteract, getConversationInteract, getConversationForMembersInteract)
+            deleteConversationMessagesForMembersInteract, getConversationInteract, getConversationForMembersInteract,
+            createConversationForMembersInteract)
 
     /**
      * Provide Conversation List View Model
@@ -186,11 +200,11 @@ class ConversationModule {
     @Provides
     @PerActivity
     fun provideConversationListViewModel(
-            getConversationForMemberInteract: GetConversationForMemberInteract,
+            getConversationsForMemberInteract: GetConversationsForMemberInteract,
             deleteConversationInteract: DeleteConversationInteract,
             deleteAllConversationForMemberInteract: DeleteAllConversationForMemberInteract
     ): ConversationListViewModel
-        = ConversationListViewModel(getConversationForMemberInteract,
+        = ConversationListViewModel(getConversationsForMemberInteract,
             deleteConversationInteract, deleteAllConversationForMemberInteract)
 
 

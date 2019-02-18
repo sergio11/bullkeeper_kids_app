@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.models
 
+import java.io.Serializable
 import java.util.*
 
 /**
@@ -76,4 +77,4 @@ data class GuardianEntity(
          */
         var visible: Boolean = false
 
-)
+): Serializable

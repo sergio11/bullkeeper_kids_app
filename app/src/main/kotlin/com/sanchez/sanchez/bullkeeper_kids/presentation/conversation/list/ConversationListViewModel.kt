@@ -5,7 +5,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseViewModel
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.conversation.DeleteAllConversationForMemberInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.conversation.DeleteConversationInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.conversation.GetConversationForMemberInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.conversation.GetConversationsForMemberInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.ConversationEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.LoadingStateEnum
 import javax.inject.Inject
@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 class ConversationListViewModel
     @Inject constructor(
-            private val getConversationForMemberInteract: GetConversationForMemberInteract,
+            private val getConversationsForMemberInteract: GetConversationsForMemberInteract,
             private val deleteConversationInteract: DeleteConversationInteract,
             private val deleteAllConversationForMemberInteract: DeleteAllConversationForMemberInteract
     )
@@ -69,7 +69,7 @@ class ConversationListViewModel
     fun load(member: String){
         result.value = OperationResultEnum.NO_OPERATION_RESULT
         state.value = LoadingStateEnum.LOADING
-        getConversationForMemberInteract(GetConversationForMemberInteract.Params(member)){
+        getConversationsForMemberInteract(GetConversationsForMemberInteract.Params(member)){
             it.either(fnR = fun(conversationList: List<ConversationEntity>) {
                 if(!conversationList.isNullOrEmpty()) {
                     conversations.value = conversationList
@@ -79,7 +79,7 @@ class ConversationListViewModel
                 }
             }, fnL = fun(failure: Failure){
                 when(failure) {
-                    is GetConversationForMemberInteract.NoConversationFoundFailure -> state.postValue(LoadingStateEnum.NO_DATA_FOUND)
+                    is GetConversationsForMemberInteract.NoConversationFoundFailure -> state.postValue(LoadingStateEnum.NO_DATA_FOUND)
                     else ->  state.postValue(LoadingStateEnum.ERROR)
                 }
             })

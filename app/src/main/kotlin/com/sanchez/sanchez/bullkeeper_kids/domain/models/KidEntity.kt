@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.models
 
+import java.io.Serializable
 import java.util.*
 
 /**
@@ -46,4 +47,4 @@ data class KidEntity(
          * Terminals
          */
         var terminals: List<TerminalEntity>? = null
-)
+): Serializable

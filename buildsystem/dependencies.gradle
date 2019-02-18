@@ -48,7 +48,6 @@ ext {
     runner_version = '1.0.2-alpha1'
     espresso_version = '3.0.2-alpha1'
     //Development
-    leakCanaryVersion = '1.5'
     customactivityoncrashVersion = '2.2.0'
     playServicesVersion = '16.0.1'
     playServicesMapsVersion = '16.0.0'
@@ -122,8 +121,6 @@ ext {
   ]
 
   development = [
-          leakCanary:         "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
-          leakCanaryNoop:     "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}",
           stethoFacebook:     "com.facebook.stetho:stetho:$stethoVersion",
           stethoRealm:        "com.uphyca:stetho_realm:$stethoRealmVersion"
       ]

@@ -12,4 +12,9 @@ interface IConversationListHandler: IBasicActivityHandler {
      */
     fun showConversationMessageList(conversation: String)
 
+    /**
+     * Show Kid Guardian
+     */
+    fun showKidGuardian()
+
 }

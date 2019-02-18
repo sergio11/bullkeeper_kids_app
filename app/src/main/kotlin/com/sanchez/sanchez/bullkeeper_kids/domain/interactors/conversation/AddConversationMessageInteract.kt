@@ -44,7 +44,7 @@ class AddConversationMessageInteract
                             profileImage = it?.to?.profileImage
                     )
                     createAt = it?.createAt?.ToDateTime(appContext
-                            .getString(R.string.date_format_server_response))
+                            .getString(R.string.date_time_format_2))
 
                 }
             }

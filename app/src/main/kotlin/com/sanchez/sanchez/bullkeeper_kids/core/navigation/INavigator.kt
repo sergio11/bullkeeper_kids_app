@@ -137,4 +137,9 @@ interface INavigator {
      */
     fun showConversationList(activity: Activity)
 
+    /**
+     * Show Kid Guardians
+     */
+    fun showKidGuardians(activity: Activity, requestCode: Int)
+
 }

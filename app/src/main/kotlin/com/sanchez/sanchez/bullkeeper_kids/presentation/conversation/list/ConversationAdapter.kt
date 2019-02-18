@@ -48,32 +48,71 @@ class ConversationAdapter
         override fun bind(element: ConversationEntity) {
             super.bind(element)
 
+
             val userTarget = if(element.memberOne?.identity == selfUserId)
                 element.memberTwo
             else
                 element.memberOne
 
-            picasso.load(userTarget?.profileImage)
-                    .placeholder(R.drawable.user_default)
-                    .error(R.drawable.user_default)
-                    .into(itemView.findViewById<ImageView>(R.id.userImage))
-
             itemView.findViewById<TextView>(R.id.userName).text =
                     String.format(Locale.getDefault(), "%s - %s",
                             userTarget?.firstName, userTarget?.lastName)
 
-            itemView.findViewById<TextView>(R.id.lastMessage).text =
-                    element.lastMessage
-
-            val unreadMessagesCountTextView =
-                    itemView.findViewById<TextView>(R.id.unreadMessagesCount)
-
-            if(element.unreadMessages > 0) {
-                unreadMessagesCountTextView.visible()
-                unreadMessagesCountTextView.text = element.unreadMessages.toString()
+            if(!userTarget?.profileImage.isNullOrEmpty()) {
+                picasso.load(userTarget?.profileImage)
+                        .placeholder(R.drawable.user_default)
+                        .error(R.drawable.user_default)
+                        .into(itemView.findViewById<ImageView>(R.id.userImage))
             } else {
-                unreadMessagesCountTextView.invisible()
+                itemView.findViewById<ImageView>(R.id.userImage)
+                        .setImageResource(R.drawable.user_default)
             }
+
+
+            val unreadMessagesCountTextView = itemView.findViewById<TextView>(R.id.unreadMessagesCount);
+
+            if(selfUserId == element.memberOne?.identity) {
+
+                if(!element.lastMessageForMemberOne.isNullOrEmpty())
+                    itemView.findViewById<TextView>(R.id.lastMessage).text =
+                            element.lastMessageForMemberOne
+                else if(!element.lastMessage.isNullOrEmpty())
+                    itemView.findViewById<TextView>(R.id.lastMessage).text =
+                            element.lastMessage
+                else
+                    itemView.findViewById<TextView>(R.id.lastMessage).text =
+                            context.getString(R.string.no_messages_found_for_conversation)
+
+                if(element.pendingMessagesForMemberOne > 0) {
+                    unreadMessagesCountTextView.visible()
+                    unreadMessagesCountTextView.text = element.pendingMessagesForMemberOne.toString()
+                } else {
+                    unreadMessagesCountTextView.invisible()
+                    unreadMessagesCountTextView.text = "-"
+                }
+
+            } else {
+
+                if(!element.lastMessageForMemberTwo.isNullOrEmpty())
+                    itemView.findViewById<TextView>(R.id.lastMessage).text =
+                            element.lastMessageForMemberTwo
+                else if(!element.lastMessage.isNullOrEmpty())
+                    itemView.findViewById<TextView>(R.id.lastMessage).text =
+                            element.lastMessage
+                else
+                    itemView.findViewById<TextView>(R.id.lastMessage).text =
+                            context.getString(R.string.no_messages_found_for_conversation)
+
+
+                if(element.pendingMessagesForMemberTwo > 0) {
+                    unreadMessagesCountTextView.visible()
+                    unreadMessagesCountTextView.text = element.pendingMessagesForMemberTwo.toString()
+                } else {
+                    unreadMessagesCountTextView.invisible()
+                    unreadMessagesCountTextView.text = "-"
+                }
+            }
+
         }
     }
 

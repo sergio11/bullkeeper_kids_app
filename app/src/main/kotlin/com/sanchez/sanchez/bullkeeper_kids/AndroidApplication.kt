@@ -1,15 +1,11 @@
 package com.sanchez.sanchez.bullkeeper_kids
 
 import android.app.Application
-import android.content.Intent
-import android.support.v4.content.ContextCompat
 import android.util.Log
 import cat.ereza.customactivityoncrash.config.CaocConfig
 import com.facebook.stetho.Stetho
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.*
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.*
-import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
-import com.squareup.leakcanary.LeakCanary
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import io.realm.Realm
 import timber.log.Timber
@@ -134,8 +130,6 @@ class AndroidApplication : Application(){
         // Debug Tree
         Timber.plant(Timber.DebugTree())
 
-        this.initializeLeakDetection()
-
         this.initializeStetho()
     }
 
@@ -162,14 +156,6 @@ class AndroidApplication : Application(){
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         )
-    }
-
-
-    /**
-     * Initializae Leak Detection
-     */
-    private fun initializeLeakDetection() {
-        if (BuildConfig.DEBUG) LeakCanary.install(this)
     }
 
     /**

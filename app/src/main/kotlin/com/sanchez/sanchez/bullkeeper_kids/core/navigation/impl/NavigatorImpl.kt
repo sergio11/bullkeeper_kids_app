@@ -14,6 +14,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDevi
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.list.ConversationListActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.kidguardians.KidGuardiansActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.legalcontent.LegalContentActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.LinkDeviceTutorialActivity
@@ -31,8 +32,6 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
-
-
 
     /**
      * Show Usage Access Settings
@@ -220,4 +219,12 @@ class NavigatorImpl
      */
     override fun showConversationList(activity: Activity) =
         activity.startActivity(ConversationListActivity.callingIntent(activity))
+
+
+    /**
+     * Show Kid Guardians
+     */
+    override fun showKidGuardians(activity: Activity, requestCode: Int) =
+            activity.startActivityForResult(KidGuardiansActivity.callingIntent(activity), requestCode)
+
 }

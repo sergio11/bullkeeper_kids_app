@@ -18,7 +18,7 @@ import javax.inject.Inject
 class GetSelfChildrenInteract
     @Inject constructor(
             retrofit: Retrofit,
-            private val parentService: IGuardiansService,
+            private val guardiansService: IGuardiansService,
             private val apiEndPointsHelper: ApiEndPointsHelper): UseCase<ChildrenOfSelfGuardianEntity, UseCase.None>(retrofit){
 
 
@@ -41,7 +41,7 @@ class GetSelfChildrenInteract
      */
     override suspend fun onExecuted(params: None): ChildrenOfSelfGuardianEntity {
 
-        val response = parentService.getSelfChildren().await()
+        val response = guardiansService.getSelfChildren().await()
 
         val childrenOfSelfParent = ChildrenOfSelfGuardianEntity()
         childrenOfSelfParent.confirmed = response.data?.confirmed

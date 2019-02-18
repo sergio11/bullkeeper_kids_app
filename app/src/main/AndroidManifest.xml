@@ -243,6 +243,11 @@
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait" />
 
+        <!-- Kid Guardians Activity -->
+        <activity android:name=".presentation.kidguardians.KidGuardiansActivity"
+            android:theme="@style/AppTheme.Common"
+            android:screenOrientation="portrait" />
+
 
     </application>
 

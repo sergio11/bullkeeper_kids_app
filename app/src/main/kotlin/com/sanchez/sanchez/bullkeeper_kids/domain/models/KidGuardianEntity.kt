@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.models
 
+import java.io.Serializable
 import java.util.*
 
 /**
@@ -39,4 +40,4 @@ data class KidGuardianEntity(
          */
         var role: GuardianRolesEnum? = null
 
-)
+): Serializable

@@ -15,14 +15,14 @@ import javax.inject.Inject
 /**
  * Get Conversation For Member Interact
  */
-class GetConversationForMemberInteract
+class GetConversationsForMemberInteract
     @Inject constructor(
         private val context: Context,
         private val conversationService: IConversationService,
-        retrofit: Retrofit): UseCase<List<ConversationEntity>, GetConversationForMemberInteract.Params>(retrofit){
+        retrofit: Retrofit): UseCase<List<ConversationEntity>, GetConversationsForMemberInteract.Params>(retrofit){
 
 
-    private val NO_CONVERSATION_FOUND_CODE_NAME = "NO_CONVERSATION_FOUND"
+    private val NO_CONVERSATION_FOUND_CODE_NAME = "NO_CONVERSATIONS_FOUND"
 
 
     /**
@@ -47,7 +47,10 @@ class GetConversationForMemberInteract
                 profileImage = it.memberTwo?.profileImage
             }
             lastMessage = it.lastMessage
-            unreadMessages = it.unreadMessages
+            lastMessageForMemberOne = it.lastMessageForMemberOne
+            lastMessageForMemberTwo = it.lastMessageForMemberTwo
+            pendingMessagesForMemberOne = it.pendingMessagesForMemberOne
+            pendingMessagesForMemberTwo = it.pendingMessagesForMemberTwo
         } } ?: ArrayList()
 
     /**
@@ -71,7 +74,7 @@ class GetConversationForMemberInteract
             var id: String
     )
 
-
+    // No Conversation Found Failure
     class NoConversationFoundFailure: Failure.FeatureFailure()
 
 }

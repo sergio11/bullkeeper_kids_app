@@ -291,4 +291,12 @@
     <string name="error_create_message">The message could not be sent</string>
     <string name="conversation_message_list_date_header_format">dd MMMM yyyy</string>
     <string name="error_deleting_messages">Error deleting messages</string>
+
+    <!-- Kid Guardians -->
+    <string name="kid_guardian_list_title">Your Supervisors</string>
+    <string name="error_loading_kid_guardian">Error loading Data</string>
+    <string name="no_data_found">No Data Found</string>
+
+    <string name="no_messages_found_for_conversation">All messages will be stored securely</string>
+
 </resources>

@@ -38,13 +38,29 @@ data class ConversationEntity(
         var messagesCount: Long = 0,
 
         /**
-         * Unread Messages
-         */
-        var unreadMessages: Long = 0,
-
-        /**
          * Last Message
          */
-        var lastMessage: String? = null
+        var lastMessage: String? = null,
+
+        /**
+         * Last Message For Member One
+         */
+        var lastMessageForMemberOne: String? = null,
+
+        /**
+         * Last Message For Member Two
+         */
+        var lastMessageForMemberTwo: String? = null,
+
+        /**
+         * Pending Messages For Member One
+         */
+        var pendingMessagesForMemberOne: Long = 0,
+
+        /**
+         * Pending Messages For Member Two
+         */
+        var pendingMessagesForMemberTwo: Long = 0
+
 
 )

@@ -146,11 +146,9 @@ dependencies {
     androidTestImplementation acceptanceTestDependencies.androidAnnotations
 
     //Development dependencies
-    debugImplementation developmentDependencies.leakCanary
     debugImplementation developmentDependencies.stethoFacebook
     debugImplementation developmentDependencies.stethoRealm
-    releaseImplementation developmentDependencies.leakCanaryNoop
-    testImplementation developmentDependencies.leakCanaryNoop
+
 }
 
 kotlin {

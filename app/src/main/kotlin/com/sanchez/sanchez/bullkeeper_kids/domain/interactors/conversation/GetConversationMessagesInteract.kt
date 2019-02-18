@@ -23,6 +23,7 @@ class GetConversationMessagesInteract
         retrofit: Retrofit): UseCase<List<MessageEntity>, GetConversationMessagesInteract.Params>(retrofit){
 
 
+    private val CONVERSATION_NOT_FOUND_CODE_NAME = "CONVERSATION_NOT_FOUND_EXCEPTION"
     private val NO_MESSAGES_FOUND_CODE_NAME = "NO_MESSAGES_FOUND"
 
     /**
@@ -48,7 +49,7 @@ class GetConversationMessagesInteract
                             profileImage = it.to?.profileImage
                     )
                     createAt = it.createAt?.ToDateTime(context
-                            .getString(R.string.date_format_server_response))
+                            .getString(R.string.date_time_format_2))
                 }
             }?.toList() ?: ArrayList()
 
@@ -59,7 +60,11 @@ class GetConversationMessagesInteract
     override fun onApiExceptionOcurred(apiException: RetrofitException, response: APIResponse<*>?): Failure {
         return if(response?.codeName != null
                 && response.codeName.equals(NO_MESSAGES_FOUND_CODE_NAME))
-            NoMessagesFoundFailure() else super.onApiExceptionOcurred(apiException, response)
+                NoMessagesFoundFailure()
+            else if(response?.codeName != null
+                && response.codeName.equals(CONVERSATION_NOT_FOUND_CODE_NAME))
+                ConversationNotFoundFailure()
+            else super.onApiExceptionOcurred(apiException, response)
     }
 
     /**
@@ -74,5 +79,9 @@ class GetConversationMessagesInteract
     )
 
 
+    // No Messages Found Failure
     class NoMessagesFoundFailure: Failure.FeatureFailure()
+
+    // Conversation Not Found Failure
+    class ConversationNotFoundFailure: Failure.FeatureFailure()
 }
