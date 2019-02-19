@@ -188,7 +188,7 @@ class ConversationModule {
     @PerActivity
     fun provideImageLoader(picasso: Picasso): ImageLoader {
         return ImageLoader { imageView, url, payload ->
-            picasso.load(url).placeholder(R.drawable.user_default).error(R.drawable.user_default).into(imageView) }
+            picasso.load(url).placeholder(R.drawable.user_default_inverse_solid).error(R.drawable.user_default_inverse_solid).into(imageView) }
     }
 
 
