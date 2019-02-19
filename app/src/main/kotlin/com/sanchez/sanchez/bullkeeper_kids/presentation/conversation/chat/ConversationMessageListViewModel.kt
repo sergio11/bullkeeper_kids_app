@@ -20,7 +20,8 @@ class ConversationMessageListViewModel
             private val deleteConversationMessagesForMembersInteract: DeleteConversationMessagesForMembersInteract,
             private val getConversationInteract: GetConversationInteract,
             private val getConversationForMembersInteract: GetConversationForMembersInteract,
-            private val createConversationForMembersInteract: CreateConversationForMembersInteract
+            private val createConversationForMembersInteract: CreateConversationForMembersInteract,
+            private val setMessagesAsViewedInteract: SetMessagesAsViewedInteract
     )
     : BaseViewModel()  {
 
@@ -39,7 +40,9 @@ class ConversationMessageListViewModel
         NO_MESSAGES_FOUND,
         LOAD_MESSAGES_ERROR,
         CONVERSATION_DETAIL_LOADED,
-        CONVERSATION_DETAIL_FAILED
+        CONVERSATION_DETAIL_FAILED,
+        MESSAGES_MARKED_AS_SEEN_SUCCESS,
+        MESSAGES_MARKED_AS_SEEN_FAILED
     }
 
     /**
@@ -81,12 +84,8 @@ class ConversationMessageListViewModel
             it.either(fnR = fun(conversation: ConversationEntity) {
                 conversationDetail.value = conversation
                 result.postValue(OperationResultEnum.CONVERSATION_DETAIL_LOADED)
-            }, fnL = fun(failure: Failure){
-                when(failure) {
-                    is GetConversationInteract.ConversationNotFoundFailure -> null
-                    else -> result.postValue(OperationResultEnum.CONVERSATION_DETAIL_FAILED)
-                }
-
+            }, fnL = fun(_: Failure){
+                result.postValue(OperationResultEnum.CONVERSATION_DETAIL_FAILED)
             })
         }
     }
@@ -124,6 +123,21 @@ class ConversationMessageListViewModel
                 result.postValue(OperationResultEnum.CONVERSATION_DETAIL_LOADED)
             }, fnL = fun(_: Failure){
                 result.postValue(OperationResultEnum.CONVERSATION_DETAIL_FAILED)
+            })
+        }
+    }
+
+    /**
+     * Set Messages As Viewed
+     * @param conversation
+     * @param messagesList
+     */
+    fun setMessagesAsViewed(conversation: String, messagesList: List<String>) {
+        setMessagesAsViewedInteract(SetMessagesAsViewedInteract.Params(conversation, messagesList)){
+            it.either(fnR = fun(_: String) {
+                result.postValue(OperationResultEnum.MESSAGES_MARKED_AS_SEEN_SUCCESS)
+            }, fnL = fun(failure: Failure){
+                result.postValue(OperationResultEnum.MESSAGES_MARKED_AS_SEEN_FAILED)
             })
         }
     }

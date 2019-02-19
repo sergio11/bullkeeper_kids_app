@@ -9,6 +9,16 @@ class ApiEndPointsHelper
  */
 (private val baseUrl: String) {
 
+
+    /**
+     * Get  Profile Url
+     * @param identity
+     * @return
+     */
+    fun getProfileUrl(identity: String): String {
+        return baseUrl + String.format("images/%s", identity)
+    }
+
     /**
      * Get Kid Profile Url
      * @param identity

@@ -184,7 +184,31 @@ interface IConversationService {
     fun addMessage(
             @Path("memberOne") memberOne: String,
             @Path("memberTwo") memberTwo: String,
-            addMessageDTO: AddMessageDTO
+            @Body addMessageDTO: AddMessageDTO
     ): Deferred<APIResponse<MessageDTO>>
 
+    /**
+     * Set Messages As Viewed
+     * @param id
+     * @param messageIds
+     */
+    @POST("conversations/{id}/messages/viewed")
+    fun setMessagesAsViewed(
+            @Path("id") id: String,
+            @Body messageIds: List<String>
+    ): Deferred<APIResponse<String>>
+
+
+    /**
+     * Set Messages As Viewed
+     * @param memberOne
+     * @param memberTwo
+     * @param messageIds
+     */
+    @POST("conversations/members/{memberOne}/{memberTwo}/messages/viewed")
+    fun setMessagesAsViewed(
+            @Path("memberOne") memberOne: String,
+            @Path("memberTwo") memberTwo: String,
+            @Body messageIds: List<String>
+    ): Deferred<APIResponse<String>>
 }

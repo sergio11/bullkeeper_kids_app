@@ -5,6 +5,7 @@ import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IConversationService
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.ConversationEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.PersonEntity
 import retrofit2.Retrofit
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class CreateConversationForMembersInteract
     @Inject constructor(
             private val appContext: Context,
+            private val apiEndPointsHelper: ApiEndPointsHelper,
             private val conversationService: IConversationService,
             retrofit: Retrofit
     ) : UseCase<ConversationEntity, CreateConversationForMembersInteract.Params>(retrofit){
@@ -39,13 +41,17 @@ class CreateConversationForMembersInteract
                         identity = it.memberOne?.identity
                         firstName = it.memberOne?.firstName
                         lastName = it.memberOne?.lastName
-                        profileImage = it.memberOne?.profileImage
+                        profileImage = it.memberOne?.profileImage?.let {
+                            apiEndPointsHelper.getProfileUrl(it)
+                        }
                     }
                     memberTwo = PersonEntity().apply {
                         identity = it.memberTwo?.identity
                         firstName = it.memberTwo?.firstName
                         lastName = it.memberTwo?.lastName
-                        profileImage = it.memberTwo?.profileImage
+                        profileImage = it.memberTwo?.profileImage?.let {
+                            apiEndPointsHelper.getProfileUrl(it)
+                        }
                     }
 
                 }

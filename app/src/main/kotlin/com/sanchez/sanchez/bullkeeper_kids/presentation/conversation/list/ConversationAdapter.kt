@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.invisible
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.toStringFormat
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.visible
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.SupportRecyclerViewAdapter
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.ConversationEntity
@@ -55,21 +56,22 @@ class ConversationAdapter
                 element.memberOne
 
             itemView.findViewById<TextView>(R.id.userName).text =
-                    String.format(Locale.getDefault(), "%s - %s",
+                    String.format(Locale.getDefault(), "%s %s",
                             userTarget?.firstName, userTarget?.lastName)
 
             if(!userTarget?.profileImage.isNullOrEmpty()) {
-                picasso.load(userTarget?.profileImage)
-                        .placeholder(R.drawable.user_default)
-                        .error(R.drawable.user_default)
+                picasso.load(userTarget?.profileImage!!)
+                        .placeholder(R.drawable.user_default_inverse_solid)
+                        .error(R.drawable.user_default_inverse_solid)
                         .into(itemView.findViewById<ImageView>(R.id.userImage))
             } else {
                 itemView.findViewById<ImageView>(R.id.userImage)
-                        .setImageResource(R.drawable.user_default)
+                        .setImageResource(R.drawable.user_default_inverse_solid)
             }
 
+            itemView.findViewById<TextView>(R.id.lastUpdate).text = element.updateAt?.toStringFormat(context.getString(R.string.date_format_server_response))
 
-            val unreadMessagesCountTextView = itemView.findViewById<TextView>(R.id.unreadMessagesCount);
+            val unreadMessagesCountTextView = itemView.findViewById<TextView>(R.id.unreadMessagesCount)
 
             if(selfUserId == element.memberOne?.identity) {
 

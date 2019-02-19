@@ -16,6 +16,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidGuardianEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.kidguardians.KidGuardiansActivity
+import kotlinx.android.synthetic.main.app_translucent_toolbar_return.*
 import javax.inject.Inject
 
 /**
@@ -70,6 +71,14 @@ class ConversationListActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         conversationComponent.inject(this)
+
+        backIcon.setOnClickListener {
+            onBackPressed()
+        }
+
+        appTitle.setOnClickListener {
+            navigator.showHome(this)
+        }
     }
 
     /**

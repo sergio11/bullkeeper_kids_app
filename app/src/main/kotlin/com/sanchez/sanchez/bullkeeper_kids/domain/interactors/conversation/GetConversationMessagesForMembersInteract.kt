@@ -7,6 +7,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IConversationService
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.RetrofitException
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.MessageEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.PersonEntity
@@ -18,9 +19,10 @@ import javax.inject.Inject
  */
 class GetConversationMessagesForMembersInteract
     @Inject constructor(
-        private val context: Context,
-        private val conversationService: IConversationService,
-        retrofit: Retrofit): UseCase<List<MessageEntity>, GetConversationMessagesForMembersInteract.Params>(retrofit){
+            private val context: Context,
+            private val apiEndPointsHelper: ApiEndPointsHelper,
+            private val conversationService: IConversationService,
+            retrofit: Retrofit): UseCase<List<MessageEntity>, GetConversationMessagesForMembersInteract.Params>(retrofit){
 
 
     private val CONVERSATION_NOT_FOUND_CODE_NAME = "CONVERSATION_NOT_FOUND_EXCEPTION"
@@ -42,13 +44,17 @@ class GetConversationMessagesForMembersInteract
                             identity = it.from?.identity,
                             firstName = it.from?.firstName,
                             lastName = it.from?.lastName,
-                            profileImage = it.from?.profileImage
+                            profileImage = it.from?.profileImage?.let {
+                                apiEndPointsHelper.getProfileUrl(it)
+                            }
                     )
                     to = PersonEntity(
                             identity = it.to?.identity,
                             firstName = it.to?.firstName,
                             lastName = it.to?.lastName,
-                            profileImage = it.to?.profileImage
+                            profileImage = it.to?.profileImage?.let {
+                                apiEndPointsHelper.getProfileUrl(it)
+                            }
                     )
                     createAt = it.createAt?.ToDateTime(context
                             .getString(R.string.date_time_format_2))

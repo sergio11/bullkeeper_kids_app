@@ -10,7 +10,6 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ConversationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.empty
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.invisible
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.toStringFormat
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.visible
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.ConfirmationDialogFragment
@@ -137,6 +136,9 @@ class ConversationMessageListActivityFragment : BaseFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeInjector()
+
+        // Init View Model
+        viewModel.init()
 
         if(arguments?.isEmpty == true)
             throw IllegalStateException("Arguments can not be null")
@@ -347,6 +349,15 @@ class ConversationMessageListActivityFragment : BaseFragment(),
 
         content.isRefreshing = false
         clearMessage.visible()
+
+        // Set Messages as viewed
+        val messagesViewed = viewModel.messages.value?.filter {
+            it.to?.identity == currentUserId && !it.viewed && !it.identity.isNullOrEmpty() }?.map { it.identity!! }
+                ?.toList() ?: ArrayList()
+
+        if(messagesViewed.isNotEmpty())
+            viewModel.setMessagesAsViewed(conversation!!, messagesViewed)
+
 
         messagesAdapter.clear(true)
         messagesAdapter.addToEnd(viewModel.messages.value?.map {

@@ -7,6 +7,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IConversationService
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.RetrofitException
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.*
 import retrofit2.Retrofit
@@ -17,9 +18,10 @@ import javax.inject.Inject
  */
 class GetConversationForMembersInteract
     @Inject constructor(
-        private val context: Context,
-        private val conversationService: IConversationService,
-        retrofit: Retrofit): UseCase<ConversationEntity, GetConversationForMembersInteract.Params>(retrofit){
+            private val context: Context,
+            private val apiEndPointsHelper: ApiEndPointsHelper,
+            private val conversationService: IConversationService,
+            retrofit: Retrofit): UseCase<ConversationEntity, GetConversationForMembersInteract.Params>(retrofit){
 
 
     private val CONVERSATION_NOT_FOUND_CODE_NAME = "CONVERSATION_NOT_FOUND_EXCEPTION"
@@ -42,13 +44,17 @@ class GetConversationForMembersInteract
                         identity = it.memberOne?.identity
                         firstName = it.memberOne?.firstName
                         lastName = it.memberOne?.lastName
-                        profileImage = it.memberOne?.profileImage
+                        profileImage = it.memberOne?.profileImage?.let {
+                            apiEndPointsHelper.getProfileUrl(it)
+                        }
                     }
                     memberTwo = PersonEntity().apply {
                         identity = it.memberTwo?.identity
                         firstName = it.memberTwo?.firstName
                         lastName = it.memberTwo?.lastName
-                        profileImage = it.memberTwo?.profileImage
+                        profileImage = it.memberTwo?.profileImage?.let {
+                            apiEndPointsHelper.getProfileUrl(it)
+                        }
                     }
                     lastMessage = it.lastMessage
                     lastMessageForMemberOne = it.lastMessageForMemberOne

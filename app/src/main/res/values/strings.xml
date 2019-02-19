@@ -298,5 +298,9 @@
     <string name="no_data_found">No Data Found</string>
 
     <string name="no_messages_found_for_conversation">All messages will be stored securely</string>
+    <string name="kid_guardian_data_viewer_role">He can visualize alerts and results of your profile</string>
+    <string name="kid_guardian_parental_control_rule_editor_role">He can edit and apply parental control rules</string>
+    <string name="kid_guardian_admin_role">He can manage your profile</string>
+
 
 </resources>

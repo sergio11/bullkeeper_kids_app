@@ -15,6 +15,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidGuardianEntity
+import kotlinx.android.synthetic.main.app_translucent_toolbar_return.*
 import javax.inject.Inject
 
 
@@ -62,6 +63,14 @@ class KidGuardiansActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         kidGuardianComponent.inject(this)
+
+        backIcon.setOnClickListener {
+            onBackPressed()
+        }
+
+        appTitle.setOnClickListener {
+            navigator.showHome(this)
+        }
     }
 
     /**

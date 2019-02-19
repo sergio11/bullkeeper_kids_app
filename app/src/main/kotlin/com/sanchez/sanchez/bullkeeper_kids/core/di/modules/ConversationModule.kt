@@ -4,6 +4,7 @@ import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IConversationService
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.conversation.*
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListViewModel
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.list.ConversationListViewModel
@@ -34,10 +35,11 @@ class ConversationModule {
     @PerActivity
     fun provideAddMessageInteract(
             appContext: Context,
+            apiEndPointsHelper: ApiEndPointsHelper,
             conversationService: IConversationService,
             retrofit: Retrofit
     ): AddConversationMessageInteract
-        = AddConversationMessageInteract(appContext, conversationService, retrofit)
+        = AddConversationMessageInteract(appContext, apiEndPointsHelper, conversationService, retrofit)
 
     /**
      * Provide Delete Conversation Interact
@@ -69,10 +71,11 @@ class ConversationModule {
     @PerActivity
     fun provideGetConversationInteract(
             appContext: Context,
+            apiEndPointsHelper: ApiEndPointsHelper,
             conversationService: IConversationService,
             retrofit: Retrofit
     ): GetConversationInteract
-            = GetConversationInteract(appContext, conversationService, retrofit)
+            = GetConversationInteract(appContext, apiEndPointsHelper, conversationService, retrofit)
 
 
     /**
@@ -82,10 +85,11 @@ class ConversationModule {
     @PerActivity
     fun provideGetConversationMessagesInteract(
             appContext: Context,
+            apiEndPointsHelper: ApiEndPointsHelper,
             conversationService: IConversationService,
             retrofit: Retrofit
     ): GetConversationMessagesInteract
-            = GetConversationMessagesInteract(appContext, conversationService, retrofit)
+            = GetConversationMessagesInteract(appContext, apiEndPointsHelper, conversationService, retrofit)
 
     /**
      * Provide Get Conversation For Member Interact
@@ -94,10 +98,11 @@ class ConversationModule {
     @PerActivity
     fun provideGetConversationForMemberInteract(
             appContext: Context,
+            apiEndPointsHelper: ApiEndPointsHelper,
             conversationService: IConversationService,
             retrofit: Retrofit
     ): GetConversationsForMemberInteract
-        = GetConversationsForMemberInteract(appContext, conversationService, retrofit)
+        = GetConversationsForMemberInteract(appContext, apiEndPointsHelper, conversationService, retrofit)
 
 
     /**
@@ -119,10 +124,11 @@ class ConversationModule {
     @PerActivity
     fun provideGetConversationMessagesForMembersInteract(
             appContext: Context,
+            apiEndPointsHelper: ApiEndPointsHelper,
             conversationService: IConversationService,
             retrofit: Retrofit
     ): GetConversationMessagesForMembersInteract
-        = GetConversationMessagesForMembersInteract(appContext, conversationService, retrofit)
+        = GetConversationMessagesForMembersInteract(appContext, apiEndPointsHelper, conversationService, retrofit)
 
 
     /**
@@ -143,10 +149,11 @@ class ConversationModule {
     @PerActivity
     fun provideGetConversationForMembersInteract(
             appContext: Context,
+            apiEndPointsHelper: ApiEndPointsHelper,
             conversationService: IConversationService,
             retrofit: Retrofit
     ): GetConversationForMembersInteract
-        = GetConversationForMembersInteract(appContext, conversationService, retrofit)
+        = GetConversationForMembersInteract(appContext, apiEndPointsHelper, conversationService, retrofit)
 
     /**
      * Provide Create Conversation For Members Interact
@@ -155,11 +162,22 @@ class ConversationModule {
     @PerActivity
     fun provideCreateConversationForMembersInteract(
             appContext: Context,
+            apiEndPointsHelper: ApiEndPointsHelper,
             conversationService: IConversationService,
             retrofit: Retrofit
     ): CreateConversationForMembersInteract
-        = CreateConversationForMembersInteract(appContext, conversationService, retrofit)
+        = CreateConversationForMembersInteract(appContext, apiEndPointsHelper, conversationService, retrofit)
 
+    /**
+     * Provide Set Messages As Viewed Interact
+     */
+    @Provides
+    @PerActivity
+    fun provideSetMessagesAsViewedInteract(
+            conversationService: IConversationService,
+            retrofit: Retrofit
+    ): SetMessagesAsViewedInteract
+        = SetMessagesAsViewedInteract(conversationService, retrofit)
 
     /**
      * Provide Image Loader
@@ -187,12 +205,13 @@ class ConversationModule {
             deleteConversationMessagesForMembersInteract: DeleteConversationMessagesForMembersInteract,
             getConversationInteract: GetConversationInteract,
             getConversationForMembersInteract: GetConversationForMembersInteract,
-            createConversationForMembersInteract: CreateConversationForMembersInteract
+            createConversationForMembersInteract: CreateConversationForMembersInteract,
+            setMessagesAsViewedInteract: SetMessagesAsViewedInteract
     ): ConversationMessageListViewModel
         = ConversationMessageListViewModel(addMessageInteract, getConversationMessagesInteract,
             deleteConversationMessagesInteract, getConversationMessagesForMembersInteract,
             deleteConversationMessagesForMembersInteract, getConversationInteract, getConversationForMembersInteract,
-            createConversationForMembersInteract)
+            createConversationForMembersInteract, setMessagesAsViewedInteract)
 
     /**
      * Provide Conversation List View Model
