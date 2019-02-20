@@ -7,6 +7,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IChildrenService
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.RetrofitException
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -21,11 +22,11 @@ class GetConfirmedGuardiansForKidInteract
             private val appContext: Context,
             private val childrenService: IChildrenService,
             private val preferenceRepository: IPreferenceRepository,
+            private val apiEndPointsHelper: ApiEndPointsHelper,
             retrofit: Retrofit): UseCase<List<KidGuardianEntity>, UseCase.None>(retrofit){
 
 
     private val NO_KID_GUARDIAN_FOUND_CODE_NAME = "NO_KID_GUARDIAN_FOUND"
-
 
     /**
      * On Executed
@@ -50,7 +51,9 @@ class GetConfirmedGuardiansForKidInteract
                                     fbId = it.fbId
                                     children = it.children
                                     locale = it.locale
-                                    profileImage = it.profileImage
+                                    profileImage =  it.profileImage?.let {
+                                        apiEndPointsHelper.getProfileUrl(it)
+                                    }
                                     visible = it.visible
                                 }
                             }
@@ -68,7 +71,9 @@ class GetConfirmedGuardiansForKidInteract
             NoKidGuardianFoundFailure() else super.onApiExceptionOcurred(apiException, response)
     }
 
-
+    /**
+     * No Kid Guardian Found Failure
+     */
     class NoKidGuardianFoundFailure: Failure.FeatureFailure()
 
 }

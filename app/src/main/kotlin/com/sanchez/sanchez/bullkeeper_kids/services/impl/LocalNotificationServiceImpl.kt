@@ -17,6 +17,7 @@ import javax.inject.Inject
 class LocalNotificationServiceImpl
     @Inject constructor(private val context: Context): ILocalNotificationService {
 
+
     init {
         // Create Notification Channel
         createNotificationChannel()
@@ -88,22 +89,61 @@ class LocalNotificationServiceImpl
      * Get Notification
      */
     override fun getNotification(contentTitle: String, contentText: String, channelId: String?, pendingIntent: PendingIntent?): Notification {
-
         val notificationBuilder = buildBasicNotification(contentTitle, contentText)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             if(!channelId.isNullOrEmpty())
                 notificationBuilder.setChannelId(channelId.orEmpty())
-
-        }
-
         if(pendingIntent != null)
             notificationBuilder.setContentIntent(pendingIntent)
-
         return notificationBuilder.build()
     }
 
+    /**
+     * Send Notification
+     * @param notificationId
+     * @param contentTitle
+     * @param contentText
+     */
+    override fun sendNotification(notificationId: Int, contentTitle: String, contentText: String) {
+        mNotificationManager?.notify(notificationId,
+                getNotification(contentTitle, contentText))
+    }
 
+    /**
+     * Send Notification
+     * @param notificationId
+     * @param contentTitle
+     * @param contentText
+     * @param channelId
+     */
+    override fun sendNotification(notificationId: Int, contentTitle: String, contentText: String, channelId: String?) {
+        mNotificationManager?.notify(notificationId,
+                getNotification(contentTitle, contentText, channelId))
+    }
+
+    /**
+     * Send Notification
+     * @param notificationId
+     * @param contentTitle
+     * @param contentText
+     * @param pendingIntent
+     */
+    override fun sendNotification(notificationId: Int, contentTitle: String, contentText: String, pendingIntent: PendingIntent?) {
+        mNotificationManager?.notify(notificationId,
+                getNotification(contentTitle, contentText, pendingIntent))
+    }
+
+    /**
+     * Send Notification
+     * @param notificationId
+     * @param contentTitle
+     * @param contentText
+     * @param channelId
+     * @param pendingIntent
+     */
+    override fun sendNotification(notificationId: Int, contentTitle: String, contentText: String, channelId: String?, pendingIntent: PendingIntent?) {
+        mNotificationManager?.notify(notificationId,
+                getNotification(contentTitle, contentText, channelId, pendingIntent))
+    }
 
 }

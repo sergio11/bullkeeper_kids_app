@@ -224,6 +224,14 @@ class ConversationListActivityFragment : BaseFragment(), SwipeRefreshLayout.OnRe
     override fun onRefresh() = viewModel.load(kid)
 
     /**
+     * On Start
+     */
+    override fun onStart() {
+        super.onStart()
+        viewModel.load(kid)
+    }
+
+    /**
      * State Observer Handler
      */
     private fun stateObserverHandler(){

@@ -4,6 +4,7 @@ import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IChildrenService
+import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.children.GetConfirmedGuardiansForKidInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import dagger.Module
@@ -41,8 +42,9 @@ class ChildrenModule() {
             appContext: Context,
             childrenService: IChildrenService,
             preferenceRepository: IPreferenceRepository,
+            apiEndPointsHelper: ApiEndPointsHelper,
             retrofit: Retrofit
     ): GetConfirmedGuardiansForKidInteract
         = GetConfirmedGuardiansForKidInteract(appContext, childrenService,
-            preferenceRepository, retrofit)
+            preferenceRepository, apiEndPointsHelper, retrofit)
 }

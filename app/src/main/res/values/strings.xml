@@ -292,6 +292,10 @@
     <string name="conversation_message_list_date_header_format">dd MMMM yyyy</string>
     <string name="error_deleting_messages">Error deleting messages</string>
 
+    <string name="new_message_saved_notification_title">%s sent you a message</string>
+
+    <string name="conversation_was_deleted_dialog">The conversation was deleted</string>
+    <string name="all_messages_was_deleted_dialog">All messages was deleted</string>
     <!-- Kid Guardians -->
     <string name="kid_guardian_list_title">Your Supervisors</string>
     <string name="error_loading_kid_guardian">Error loading Data</string>

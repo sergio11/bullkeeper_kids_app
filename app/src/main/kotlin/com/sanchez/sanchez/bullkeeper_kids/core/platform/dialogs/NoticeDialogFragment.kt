@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.notice_dialog_layout.*
 /**
  * Notice Fragment
  */
-class NoticeDialogFragment: SupportDialogFragment() {
+open class NoticeDialogFragment: SupportDialogFragment() {
 
     companion object {
 

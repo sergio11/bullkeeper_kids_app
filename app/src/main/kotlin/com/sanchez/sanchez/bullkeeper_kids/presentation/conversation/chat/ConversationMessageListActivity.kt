@@ -90,13 +90,26 @@ class ConversationMessageListActivity : BaseActivity(),
 
     companion object {
 
+
+        /**
+         * Events
+         */
+        const val MESSAGE_SAVED_EVENT = "com.sanchez.sanchez.sergio.bullkeeper.message.saved"
+        const val ALL_CONVERSATION_DELETED_EVENT = "com.sanchez.sanchez.sergio.bullkeeper.all.conversation.deleted"
+        const val ALL_MESSAGES_DELETED_EVENT = "com.sanchez.sanchez.sergio.bullkeeper.all.messages.deleted"
+        const val DELETED_MESSAGES_EVENT = "com.sanchez.sanchez.sergio.bullkeeper.deleted_messages"
+        const val SET_MESSAGES_AS_VIEWED_EVENT = "com.sanchez.sanchez.sergio.bullkeeper.messages.viewed"
         /**
          * Args
          */
         const val CONVERSATION_ID_ARG = "CONVERSATION_ID_ARG"
         const val MEMBER_ONE_ARG = "MEMBER_ONE_ARG"
         const val MEMBER_TWO_ARG = "MEMBER_TWO_ARG"
-
+        const val MESSAGE_SAVED_ARG = "MESSAGE_SAVED_ARG"
+        const val ALL_CONVERSATION_DELETED_ARG = "ALL_CONVERSATION_DELETED_ARG"
+        const val ALL_MESSAGES_DELETED_ARG = "ALL_MESSAGES_DELETED_ARG"
+        const val DELETED_MESSAGES_ARG = "DELETED_MESSAGES_ARG"
+        const val SET_MESSAGES_AS_VIEWED_ARG = "SET_MESSAGES_AS_VIEWED_ARG"
 
         /**
          * Calling Intent

@@ -63,6 +63,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 import org.joda.time.LocalTime
@@ -349,6 +350,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    /**
+     * Local Broadcast Manager
+     */
+    private val localBroadcastManager: LocalBroadcastManager by lazy {
+        LocalBroadcastManager.getInstance(this@MonitoringService)
+    }
 
     /**
      * State
@@ -543,8 +550,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun sendUnLockAppAction(){
         if(!currentAppLocked.isNullOrEmpty()) {
             currentAppLocked = null
-            val localBroadcastManager = LocalBroadcastManager
-                    .getInstance(this@MonitoringService)
+
             localBroadcastManager.sendBroadcast(Intent(
                     AppLockScreenActivity.UNLOCK_APP_ACTION))
         }
@@ -556,8 +562,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun sendEnableAppAction(){
         if(!currentDisabledApp.isNullOrEmpty()) {
             currentDisabledApp = null
-            val localBroadcastManager = LocalBroadcastManager
-                    .getInstance(this@MonitoringService)
             localBroadcastManager.sendBroadcast(Intent(
                     DisabledAppScreenActivity.ENABLE_APP_ACTION))
         }
@@ -569,8 +573,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun sendDisableBedTimeAction(){
         if(isBedTimeEnabled) {
             isBedTimeEnabled = false
-            val localBroadcastManager = LocalBroadcastManager
-                    .getInstance(this@MonitoringService)
             localBroadcastManager.sendBroadcast(Intent(
                     BedTimeActivity.DISABLE_BED_TIME_ACTION))
         }
@@ -1554,6 +1556,95 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Message Saved Event Handler
+     * @param messageSavedDTO
+     */
+    private fun messageSavedEventHandler(messageSavedDTO: MessageSavedDTO){
+        Timber.d("SSE: Message Saved Event Handler")
+
+        val pendingIntent = PendingIntent.getService(
+                this,
+                0,
+                ConversationMessageListActivity.callingIntent(this, messageSavedDTO.conversation),
+                PendingIntent.FLAG_UPDATE_CURRENT)
+
+        localNotificationService.sendNotification(3435, String.format(
+                getString(R.string.new_message_saved_notification_title), messageSavedDTO.from.firstName),
+                messageSavedDTO.text, pendingIntent)
+
+        localBroadcastManager.sendBroadcast(
+                Intent(ConversationMessageListActivity.MESSAGE_SAVED_EVENT).apply {
+                    putExtras(Bundle().apply {
+                        putSerializable(ConversationMessageListActivity.MESSAGE_SAVED_ARG, messageSavedDTO)
+                    })
+                })
+
+    }
+
+    /**
+     * All Conversation Deleted Event Handler
+     * @param allConversationDeletedDTO
+     */
+    private fun allConversationDeletedEventHandler(allConversationDeletedDTO: AllConversationDeletedDTO){
+        Timber.d("SSE: All Conversation Deleted Event Handler")
+
+
+        localBroadcastManager.sendBroadcast(
+                Intent(ConversationMessageListActivity.ALL_CONVERSATION_DELETED_EVENT).apply {
+                    putExtras(Bundle().apply {
+                        putSerializable(ConversationMessageListActivity.ALL_CONVERSATION_DELETED_ARG, allConversationDeletedDTO)
+                    })
+                })
+    }
+
+    /**
+     * All Messages Deleted Event Handler
+     * @param allMessagesDeletedDTO
+     */
+    private fun allMessagesDeletedEventHandler(allMessagesDeletedDTO: AllMessagesDeletedDTO){
+        Timber.d("SSE: All Messages Deleted Event Handler")
+
+        localBroadcastManager.sendBroadcast(
+                Intent(ConversationMessageListActivity.ALL_MESSAGES_DELETED_EVENT).apply {
+                    putExtras(Bundle().apply {
+                        putSerializable(ConversationMessageListActivity.ALL_MESSAGES_DELETED_ARG, allMessagesDeletedDTO)
+                    })
+                })
+
+    }
+
+    /**
+     * Deleted Messages Event Handler
+     * @param deletedMessagesDTO
+     */
+    private fun deletedMessagesEventHandler(deletedMessagesDTO: DeletedMessagesDTO){
+        Timber.d("SSE: Deleted Messages Event Handler")
+
+
+        localBroadcastManager.sendBroadcast(
+                Intent(ConversationMessageListActivity.DELETED_MESSAGES_EVENT).apply {
+                    putExtras(Bundle().apply {
+                        putSerializable(ConversationMessageListActivity.DELETED_MESSAGES_ARG, deletedMessagesDTO)
+                    })
+                })
+    }
+
+    /**
+     * Set Messages As Viewed Event Handler
+     * @param setMessagesAsViewedDTO
+     */
+    private fun setMessagesAsViewedEventHandler(setMessagesAsViewedDTO: SetMessagesAsViewedDTO){
+        Timber.d("SSE: Set Messages As Viewed Event Handler")
+
+        localBroadcastManager.sendBroadcast(
+                Intent(ConversationMessageListActivity.SET_MESSAGES_AS_VIEWED_EVENT).apply {
+                    putExtras(Bundle().apply {
+                        putSerializable(ConversationMessageListActivity.SET_MESSAGES_AS_VIEWED_ARG, setMessagesAsViewedDTO)
+                    })
+                })
+    }
+
+    /**
      * Start Listen SSE
      */
     private fun startListenSse() {
@@ -1752,6 +1843,41 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             funTimeDayScheduledUpdatedEventHandler(
                                     objectMapper.readValue(eventMessage,
                                             FunTimeDayScheduledChangedDTO::class.java))
+                        }
+
+                        // Message Saved Event
+                        ServerEventTypeEnum.MESSAGE_SAVED_EVENT -> {
+                            messageSavedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            MessageSavedDTO::class.java))
+                        }
+
+                        // All Conversation Deleted Event
+                        ServerEventTypeEnum.ALL_CONVERSATION_DELETED_EVENT -> {
+                            allConversationDeletedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            AllConversationDeletedDTO::class.java))
+                        }
+
+                        // All Messages Deleted Event
+                        ServerEventTypeEnum.ALL_MESSAGES_DELETED_EVENT -> {
+                            allMessagesDeletedEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            AllMessagesDeletedDTO::class.java))
+                        }
+
+                        // Deleted Messages Event
+                        ServerEventTypeEnum.DELETED_MESSAGES_EVENT -> {
+                            deletedMessagesEventHandler(
+                                    objectMapper.readValue(eventMessage,
+                                            DeletedMessagesDTO::class.java))
+                        }
+
+                        // Set Messages As Viewed Event
+                        ServerEventTypeEnum.SET_MESSAGES_AS_VIEWED_EVENT -> {
+                            setMessagesAsViewedEventHandler(objectMapper.readValue(eventMessage,
+                                    SetMessagesAsViewedDTO::class.java))
+
                         }
                         // Unknown Event
 

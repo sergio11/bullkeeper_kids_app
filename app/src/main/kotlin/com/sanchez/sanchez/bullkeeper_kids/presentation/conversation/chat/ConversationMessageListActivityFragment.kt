@@ -1,13 +1,18 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat
 
 import android.arch.lifecycle.Observer
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v4.content.LocalBroadcastManager
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ConversationComponent
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToDateTime
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.empty
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.invisible
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.visible
@@ -15,7 +20,18 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.ConfirmationDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
+import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.ALL_CONVERSATION_DELETED_ARG
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.ALL_CONVERSATION_DELETED_EVENT
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.ALL_MESSAGES_DELETED_ARG
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.ALL_MESSAGES_DELETED_EVENT
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.DELETED_MESSAGES_ARG
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.DELETED_MESSAGES_EVENT
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.MESSAGE_SAVED_ARG
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.MESSAGE_SAVED_EVENT
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.SET_MESSAGES_AS_VIEWED_ARG
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.SET_MESSAGES_AS_VIEWED_EVENT
 import com.stfalcon.chatkit.commons.ImageLoader
 import com.stfalcon.chatkit.commons.models.IMessage
 import com.stfalcon.chatkit.commons.models.IUser
@@ -24,6 +40,7 @@ import com.stfalcon.chatkit.messages.MessageInput
 import com.stfalcon.chatkit.messages.MessagesListAdapter
 import com.stfalcon.chatkit.utils.DateFormatter
 import kotlinx.android.synthetic.main.fragment_conversation_message_list.*
+import timber.log.Timber
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 import java.util.*
@@ -112,6 +129,119 @@ class ConversationMessageListActivityFragment : BaseFragment(),
      */
     private lateinit var messagesAdapter: MessagesListAdapter<ConversationMessage>
 
+
+    /**
+     * Local Broadcast Manager
+     */
+    private val mLocalBroadcastManager: LocalBroadcastManager by lazy {
+        LocalBroadcastManager.getInstance(context)
+    }
+
+
+    /**
+     * Message Saved Event Broadcast Receiver
+     */
+    private var messageSavedEventBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Timber.d("SSE: Message Saved Event")
+            intent?.let {
+                if(it.hasExtra(MESSAGE_SAVED_ARG)) {
+                    val messageSavedDTO = it.getSerializableExtra(MESSAGE_SAVED_ARG) as MessageSavedDTO
+
+                    if(messageSavedDTO.to.identity.equals(currentUserId))
+                        mapToConversationMessage(
+                                messageSavedDTO.identity,
+                                messageSavedDTO.text,
+                                messageSavedDTO.createAt.ToDateTime(getString(R.string.date_time_format_2)),
+                                messageSavedDTO.from.identity!!,
+                                String.format(Locale.getDefault(), "%s %s",
+                                        messageSavedDTO.from.firstName ?: String.empty(),
+                                        messageSavedDTO.from.lastName
+                                        ?: String.empty()),
+                                messageSavedDTO.from.profileImage ?: String.empty()
+                        )
+
+
+                }
+            }
+        }
+    }
+
+    /**
+     * All Conversation Event Broadcast Receiver
+     */
+    private var allConversationEventBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Timber.d("SSE: All Conversation Event")
+            intent?.let {
+                if(it.hasExtra(ALL_CONVERSATION_DELETED_ARG)) {
+                    val allConversationDeletedDTO = it.getSerializableExtra(ALL_CONVERSATION_DELETED_ARG) as AllConversationDeletedDTO
+                    if(allConversationDeletedDTO.member == targetUser)
+                        activityHandler.showNoticeDialog(R.string.conversation_was_deleted_dialog, object: NoticeDialogFragment.NoticeDialogListener {
+                            /**
+                             * On Accepted
+                             */
+                            override fun onAccepted(dialog: DialogFragment) {
+                                activityHandler.closeActivity()
+                            }
+                        })
+                }
+            }
+
+        }
+    }
+
+    /**
+     * All Messages Deleted Event Broadcast Receiver
+     */
+    private var allMessagesDeletedEventBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Timber.d("SSE: All Messages Deleted Event")
+            intent?.let {
+                if (it.hasExtra(ALL_MESSAGES_DELETED_ARG)) {
+                    val allMessagesDeletedDTO = it.getSerializableExtra(ALL_MESSAGES_DELETED_ARG) as AllMessagesDeletedDTO
+                    if(allMessagesDeletedDTO.conversation == conversation) {
+                        activityHandler.showNoticeDialog(R.string.all_messages_was_deleted_dialog)
+                        messagesAdapter.clear()
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Deleted Messages Event Broadcast Receiver
+     */
+    private var deletedMessagesEventBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Timber.d("SSE: Deleted Messages Event")
+            intent?.let {
+                if (it.hasExtra(DELETED_MESSAGES_ARG)) {
+                    val deletedMessagesDTO = it.getSerializableExtra(DELETED_MESSAGES_ARG) as DeletedMessagesDTO
+                    if(deletedMessagesDTO.conversation == conversation) {
+                        messagesAdapter.deleteByIds(deletedMessagesDTO.ids.toTypedArray())
+                    }
+                }
+            }
+
+        }
+    }
+
+    /**
+     * Set Messages As Viewed Event Broadcast Receiver
+     */
+    private var setMessagesAsViewedEventBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Timber.d("SSE: Set Messages As Viewed Event")
+            intent?.let {
+                if (it.hasExtra(SET_MESSAGES_AS_VIEWED_ARG)) {
+                    val setMessagesAsViewedDTO = it.getSerializableExtra(SET_MESSAGES_AS_VIEWED_ARG) as SetMessagesAsViewedDTO
+                }
+            }
+        }
+
+    }
+
     /**
      * On Attach
      */
@@ -192,7 +322,6 @@ class ConversationMessageListActivityFragment : BaseFragment(),
 
         operationResultObserverHandler()
 
-
     }
 
     /**
@@ -205,6 +334,40 @@ class ConversationMessageListActivityFragment : BaseFragment(),
         } else {
             viewModel.loadConversationDetail(memberOne!!, memberTwo!!)
         }
+
+        mLocalBroadcastManager.registerReceiver(messageSavedEventBroadcastReceiver, IntentFilter().apply {
+            addAction(MESSAGE_SAVED_EVENT)
+        })
+
+        mLocalBroadcastManager.registerReceiver(allConversationEventBroadcastReceiver, IntentFilter().apply {
+            addAction(ALL_CONVERSATION_DELETED_EVENT)
+        })
+
+        mLocalBroadcastManager.registerReceiver(allMessagesDeletedEventBroadcastReceiver, IntentFilter().apply {
+            addAction(ALL_MESSAGES_DELETED_EVENT)
+        })
+
+        mLocalBroadcastManager.registerReceiver(deletedMessagesEventBroadcastReceiver, IntentFilter().apply {
+            addAction(DELETED_MESSAGES_EVENT)
+        })
+
+        mLocalBroadcastManager.registerReceiver(setMessagesAsViewedEventBroadcastReceiver, IntentFilter().apply {
+            addAction(SET_MESSAGES_AS_VIEWED_EVENT)
+        })
+    }
+
+    /**
+     * On Stop
+     */
+    override fun onStop() {
+        super.onStop()
+
+        mLocalBroadcastManager.unregisterReceiver(messageSavedEventBroadcastReceiver)
+        mLocalBroadcastManager.unregisterReceiver(allConversationEventBroadcastReceiver)
+        mLocalBroadcastManager.unregisterReceiver(allMessagesDeletedEventBroadcastReceiver)
+        mLocalBroadcastManager.unregisterReceiver(deletedMessagesEventBroadcastReceiver)
+        mLocalBroadcastManager.unregisterReceiver(setMessagesAsViewedEventBroadcastReceiver)
+
     }
 
     /**
@@ -361,17 +524,16 @@ class ConversationMessageListActivityFragment : BaseFragment(),
 
         messagesAdapter.clear(true)
         messagesAdapter.addToEnd(viewModel.messages.value?.map {
-            ConversationMessage(
-                    messageId = it.identity ?: String.empty(),
-                    messageText = it.text ?: String.empty(),
-                    messageCreatedAt = it.createAt ?: Date(),
-                    messageUser = ConversationMessageUser(
-                            userId = it.from?.identity ?: String.empty(),
-                            userName = String.format(Locale.getDefault(), "%s %s",
-                                    it.from?.firstName ?: String.empty(), it.from?.lastName ?: String.empty()),
-                            userAvatar = it.from?.profileImage ?: String.empty(),
-                            online = true))
+            mapToConversationMessage(
+                    it.identity ?: String.empty(),
+                    it.text ?: String.empty(),
+                    it.createAt ?: Date(),
+                    it.from?.identity ?: String.empty(),
+                    String.format(Locale.getDefault(), "%s %s",
+                            it.from?.firstName ?: String.empty(), it.from?.lastName ?: String.empty()),
+                    it.from?.profileImage ?: String.empty()
 
+            )
         } ?: ArrayList(), false)
 
     }
@@ -389,16 +551,16 @@ class ConversationMessageListActivityFragment : BaseFragment(),
             clearMessage.visible()
             messagesAdapter.deleteById(SENDING_MESSAGE_ID)
             messagesAdapter.addToStart(
-                    ConversationMessage(
-                            messageId = lastMessageAdded.identity ?: String.empty(),
-                            messageText = lastMessageAdded.text ?: String.empty(),
-                            messageCreatedAt = lastMessageAdded.createAt ?: Date(),
-                            messageUser = ConversationMessageUser(
-                                    userId = lastMessageAdded.from?.identity ?: String.empty(),
-                                    userName = String.format(Locale.getDefault(), "%s %s",
-                                            lastMessageAdded.from?.firstName ?: String.empty(), lastMessageAdded.from?.lastName ?: String.empty()),
-                                    userAvatar = lastMessageAdded.from?.profileImage ?: String.empty(),
-                                    online = true)), true)
+                    mapToConversationMessage(
+                            lastMessageAdded.identity ?: String.empty(),
+                            lastMessageAdded.text ?: String.empty(),
+                            lastMessageAdded.createAt ?: Date(),
+                            lastMessageAdded.from?.identity ?: String.empty(),
+                            String.format(Locale.getDefault(), "%s %s",
+                                    lastMessageAdded.from?.firstName ?: String.empty(),
+                                    lastMessageAdded.from?.lastName ?: String.empty()),
+                            lastMessageAdded.from?.profileImage ?: String.empty()
+                    ), true)
 
         }
     }
@@ -472,6 +634,21 @@ class ConversationMessageListActivityFragment : BaseFragment(),
         activityHandler.showProgressDialog(R.string.generic_loading_text)
     }
 
+    /**
+     * Map To Conversation Message
+     */
+    private fun mapToConversationMessage(identity: String, text: String, createAt: Date,
+                                         fromId: String, fullName: String,
+                                         profileImage: String): ConversationMessage =
+            ConversationMessage(
+                messageId = identity,
+                messageText = text,
+                messageCreatedAt = createAt,
+                messageUser = ConversationMessageUser(
+                        userId = fromId,
+                        userName = fullName,
+                        userAvatar = profileImage,
+                        online = true))
     /**
      * Conversation Message
      */
