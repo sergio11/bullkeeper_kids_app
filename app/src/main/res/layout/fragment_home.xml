@@ -21,17 +21,23 @@
             android:textColor="@color/commonWhite"
             style="@style/CommonStrongText.Big"/>
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="start|center_vertical">
+            android:layout_margin="@dimen/common_margin"
+            android:padding="@dimen/common_padding"
+            android:background="@drawable/fun_time_background">
 
 
             <at.grabner.circleprogress.CircleProgressView
                 android:id="@+id/funTimeProgress"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
+                android:layout_margin="@dimen/common_margin"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/remainingFunTimeTextView"
+                app:layout_constraintEnd_toStartOf="@id/descriptionContainer"
                 CircleProgressView:cpv_autoTextSize="true"
                 CircleProgressView:cpv_barColor="@color/redDanger"
                 CircleProgressView:cpv_barWidth="35dp"
@@ -51,21 +57,33 @@
                 CircleProgressView:cpv_unitScale="1"
                 CircleProgressView:cpv_value="0" />
 
-            <LinearLayout
+
+            <TextView
+                android:id="@+id/remainingFunTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_marginTop="@dimen/common_margin"
+                android:textAlignment="center"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/funTimeProgress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/descriptionContainer"
+                android:textColor="@color/commonWhite"
+                style="@style/CommonStrongText.Big"/>
 
-                <TextView
-                    android:id="@+id/remainingFunTimeTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/common_margin"
-                    android:textAlignment="textStart"
-                    android:visibility="gone"
-                    android:textColor="@color/commonWhite"
-                    style="@style/CommonStrongText.Big"/>
+
+            <LinearLayout
+                android:id="@+id/descriptionContainer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/funTimeProgress"
+                >
 
                 <!-- Fun Time Icon -->
                 <ImageView
@@ -90,7 +108,7 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
 
         <android.support.constraint.ConstraintLayout

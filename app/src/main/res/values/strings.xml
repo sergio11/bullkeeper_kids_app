@@ -307,4 +307,9 @@
     <string name="kid_guardian_admin_role">He can manage your profile</string>
 
 
+
+    <string name="monitoring_service_notification_title">Bullkeeper kids is working</string>
+    <string name="monitoring_service_notification_description">Will monitor the use of the device</string>
+
+
 </resources>

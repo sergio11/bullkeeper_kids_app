@@ -64,6 +64,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceReposito
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 import org.joda.time.LocalTime
@@ -78,8 +79,6 @@ import java.util.*
  */
 class MonitoringService : Service(), ServerSentEvent.Listener {
 
-    // Extra Started From Notification
-    private val EXTRA_STARTED_FROM_NOTIFICATION = "STARTED_FROM_NOTIFICATION"
 
     private val TAG = MonitoringService::class.java.simpleName
 
@@ -385,19 +384,15 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun getNotification(): Notification {
 
-        val intent = Intent(this, MonitoringService::class.java)
-        // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
-        intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true)
-
         // The PendingIntent that leads to a call to onStartCommand() in this service.
-        val pendingIntent = PendingIntent.getService(this, 0, intent,
+        val pendingIntent = PendingIntent.getService(this, 0, HomeActivity.callingIntent(this),
                 PendingIntent.FLAG_UPDATE_CURRENT)
 
         /**
          * Get Notification
          */
-        return localNotificationService.getNotification("Monitoring Service Title",
-                "Monitoring Service Content", pendingIntent)
+        return localNotificationService.getNotification(getString(R.string.monitoring_service_notification_title),
+                getString(R.string.monitoring_service_notification_description), pendingIntent)
     }
 
     /**
@@ -476,18 +471,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(TAG, "Monitoring Service started")
-
-        intent?.let {
-
-            val startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
-                    false)
-
-            // We got here because the user decided to remove location updates from the notification.
-            if (startedFromNotification) {
-                stopSelf()
-            }
-
-        }
 
         // Tells the system try  recreate the service after it has been killed.
         return Service.START_STICKY
