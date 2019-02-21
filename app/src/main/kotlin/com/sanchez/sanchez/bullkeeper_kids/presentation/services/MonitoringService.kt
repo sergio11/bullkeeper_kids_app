@@ -1545,22 +1545,30 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun messageSavedEventHandler(messageSavedDTO: MessageSavedDTO){
         Timber.d("SSE: Message Saved Event Handler")
 
-        val pendingIntent = PendingIntent.getService(
-                this,
-                0,
-                ConversationMessageListActivity.callingIntent(this, messageSavedDTO.conversation),
-                PendingIntent.FLAG_UPDATE_CURRENT)
 
-        localNotificationService.sendNotification(3435, String.format(
-                getString(R.string.new_message_saved_notification_title), messageSavedDTO.from.firstName),
-                messageSavedDTO.text, pendingIntent)
+        if(preferenceRepository.getPrefKidIdentity() == messageSavedDTO.to.identity) {
 
-        localBroadcastManager.sendBroadcast(
-                Intent(ConversationMessageListActivity.MESSAGE_SAVED_EVENT).apply {
-                    putExtras(Bundle().apply {
-                        putSerializable(ConversationMessageListActivity.MESSAGE_SAVED_ARG, messageSavedDTO)
+            val pendingIntent = PendingIntent.getService(
+                    this,
+                    0,
+                    ConversationMessageListActivity.callingIntent(this, messageSavedDTO.conversation),
+                    PendingIntent.FLAG_UPDATE_CURRENT)
+
+            val notificationId = 3435
+
+            localNotificationService.sendNotification(notificationId, String.format(
+                    getString(R.string.new_message_saved_notification_title), messageSavedDTO.from.firstName),
+                    messageSavedDTO.text, pendingIntent)
+
+            localBroadcastManager.sendBroadcast(
+                    Intent(ConversationMessageListActivity.MESSAGE_SAVED_EVENT).apply {
+                        putExtras(Bundle().apply {
+                            putSerializable(ConversationMessageListActivity.MESSAGE_SAVED_ARG, messageSavedDTO)
+                        })
                     })
-                })
+        }
+
+
 
     }
 
