@@ -26,6 +26,10 @@ import android.provider.ContactsContract
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings
+import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.strategy.SocketInternetObservingStrategy
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import com.google.android.gms.location.*
 import com.here.oksse.ServerSentEvent
@@ -34,6 +38,7 @@ import okhttp3.Request
 import okhttp3.Response
 import timber.log.Timber
 import com.here.oksse.OkSse
+import com.sanchez.sanchez.bullkeeper_kids.BuildConfig
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.*
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.FunTimeScheduledDTO
@@ -67,6 +72,8 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.Conver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import java.lang.Exception
@@ -376,6 +383,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     // Server Sent Event
     private var serverSentEvent: ServerSentEvent? = null
 
+    // Last Connectivity
+    private var lastConnectivity: Connectivity? = null
+
 
 
 
@@ -410,6 +420,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * On Create
      */
+    @SuppressLint("CheckResult")
     override fun onCreate() {
         super.onCreate()
         // Inject Dependencies
@@ -440,15 +451,23 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         // Start Services
         startBasicServices()
 
-        // Start Data Synchronization
-        startDataSynchronization()
-
         // Configure Camera Status
         configureCameraStatus()
 
         // Start service with notification
         startForeground(NOTIFICATION_ID, getNotification())
 
+        ReactiveNetwork
+                .observeNetworkConnectivity(this)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe{conectivity ->
+
+                    lastConnectivity = conectivity
+                    if(conectivity.available())
+                        // Start Data Synchronization
+                        startDataSynchronization()
+                }
 
     }
 
@@ -487,7 +506,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Start Basic Services
      */
     private fun startBasicServices(){
-        // Launch SSE Listener
+        // Start Listen events
         startListenSse()
         // Enable HeartBeat Monitoring
         enableHeartBeatMonitoring()

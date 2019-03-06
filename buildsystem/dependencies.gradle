@@ -54,6 +54,7 @@ ext {
     chatkitVersion = '0.3.3'
 
     circleViewVersion = '1.4'
+    reactivenetworkRx2 = '3.0.2'
 
 
   mainApplication = [
@@ -100,7 +101,8 @@ ext {
           playServicesLocation:       "com.google.android.gms:play-services-location:${playServicesMapsVersion}",
           customactivityoncrash:      "cat.ereza:customactivityoncrash:${customactivityoncrashVersion}",
           circleView:                 "com.github.jakob-grabner:Circle-Progress-View:${circleViewVersion}",
-          chatkit:                    "com.github.stfalcon:chatkit:${chatkitVersion}"
+          chatkit:                    "com.github.stfalcon:chatkit:${chatkitVersion}",
+          reactivenetworkRx2:         "com.github.pwittchen:reactivenetwork-rx2:${reactivenetworkRx2}"
   ]
 
   unitTesting = [
