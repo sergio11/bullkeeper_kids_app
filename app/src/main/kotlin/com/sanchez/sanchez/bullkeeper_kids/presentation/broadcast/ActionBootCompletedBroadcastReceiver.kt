@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast
 
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -37,16 +38,21 @@ class ActionBootCompletedBroadcastReceiver : BroadcastReceiver()  {
     override fun onReceive(context: Context?, intent: Intent?) {
         actionBootCompletedComponent.inject(this)
 
-        Timber.d("Action Boot Completed Event Fired")
+        Timber.d("BKA_59: Action Boot Completed Event Fired")
+
 
         context?.let {
 
             if(preferenceRepository.getPrefKidIdentity()
                     != IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE &&
                     preferenceRepository.getPrefTerminalIdentity() !=
-                    IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)
+                    IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE) {
+
+                AwakenMonitoringServiceBroadcastReceiver.scheduledAt(it)
+
                 ContextCompat.startForegroundService(it,
                         Intent(it, MonitoringService::class.java))
+            }
 
         }
 

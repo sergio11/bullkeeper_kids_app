@@ -14,6 +14,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import kotlinx.android.synthetic.main.app_translucent_toolbar.*
@@ -138,6 +139,8 @@ class HomeActivity : BaseActivity(),
             appSettings.visibility = View.GONE
             appSettings.setOnClickListener(null)
         }
+
+        AwakenMonitoringServiceBroadcastReceiver.scheduledAt(this)
 
     }
 

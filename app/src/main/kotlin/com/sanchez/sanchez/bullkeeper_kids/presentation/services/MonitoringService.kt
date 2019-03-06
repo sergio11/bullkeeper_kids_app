@@ -1895,10 +1895,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         override fun uncaughtException(t: Thread, e: Throwable) {
             Timber.d("Monitoring Service Exception Handler -> %s", e.message)
             cleanResources()
-            val i = Intent(context, AwakenMonitoringServiceBroadcastReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, i, 0)
-            val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
             System.exit(2)
         }
     }
