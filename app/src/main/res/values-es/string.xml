@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BullKeeper Kids</string>
+    <string name="action_refresh">Refrescar</string>
+    <!-- Restart App -->
+    <string name="btn_restart">Reiniciar</string>
+    <!-- Details App -->
+    <string name="btn_details">Detalles</string>
+    <!-- CLose App -->
+    <string name="btn_close">Cerrar</string>
+
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="action_settings">Settings</string>
+    <!-- Notification Channel -->
+    <string name="important_notification_channel_id">important_channel</string>
+    <string name="important_notification_channel_title">Notificaciones importantes</string>
+    <string name="important_notification_channel_content">Alertas y avisos importantes.</string>
+    <string name="default_notification_channel_id">@string/important_notification_channel_id</string>
+    <string name="title_activity_lock_screen">LockScreenActivity</string>
+    <string name="content_not_be_loaded">El contenido no se puede cargar</string>
+    <!-- Pick Me Up -->
+    <string name="menu_pick_me_up">Pick Me Up</string>
+    <!-- Time Bank -->
+    <string name="menu_time_bank">Time Bank</string>
+    <!-- SOS -->
+    <string name="menu_sos">S.O.S</string>
+    <!-- Chat -->
+    <string name="menu_chat">Chat</string>
+    <!-- Sign In -->
+    <string name="sign_in_btn">Iniciar Sesión</string>
+    <!-- Intro Text -->
+    <string name="sign_in_title">Por favor inicie sesión con la información principal de la cuenta.</string>
+    <!-- email hint -->
+    <string name="email_address_hint">Correo Electrónico</string>
+    <!-- password hint -->
+    <string name="password_hint">Contraseña</string>
+    <!-- Accept -->
+    <string name="accept">Entendido</string>
+    <!-- App Tutorial -->
+    <!-- First Page -->
+    <string name="first_page_title">Bienvenido a BullKeeper Kids</string>
+    <string name="first_page_registration_terms_and_conditions" formatted="false">Si continúas, aceptas nuestro %s y %s</string>
+    <string name="terms_of_service">Términos de servicio</string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="terms_of_service_not_accepted">Debes aceptar los términos de la licencia para continuar.</string>
+    <string name="terms_of_service_url">file:///android_asset/web/terms_of_service_content.html</string>
+    <string name="privacy_policy_url">file:///android_asset/web/privacy_policy_content.html</string>
+    <!-- Second Page -->
+    <string name="second_page_title">BullKeeper Kids: Permisos para acceso a datos</string>
+    <string name="second_page_description">La aplicación BullKeeper Kids necesita acceso a ciertos datos e información de este dispositivo. Este asistente solicitará su permiso para los datos a los que se accede a través de la aplicación</string>
+    <!-- Third Page -->
+    <string name="third_page_title">BullKeeper Kids necesita acceso:</string>
+    <string name="third_page_location_history_title">Historial de ubicación</string>
+    <string name="third_page_location_history_description">BullKeeper Kids necesita almacenar periódicamente la ubicación en su cuenta para el uso exclusivo de BullKeeper.</string>
+    <string name="third_page_location_history_reason">BullKeepper Kids tendrá que acceder a la posición actual para la funcionalidad de "Family Locator"</string>
+    <string name="third_page_call_logs_title">Registros de llamadas</string>
+    <string name="third_page_call_logs_description">BullKeeper Kids sincronizará el historial de llamadas. Para mantenerse informado sobre las llamadas recibidas y realizadas en todo momento.</string>
+    <string name="third_page_call_logs_reason">Bullkeeper kids necesita acceso al historial de llamadas para mantenerse informado sobre posibles amenazas</string>
+    <string name="third_page_contacts_title">Contactos</string>
+    <string name="third_page_contacts_description">BullKeeper Kids sincronizará la lista de contactos almacenados en el dispositivo con el objetivo de ofrecerle información sobre los usuarios con los que normalmente se comunica.</string>
+    <string name="third_page_contacts_reason">Bullkeeper kids necesita acceso a la lista de contactos para informarle sobre los contactos habituales</string>
+    <string name="third_page_text_messages_title">Mensajes de texto</string>
+    <string name="third_page_text_messages_description">BullKeeper Kids sincroniza todos los SMS presentes en el dispositivo para un análisis más detallado, así como el nuevo SMS recibido después de la instalación de la aplicación.</string>
+    <string name="third_page_text_messages_reason">Bull Keeper Kids necesita obtener el contenido de los SMS recibidos para analizar su contenido de manera preventiva y detectar posibles amenazas.</string>
+    <string name="third_page_storage_title">Sistema de almacenamiento</string>
+    <string name="third_page_storage_description">Bullkeeper kids necesita acceso al sistema de almacenamiento para controlar los recursos almacenados en el dispositivo.</string>
+    <string name="third_page_storage_reason">Bullkeeper Kids necesita acceso al sistema de almacenamiento para garantizar el máximo control y protección</string>
+    <string name="third_page_permission_enabled">On</string>
+    <string name="third_page_permission_disabled">Off</string>
+    <string name="third_page_review_permission_request">Debe revisar y habilitar todos los permisos para continuar</string>
+    <!-- Four page -->
+    <string name="four_page_title">Debes considerar que Bull Keeper Kids:</string>
+    <string name="four_run_on_startup_title">Se Ejecuta en el arranque</string>
+    <string name="four_run_on_startup_description">Cada vez que se inicia el teléfono, BullKeeper Kids comienza a funcionar automáticamente</string>
+    <string name="four_run_in_the_background_title">Se ejecuta en segundo plano</string>
+    <string name="four_run_in_the_background_description">Incluso si el teléfono está inactivo o en modo de suspensión, BullKeeper Kids aún funciona en segundo plano. El icono de BullKeeper Kids siempre permanecerá en la barra de notificación, lo que indica que los servicios en segundo plano se están ejecutando.</string>
+    <string name="title_activity_legal_content">LegalContentActivity</string>
+    <!-- Fifth page -->
+    <string name="fifth_page_title">Bullkeeper Kids necesita acceso a las estadísticas del dispositivo</string>
+    <string name="fifth_page_description">Necesitamos acceder al servicio de estadísticas del sistema, que nos permite recuperar estadísticas sobre el uso de aplicaciones instaladas en el dispositivo en
+         Para informarle acerca de las aplicaciones que se usan con frecuencia, además de determinar la aplicación actualmente en uso para ofrecerle capacidades de bloqueo.</string>
+    <string name="fifth_page_enable_usage_stats">Habilitar</string>
+    <string name="fifth_page_usage_stats_already_allowed">Ya has otorgado acceso a las estadísticas de uso.</string>
+    <string name="fifth_page_usage_stats_no_granted">Debes conceder acceso a las estadísticas de uso antes de continuar</string>
+    <string name="fifth_page_usage_stats_granted">Has concedido acceso a las estadísticas de uso.</string>
+    <!-- Sixth page -->
+    <string name="sixth_page_title">Bullkepper Kids requiere permisos de administración en este dispositivo</string>
+    <string name="sixth_page_description">Debe permitir que Bull Keeper Kids tenga permisos administrativos en este dispositivo para evitar que se desinstale fácilmente.</string>
+    <string name="sixth_page_admin_is_already_enabled">Las capacidades de gestión ya han sido otorgadas.</string>
+    <string name="sixth_page_admin_is_granted">Se han otorgado capacidades de gestión.</string>
+    <string name="sixth_page_admin_is_not_enabled">Debe otorgar capacidades de gestión antes de continuar</string>
+    <!-- Seventh page -->
+    <string name="seventh_page_title">Configuración completada !!!</string>
+    <string name="seventh_page_description">Enhorabuena, ha completado la configuración de la aplicación, inicie sesión y comience a disfrutar de las capacidades que ofrece BullKeeper.</string>
+    <string name="seventh_page_signin">Iniciar sesión</string>
+    <!-- Dialogs Strings -->
+    <string name="default_notice_dialog_title">Aviso de diálogo</string>
+    <string name="required_administration_permissions">Bullkepper Kids requiere permisos de administración en este dispositivo</string>
+    <!-- Date Format -->
+    <string name="date_format">yyyy-MM-dd</string>
+    <string name="date_time_format">yyyy/MM/dd HH:mm:ss</string>
+    <string name="date_time_format_2">yyyy/MM/dd HH:mm:ss.SSS</string>
+    <string name="date_format_server_response">yyyy/MM/dd</string>
+    <string name="joda_local_time_format_server_response">HH:mm:ss.SSS</string>
+    <!-- Sign In -->
+    <string name="authenticating_in_progress">Autentificando espera …</string>
+    <string name="authenticating_invalid_credentials">Nombre de usuario o contraseña incorrecta</string>
+    <string name="authenticating_error_ocurred">Ocurrió un error al autenticar, por favor intente nuevamente</string>
+    <string name="you_must_provide_email_and_password">Debe proporcionar un correo electrónico y contraseña</string>
+    <!-- Sign in facebook -->
+    <string name="facebook_app_id">296606527738358</string>
+    <string name="authenticating_with_facebook">Inicia sesión a través de Facebook</string>
+    <string name="authenticating_with_facebook_canceled">El inicio de sesión fue cancelado por el usuario.</string>
+    <string name="authenticating_with_facebook_error">Hubo un error al iniciar sesión a través de Facebook.</string>
+    <string name="generic_loading_text">Por favor espera …</string>
+    <!-- Link Terminal Tutorial -->
+    <!-- First Page -->
+    <string name="link_terminal_first_page_title">Este dispositivo no está vinculado a ningún niño supervisado</string>
+    <string name="link_terminal_first_page_description">Este asistente lo guiará en el proceso de vincular el dispositivo con el niño.</string>
+    <string name="link_terminal_first_page_check">Estamos revisando algunas cosas espera por favor …</string>
+    <!-- Second Page -->
+    <string name="link_terminal_second_page_title">Seleccione el niño al que desea vincular este dispositivo</string>
+    <string name="link_terminal_second_page_description">Toda la información del dispositivo estará vinculada al niño seleccionado.</string>
+    <string name="child_full_name_detail" formatted="false">%s %s (%d años)</string>
+    <string name="child_has_terminals_linked" formatted="false">tiene %d dispositivos vinculados</string>
+    <string name="child_has_not_terminals_linked">No hay dispositivos vinculados</string>
+    <string name="loading_children_message">Cargando niños …</string>
+    <string name="error_loading_children_information">Error al cargar la información de los niños</string>
+    <string name="no_children_found">No se encontraron niños registrados</string>
+    <!-- Third Page -->
+    <string name="link_terminal_third_page_title">Confirmación de vinculación del dispositivo</string>
+    <string name="link_terminal_third_page_description">Se enlazará con el dispositivo.</string>
+    <string name="select_child_before_continuing">Debes seleccionar un niño antes de continuar</string>
+    <string name="link_device_to_child_btn">Enlazar</string>
+    <string name="link_device_in_progress">Enlace en progreso …</string>
+    <string name="terminal_successfully_linked">El terminal fue enlazado exitosamente.</string>
+    <string name="terminal_linked_failed">Se ha producido un error al vincular el teléfono. Inténtalo de nuevo más tarde.</string>
+    <string name="confirm_linking_device_required">Debes confirmar la vinculación del dispositivo.</string>
+    <!-- Four Page -->
+    <string name="link_terminal_four_page_title">Sincronizando Datos de Terminal</string>
+    <string name="error_ocurred_during_synchronization">Se produjo un error durante la sincronización.</string>
+    <!-- Sync App -->
+    <string name="synchronizing_applications_installed">Sincronizando aplicaciones instaladas en el terminal …</string>
+    <string name="successfully_synchronized_applications" formatted="false">%d aplicaciones instaladas en el terminal han sido sincronizadas.</string>
+    <!-- Sync Sms -->
+    <string name="synchronizing_sms">Sincronización de SMS registrados en el terminal …</string>
+    <string name="sms_successfully_synchronized" formatted="false">Un total de %d SMS registrados en el terminal fueron sincronizados exitosamente.</string>
+    <!-- Sync Calls -->
+    <string name="synchronizing_call_history">Sincronización del historial de llamadas …</string>
+    <string name="successfully_synchronized_call_history" formatted="false">Un total de %d llamadas fueron sincronizadas exitosamente</string>
+    <!-- Sync Contacts -->
+    <string name="synchronizing_contacts">Sincronización de contactos …</string>
+    <string name="successfully_synchronized_contacts" formatted="false">
+        Un total de %d contactos fueron sincronizados exitosamente</string>
+    <string name="retry_synchronizing">Procesar de nuevo</string>
+    <string name="synchronization_completed">La sincronización se ha completado con éxito.</string>
+    <string name="synchronized_later_time">La información del terminal se sincronizará posteriormente.</string>
+    <!-- Fifth Page -->
+    <string name="link_terminal_fifth_page_title"> Ya tenemos toda la información necesaria para comenzar a trabajar. Use BullKepper para visualizar toda la información sincronizada y aplique diferentes reglas de configuración.</string>
+    <string name="link_terminal_fifth_page_finish">Terminar</string>
+    <!-- Lock Screen -->
+    <string name="lock_screen_fun_time_not_enabled" formatted="false">No puedes usar %s porque el tiempo de diversión no está habilitado.</string>
+    <string name="lock_screen_content_screen" formatted="false">Bullkeeper bloqueó %s porque está restringido por las reglas de tu casa.</string>
+    <string name="lock_screen_fun_time_unavailable" formatted="false">No tienes suficiente tiempo de diversión para usar %s</string>
+    <string name="lock_screen_close_app">Cerrar app</string>
+    <string name="previous_request_has_not_expired">Una solicitud ya está en progreso, por favor espere</string>
+    <string name="request_generic_error_occurred">Se produjo un error al enviar la solicitud, inténtalo de nuevo.</string>
+    <!-- SOS Screen -->
+    <string name="sos_toolbar_title">SOS</string>
+    <string name="sos_your_current_location">Su ubicación actual</string>
+    <string name="sos_button_text">SOS \n Toque para activar</string>
+    <string name="sos_button_in_progress_text">Solicitando ayuda, \n por favor espere …</string>
+    <string name="sos_button_no_expired_text">La solicitud ha \n sido enviada, espere por favor.</string>
+    <string name="sos_current_address_not_determined">La dirección actual no pudo ser determinada</string>
+
+    <!-- Pick Me Up Screen -->
+    <string name="pick_me_up_toolbar_title">PickMeUp</string>
+    <string name="pick_me_up_your_current_location">Su ubicación actual</string>
+    <string name="pick_me_up_button_text">PickMeUp \n Toque para activar</string>
+    <string name="pick_me_up_button_in_progress_text">Recogida en curso, por favor espere …</string>
+    <string name="pick_me_up_button_no_expired_text">La solicitud ha \n sido enviada, espere por favor.</string>
+    <!-- Time Bank Screen -->
+    <string name="time_bank_toolbar_title">TimeBank</string>
+    <string name="time_bank_your_current_location">Su ubicación actual</string>
+    <string name="time_bank_saved_button_text" formatted="false">%s \n dejado en su banco de tiempo</string>
+    <string name="time_bank_restored_button_text" formatted="false">%s \n Se pueden restaurar para su diversión.</string>
+    <string name="time_bank_button_saved_successfully_text">Tiempo ahorrado exitosamente</string>
+    <string name="time_bank_button_restored_successfully_text">Tiempo exitosamente restaurado</string>
+    <string name="time_bank_avaliable_description">Puede utilizar estos minutos en su tiempo de diversión</string>
+    <string name="time_bank_not_avaliable_description">Lo sentimos, no se puede guardar o restaurar el tiempo.</string>
+    <string name="time_bank_not_avaliable_btn">Banco de tiempo no disponible</string>
+    <!-- Bed Time Screen -->
+    <string name="bed_time_screen_title">Hora de dormir</string>
+    <string name="bed_time_screen_description">Mantén la calma y duerme, es hora de ir a la cama.. \n
+    Su dispositivo estará disponible a las</string>
+    <string name="bed_time_screen_device_available_at">7:00 am</string>
+    <string name="bed_time_screen_pick_me_up">PickMeUp</string>
+    <string name="bed_time_screen_sos">SOS</string>
+    <!-- Phone Number Blocked Screen -->
+    <string name="phone_number_blocked_screen_close_btn">Cerrar</string>
+    <string name="phone_number_blocked_content" formatted="false">No puede llamar o recibir llamadas del número %s, este número está restringido por las reglas de su hogar</string>
+    <string name="phone_number_blocked_blocked_at" formatted="false">Bloqueo establecido en %s </string>
+    <string name="phone_number_blocked_unknown_emitter">Bull Keeper kids evita recibir llamadas de emisores desconocidos</string>
+    <!-- App Disabled Screen -->
+    <string name="app_disabled_uninstall_app">Desinstalar</string>
+    <string name="app_disabled_screen_content_screen" formatted="false">La aplicación %s ha sido deshabilitada, no puede ser usada bajo ninguna circunstancia. Por favor, complete el proceso de eliminación.</string>
+    <string name="fun_time_avaliable_title">Tiempo de diversión disponible</string>
+    <string name="fun_time_not_avaliable_title">Tiempo de diversión no disponible</string>
+    <string name="fun_time_avaliable_description">Gestiona tus momentos de diversión como quieras.</string>
+    <string name="fun_time_not_avaliable_description">Lo sentimos, no hay tiempo de diversión disponible</string>
+    <!-- Settings -->
+    <string name="settings_toolbar_title">Settings</string>
+    <!-- Geofence -->
+    <string name="geofence_violated_title_default">Geofence Violado</string>
+    <string name="geofence_transition_exit_description">No puedes salir de esta zona, se registrará una alerta.</string>
+    <string name="geofence_transition_enter_description">No se puede ingresar a esta área, se generará una alerta.</string>
+    <string name="geofence_close">Cerrar</string>
+    <string name="scheduled_block_time_format" formatted="false">Duración %s - %s</string>
+    <!-- Android Settings Package Name -->
+    <string name="android_settings_package_name">com.android.settings</string>
+    <string name="settings_lock_screen_title">No tienes acceso a esta sección.</string>
+    <string name="settings_lock_screen_description">El acceso a esta sección está restringido por las reglas de control parental.</string>
+    <string name="conversation_message_title">Mensajes</string>
+    <string name="hint_enter_a_message">Escribe un mensaje …</string>
+    <string name="delete_list_menu_item">Borrar</string>
+    <string name="snackbar_undo_action">DESHACER</string>
+    <string name="conversation_was_deleted">La conversación fue eliminada</string>
+    <!-- Conversation List -->
+    <string name="no_conversation_found">No se encontraron conversaciones</string>
+    <string name="error_loading_conversation">Error al cargar la conversación</string>
+    <string name="loading_conversation_message">Cargando conversación …</string>
+    <string name="conversations_title">Conversaciones</string>
+    <string name="delete_all_conversations_confirm">¿Quieres borrar todas las conversaciones?</string>
+    <string name="delete_all_conversation_messages_confirm">¿Quieres eliminar todos los mensajes de la conversación?</string>
+    <string name="delete_conversation_selected_messages_confirm">¿Quieres borrar los mensajes seleccionados?</string>
+    <string name="sending_message_wait">enviando espera …</string>
+    <string name="load_conversation_error">Hubo un error al cargar la conversación.</string>
+    <string name="all_messages_deleted">Todos los mensajes eliminados con éxito</string>
+    <string name="selected_messages_deleted">Mensajes seleccionados eliminados exitosamentey</string>
+    <string name="error_create_message">El mensaje no se pudo enviar</string>
+    <string name="conversation_message_list_date_header_format">dd MMMM yyyy</string>
+    <string name="error_deleting_messages">Error al eliminar mensajes</string>
+    <string name="new_message_saved_notification_title">%s te envio un mensaje</string>
+    <string name="conversation_was_deleted_dialog">La conversación fue eliminada</string>
+    <string name="all_messages_was_deleted_dialog">Todos los mensajes fueron eliminados</string>
+    <!-- Kid Guardians -->
+    <string name="kid_guardian_list_title">Sus supervisores</string>
+    <string name="error_loading_kid_guardian">Error al cargar los datos</string>
+    <string name="no_data_found">Datos no encontrados</string>
+    <string name="no_messages_found_for_conversation">Todos los mensajes serán almacenados de forma segura.</string>
+    <string name="kid_guardian_data_viewer_role">Puede visualizar alertas y resultados de tu perfil.</string>
+    <string name="kid_guardian_parental_control_rule_editor_role">Puede editar y aplicar reglas de control parental.</string>
+    <string name="kid_guardian_admin_role">Él puede gestionar tu perfil.</string>
+    <string name="monitoring_service_notification_title">Bullkeeper kids está trabajando</string>
+    <string name="monitoring_service_notification_description">Supervisará el uso del dispositivo.</string>
+</resources>
