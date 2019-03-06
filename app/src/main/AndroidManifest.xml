@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Required for API 28 (Android P) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
@@ -160,6 +161,14 @@
             </intent-filter>
         </receiver>
 
+        <!-- Action Boot Completed Broadcast Receiver -->
+        <receiver android:name=".presentation.broadcast.ActionBootCompletedBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <!-- App Tutorial Activity -->
         <activity

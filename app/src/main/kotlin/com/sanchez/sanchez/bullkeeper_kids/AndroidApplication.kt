@@ -81,6 +81,16 @@ class AndroidApplication : Application(){
                 .build()
     }
 
+    /**
+     * Action Boot Completed Receiver Component
+     */
+    val actionBootCompletedReceiverComponent: ActionBootCompletedReceiverComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerActionBootCompletedReceiverComponent
+                .builder()
+                .applicationModule(ApplicationModule(this))
+                .globalServiceModule(GlobalServiceModule(this))
+                .build()
+    }
 
     companion object {
 
