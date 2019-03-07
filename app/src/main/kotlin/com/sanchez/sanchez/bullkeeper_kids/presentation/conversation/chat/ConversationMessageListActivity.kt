@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
@@ -12,6 +13,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import kotlinx.android.synthetic.main.app_translucent_toolbar_return.*
 import javax.inject.Inject
 
@@ -86,6 +88,21 @@ class ConversationMessageListActivity : BaseActivity(),
     override fun fragment(): BaseFragment = ConversationMessageListActivityFragment().apply {
         arguments = intent.extras
     }
+
+
+    /**
+     * On Connectivity Not Available
+     */
+    override fun onConnectivityNotAvailable() {
+        super.onConnectivityNotAvailable()
+
+        showNoticeDialog(R.string.connectivity_not_available, object : NoticeDialogFragment.NoticeDialogListener {
+            override fun onAccepted(dialog: DialogFragment) {
+                navigator.showHome(this@ConversationMessageListActivity)
+            }
+        })
+    }
+
 
 
     companion object {

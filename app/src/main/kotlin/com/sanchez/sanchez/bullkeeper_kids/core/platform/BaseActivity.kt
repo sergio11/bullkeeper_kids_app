@@ -4,8 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
+import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.inTransaction
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.toolbar.toolbar
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
@@ -18,6 +22,12 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 abstract class BaseActivity : SupportActivity() {
 
     /**
+     * Last Connectivity
+     */
+    var lastConnectivity: Connectivity? = null
+
+
+    /**
      * On Create
      */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +35,18 @@ abstract class BaseActivity : SupportActivity() {
         setContentView(getLayoutRes())
         setSupportActionBar(toolbar)
         addFragment(savedInstanceState)
+
+        ReactiveNetwork
+                .observeNetworkConnectivity(this)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe{conectivity ->
+                    lastConnectivity = conectivity
+                    if(conectivity.available())
+                        onConnectivityAvailable()
+                    else
+                        onConnectivityNotAvailable()
+                }
     }
 
     /**
@@ -61,4 +83,14 @@ abstract class BaseActivity : SupportActivity() {
      */
     @LayoutRes
     abstract fun getLayoutRes(): Int
+
+    /**
+     * On Connectivity Available
+     */
+    open fun onConnectivityAvailable(){}
+
+    /**
+     * On Connectivity Not Available
+     */
+    open fun onConnectivityNotAvailable(){}
 }

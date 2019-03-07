@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs
 
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
@@ -60,6 +61,8 @@ open class NoticeDialogFragment: SupportDialogFragment() {
             return showDialog(activity, title, null)
         }
 
+
+
     }
 
     private var noticeDialogListener: NoticeDialogListener? = null
@@ -92,6 +95,15 @@ open class NoticeDialogFragment: SupportDialogFragment() {
         dismiss.setOnClickListener {
             noticeDialogListener?.onAccepted(this)
             dismiss()
+        }
+    }
+
+    /**
+     * Show
+     */
+    override fun show(manager: FragmentManager?, tag: String?) {
+        if (manager?.isDestroyed == false && !manager.isStateSaved) {
+            super.show(manager, tag)
         }
     }
 

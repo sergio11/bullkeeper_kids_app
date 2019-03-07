@@ -307,5 +307,6 @@
     <string name="monitoring_service_notification_title">Bullkeeper kids is working</string>
     <string name="monitoring_service_notification_description">Will monitor the use of the device</string>
 
+    <string name="connectivity_not_available">Check your connection, this functionality is not available without an internet connection</string>
 
 </resources>

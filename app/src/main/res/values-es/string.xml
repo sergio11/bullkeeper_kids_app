@@ -253,4 +253,5 @@
     <string name="kid_guardian_admin_role">Él puede gestionar tu perfil.</string>
     <string name="monitoring_service_notification_title">Bullkeeper kids está trabajando</string>
     <string name="monitoring_service_notification_description">Supervisará el uso del dispositivo.</string>
+    <string name="connectivity_not_available">Revise su conexión, está funcionalidad no está disponible sin conexión a internet</string>
 </resources>

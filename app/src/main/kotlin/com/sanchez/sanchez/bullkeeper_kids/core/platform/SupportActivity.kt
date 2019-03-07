@@ -5,8 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
@@ -73,33 +71,12 @@ abstract class SupportActivity: AppCompatActivity(),
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    /**
-     * Dismiss all DialogFragments added to given FragmentManager and child fragments
-     */
-    private fun dismissAllDialogs(fragmentManager: FragmentManager) {
-
-        val fragments = fragmentManager.fragments
-
-        if (!fragments.isEmpty()) {
-            for (fragment in fragments) {
-                if (fragment is DialogFragment) {
-                    fragment.dismissAllowingStateLoss()
-                }
-
-                val childFragmentManager = fragment.childFragmentManager
-                dismissAllDialogs(childFragmentManager)
-            }
-
-        }
-
-    }
 
     /**
      * Show Notice Dialog
      * @param title
      */
     override fun showNoticeDialog(title: String) {
-        dismissAllDialogs(supportFragmentManager)
         NoticeDialogFragment.showDialog(this, title)
     }
 
@@ -118,7 +95,6 @@ abstract class SupportActivity: AppCompatActivity(),
      */
     override fun showNoticeDialog(title: String,
                          noticeDialogListener: NoticeDialogFragment.NoticeDialogListener) {
-        dismissAllDialogs(supportFragmentManager)
         NoticeDialogFragment.showDialog(this, title, noticeDialogListener)
     }
 
@@ -137,7 +113,6 @@ abstract class SupportActivity: AppCompatActivity(),
      * @param title
      */
     override fun showProgressDialog(title: String) {
-        dismissAllDialogs(supportFragmentManager)
         ProgressDialogFragment.showDialog(this, title)
     }
 
@@ -161,7 +136,6 @@ abstract class SupportActivity: AppCompatActivity(),
      * @param title
      */
     override fun showConfirmationDialog(title: String) {
-        dismissAllDialogs(supportFragmentManager)
         ConfirmationDialogFragment.showDialog(this, title)
     }
 
@@ -179,7 +153,6 @@ abstract class SupportActivity: AppCompatActivity(),
      * @param confirmationDialogListener
      */
     override fun showConfirmationDialog(title: String, confirmationDialogListener: ConfirmationDialogFragment.ConfirmationDialogListener) {
-        dismissAllDialogs(supportFragmentManager)
         ConfirmationDialogFragment.showDialog(this, title, confirmationDialogListener)
     }
 

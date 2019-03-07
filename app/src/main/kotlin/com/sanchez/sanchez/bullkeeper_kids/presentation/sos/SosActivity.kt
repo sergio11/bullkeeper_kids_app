@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.presentation.sos
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.view.WindowManager
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
@@ -13,6 +14,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import kotlinx.android.synthetic.main.sos_toolbar.*
 import javax.inject.Inject
 
@@ -81,4 +83,17 @@ class SosActivity : BaseActivity(),
      */
     override fun fragment(): BaseFragment = SosActivityFragment()
 
+
+    /**
+     * On Connectivity Not Available
+     */
+    override fun onConnectivityNotAvailable() {
+        super.onConnectivityNotAvailable()
+
+        showNoticeDialog(R.string.connectivity_not_available, object : NoticeDialogFragment.NoticeDialogListener {
+            override fun onAccepted(dialog: DialogFragment) {
+                navigator.showHome(this@SosActivity)
+            }
+        })
+    }
 }
