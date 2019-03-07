@@ -1,17 +1,25 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.home
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.ToHoursMinutesSecondsFormat
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
+import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IFunTimeDayScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.FUN_TIME_CHANGED_ACTION
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.SETTINGS_STATUS_CHANGED_ACTION
 import kotlinx.android.synthetic.main.fragment_home.*
+import timber.log.Timber
 import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,6 +54,32 @@ class HomeActivityFragment : BaseFragment() {
     internal lateinit var context: Context
 
     /**
+     * Sound Manager
+     */
+    @Inject
+    internal lateinit var soundManager: ISoundManager
+
+
+    /**
+     * Fun Time Changed Event Handler
+     */
+    private var mLocalBroadcastManager: LocalBroadcastManager? = null
+    private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == FUN_TIME_CHANGED_ACTION) {
+                try {
+                    showFunTimeStatus()
+                    soundManager.playSound(R.raw.send_message_sound)
+                } catch (ex: Exception) {
+                    Timber.d("Exception Ocurred")
+                    ex.printStackTrace()
+                }
+
+            }
+        }
+    }
+
+    /**
      * On Attach
      */
     override fun onAttach(context: Context?) {
@@ -70,6 +104,12 @@ class HomeActivityFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeInjector()
+
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context)
+        val mIntentFilter = IntentFilter()
+        mIntentFilter.addAction(FUN_TIME_CHANGED_ACTION)
+        mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
+
 
         // Pick Me Up click Handler
         pickMeUpAction.setOnClickListener {
@@ -149,17 +189,26 @@ class HomeActivityFragment : BaseFragment() {
                         }
                     }
 
+                } else {
+                    showFunTimeNotAvaliable()
                 }
 
             }
 
         } else {
-            funTimeTitle.text = getString(R.string.fun_time_not_avaliable_title)
-            remainingFunTimeTextView.visibility = View.GONE
-            funTimeIcon.setImageResource(R.drawable.sad_face_icon)
-            funTimeDescription.text = getString(R.string.fun_time_not_avaliable_description)
-            funTimeProgress.setValue(0.0f)
+            showFunTimeNotAvaliable()
         }
+    }
+
+    /**
+     * Show Fun Time Not Avaliable
+     */
+    private fun showFunTimeNotAvaliable(){
+        funTimeTitle.text = getString(R.string.fun_time_not_avaliable_title)
+        remainingFunTimeTextView.visibility = View.GONE
+        funTimeIcon.setImageResource(R.drawable.sad_face_icon)
+        funTimeDescription.text = getString(R.string.fun_time_not_avaliable_description)
+        funTimeProgress.setValue(0.0f)
     }
 
     /**
@@ -171,4 +220,6 @@ class HomeActivityFragment : BaseFragment() {
                         .component)
         appComponent?.inject(this)
     }
+
+
 }

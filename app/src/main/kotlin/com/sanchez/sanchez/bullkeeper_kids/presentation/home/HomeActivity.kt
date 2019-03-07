@@ -1,10 +1,13 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.home
 
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
@@ -16,6 +19,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.SETTINGS_STATUS_CHANGED_ACTION
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import kotlinx.android.synthetic.main.app_translucent_toolbar.*
 import javax.inject.Inject
@@ -82,11 +86,28 @@ class HomeActivity : BaseActivity(),
     internal lateinit var preferenceRepository: IPreferenceRepository
 
     /**
+     * Fun Time Changed Event Handler
+     */
+    private var mLocalBroadcastManager: LocalBroadcastManager? = null
+    private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if(intent.action == SETTINGS_STATUS_CHANGED_ACTION) {
+                checkSettingsStatus()
+            }
+        }
+    }
+
+    /**
      * On Create
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
+
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this)
+        val mIntentFilter = IntentFilter()
+        mIntentFilter.addAction(SETTINGS_STATUS_CHANGED_ACTION)
+        mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
 
         ContextCompat.startForegroundService(this,
                 Intent(this, MonitoringService::class.java))
@@ -99,6 +120,7 @@ class HomeActivity : BaseActivity(),
     override fun onResume() {
         super.onResume()
 
+        checkSettingsStatus()
         // Save the status of permissions
 
         preferenceRepository.setAccessFineLocationEnabled(
@@ -129,16 +151,6 @@ class HomeActivity : BaseActivity(),
                 isDevicePolicyManagerActive()
         )
 
-        if(preferenceRepository.isSettingsEnabled()) {
-            appSettings.visibility = View.VISIBLE
-            appSettings.setOnClickListener {
-                navigator.showSettingsScreen(this)
-            }
-
-        } else {
-            appSettings.visibility = View.GONE
-            appSettings.setOnClickListener(null)
-        }
 
         AwakenMonitoringServiceBroadcastReceiver.scheduledAt(this)
 
@@ -174,5 +186,21 @@ class HomeActivity : BaseActivity(),
      * Show Chat Action
      */
     override fun showChatAction() = navigator.showConversationList(this)
+
+    /**
+     * Check Settings Status
+     */
+    private fun checkSettingsStatus() {
+        if(preferenceRepository.isSettingsEnabled()) {
+            appSettings.visibility = View.VISIBLE
+            appSettings.setOnClickListener {
+                navigator.showSettingsScreen(this)
+            }
+
+        } else {
+            appSettings.visibility = View.GONE
+            appSettings.setOnClickListener(null)
+        }
+    }
 
 }

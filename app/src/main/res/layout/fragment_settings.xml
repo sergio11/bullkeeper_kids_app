@@ -28,8 +28,8 @@
         android:id="@+id/accessRequired"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleText"
-        android:layout_marginBottom="80dp">
+        android:layout_marginBottom="@dimen/common_margin"
+        android:layout_below="@id/titleText">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,9 +56,10 @@
                 <!-- Location History Title -->
                 <TextView
                     android:id="@+id/locationHistoryTitle"
-                    style="@style/CommonStrongText.Big"
+                    style="@style/CommonStrongText.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="0dp"
                     android:layout_toEndOf="@+id/locationHistoryIcon"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
@@ -121,9 +122,10 @@
                 <!-- Calls History Title -->
                 <TextView
                     android:id="@+id/callsHistoryTitle"
-                    style="@style/CommonStrongText.Big"
+                    style="@style/CommonStrongText.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="0dp"
                     android:layout_toEndOf="@+id/callsHistoryIcon"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
@@ -187,12 +189,13 @@
                 <!-- Contacts List Title -->
                 <TextView
                     android:id="@+id/contactsListTitle"
-                    style="@style/CommonStrongText.Big"
+                    style="@style/CommonStrongText.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/contactsListIcon"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
+                    android:padding="0dp"
                     android:layout_above="@id/contactsListDescription"
                     android:gravity="start|center_vertical"
                     android:text="@string/third_page_contacts_title"
@@ -253,10 +256,11 @@
                 <!-- Text Message Title -->
                 <TextView
                     android:id="@+id/textMessageTitle"
-                    style="@style/CommonStrongText.Big"
+                    style="@style/CommonStrongText.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/textMessageIcon"
+                    android:padding="0dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_above="@id/textMessageDescription"
@@ -319,10 +323,11 @@
                 <!-- Storage Title -->
                 <TextView
                     android:id="@+id/storageTitle"
-                    style="@style/CommonStrongText.Big"
+                    style="@style/CommonStrongText.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/storageIcon"
+                    android:padding="0dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_above="@id/storageDescription"
@@ -385,9 +390,10 @@
                 <!-- Device statistics Title -->
                 <TextView
                     android:id="@+id/deviceStatisticsTitle"
-                    style="@style/CommonStrongText.Big"
+                    style="@style/CommonStrongText.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="0dp"
                     android:layout_toEndOf="@+id/deviceStatisticsIcon"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
@@ -452,9 +458,10 @@
                 <!-- Admin Access Title -->
                 <TextView
                     android:id="@+id/adminAccessTitle"
-                    style="@style/CommonStrongText.Big"
+                    style="@style/CommonStrongText.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="0dp"
                     android:layout_toEndOf="@+id/adminAccessIcon"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"

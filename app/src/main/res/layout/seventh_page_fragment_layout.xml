@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     android:background="@drawable/background_13">
 
     <!-- Title Text -->
     <TextView
         android:id="@+id/titleText"
         style="@style/CommonStrongText"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_margin"
         android:padding="@dimen/common_padding"
@@ -28,7 +30,7 @@
     <TextView
         android:id="@+id/contentText"
         style="@style/CommonStrongText.Big"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_margin"
         android:gravity="center"
@@ -49,11 +51,6 @@
         android:layout_width="@dimen/common_action_button_width"
         android:layout_height="@dimen/common_action_button_height"
         android:layout_margin="@dimen/common_margin"
-        android:layout_marginBottom="80dp"
-        android:text="@string/seventh_page_signin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/contentText"/>
+        android:text="@string/seventh_page_signin"/>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

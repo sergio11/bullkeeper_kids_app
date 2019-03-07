@@ -16,7 +16,6 @@ import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import javax.inject.Inject
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
-import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageManager
@@ -28,8 +27,6 @@ import android.support.v4.content.LocalBroadcastManager
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
-import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings
-import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.strategy.SocketInternetObservingStrategy
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import com.google.android.gms.location.*
 import com.here.oksse.ServerSentEvent
@@ -38,7 +35,6 @@ import okhttp3.Request
 import okhttp3.Response
 import timber.log.Timber
 import com.here.oksse.OkSse
-import com.sanchez.sanchez.bullkeeper_kids.BuildConfig
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.*
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.FunTimeScheduledDTO
@@ -72,6 +68,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.Conver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.SettingsLockScreenActivity.Companion.UNLOCK_SETTINGS_SCREEN
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.LocalTime
@@ -1100,6 +1097,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 Timber.d("Sync Fun Time Failed")
             }, fnR = fun(_: Unit){
                 Timber.d("Sync Fun Time successfully")
+                localBroadcastManager.sendBroadcast(Intent(
+                        FUN_TIME_CHANGED_ACTION))
             })
         }
     }
@@ -1298,6 +1297,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun terminalSettingsStatusChangedHandler(event: TerminalSettingsStatusChangedDTO) {
         Timber.d("SSE: Terminal Settings status Changed Handler")
         event.enabled?.let { preferenceRepository.setSettingsEnabled(it) }
+
+        localBroadcastManager.sendBroadcast(Intent(
+                SETTINGS_STATUS_CHANGED_ACTION))
+
+        if(preferenceRepository.isSettingsEnabled())
+            localBroadcastManager.sendBroadcast(Intent(
+                    UNLOCK_SETTINGS_SCREEN))
     }
 
     /**
@@ -1497,6 +1503,10 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 )
         ))
 
+
+        localBroadcastManager.sendBroadcast(Intent(
+                FUN_TIME_CHANGED_ACTION))
+
     }
 
 
@@ -1555,6 +1565,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 enabled = funTimeDayScheduledChangedDTO.enabled,
                 totalHours = funTimeDayScheduledChangedDTO.totalHours
         ))
+
+        localBroadcastManager.sendBroadcast(Intent(
+                FUN_TIME_CHANGED_ACTION))
     }
 
     /**
@@ -1944,4 +1957,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     override fun onBind(intent: Intent?): IBinder  = Binder()
+
+
+    companion object {
+        /**
+         * Events
+         */
+        const val FUN_TIME_CHANGED_ACTION = "com.sanchez.sergio.fun.time.changed"
+        const val SETTINGS_STATUS_CHANGED_ACTION = "com.sanchez.sergio.settings.status.changed"
+    }
 }

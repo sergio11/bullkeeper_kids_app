@@ -1,6 +1,11 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.timebank
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
@@ -10,6 +15,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IFunTimeDayScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import kotlinx.android.synthetic.main.fragment_time_bank.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -38,6 +44,26 @@ class TimeBankActivityFragment : BaseFragment() {
     @Inject
     internal lateinit var funTimeDayScheduledRepository: IFunTimeDayScheduledRepository
 
+    /**
+     * Context
+     */
+    @Inject
+    internal lateinit var context: Context
+
+
+    /**
+     * Fun Time Changed Event Handler
+     */
+    private var mLocalBroadcastManager: LocalBroadcastManager? = null
+    private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == MonitoringService.FUN_TIME_CHANGED_ACTION) {
+                showTimeBankStatus()
+                soundManager.playSound(R.raw.send_message_sound)
+            }
+        }
+    }
+
 
     /**
      * Layout Id
@@ -55,6 +81,45 @@ class TimeBankActivityFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeInjector()
+
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context)
+        val mIntentFilter = IntentFilter()
+        mIntentFilter.addAction(MonitoringService.FUN_TIME_CHANGED_ACTION)
+        mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
+    }
+
+    /**
+     * On Resume
+     */
+    override fun onResume() {
+        super.onResume()
+        showTimeBankStatus()
+    }
+
+    /**
+     * On Destroy View
+     */
+    override fun onDestroyView() {
+        super.onDestroyView()
+        soundManager.stopSound(timeBankStreamId)
+    }
+
+
+    /**
+     * Initialize Injector
+     */
+    fun initializeInjector() {
+        val applicationComponent = ApplicationComponent::class.java
+                .cast((activity as HasComponent<*>)
+                        .component)
+        applicationComponent?.inject(this)
+    }
+
+
+    /**
+     * Show Time Bank Status
+     */
+    private fun showTimeBankStatus() {
 
         if(preferenceRepository.isFunTimeEnabled()) {
 
@@ -123,29 +188,24 @@ class TimeBankActivityFragment : BaseFragment() {
                         }
                     }
 
+                } else {
+                    showTimeBankNotEnable()
                 }
 
             }
 
+        } else {
+            showTimeBankNotEnable()
         }
-
     }
 
     /**
-     * On Destroy View
+     * Show Time Bank Not Enable
      */
-    override fun onDestroyView() {
-        super.onDestroyView()
-        soundManager.stopSound(timeBankStreamId)
-    }
+    private fun showTimeBankNotEnable(){
+        saveOnTimeBank.text = getString(R.string.time_bank_not_avaliable_btn)
+        timeBankIcon.setImageResource(R.drawable.sad_face_icon)
+        timeBankDescription.text = getString(R.string.time_bank_not_avaliable_description)
 
-    /**
-     * Initialize Injector
-     */
-    fun initializeInjector() {
-        val applicationComponent = ApplicationComponent::class.java
-                .cast((activity as HasComponent<*>)
-                        .component)
-        applicationComponent?.inject(this)
     }
 }

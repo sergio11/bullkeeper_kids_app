@@ -99,4 +99,8 @@
     <dimen name="time_bank_btn_small_height">150dp</dimen>
 
 
+    <!-- Fun Time -->
+    <dimen name="fun_time_block_height">320dp</dimen>
+
+
 </resources>

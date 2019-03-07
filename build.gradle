@@ -13,8 +13,8 @@ buildscript {
     ext.min_sdk = 21
 
     ext.application_id = 'com.sanchez.sanchez.bullkeeper_kids'
-    ext.version_name = '0.93'
-    ext.version_code = 93
+    ext.version_name = '0.94'
+    ext.version_code = 94
     ext.test_runner = 'android.support.test.runner.AndroidJUnitRunner'
 
     repositories {
@@ -25,7 +25,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.3.0"
+        classpath "com.android.tools.build:gradle:3.3.2"
         //noinspection DifferentKotlinGradleVersion
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "io.realm:realm-gradle-plugin:$realm_gradle"
