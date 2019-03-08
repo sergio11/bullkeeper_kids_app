@@ -9,12 +9,16 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IAppsService
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppAllowedByScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.AddCallDetailsFromTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.location.GetAddressFromCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.SplashScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
@@ -42,8 +46,8 @@ import javax.inject.Singleton
 @Component(modules = [
     ApplicationModule::class, NetModule::class,
     GlobalServiceModule::class, PackagesModule::class,
-    CallDetailsModule::class, SmsModule::class,
-    ContactsModule::class, FunTimeModule::class])
+    CallDetailsModule::class, SmsModule::class, ScheduledBlocksModule::class, PhoneNumberBlockedModule::class,
+    GeofencesModule::class, ContactsModule::class, FunTimeModule::class, TerminalModule::class])
 interface ApplicationComponent {
 
     /**
@@ -147,4 +151,7 @@ interface ApplicationComponent {
     fun synchronizeTerminalContactsInteract(): SynchronizeTerminalContactsInteract
     fun getAddressFromCurrentLocationInteract(): GetAddressFromCurrentLocationInteract
     fun soundManager(): ISoundManager
+    fun getTerminalDetailInteract(): GetTerminalDetailInteract
+    fun saveTerminalInteract(): SaveTerminalInteract
+    fun unlinkTerminalInteract(): UnlinkTerminalInteract
 }

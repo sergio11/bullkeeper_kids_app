@@ -12,6 +12,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.LinkDeviceTutorialComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.ILinkDeviceTutorialHandler
 import kotlinx.android.synthetic.main.first_link_terminal_page_fragment_layout.*
@@ -70,6 +71,9 @@ class FirstLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
 
     }
 
+    /**
+     *
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -81,9 +85,16 @@ class FirstLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
 
         // Create the observer which updates the UI.
         val terminalEntityFailureObserver = Observer<Failure> { failure ->
-            titleText.text = getString(R.string.link_terminal_first_page_title)
-            contentText.visibility = VISIBLE
-            linkDeviceTutorialHandler.hideProgressDialog()
+
+            if( failure is FirstLinkTerminalViewModel.NoChildrenLinkedFailure ||
+                    failure is GetTerminalDetailInteract.NoTerminalFoundFailure) {
+                titleText.text = getString(R.string.link_terminal_first_page_title)
+                contentText.visibility = VISIBLE
+                linkDeviceTutorialHandler.hideProgressDialog()
+            } else {
+                linkDeviceTutorialHandler.goToHome()
+            }
+
         }
 
         firstLinkTerminalViewModel.terminalSuccess.observe(this, terminalEntityObserver)
@@ -91,8 +102,6 @@ class FirstLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
 
         linkDeviceTutorialHandler.showProgressDialog(R.string.generic_loading_text)
         firstLinkTerminalViewModel.checkTerminalStatus()
-
-
 
     }
 

@@ -3,6 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 import android.content.Context
 import android.os.Handler
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IContactsService
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IContactRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ContactRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
@@ -31,7 +32,7 @@ class ContactsModule {
      */
     @Provides
     @Singleton
-    fun provideContactRepository(): ContactRepositoryImpl
+    fun provideContactRepository(): IContactRepository
             = ContactRepositoryImpl()
 
     /**
@@ -41,11 +42,11 @@ class ContactsModule {
     @Singleton
     fun provideSynchronizeTerminalContactsInteract(
             contactsService: IContactsService,
-            contactRepositoryImpl: ContactRepositoryImpl,
+            contactRepository: IContactRepository,
             context: Context,
             preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit)
-            = SynchronizeTerminalContactsInteract(context, contactsService, contactRepositoryImpl, preferenceRepository, retrofit)
+            = SynchronizeTerminalContactsInteract(context, contactsService, contactRepository, preferenceRepository, retrofit)
 
     /**
      * Provide Contacts Observer

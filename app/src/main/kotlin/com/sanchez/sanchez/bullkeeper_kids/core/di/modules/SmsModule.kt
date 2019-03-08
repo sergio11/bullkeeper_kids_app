@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ISmsService
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.ISmsRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.SmsRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -29,7 +30,7 @@ class SmsModule {
      */
     @Provides
     @Singleton
-    fun provideSmsRepository(): SmsRepositoryImpl
+    fun provideSmsRepository(): ISmsRepository
         = SmsRepositoryImpl()
 
     /**
@@ -39,10 +40,10 @@ class SmsModule {
     @Singleton
     fun provideSaveSmsInTheTerminalInteract(
             smsService: ISmsService,
-            smsRepositoryImpl: SmsRepositoryImpl,
+            smsRepository: ISmsRepository,
             context: Context,
             preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit)
-        = SynchronizeTerminalSMSInteract(context, smsService, smsRepositoryImpl, preferenceRepository, retrofit)
+        = SynchronizeTerminalSMSInteract(context, smsService, smsRepository, preferenceRepository, retrofit)
 
 }

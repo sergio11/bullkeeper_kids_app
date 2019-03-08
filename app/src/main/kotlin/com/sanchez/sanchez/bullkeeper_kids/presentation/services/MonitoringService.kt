@@ -22,6 +22,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.*
 import android.provider.ContactsContract
+import android.provider.Settings
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -39,10 +40,7 @@ import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.*
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.FunTimeScheduledDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppAllowedByScheduledRepository
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.IFunTimeDayScheduledRepository
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPhoneNumberRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.*
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
@@ -58,8 +56,10 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.phonenumber.GetBlockedPhoneNumbersInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.scheduledblocks.SynchronizeScheduledBlocksInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.ServerEventTypeEnum
+import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
@@ -141,6 +141,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     /**
      * Dependencies
      */
+
+    /**
+     * Get Terminal Detail Interact
+     */
+    @Inject
+    internal lateinit var getTerminalDetailInteract: GetTerminalDetailInteract
 
     /**
      * Synchronize Terminal Call History Interact
@@ -258,7 +264,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Scheduled Block Repository
      */
     @Inject
-    internal lateinit var scheduledBlocksRepositoryImpl: ScheduledBlocksRepositoryImpl
+    internal lateinit var scheduledBlocksRepositoryImpl: IScheduledBlocksRepository
 
     /**
      * Unlink Terminal
@@ -517,15 +523,43 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Start Data Synchronization
      */
     private fun startDataSynchronization(){
-        syncPhoneNumbersBlocked()
-        syncTerminalApps()
-        syncTerminalCallHistory()
-        syncTerminalContacts()
-        syncTerminalSMS()
-        syncScheduledBlocks()
-        syncGeofences()
-        syncFunTime()
-        startContactObserver()
+
+        val kid = preferenceRepository.getPrefKidIdentity()
+        val deviceId = Settings.Secure.getString(contentResolver,
+                Settings.Secure.ANDROID_ID)
+
+        // Get Terminal Details
+        getTerminalDetailInteract(GetTerminalDetailInteract.Params(kid, deviceId)) {
+            it.either(fnL = fun(failure) {
+
+                if(failure is GetTerminalDetailInteract.NoTerminalFoundFailure)
+                    // Unlink the device and all its associated information
+                    unlinkTerminal()
+
+            } , fnR = fun(terminalEntity: TerminalEntity){
+
+                // update device information and start data synchronization
+                terminalEntity.identity?.let{ preferenceRepository.setPrefTerminalIdentity(it) }
+                terminalEntity.deviceId?.let{ preferenceRepository.setPrefDeviceId(it) }
+                terminalEntity.kidId?.let{ preferenceRepository.setPrefKidIdentity(it) }
+                preferenceRepository.setCameraEnabled(terminalEntity.lockCameraEnabled)
+                preferenceRepository.setScreenEnabled(terminalEntity.lockScreenEnabled)
+                preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
+                preferenceRepository.setSettingsEnabled(terminalEntity.settingsEnabled)
+
+                syncPhoneNumbersBlocked()
+                syncTerminalApps()
+                syncTerminalCallHistory()
+                syncTerminalContacts()
+                syncTerminalSMS()
+                syncScheduledBlocks()
+                syncGeofences()
+                syncFunTime()
+                startContactObserver()
+
+            })
+        }
+
     }
 
     /**
@@ -1113,6 +1147,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 Timber.d("Unlink Terminal Failed")
             }, fnR = fun(_){
                 Timber.d("Unlink Terminal Success")
+                preferenceRepository.setAuthToken(IPreferenceRepository.AUTH_TOKEN_DEFAULT_VALUE)
                 navigator.showLogin(this)
                 stopSelf()
             })
@@ -1675,8 +1710,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         serverSentEvent?.close()
         serverSentEvent = null
 
-        if (preferenceRepository.getPrefCurrentUserIdentity()
-                != IPreferenceRepository.CURRENT_USER_IDENTITY_DEFAULT_VALUE) {
+        if (preferenceRepository.getPrefTerminalIdentity()
+                != IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE) {
 
             Timber.d("Start Listen SSE")
             val eventSubscriptionRequest = Request.Builder()

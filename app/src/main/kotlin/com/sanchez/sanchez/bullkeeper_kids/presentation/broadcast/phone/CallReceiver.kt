@@ -9,7 +9,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPhoneNumberRepository
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IScheduledBlocksRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import timber.log.Timber
 import java.util.*
@@ -43,7 +43,7 @@ class CallReceiver: PhoneCallReceiver() {
      * Scheduled Block Repository Impl
      */
     @Inject
-    internal lateinit var scheduledBlocksRepositoryImpl: ScheduledBlocksRepositoryImpl
+    internal lateinit var scheduledBlocksRepositoryImpl: IScheduledBlocksRepository
 
     /**
      * Navigator

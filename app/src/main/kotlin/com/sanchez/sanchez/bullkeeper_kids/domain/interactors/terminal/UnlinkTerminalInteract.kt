@@ -2,7 +2,6 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal
 
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.*
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -13,14 +12,17 @@ import javax.inject.Inject
 class UnlinkTerminalInteract
     @Inject constructor(
             retrofit: Retrofit,
-            private val preferencesRepository: IPreferenceRepository,
+            private val appAllowedByScheduledRepository: IAppAllowedByScheduledRepository,
             private val appsInstalledRepository: IAppsInstalledRepository,
-            private val smsRepository: ISmsRepository,
             private val callsRepository: ICallDetailRepository,
             private val contactsRepository: IContactRepository,
-            private val phoneNumberRepositoryImpl: IPhoneNumberRepository,
-            private val scheduledBlocksRepositoryImpl: ScheduledBlocksRepositoryImpl,
-            private val packageUsageStatsRepositoryImpl: IPackageUsageStatsRepository):
+            private val funTimeDayScheduledRepository: IFunTimeDayScheduledRepository,
+            private val geofenceRepository: IGeofenceRepository,
+            private val packageUsageStatsRepository: IPackageUsageStatsRepository,
+            private val phoneNumberRepository: IPhoneNumberRepository,
+            private val scheduledBlocksRepository: IScheduledBlocksRepository,
+            private val smsRepository: ISmsRepository,
+            private val preferencesRepository: IPreferenceRepository):
             UseCase<Unit, UseCase.None>(retrofit){
 
 
@@ -29,30 +31,26 @@ class UnlinkTerminalInteract
      */
     override suspend fun onExecuted(params: None) {
 
-        // Delete all Contacts
-        contactsRepository.deleteAll()
-        // Delete all sms
-        smsRepository.deleteAll()
-        // Delete All Calls
-        callsRepository.deleteAll()
-        // Delete all apps
+        appAllowedByScheduledRepository.deleteAll()
         appsInstalledRepository.deleteAll()
-        // Delete all phone numbers blocked
-        phoneNumberRepositoryImpl.deleteAll()
-        // Delete all scheduled blocks
-        scheduledBlocksRepositoryImpl.deleteAll()
-        // Delete All Usage Stats Repository Impl
-        packageUsageStatsRepositoryImpl.deleteAll()
+        callsRepository.deleteAll()
+        contactsRepository.deleteAll()
+        funTimeDayScheduledRepository.deleteAll()
+        geofenceRepository.deleteAll()
+        packageUsageStatsRepository.deleteAll()
+        phoneNumberRepository.deleteAll()
+        scheduledBlocksRepository.deleteAll()
+        smsRepository.deleteAll()
 
         // Reset Preferences
         preferencesRepository.setPrefKidIdentity(IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE)
         preferencesRepository.setPrefTerminalIdentity(IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)
         preferencesRepository.setPrefDeviceId(IPreferenceRepository.CURRENT_DEVICE_ID_DEFAULT_VALUE)
         preferencesRepository.setPrefCurrentUserIdentity(IPreferenceRepository.CURRENT_USER_IDENTITY_DEFAULT_VALUE)
-        preferencesRepository.setAuthToken(IPreferenceRepository.AUTH_TOKEN_DEFAULT_VALUE)
         preferencesRepository.setCameraEnabled(IPreferenceRepository.CAMERA_ENABLED_DEFAULT_VALUE)
         preferencesRepository.setScreenEnabled(IPreferenceRepository.SCREEN_ENABLED_DEFAULT_VALUE)
         preferencesRepository.setBedTimeEnabled(IPreferenceRepository.BED_TIME_DEFAULT_VALUE)
+        preferencesRepository.setSettingsEnabled(IPreferenceRepository.SETTINGS_ENABLED_DEFAULT_VALUE)
     }
 
 

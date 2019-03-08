@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ICallsService
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.ICallDetailRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.CallDetailRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.AddCallDetailsFromTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
@@ -30,7 +31,7 @@ class CallDetailsModule {
      */
     @Provides
     @Singleton
-    fun provideCallDetailRepository(): CallDetailRepositoryImpl
+    fun provideCallDetailRepository(): ICallDetailRepository
         = CallDetailRepositoryImpl()
 
     /**
@@ -41,10 +42,10 @@ class CallDetailsModule {
     fun provideSaveTerminalHistoryCallsInteract(
             context: Context,
             callsService: ICallsService,
-            callDetailsRepositoryImpl: CallDetailRepositoryImpl,
+            callDetailsRepository: ICallDetailRepository,
             preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit)
-        = SynchronizeTerminalCallHistoryInteract(context, callsService, callDetailsRepositoryImpl, preferenceRepository, retrofit)
+        = SynchronizeTerminalCallHistoryInteract(context, callsService, callDetailsRepository, preferenceRepository, retrofit)
 
     /**
      * Provide Add Call Details From Terminal Interact
@@ -52,12 +53,10 @@ class CallDetailsModule {
     @Provides
     @Singleton
     fun provideAddCallDetailsFromTerminalInteract(
-            context: Context,
             callsService: ICallsService,
-            callDetailsRepositoryImpl: CallDetailRepositoryImpl,
+            callDetailsRepository: ICallDetailRepository,
             preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit
-    ) = AddCallDetailsFromTerminalInteract(context, callsService, callDetailsRepositoryImpl, preferenceRepository, retrofit)
-
+    ) = AddCallDetailsFromTerminalInteract(callsService, callDetailsRepository, preferenceRepository, retrofit)
 
 }

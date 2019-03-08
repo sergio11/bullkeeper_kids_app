@@ -11,6 +11,7 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveSmsDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ISmsService
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.ISmsRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.SmsRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import timber.log.Timber
@@ -22,7 +23,7 @@ class SynchronizeTerminalSMSInteract
     @Inject constructor(
             private val context: Context,
             private val smsService: ISmsService,
-            private val smsRepositoryImpl: SmsRepositoryImpl,
+            private val smsRepositoryImpl: ISmsRepository,
             private val preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit): UseCase<Int, UseCase.None>(retrofit) {
 

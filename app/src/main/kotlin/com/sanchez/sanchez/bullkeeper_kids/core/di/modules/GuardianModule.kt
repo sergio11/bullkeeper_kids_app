@@ -13,7 +13,7 @@ import retrofit2.Retrofit
  * Guardian Module
  */
 @Module
-class GuardianModule(private val application: AndroidApplication) {
+class GuardianModule {
 
     /**
      * Provide Guardian Service

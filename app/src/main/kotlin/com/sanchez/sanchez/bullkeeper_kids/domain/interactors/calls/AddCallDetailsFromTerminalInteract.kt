@@ -1,11 +1,11 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls
 
-import android.content.Context
+
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.CallDetailEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveCallDetailDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ICallsService
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.CallDetailRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.ICallDetailRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -15,11 +15,10 @@ import javax.inject.Inject
  */
 class AddCallDetailsFromTerminalInteract
     @Inject constructor(
-        private val context: Context,
-        private val callService: ICallsService,
-        private val callDetailsRepositoryImpl: CallDetailRepositoryImpl,
-        private val preferenceRepository: IPreferenceRepository,
-        retrofit: Retrofit): UseCase<Unit, AddCallDetailsFromTerminalInteract.Params>(retrofit){
+            private val callService: ICallsService,
+            private val callDetailsRepositoryImpl: ICallDetailRepository,
+            private val preferenceRepository: IPreferenceRepository,
+            retrofit: Retrofit): UseCase<Unit, AddCallDetailsFromTerminalInteract.Params>(retrofit){
 
 
     /**

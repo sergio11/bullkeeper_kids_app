@@ -1,7 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
-import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
 import com.sanchez.sanchez.bullkeeper_kids.core.di.scopes.PerActivity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IChildrenService
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
@@ -15,7 +14,7 @@ import retrofit2.Retrofit
  * Children Module
  */
 @Module
-class ChildrenModule() {
+class ChildrenModule {
 
     /**
      * Provide Children Service

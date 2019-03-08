@@ -203,7 +203,7 @@ class SecondLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialComp
     override fun whenPhaseIsHidden(pagePosition: Int, currentPosition: Int) {
         Timber.d("Phase Is Hidden")
 
-        if(currentPosition > pagePosition && linkDeviceTutorialHandler.getCurrentSonEntity() == null)
+        if(currentPosition > pagePosition && linkDeviceTutorialHandler.getCurrentKidEntity() == null)
             linkDeviceTutorialHandler.showNoticeDialog(R.string.select_child_before_continuing, object : NoticeDialogFragment.NoticeDialogListener {
                 override fun onAccepted(dialog: DialogFragment) {
                     linkDeviceTutorialHandler.requestFocus()
@@ -242,7 +242,7 @@ class SecondLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialComp
      */
     override fun onItemClick(item: SupervisedChildrenEntity) {
         Preconditions.checkNotNull(item, "Item can not be null")
-        linkDeviceTutorialHandler.setCurrentSonEntity(item.kid)
+        linkDeviceTutorialHandler.setCurrentKidEntity(item.kid)
         linkDeviceTutorialHandler.releaseFocus()
     }
 

@@ -52,8 +52,7 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
                 .applicationComponent((application as AndroidApplication).appComponent)
                 .activityModule(ActivityModule(this))
                 .linkTerminalModule(LinkTerminalModule())
-                .guardianModule(GuardianModule(application as AndroidApplication))
-                .terminalModule(TerminalModule(application as AndroidApplication))
+                .guardianModule(GuardianModule())
                 .build()
     }
 
@@ -144,7 +143,7 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
     /**
      * Set Current Son Entity
      */
-    override fun setCurrentSonEntity(kidEntity: KidEntity?) {
+    override fun setCurrentKidEntity(kidEntity: KidEntity?) {
         Preconditions.checkNotNull(kidEntity, "Son Entity can not be null")
         this.currentKidEntity = kidEntity
     }
@@ -152,12 +151,12 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
     /**
      * Get Current Son Entity
      */
-    override fun getCurrentSonEntity(): KidEntity? = currentKidEntity
+    override fun getCurrentKidEntity(): KidEntity? = currentKidEntity
 
     /**
      * Has Current Son Entity
      */
-    override fun hasCurrentSonEntity(): Boolean = currentKidEntity != null
+    override fun hasCurrentKidEntity(): Boolean = currentKidEntity != null
 
     /**
      * Go To Home

@@ -9,6 +9,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.Synchroni
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.sms.SynchronizeTerminalSMSInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FirstLinkTerminalViewModel
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.FourLinkTerminalViewModel
@@ -20,9 +21,7 @@ import dagger.Provides
 /**
  * Link Terminal Module
  */
-@Module(includes = [
-    TerminalModule::class
-])
+@Module
 class LinkTerminalModule {
 
     /**
@@ -55,8 +54,9 @@ class LinkTerminalModule {
     fun provideFirstLinkTerminalViewModel(
             application: Application,
             getTerminalDetailInteract: GetTerminalDetailInteract,
-            preferenceRepository: IPreferenceRepository): FirstLinkTerminalViewModel
-            = FirstLinkTerminalViewModel(application, getTerminalDetailInteract, preferenceRepository)
+            preferenceRepository: IPreferenceRepository,
+            unlinkTerminalInteract: UnlinkTerminalInteract): FirstLinkTerminalViewModel
+            = FirstLinkTerminalViewModel(application, getTerminalDetailInteract, preferenceRepository, unlinkTerminalInteract)
 
 
     /**

@@ -5,8 +5,10 @@ import android.arch.lifecycle.MutableLiveData
 import android.provider.Settings
 import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
+import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseViewModel
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import timber.log.Timber
@@ -19,7 +21,8 @@ class FirstLinkTerminalViewModel
     @Inject constructor(
             private val context: Application,
             private val getTerminalDetailInteract: GetTerminalDetailInteract,
-            private val preferenceRepository: IPreferenceRepository)
+            private val preferenceRepository: IPreferenceRepository,
+            private val unlinkTerminalInteract: UnlinkTerminalInteract)
     : BaseViewModel()  {
 
 
@@ -62,7 +65,15 @@ class FirstLinkTerminalViewModel
      */
     private fun onTerminalDetailFailed(failure: Failure) {
         Preconditions.checkNotNull(failure, "Failure can not be null")
-        Timber.d("Terminal Detail Failure")
+        if(failure is GetTerminalDetailInteract.NoTerminalFoundFailure) {
+            unlinkTerminalInteract(UseCase.None()){
+                it.either(fnL = fun(failure) {
+                    Timber.d("Unlink Terminal Failed")
+                } , fnR = fun(_: Unit){
+                    Timber.d("Unlink Terminal Success")
+                })
+            }
+        }
         terminalFailure.value = failure
     }
 

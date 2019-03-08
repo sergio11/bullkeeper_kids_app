@@ -13,7 +13,7 @@ import javax.inject.Singleton
     PackagesModule::class, NetModule::class, MonitoringModule::class,
     PhoneNumberBlockedModule::class, SmsModule::class, CallDetailsModule::class,
     ContactsModule::class, ScheduledBlocksModule::class, GeofencesModule::class,
-    FunTimeModule::class])
+    FunTimeModule::class, TerminalModule::class])
 interface ServiceComponent {
 
     /**

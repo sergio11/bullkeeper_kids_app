@@ -19,19 +19,19 @@ interface ILinkDeviceTutorialHandler: IBasicActivityHandler {
     fun releaseFocus()
 
     /**
-     * Set Current Son Entity
+     * Set Current Kid Entity
      */
-    fun setCurrentSonEntity(kidEntity: KidEntity?)
+    fun setCurrentKidEntity(kidEntity: KidEntity?)
 
     /**
-     * Get Current Son Entity
+     * Get Current Kid Entity
      */
-    fun getCurrentSonEntity(): KidEntity?
+    fun getCurrentKidEntity(): KidEntity?
 
     /**
-     * Has Current Son Entity
+     * Has Current Kid Entity
      */
-    fun hasCurrentSonEntity(): Boolean
+    fun hasCurrentKidEntity(): Boolean
 
     /**
      * Go To Home

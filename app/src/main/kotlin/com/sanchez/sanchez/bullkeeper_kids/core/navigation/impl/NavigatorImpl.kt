@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import com.sanchez.sanchez.bullkeeper_kids.R
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.empty
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity

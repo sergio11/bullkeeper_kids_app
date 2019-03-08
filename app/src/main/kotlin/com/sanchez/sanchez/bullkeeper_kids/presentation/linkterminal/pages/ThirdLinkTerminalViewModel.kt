@@ -68,6 +68,41 @@ class ThirdLinkTerminalViewModel
     }
 
     /**
+     * Save Terminal
+     */
+    fun saveTerminal(kidId: String, appVersionName: String, appVersionCode: String,
+                     manufacturer: String, marketName: String, codeName: String, name: String,
+                     deviceName: String, deviceId: String, model: String, osVersion: String, sdkVersion: String) {
+
+        saveTerminalInteract(SaveTerminalInteract.Params(
+                kidId = kidId,
+                appVersionName = appVersionName,
+                appVersionCode = appVersionCode,
+                manufacturer = manufacturer,
+                marketName = marketName,
+                codeName = codeName,
+                name = name,
+                deviceName = deviceName,
+                deviceId = deviceId,
+                model = model,
+                osVersion = osVersion,
+                sdkVersion = sdkVersion
+        )) {
+            it.either(::onSaveTerminalFailed, ::onTerminalDetailSuccess)
+        }
+    }
+
+
+    /**
+     * Handlers
+     */
+
+    private fun onSaveTerminalFailed(failure: Failure) {
+        Preconditions.checkNotNull(failure, "Failure can not be null")
+        errorSaveTerminal.value = failure
+    }
+
+    /**
      * On Terminal Detail Failed
      */
     private fun onTerminalDetailFailed(failure: Failure) {
@@ -96,62 +131,7 @@ class ThirdLinkTerminalViewModel
         preferenceRepository.setCameraEnabled(terminalEntity.lockCameraEnabled)
         preferenceRepository.setScreenEnabled(terminalEntity.lockScreenEnabled)
         preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
-
-        terminalSaved.value = terminalEntity
-    }
-
-    /**
-     * Save Terminal
-     */
-    fun saveTerminal(kidId: String, appVersionName: String, appVersionCode: String,
-                     manufacturer: String, marketName: String, codeName: String, name: String,
-                     deviceName: String, deviceId: String, model: String, osVersion: String, sdkVersion: String) {
-
-        saveTerminalInteract(SaveTerminalInteract.Params(
-                kidId = kidId,
-                appVersionName = appVersionName,
-                appVersionCode = appVersionCode,
-                manufacturer = manufacturer,
-                marketName = marketName,
-                codeName = codeName,
-                name = name,
-                deviceName = deviceName,
-                deviceId = deviceId,
-                model = model,
-                osVersion = osVersion,
-                sdkVersion = sdkVersion
-        )) {
-            it.either(::onSaveTerminalFailed, ::onSaveTerminalSuccess)
-        }
-    }
-
-
-    /**
-     * Handlers
-     */
-
-    private fun onSaveTerminalFailed(failure: Failure) {
-        Preconditions.checkNotNull(failure, "Failure can not be null")
-        errorSaveTerminal.value = failure
-    }
-
-    /**
-     * On Save Terminal Success
-     */
-    private fun onSaveTerminalSuccess(terminalEntity: TerminalEntity) {
-        Preconditions.checkNotNull(terminalEntity, "Terminal can not be null")
-
-        terminalEntity.deviceId?.let {
-            preferenceRepository.setPrefDeviceId(it)
-        }
-
-        terminalEntity.identity?.let {
-            preferenceRepository.setPrefTerminalIdentity(it)
-        }
-
-        terminalEntity.kidId?.let {
-            preferenceRepository.setPrefKidIdentity(it)
-        }
+        preferenceRepository.setSettingsEnabled(terminalEntity.settingsEnabled)
 
         terminalSaved.value = terminalEntity
     }

@@ -165,20 +165,20 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
     override fun whenPhaseIsShowed() {
         Timber.d("Phase Is Showed")
 
-        if(linkDeviceTutorialHandler.hasCurrentSonEntity()) {
+        if(linkDeviceTutorialHandler.hasCurrentKidEntity()) {
 
             thirdLinkTerminalViewModel.getDeviceInformation()
 
 
-            val currentSonEntity = linkDeviceTutorialHandler.getCurrentSonEntity()
+            val currentKidEntity = linkDeviceTutorialHandler.getCurrentKidEntity()
 
             // Set Kid Full Name
-            kidFullNameTextView.text = "${currentSonEntity?.firstName} ${currentSonEntity?.lastName}"
+            kidFullNameTextView.text = "${currentKidEntity?.firstName} ${currentKidEntity?.lastName}"
 
             // Set School Name
-            schoolNameTextView.text = currentSonEntity?.school?.name
+            schoolNameTextView.text = currentKidEntity?.school?.name
 
-            picasso.load(currentSonEntity?.profileImage)
+            picasso.load(currentKidEntity?.profileImage)
                     .placeholder(R.drawable.kid_default)
                     .error(R.drawable.kid_default)
                     .into(childImageImageView)
@@ -193,7 +193,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                         Settings.Secure.ANDROID_ID)
                 // Save Terminal
                 thirdLinkTerminalViewModel.saveTerminal(
-                        kidId = currentSonEntity?.identity!!,
+                        kidId = currentKidEntity?.identity!!,
                         appVersionName = BuildConfig.VERSION_NAME,
                         appVersionCode = BuildConfig.VERSION_CODE.toString(),
                         manufacturer = deviceInfo?.manufacturer!!,
@@ -209,7 +209,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                 )
             }
 
-            currentSonEntity?.identity?.let{
+            currentKidEntity?.identity?.let{
                 // Check Terminal Status
                 linkDeviceTutorialHandler.showProgressDialog(R.string.generic_loading_text)
                 thirdLinkTerminalViewModel.checkTerminalStatus(it)

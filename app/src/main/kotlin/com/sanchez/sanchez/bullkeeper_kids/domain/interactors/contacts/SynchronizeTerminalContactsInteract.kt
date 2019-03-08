@@ -6,7 +6,6 @@ import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import retrofit2.Retrofit
 import javax.inject.Inject
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IContactsService
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ContactRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import android.provider.ContactsContract
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.ContactEntity
@@ -18,6 +17,7 @@ import android.graphics.Bitmap
 import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.batch
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveContactDTO
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IContactRepository
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 
@@ -28,7 +28,7 @@ class SynchronizeTerminalContactsInteract
     @Inject constructor(
             private val context: Context,
             private val contactsService: IContactsService,
-            private val contactRepositoryImpl: ContactRepositoryImpl,
+            private val contactRepositoryImpl: IContactRepository,
             private val preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit): UseCase<Int, UseCase.None>(retrofit) {
 

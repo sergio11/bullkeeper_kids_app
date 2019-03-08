@@ -12,6 +12,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.extension.batch
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.toDateTimeString
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.CallDetailEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveCallDetailDTO
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.ICallDetailRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.CallDetailRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import timber.log.Timber
@@ -24,7 +25,7 @@ class SynchronizeTerminalCallHistoryInteract
     @Inject constructor(
             private val context: Context,
             private val callService: ICallsService,
-            private val callDetailsRepositoryImpl: CallDetailRepositoryImpl,
+            private val callDetailsRepositoryImpl: ICallDetailRepository,
             private val preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit): UseCase<Int, UseCase.None>(retrofit) {
 
