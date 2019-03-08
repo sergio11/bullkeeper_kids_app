@@ -61,6 +61,7 @@ class SendRequestInteract
         sosRequest.terminal = terminal
         sosRequest.type = params.type
         sosRequest.location = SaveCurrentLocationDTO(latitude, longitude)
+        sosRequest.address = params.address
 
         val response =
                 kidRequestService.addRequestForKid(kid, sosRequest).await()
@@ -90,6 +91,6 @@ class SendRequestInteract
      * Params
      */
 
-    data class Params(val type: String)
+    data class Params(val type: String, val address: String?)
 
 }

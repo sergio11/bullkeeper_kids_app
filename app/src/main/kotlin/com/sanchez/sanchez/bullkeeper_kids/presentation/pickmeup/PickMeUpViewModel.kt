@@ -57,7 +57,9 @@ class PickMeUpViewModel
      * Activate Pick Me Up
      */
     fun activatePickMeUp(){
-        sendRequestInteract(SendRequestInteract.Params(RequestTypeEnum.PICKMEUP.name)){
+        sendRequestInteract(SendRequestInteract.Params(
+                type = RequestTypeEnum.PICKMEUP.name,
+                address = addressFromCurrentLocation.value)){
             it.either(::onPickMeUpRequestFailed, ::onPickMeUpRequestSuccess)
         }
     }

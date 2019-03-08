@@ -54,9 +54,12 @@ class SosViewModel
 
     /**
      * Activate SOS
+     * @param address
      */
     fun activateSos(){
-        sendRequestInteract(SendRequestInteract.Params(type = RequestTypeEnum.SOS.name)) {
+        sendRequestInteract(SendRequestInteract.Params(
+                type = RequestTypeEnum.SOS.name,
+                address = addressFromCurrentLocation.value)) {
             it.either(::onSosRequestFailed, ::onSosRequestSuccess)
         }
     }
