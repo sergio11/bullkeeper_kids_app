@@ -56,7 +56,9 @@ class NotifyHeartBeatInteract
                         readCallLogEnabled = preferenceRepository.isReadCallLogEnabled(),
                         writeExternalStorageEnabled = preferenceRepository.isWriteExternalStorageEnabled(),
                         usageStatsAllowed = preferenceRepository.isUsageStatsAllowed(),
-                        adminAccessEnabled = preferenceRepository.isAdminAccessEnabled())).await()
+                        adminAccessEnabled = preferenceRepository.isAdminAccessEnabled(),
+                        batteryLevel = preferenceRepository.getBatteryLevel(),
+                        isBatteryCharging = preferenceRepository.isBatteryChargingEnabled())).await()
 
         return response.data!!
     }

@@ -63,6 +63,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
+import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.BatteryStatusBroadcastReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
@@ -355,6 +356,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private lateinit var screenStatusReceiver: ScreenStatusReceiver
 
     /**
+     * Battery Status Receiver
+     */
+    private lateinit var batteryStatusReceiver: BatteryStatusBroadcastReceiver
+
+    /**
      * Fused Location Provider Service
      */
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -414,6 +420,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun cleanResources() {
         unregisterReceiver(appStatusChangedReceiver)
         unregisterReceiver(screenStatusReceiver)
+        unregisterReceiver(batteryStatusReceiver)
         disableAppForegroundMonitoring()
         disableHeartBeatMonitoring()
         stopListenSse()
@@ -447,6 +454,16 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         filter.addAction(Intent.ACTION_SCREEN_OFF)
         filter.addAction(Intent.ACTION_USER_PRESENT)
         registerReceiver(screenStatusReceiver, filter)
+
+        // Register Battery Status Receiver
+        batteryStatusReceiver = BatteryStatusBroadcastReceiver()
+        val batteryStatusFilter = IntentFilter()
+        batteryStatusFilter.addAction(Intent.ACTION_POWER_CONNECTED)
+        batteryStatusFilter.addAction(Intent.ACTION_POWER_DISCONNECTED)
+        batteryStatusFilter.addAction(Intent.ACTION_BATTERY_LOW)
+        batteryStatusFilter.addAction(Intent.ACTION_BATTERY_OKAY)
+        batteryStatusFilter.addAction(Intent.ACTION_BATTERY_CHANGED)
+        registerReceiver(batteryStatusReceiver, batteryStatusFilter)
 
         // Init Task
         initTask()

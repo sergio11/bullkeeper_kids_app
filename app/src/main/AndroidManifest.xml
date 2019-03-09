@@ -170,6 +170,7 @@
             </intent-filter>
         </receiver>
 
+
         <!-- App Tutorial Activity -->
         <activity
             android:name=".presentation.tutorial.AppTutorialActivity"

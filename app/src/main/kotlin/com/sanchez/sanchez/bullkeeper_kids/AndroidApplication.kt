@@ -93,6 +93,17 @@ class AndroidApplication : Application(){
                 .build()
     }
 
+    /**
+     * Battery Status Component
+     */
+    val batteryStatusReceiverComponent: BatteryStatusReceiverComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerBatteryStatusReceiverComponent
+                .builder()
+                .applicationModule(ApplicationModule(this))
+                .globalServiceModule(GlobalServiceModule(this))
+                .build()
+    }
+
     companion object {
 
         @JvmStatic

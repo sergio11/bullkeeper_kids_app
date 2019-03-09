@@ -112,6 +112,13 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_ADMIN_ACCESS_ALLOWED = "admin_access"
         const val ADMIN_ACCESS_DEFAULT_VALUE = false
 
+        // Pref Battery Charging
+        const val PREF_BATTERY_CHARGING_ENABLED = "battery_charging"
+        const val BATTERY_CHARGING_DEFAULT_VALUE = false
+
+        // Pref Battery Level
+        const val PREF_BATTERY_LEVEL = "battery_level"
+        const val BATTERY_LEVEL_DEFAULT_VALUE = 0
     }
 
     /**
@@ -406,6 +413,26 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param is Enabled
      */
     fun setAdminAccessEnabled(isEnabled: Boolean)
+
+    /**
+     * Set Battery Charging Enabled
+     */
+    fun setBatteryChargingEnabled(isEnabled: Boolean)
+
+    /**
+     * Is Battery Charging Enabled
+     */
+    fun isBatteryChargingEnabled(): Boolean
+
+    /**
+     * Set Battery Level
+     */
+    fun setBatteryLevel(level: Int)
+
+    /**
+     * Get Battery Level
+     */
+    fun getBatteryLevel(): Int
 
 
 }

@@ -412,4 +412,35 @@ class PreferenceRepositoryImpl
                 isEnabled).apply()
     }
 
+    /**
+     * Set Battery Charging Enabled
+     */
+    override fun setBatteryChargingEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_BATTERY_CHARGING_ENABLED,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Battery Chargin Enabled
+     */
+    override fun isBatteryChargingEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_BATTERY_CHARGING_ENABLED,
+                IPreferenceRepository.BATTERY_CHARGING_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Battery Level
+     */
+    override fun setBatteryLevel(level: Int) {
+        mPref.edit().putInt(IPreferenceRepository.PREF_BATTERY_LEVEL,
+                level).apply()
+    }
+
+    /**
+     * Get Battery Level
+     */
+    override fun getBatteryLevel(): Int {
+        return mPref.getInt(IPreferenceRepository.PREF_BATTERY_LEVEL,
+                IPreferenceRepository.BATTERY_LEVEL_DEFAULT_VALUE)
+    }
 }

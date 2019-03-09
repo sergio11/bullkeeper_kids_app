@@ -60,7 +60,18 @@ data class NotifyTerminalHeartBeatDTO (
          * Admin Access Enabled
          */
         @get:JsonProperty("admin_access_enabled")
-        var adminAccessEnabled: Boolean = false
+        var adminAccessEnabled: Boolean = false,
 
+        /**
+         * Battery Level
+         */
+        @get:JsonProperty("battery_level")
+        var batteryLevel: Int = 0,
+
+        /**
+         * Is Battery Charging
+         */
+        @get:JsonProperty("is_battery_charging")
+        var isBatteryCharging: Boolean = false
 
 )
