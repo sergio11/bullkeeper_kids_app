@@ -90,6 +90,7 @@ class AndroidApplication : Application(){
                 .builder()
                 .applicationModule(ApplicationModule(this))
                 .globalServiceModule(GlobalServiceModule(this))
+                .netModule(NetModule(this))
                 .build()
     }
 
@@ -104,13 +105,24 @@ class AndroidApplication : Application(){
                 .build()
     }
 
+    /**
+     * Shutdown Receiver Component
+     */
+    val shutdownReceiverComponent: ShutdownReceiverComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerShutdownReceiverComponent
+                .builder()
+                .applicationModule(ApplicationModule(this))
+                .globalServiceModule(GlobalServiceModule(this))
+                .netModule(NetModule(this))
+                .build()
+    }
+
     companion object {
 
         @JvmStatic
         lateinit var INSTANCE: AndroidApplication
 
     }
-
 
     /**
      * On Create

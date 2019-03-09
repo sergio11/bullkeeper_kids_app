@@ -170,6 +170,15 @@
             </intent-filter>
         </receiver>
 
+        <!-- -->
+        <receiver android:name=".presentation.broadcast.ShutdownBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="android.intent.action.QUICKBOOT_POWEROFF" />
+            </intent-filter>
+        </receiver>
 
         <!-- App Tutorial Activity -->
         <activity

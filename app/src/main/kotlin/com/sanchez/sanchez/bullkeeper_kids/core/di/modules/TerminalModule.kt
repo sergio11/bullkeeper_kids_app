@@ -5,6 +5,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ITerminalService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalStatusInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import dagger.Module
@@ -44,6 +45,14 @@ class TerminalModule {
     fun provideGetTerminalDetailInteract(retrofit: Retrofit, terminalService: ITerminalService)
         = GetTerminalDetailInteract(retrofit, terminalService)
 
+
+    /**
+     * Provide Save Terminal Status Interact
+     */
+    @Provides
+    @Singleton
+    fun provideSaveTerminalStatusInteract(retrofit: Retrofit, terminalService: ITerminalService)
+        = SaveTerminalStatusInteract(retrofit, terminalService)
 
     /**
      * Provide Unlink Terminal Interact
