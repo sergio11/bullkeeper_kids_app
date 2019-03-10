@@ -33,6 +33,7 @@ import javax.inject.Inject
 class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler,
         HasComponent<LinkDeviceTutorialComponent> {
 
+
     /**
      * Page Position
      */
@@ -217,6 +218,13 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
 
         addFragment(R.id.fragmentContainer, tutorialSupportFragment, false)
 
+    }
+
+    /**
+     * Go To Login
+     */
+    override fun goToLogin() {
+        navigator.showLogin(this)
     }
 
 }

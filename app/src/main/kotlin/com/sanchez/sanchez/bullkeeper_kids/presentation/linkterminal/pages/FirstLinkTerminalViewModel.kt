@@ -65,7 +65,8 @@ class FirstLinkTerminalViewModel
      */
     private fun onTerminalDetailFailed(failure: Failure) {
         Preconditions.checkNotNull(failure, "Failure can not be null")
-        if(failure is GetTerminalDetailInteract.NoTerminalFoundFailure) {
+        if(failure is GetTerminalDetailInteract.NoTerminalFoundFailure ||
+                failure is Failure.UnauthorizedRequestError) {
             unlinkTerminalInteract(UseCase.None()){
                 it.either(fnL = fun(failure) {
                     Timber.d("Unlink Terminal Failed")
@@ -96,8 +97,8 @@ class FirstLinkTerminalViewModel
             preferenceRepository.setPrefKidIdentity(it)
         }
 
-        preferenceRepository.setCameraEnabled(terminalEntity.lockCameraEnabled)
-        preferenceRepository.setScreenEnabled(terminalEntity.lockScreenEnabled)
+        preferenceRepository.setCameraEnabled(terminalEntity.cameraEnabled)
+        preferenceRepository.setScreenEnabled(terminalEntity.screenEnabled)
         preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
         preferenceRepository.setSettingsEnabled(terminalEntity.settingsEnabled)
 

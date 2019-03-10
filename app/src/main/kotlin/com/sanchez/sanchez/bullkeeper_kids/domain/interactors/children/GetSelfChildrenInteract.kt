@@ -33,8 +33,8 @@ class GetSelfChildrenInteract
             terminalDTO.appVersionName, terminalDTO.appVersionCode, terminalDTO.osVersion,
             terminalDTO.sdkVersion, terminalDTO.manufacturer, terminalDTO.marketName, terminalDTO.model,
             terminalDTO.codeName, terminalDTO.deviceName, terminalDTO.deviceId,
-            terminalDTO.kidId, terminalDTO.bedTimeEnabled, terminalDTO.lockScreenEnabled,
-            terminalDTO.lockCameraEnabled)  }
+            terminalDTO.kidId, terminalDTO.bedTimeEnabled, terminalDTO.screenEnabled,
+            terminalDTO.cameraEnabled)  }
 
     /**
      * On Executed

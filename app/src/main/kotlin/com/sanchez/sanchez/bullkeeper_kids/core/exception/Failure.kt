@@ -24,6 +24,17 @@ sealed class Failure {
     class ApiError(private val response: APIResponse<*>?): Failure()
 
     /**
+     * Unauthorized Request Error
+     */
+    class UnauthorizedRequestError(): Failure()
+
+    /**
+     * Bad Request Error
+     */
+    class BadRequestError(): Failure()
+
+
+    /**
      * Unexpected Error
      */
     object UnexpectedError : Failure()

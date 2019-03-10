@@ -55,11 +55,11 @@ class SaveTerminalInteract
         response.data?.bedTimeEnabled?.let {
             terminalEntity.bedTimeEnabled = it
         }
-        response.data?.lockScreenEnabled?.let {
-            terminalEntity.lockScreenEnabled = it
+        response.data?.screenEnabled?.let {
+            terminalEntity.screenEnabled = it
         }
-        response.data?.lockCameraEnabled?.let {
-            terminalEntity.lockCameraEnabled = it
+        response.data?.cameraEnabled?.let {
+            terminalEntity.cameraEnabled = it
         }
         return terminalEntity
 

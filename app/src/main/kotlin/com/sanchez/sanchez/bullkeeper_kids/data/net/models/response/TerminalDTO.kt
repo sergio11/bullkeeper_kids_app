@@ -89,16 +89,16 @@ data class TerminalDTO(
         var bedTimeEnabled: Boolean = true,
 
         /**
-         * Lock Screen Enabled
+         * Screen Enabled
          */
         @JsonProperty("screen_enabled")
-        var lockScreenEnabled: Boolean = true,
+        var screenEnabled: Boolean = true,
 
         /**
-         * Lock Camera Enabled
+         * Camera Enabled
          */
         @JsonProperty("camera_enabled")
-        var lockCameraEnabled: Boolean = true,
+        var cameraEnabled: Boolean = true,
 
         /**
          * Settings Enabled

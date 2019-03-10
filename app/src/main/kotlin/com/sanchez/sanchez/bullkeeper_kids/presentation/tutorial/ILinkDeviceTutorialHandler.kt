@@ -38,4 +38,9 @@ interface ILinkDeviceTutorialHandler: IBasicActivityHandler {
      */
     fun goToHome()
 
+    /**
+     * Go To Login
+     */
+    fun goToLogin();
+
 }

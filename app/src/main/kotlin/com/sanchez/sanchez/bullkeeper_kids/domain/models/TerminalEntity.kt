@@ -68,14 +68,14 @@ data class TerminalEntity(
         var bedTimeEnabled: Boolean = true,
 
         /**
-         * Lock Screen Enabled
+         * Screen Enabled
          */
-        var lockScreenEnabled: Boolean = true,
+        var screenEnabled: Boolean = true,
 
         /**
-         * Lock Camera Enabled
+         * Camera Enabled
          */
-        var lockCameraEnabled: Boolean = true,
+        var cameraEnabled: Boolean = true,
 
         /**
          * Settings Enabled

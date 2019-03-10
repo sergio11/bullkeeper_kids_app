@@ -85,13 +85,14 @@ class FirstLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
 
         // Create the observer which updates the UI.
         val terminalEntityFailureObserver = Observer<Failure> { failure ->
-
             if( failure is FirstLinkTerminalViewModel.NoChildrenLinkedFailure ||
                     failure is GetTerminalDetailInteract.NoTerminalFoundFailure) {
                 titleText.text = getString(R.string.link_terminal_first_page_title)
                 contentText.visibility = VISIBLE
                 linkDeviceTutorialHandler.hideProgressDialog()
-            } else {
+            } else if (failure is Failure.UnauthorizedRequestError)
+                linkDeviceTutorialHandler.goToLogin()
+            else {
                 linkDeviceTutorialHandler.goToHome()
             }
 

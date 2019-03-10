@@ -41,7 +41,6 @@ import com.sanchez.sanchez.bullkeeper_kids.data.entity.*
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.FunTimeScheduledDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.*
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ScheduledBlocksRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
@@ -88,6 +87,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private val TAG = MonitoringService::class.java.simpleName
 
     private val NOTIFICATION_ID = 6669999
+
 
     /**
      * Bed Time Const
@@ -361,6 +361,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private lateinit var batteryStatusReceiver: BatteryStatusBroadcastReceiver
 
     /**
+     * Check Terminal Status Receiver
+     */
+    private lateinit var checkTerminalStatusReceiver: CheckTerminalStatusBroadcastReceiver
+
+    /**
      * Fused Location Provider Service
      */
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -421,6 +426,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         unregisterReceiver(appStatusChangedReceiver)
         unregisterReceiver(screenStatusReceiver)
         unregisterReceiver(batteryStatusReceiver)
+        unregisterReceiver(checkTerminalStatusReceiver)
         disableAppForegroundMonitoring()
         disableHeartBeatMonitoring()
         stopListenSse()
@@ -442,28 +448,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         // Device Policy Manager
         devicePolicyManager = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
 
-        // Register App Status Broadcast receiver
-        appStatusChangedReceiver = AppStatusChangedReceiver()
-        registerReceiver(appStatusChangedReceiver,
-                AppStatusChangedReceiver.getIntentFilter())
-
-        // Register Screen Status Receiver
-        screenStatusReceiver = ScreenStatusReceiver()
-        val filter = IntentFilter()
-        filter.addAction(Intent.ACTION_SCREEN_ON)
-        filter.addAction(Intent.ACTION_SCREEN_OFF)
-        filter.addAction(Intent.ACTION_USER_PRESENT)
-        registerReceiver(screenStatusReceiver, filter)
-
-        // Register Battery Status Receiver
-        batteryStatusReceiver = BatteryStatusBroadcastReceiver()
-        val batteryStatusFilter = IntentFilter()
-        batteryStatusFilter.addAction(Intent.ACTION_POWER_CONNECTED)
-        batteryStatusFilter.addAction(Intent.ACTION_POWER_DISCONNECTED)
-        batteryStatusFilter.addAction(Intent.ACTION_BATTERY_LOW)
-        batteryStatusFilter.addAction(Intent.ACTION_BATTERY_OKAY)
-        batteryStatusFilter.addAction(Intent.ACTION_BATTERY_CHANGED)
-        registerReceiver(batteryStatusReceiver, batteryStatusFilter)
+        // Register Receivers
+        registerReceivers()
 
         // Init Task
         initTask()
@@ -476,6 +462,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
         // Start service with notification
         startForeground(NOTIFICATION_ID, getNotification())
+
+        // Scheduled Check Terminal Status
+        scheduleCheckTerminalStatus(this)
 
         ReactiveNetwork
                 .observeNetworkConnectivity(this)
@@ -523,6 +512,41 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Register Receivers
+     */
+    private fun registerReceivers() {
+        // Register App Status Broadcast receiver
+        appStatusChangedReceiver = AppStatusChangedReceiver()
+        registerReceiver(appStatusChangedReceiver,
+                AppStatusChangedReceiver.getIntentFilter())
+
+        // Register Screen Status Receiver
+        screenStatusReceiver = ScreenStatusReceiver()
+        val filter = IntentFilter()
+        filter.addAction(Intent.ACTION_SCREEN_ON)
+        filter.addAction(Intent.ACTION_SCREEN_OFF)
+        filter.addAction(Intent.ACTION_USER_PRESENT)
+        registerReceiver(screenStatusReceiver, filter)
+
+        // Register Battery Status Receiver
+        batteryStatusReceiver = BatteryStatusBroadcastReceiver()
+        val batteryStatusFilter = IntentFilter()
+        batteryStatusFilter.addAction(Intent.ACTION_POWER_CONNECTED)
+        batteryStatusFilter.addAction(Intent.ACTION_POWER_DISCONNECTED)
+        batteryStatusFilter.addAction(Intent.ACTION_BATTERY_LOW)
+        batteryStatusFilter.addAction(Intent.ACTION_BATTERY_OKAY)
+        batteryStatusFilter.addAction(Intent.ACTION_BATTERY_CHANGED)
+        registerReceiver(batteryStatusReceiver, batteryStatusFilter)
+
+        // Check Terminal Status
+        checkTerminalStatusReceiver = CheckTerminalStatusBroadcastReceiver()
+        val checkTerminalStatusFilter = IntentFilter()
+        checkTerminalStatusFilter.addAction(CHECK_TERMINAL_STATUS_ACTION)
+        registerReceiver(checkTerminalStatusReceiver, checkTerminalStatusFilter)
+    }
+
+
+    /**
      * Start Basic Services
      */
     private fun startBasicServices(){
@@ -549,7 +573,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         getTerminalDetailInteract(GetTerminalDetailInteract.Params(kid, deviceId)) {
             it.either(fnL = fun(failure) {
 
-                if(failure is GetTerminalDetailInteract.NoTerminalFoundFailure)
+                if(failure is GetTerminalDetailInteract.NoTerminalFoundFailure ||
+                        failure is Failure.UnauthorizedRequestError)
                     // Unlink the device and all its associated information
                     unlinkTerminal()
 
@@ -559,8 +584,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 terminalEntity.identity?.let{ preferenceRepository.setPrefTerminalIdentity(it) }
                 terminalEntity.deviceId?.let{ preferenceRepository.setPrefDeviceId(it) }
                 terminalEntity.kidId?.let{ preferenceRepository.setPrefKidIdentity(it) }
-                preferenceRepository.setCameraEnabled(terminalEntity.lockCameraEnabled)
-                preferenceRepository.setScreenEnabled(terminalEntity.lockScreenEnabled)
+                preferenceRepository.setCameraEnabled(terminalEntity.cameraEnabled)
+                preferenceRepository.setScreenEnabled(terminalEntity.screenEnabled)
                 preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
                 preferenceRepository.setSettingsEnabled(terminalEntity.settingsEnabled)
 
@@ -2008,14 +2033,48 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         }
     }
 
+    /**
+     * Check Terminal Status Receiver
+     */
+    inner class CheckTerminalStatusBroadcastReceiver: BroadcastReceiver() {
+
+        /**
+         * On Receiver
+         */
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Timber.d("Check Terminal Status Broadcast Receiver")
+            context?.let {
+                startDataSynchronization()
+                scheduleCheckTerminalStatus(it)
+            }
+
+        }
+
+    }
+
     override fun onBind(intent: Intent?): IBinder  = Binder()
 
 
     companion object {
+
+        const val CHECK_TERMINAL_STATUS_MILLIS = 300000
+
         /**
          * Events
          */
         const val FUN_TIME_CHANGED_ACTION = "com.sanchez.sergio.fun.time.changed"
         const val SETTINGS_STATUS_CHANGED_ACTION = "com.sanchez.sergio.settings.status.changed"
+        const val CHECK_TERMINAL_STATUS_ACTION = "com.sanchez.sergio.check.terminal.status"
+        /**
+         * Schedule Check Terminal Status
+         */
+        fun scheduleCheckTerminalStatus(context: Context){
+            Timber.d("Schedule Check Terminal Status Broadcast Receiver")
+            val i = Intent(CHECK_TERMINAL_STATUS_ACTION)
+            val pendingIntent = PendingIntent.getBroadcast(context, 0, i, 0)
+            val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            mgr.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + CHECK_TERMINAL_STATUS_MILLIS, pendingIntent)
+        }
+
     }
 }
