@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_margin"
             android:text="@string/fun_time_not_avaliable_title"
-            android:textAlignment="textStart"
+            android:textAlignment="center"
             android:textColor="@color/commonWhite"
             style="@style/CommonStrongText.Big"/>
 
