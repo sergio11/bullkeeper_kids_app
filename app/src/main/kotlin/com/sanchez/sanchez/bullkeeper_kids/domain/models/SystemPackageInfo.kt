@@ -1,6 +1,5 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.models
 
-import android.graphics.drawable.Drawable
 import android.util.Log
 import java.io.Serializable
 

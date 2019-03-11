@@ -45,6 +45,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.funtime.SyncFunTimeInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery.SynchronizeGalleryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.DeleteAllGeofenceInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.DeleteGeofenceInteract
@@ -60,6 +61,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTer
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.ServerEventTypeEnum
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
+import com.sanchez.sanchez.bullkeeper_kids.domain.observers.MediaStoreImagesContentObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.BatteryStatusBroadcastReceiver
@@ -182,6 +184,14 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
 
     /**
+     * Synchronize Gallery Interact
+     */
+    @Inject
+    internal lateinit var synchronizeGalleryInteract:
+            SynchronizeGalleryInteract
+
+
+    /**
      * Local Notification Service
      */
     @Inject
@@ -284,6 +294,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     @Inject
     internal lateinit var contactsObserver: ContactsObserver
+
+    /**
+     * Media Store Images Content Observer
+     */
+    @Inject
+    internal lateinit var mediaStoreImagesContentObserver: MediaStoreImagesContentObserver
 
     /**
      * Sync Geofences Interact
@@ -427,6 +443,10 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         unregisterReceiver(screenStatusReceiver)
         unregisterReceiver(batteryStatusReceiver)
         unregisterReceiver(checkTerminalStatusReceiver)
+        application.contentResolver
+                .unregisterContentObserver(contactsObserver)
+        application.contentResolver
+                .unregisterContentObserver(mediaStoreImagesContentObserver)
         disableAppForegroundMonitoring()
         disableHeartBeatMonitoring()
         stopListenSse()
@@ -450,6 +470,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
         // Register Receivers
         registerReceivers()
+
+        // Register Observers
+        registerObservers()
 
         // Init Task
         initTask()
@@ -545,6 +568,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         registerReceiver(checkTerminalStatusReceiver, checkTerminalStatusFilter)
     }
 
+    /**
+     * Register Observers
+     */
+    private fun registerObservers(){
+        startContactObserver()
+        startMediaStoreImageObserver()
+    }
 
     /**
      * Start Basic Services
@@ -597,7 +627,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 syncScheduledBlocks()
                 syncGeofences()
                 syncFunTime()
-                startContactObserver()
+                syncGalleryImages()
 
             })
         }
@@ -614,6 +644,23 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                     .registerContentObserver(ContactsContract.Contacts.CONTENT_URI,
                             true, contactsObserver)
             Timber.d("Contact Observer registered")
+        }catch (ex: Exception){
+            ex.printStackTrace()
+        }
+    }
+
+    /**
+     * Start Media Store Image Observer
+     */
+    private fun startMediaStoreImageObserver(){
+        try{
+            application.contentResolver
+                    .registerContentObserver(android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI,
+                            true, mediaStoreImagesContentObserver)
+            application.contentResolver
+                    .registerContentObserver(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            true, mediaStoreImagesContentObserver)
+            Timber.d("Media Store Images Observer registered")
         }catch (ex: Exception){
             ex.printStackTrace()
         }
@@ -1177,6 +1224,20 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         FUN_TIME_CHANGED_ACTION))
             })
         }
+    }
+
+    /**
+     * Sync Gallery Images
+     */
+    private fun syncGalleryImages(){
+        synchronizeGalleryInteract(UseCase.None()){
+            it.either(fnL = fun(_:Failure){
+                Timber.d("Gallery Sync Failed")
+            }, fnR = fun(total: Int){
+                Timber.d("Gallery Images Sync successfully, Total ->  %d", total)
+            })
+        }
+
     }
 
     /**
