@@ -90,9 +90,15 @@
     <string name="sixth_page_admin_is_granted">Se han otorgado capacidades de gestión.</string>
     <string name="sixth_page_admin_is_not_enabled">Debe otorgar capacidades de gestión antes de continuar</string>
     <!-- Seventh page -->
-    <string name="seventh_page_title">Configuración completada !!!</string>
-    <string name="seventh_page_description">Enhorabuena, ha completado la configuración de la aplicación, inicie sesión y comience a disfrutar de las capacidades que ofrece BullKeeper.</string>
-    <string name="seventh_page_signin">Iniciar sesión</string>
+    <string name="seventh_page_title">BullKeeper requiere geolocalización de alta precisión</string>
+    <string name="seventh_page_description">Debes conceder a Bullkeeper un acceso de alta preción a la ubicación del dispositivo</string>
+    <string name="seventh_page_signin">Habilitar</string>
+    <string name="seventh_page_location_already_allowed">Ya has habilitado la geolocalización de alta precisión</string>
+    <string name="seventh_page_location_is_not_enabled">Deberías habilitar la geolocalización de alta presión antes de continuar</string>
+    <!-- Eighth page -->
+    <string name="eighth_page_title">Configuración completada !!!</string>
+    <string name="eighth_page_description">Enhorabuena, ha completado la configuración de la aplicación, inicie sesión y comience a disfrutar de las capacidades que ofrece BullKeeper.</string>
+    <string name="eighth_page_signin">Iniciar sesión</string>
     <!-- Dialogs Strings -->
     <string name="default_notice_dialog_title">Aviso de diálogo</string>
     <string name="required_administration_permissions">Bullkepper Kids requiere permisos de administración en este dispositivo</string>

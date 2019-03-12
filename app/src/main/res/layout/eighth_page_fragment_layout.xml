@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/background_13">
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/titleText"
+        style="@style/CommonStrongText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_margin"
+        android:padding="@dimen/common_padding"
+        android:gravity="center"
+        android:text="@string/eighth_page_title"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/contentText"/>
+
+
+    <!-- Content Text -->
+    <TextView
+        android:id="@+id/contentText"
+        style="@style/CommonStrongText.Big"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_margin"
+        android:gravity="center"
+        android:padding="@dimen/common_padding"
+        android:text="@string/eighth_page_description"
+        android:textAlignment="center"
+        android:textColor="@color/commonWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        app:layout_constraintBottom_toTopOf="@+id/goToSignIn"/>
+
+
+    <!-- Enable Usage Stats -->
+    <Button
+        android:id="@+id/goToSignIn"
+        style="@style/CommonActionButton"
+        android:layout_width="@dimen/common_action_button_width"
+        android:layout_height="@dimen/common_action_button_height"
+        android:layout_margin="@dimen/common_margin"
+        android:text="@string/eighth_page_signin"/>
+
+</LinearLayout>

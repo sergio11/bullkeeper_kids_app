@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/background_13">
+    android:background="@drawable/background_14">
 
     <!-- Title Text -->
     <TextView
@@ -44,9 +44,9 @@
         app:layout_constraintBottom_toTopOf="@+id/goToSignIn"/>
 
 
-    <!-- Enable Usage Stats -->
+    <!-- Enable High Accuraccy Location -->
     <Button
-        android:id="@+id/goToSignIn"
+        android:id="@+id/enableHighAccuraccyLocation"
         style="@style/CommonActionButton"
         android:layout_width="@dimen/common_action_button_width"
         android:layout_height="@dimen/common_action_button_height"

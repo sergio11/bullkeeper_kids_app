@@ -5,7 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.View
@@ -20,7 +23,9 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceReposito
 import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.SETTINGS_STATUS_CHANGED_ACTION
+import com.sanchez.sanchez.bullkeeper_kids.services.IGeolocationService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
+import com.sanchez.sanchez.bullkeeper_kids.services.impl.GeolocationServiceImpl
 import kotlinx.android.synthetic.main.app_translucent_toolbar.*
 import javax.inject.Inject
 
@@ -84,6 +89,12 @@ class HomeActivity : BaseActivity(),
      */
     @Inject
     internal lateinit var preferenceRepository: IPreferenceRepository
+
+    /**
+     * Geolocation Service
+     */
+    @Inject
+    internal lateinit var geolocationService: IGeolocationService
 
     /**
      * Fun Time Changed Event Handler
@@ -151,8 +162,19 @@ class HomeActivity : BaseActivity(),
                 isDevicePolicyManagerActive()
         )
 
+        preferenceRepository.setHighAccuraccyLocationEnabled(
+                geolocationService.isHighAccuraccyLocationEnabled()
+        )
+
 
         AwakenMonitoringServiceBroadcastReceiver.scheduledAt(this)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName"))
+            startActivityForResult(intent, 1)
+        }
 
     }
 

@@ -12,7 +12,6 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(context: Context): IPreferenceRepository {
 
-
     /**
      * Preferences
      */
@@ -442,5 +441,21 @@ class PreferenceRepositoryImpl
     override fun getBatteryLevel(): Int {
         return mPref.getInt(IPreferenceRepository.PREF_BATTERY_LEVEL,
                 IPreferenceRepository.BATTERY_LEVEL_DEFAULT_VALUE)
+    }
+
+    /**
+     * Is High Accuraccy Location Enabled
+     */
+    override fun isHighAccuraccyLocationEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_HIGH_ACCURACCY_LOCATION_ENABLED,
+                IPreferenceRepository.HIGH_ACCURACCY_LOCATION_ENABLED_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set High Accuraccy Location Enabled
+     */
+    override fun setHighAccuraccyLocationEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_HIGH_ACCURACCY_LOCATION_ENABLED,
+                isEnabled).apply()
     }
 }

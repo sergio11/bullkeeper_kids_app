@@ -72,6 +72,12 @@ data class NotifyTerminalHeartBeatDTO (
          * Is Battery Charging
          */
         @get:JsonProperty("is_battery_charging")
-        var isBatteryCharging: Boolean = false
+        var isBatteryCharging: Boolean = false,
+
+        /**
+         * High Accuranccy Location Enabled
+         */
+        @get:JsonProperty("high_accuraccy_location_enabled")
+        var highAccuraccyLocation: Boolean = false
 
 )

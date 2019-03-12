@@ -22,7 +22,6 @@ import javax.inject.Inject
 class SettingsActivity : BaseActivity(),
         HasComponent<SettingsComponent>, ISettingsActivityHandler {
 
-
     /**
      * Settings Component
      */
@@ -89,6 +88,13 @@ class SettingsActivity : BaseActivity(),
      */
     override fun showUsageAccessSettings() {
         navigator.showUsageAccessSettings(this)
+    }
+
+    /**
+     * Show Location Source Settings
+     */
+    override fun showLocationSourceSettings() {
+        navigator.showLocationSourceSettings(this)
     }
 
 }

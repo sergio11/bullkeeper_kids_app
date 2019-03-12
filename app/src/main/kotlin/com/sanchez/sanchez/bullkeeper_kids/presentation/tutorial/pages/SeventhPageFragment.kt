@@ -11,10 +11,14 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AppTutorialCompone
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.IAppTutorialHandler
-import kotlinx.android.synthetic.main.seventh_page_fragment_layout.*
 import timber.log.Timber
 import java.lang.IllegalStateException
 import javax.inject.Inject
+import android.support.v4.app.DialogFragment
+import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
+import com.sanchez.sanchez.bullkeeper_kids.services.IGeolocationService
+import kotlinx.android.synthetic.main.seventh_page_fragment_layout.*
+
 
 /**
  * Seventh Page Fragment
@@ -31,6 +35,26 @@ class SeventhPageFragment: SupportPageFragment<AppTutorialComponent>() {
      */
     @Inject
     internal lateinit var preferenceRepository: IPreferenceRepository
+
+
+    /**
+     * Context
+     */
+    @Inject
+    internal lateinit var context: Context
+
+    /**
+     * Geolocation Service
+     */
+    @Inject
+    internal lateinit var geolocationService: IGeolocationService
+
+    /**
+     * State
+     * =============
+     */
+
+    private var requestHighAccuraccyLocationInProgress: Boolean = false
 
 
     /**
@@ -56,18 +80,48 @@ class SeventhPageFragment: SupportPageFragment<AppTutorialComponent>() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        goToSignIn.setOnClickListener {
-            preferenceRepository.setTutorialCompleted(true)
-            appTutorialHandler.showSignIn()
+        // Enable High Accuraccy Location
+        enableHighAccuraccyLocation.setOnClickListener {
+            if (!geolocationService.isHighAccuraccyLocationEnabled()) {
+                requestHighAccuraccyLocationInProgress = true
+                appTutorialHandler.showLocationSourceSettings()
+            } else
+                appTutorialHandler.showNoticeDialog(R.string.seventh_page_location_already_allowed, object : NoticeDialogFragment.NoticeDialogListener {
+                    override fun onAccepted(dialog: DialogFragment) {
+                        appTutorialHandler.releaseFocus()
+                    }
+                })
         }
     }
 
+    /**
+     * On Start
+     */
+    override fun onStart() {
+        super.onStart()
+
+        if(requestHighAccuraccyLocationInProgress && geolocationService.isHighAccuraccyLocationEnabled()) {
+            appTutorialHandler.showNoticeDialog(R.string.seventh_page_location_already_allowed, object : NoticeDialogFragment.NoticeDialogListener {
+                override fun onAccepted(dialog: DialogFragment) {
+                    requestHighAccuraccyLocationInProgress = false
+                    appTutorialHandler.releaseFocus()
+                }
+            })
+        }
+
+    }
     /**
      * When Phase Is Hidden
      */
     override fun whenPhaseIsHidden(pagePosition: Int, currentPosition: Int) {
         Timber.d("When Phase Is Hidden")
+
+        if(currentPosition > pagePosition && !geolocationService.isHighAccuraccyLocationEnabled())
+            appTutorialHandler.showNoticeDialog(R.string.seventh_page_location_is_not_enabled, object : NoticeDialogFragment.NoticeDialogListener {
+                override fun onAccepted(dialog: DialogFragment) {
+                    appTutorialHandler.requestFocus()
+                }
+            })
     }
 
     /**
@@ -75,6 +129,13 @@ class SeventhPageFragment: SupportPageFragment<AppTutorialComponent>() {
      */
     override fun whenPhaseIsShowed() {
         Timber.d("When Phase Is Showed")
+
+        if (geolocationService.isHighAccuraccyLocationEnabled())
+            appTutorialHandler.showNoticeDialog(R.string.seventh_page_location_already_allowed, object : NoticeDialogFragment.NoticeDialogListener {
+                override fun onAccepted(dialog: DialogFragment) {
+                    appTutorialHandler.releaseFocus()
+                }
+            })
     }
 
     /**
@@ -97,8 +158,11 @@ class SeventhPageFragment: SupportPageFragment<AppTutorialComponent>() {
                         Direction.LEFT_TO_RIGHT, 0.7f),
                 TransformItem.create(R.id.contentText,
                         Direction.RIGHT_TO_LEFT, 0.7f),
-                TransformItem.create(R.id.goToSignIn,
+                TransformItem.create(R.id.enableHighAccuraccyLocation,
                         Direction.LEFT_TO_RIGHT, 0.7f)
         )
     }
+
+
+
 }

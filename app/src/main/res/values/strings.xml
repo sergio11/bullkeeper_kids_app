@@ -107,10 +107,17 @@
     <string name="sixth_page_admin_is_already_enabled">Management capabilities have already been granted</string>
     <string name="sixth_page_admin_is_granted">Management capabilities have been granted</string>
     <string name="sixth_page_admin_is_not_enabled">You must grant management capabilities before continuing</string>
-    <!-- Seventh page -->
-    <string name="seventh_page_title">Configuration completed !!!</string>
-    <string name="seventh_page_description">Congratulations you have completed the configuration of the application, log in and start enjoying the capabilities offered by BullKeeper</string>
-    <string name="seventh_page_signin">Log in</string>
+
+    <!-- Seventh Page -->
+    <string name="seventh_page_title">BullKeeper requires high precision geolocation</string>
+    <string name="seventh_page_description">You must grant Bookkeeper high-pressure access to the location of the device</string>
+    <string name="seventh_page_signin">Enable</string>
+    <string name="seventh_page_location_already_allowed">You have already enabled high precision geolocation</string>
+    <string name="seventh_page_location_is_not_enabled">You should enable high-pressure geolocation before continuing</string>
+    <!-- Eighth page -->
+    <string name="eighth_page_title">Configuration completed !!!</string>
+    <string name="eighth_page_description">Congratulations you have completed the configuration of the application, log in and start enjoying the capabilities offered by BullKeeper</string>
+    <string name="eighth_page_signin">Log in</string>
 
     <!-- Dialogs Strings -->
     <string name="default_notice_dialog_title">Notice Dialog</string>
