@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -25,7 +24,6 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringServi
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.SETTINGS_STATUS_CHANGED_ACTION
 import com.sanchez.sanchez.bullkeeper_kids.services.IGeolocationService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
-import com.sanchez.sanchez.bullkeeper_kids.services.impl.GeolocationServiceImpl
 import kotlinx.android.synthetic.main.app_translucent_toolbar.*
 import javax.inject.Inject
 
@@ -166,15 +164,11 @@ class HomeActivity : BaseActivity(),
                 geolocationService.isHighAccuraccyLocationEnabled()
         )
 
+        preferenceRepository.setAppsOverlayEnabled(
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)
+        )
 
         AwakenMonitoringServiceBroadcastReceiver.scheduledAt(this)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:$packageName"))
-            startActivityForResult(intent, 1)
-        }
 
     }
 

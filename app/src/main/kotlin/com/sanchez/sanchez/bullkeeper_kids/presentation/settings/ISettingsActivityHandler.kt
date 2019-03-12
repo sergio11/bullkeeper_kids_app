@@ -20,4 +20,9 @@ interface ISettingsActivityHandler: IBasicActivityHandler {
      * Show Location Source Settings
      */
     fun showLocationSourceSettings()
+
+    /**
+     * Show Manage Overlay Settings
+     */
+    fun showManageOverlaySettings()
 }

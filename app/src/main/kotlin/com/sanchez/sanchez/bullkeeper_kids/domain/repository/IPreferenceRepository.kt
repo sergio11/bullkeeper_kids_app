@@ -123,6 +123,12 @@ interface IPreferenceRepository: IAuthTokenAware {
         // Pref High Accuraccy Location
         const val PREF_HIGH_ACCURACCY_LOCATION_ENABLED = "high_accuraccy_location"
         const val HIGH_ACCURACCY_LOCATION_ENABLED_DEFAULT_VALUE = false
+
+        // Pref Apps Overlay Enabled
+        const val PREF_APPS_OVERLAY_ENABLED = "apps_overlay"
+        const val APPS_OVERLAY_ENABLED_DEFAULT_VALUE = false
+
+
     }
 
     /**
@@ -450,5 +456,16 @@ interface IPreferenceRepository: IAuthTokenAware {
      */
     fun setHighAccuraccyLocationEnabled(isEnabled: Boolean)
 
+    /**
+     * Is Apps Overlay Enabled
+     * @return
+     */
+    fun isAppsOverlayEnabled(): Boolean
+
+    /**
+     * Set Apps Overlay
+     * @param is Enabled
+     */
+    fun setAppsOverlayEnabled(isEnabled: Boolean)
 
 }

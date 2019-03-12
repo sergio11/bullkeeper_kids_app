@@ -59,4 +59,9 @@ interface AppTutorialComponent: ActivityComponent {
      */
     fun inject(eighthPageFragment: EighthPageFragment)
 
+    /**
+     * Inject into Ninth Page Fragment
+     */
+    fun inject(ninthPageFragment: NinthPageFragment)
+
 }

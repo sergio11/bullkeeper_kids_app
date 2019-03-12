@@ -114,10 +114,19 @@
     <string name="seventh_page_signin">Enable</string>
     <string name="seventh_page_location_already_allowed">You have already enabled high precision geolocation</string>
     <string name="seventh_page_location_is_not_enabled">You should enable high-pressure geolocation before continuing</string>
+
     <!-- Eighth page -->
-    <string name="eighth_page_title">Configuration completed !!!</string>
-    <string name="eighth_page_description">Congratulations you have completed the configuration of the application, log in and start enjoying the capabilities offered by BullKeeper</string>
-    <string name="eighth_page_signin">Log in</string>
+    <string name="eighth_page_title">Bullkeeper needs to overlap other applications</string>
+    <string name="eighth_page_description">This permission allows Bullkeeper to be shown above other applications that are being used and may interfere with the use of iterfaz in other applications or change what the user thinks they are seeing in other applications</string>
+    <string name="eighth_page_enable">Enable</string>
+    <string name="eighth_page_overlap_already_allowed">You have already enabled the application overlay</string>
+    <string name="eighth_page_overlap_is_not_enabled">You should enable the application overlay before continuing</string>
+    <!-- Ninth Page -->
+    <string name="ninth_page_title">Configuration completed !!!</string>
+    <string name="ninth_page_description">Congratulations you have completed the configuration of the application, log in and start enjoying the capabilities offered by BullKeeper</string>
+    <string name="ninth_page_signin">Log in</string>
+
+
 
     <!-- Dialogs Strings -->
     <string name="default_notice_dialog_title">Notice Dialog</string>

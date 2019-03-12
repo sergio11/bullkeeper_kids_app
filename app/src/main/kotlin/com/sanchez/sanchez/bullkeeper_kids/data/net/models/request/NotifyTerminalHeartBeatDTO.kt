@@ -78,6 +78,13 @@ data class NotifyTerminalHeartBeatDTO (
          * High Accuranccy Location Enabled
          */
         @get:JsonProperty("high_accuraccy_location_enabled")
-        var highAccuraccyLocation: Boolean = false
+        var highAccuraccyLocation: Boolean = false,
+
+
+        /**
+         * Apps Overlay Enabled
+         */
+        @get:JsonProperty("apps_overlay_enabled")
+        var appsOverlayEnabled: Boolean = false
 
 )

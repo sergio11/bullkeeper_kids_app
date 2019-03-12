@@ -95,10 +95,19 @@
     <string name="seventh_page_signin">Habilitar</string>
     <string name="seventh_page_location_already_allowed">Ya has habilitado la geolocalización de alta precisión</string>
     <string name="seventh_page_location_is_not_enabled">Deberías habilitar la geolocalización de alta presión antes de continuar</string>
+
     <!-- Eighth page -->
-    <string name="eighth_page_title">Configuración completada !!!</string>
-    <string name="eighth_page_description">Enhorabuena, ha completado la configuración de la aplicación, inicie sesión y comience a disfrutar de las capacidades que ofrece BullKeeper.</string>
-    <string name="eighth_page_signin">Iniciar sesión</string>
+    <string name="eighth_page_title">Bullkeeper necesita superponerse a otras aplicaciones</string>
+    <string name="eighth_page_description">Este permiso permite que Bullkeeper se muestre por encima de otras aplicaciones que se estén utilizando y puede interferir con el uso de la iterfaz en otras aplicaciones o cambiar lo que el usuario cree que está viendo en otras aplicaciones</string>
+    <string name="eighth_page_enable">Habilitar</string>
+    <string name="eighth_page_overlap_already_allowed">Ya has habilitado la superposición de aplicaciones</string>
+    <string name="eighth_page_overlap_is_not_enabled">Deberías habilitar la superposición de aplicaciones antes de continuar</string>
+    <!-- Ninth Page -->
+    <string name="ninth_page_title">Configuración completada !!!</string>
+    <string name="ninth_page_description">Enhorabuena, ha completado la configuración de la aplicación, inicie sesión y comience a disfrutar de las capacidades que ofrece BullKeeper.</string>
+    <string name="ninth_page_signin">Iniciar sesión</string>
+
+
     <!-- Dialogs Strings -->
     <string name="default_notice_dialog_title">Aviso de diálogo</string>
     <string name="required_administration_permissions">Bullkepper Kids requiere permisos de administración en este dispositivo</string>
