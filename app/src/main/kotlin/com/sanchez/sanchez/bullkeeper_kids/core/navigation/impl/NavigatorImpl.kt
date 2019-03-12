@@ -227,4 +227,10 @@ class NavigatorImpl
     override fun showKidGuardians(activity: Activity, requestCode: Int) =
             activity.startActivityForResult(KidGuardiansActivity.callingIntent(activity), requestCode)
 
+    /**
+     * Show Location Source Settings
+     */
+    override fun showLocationSourceSettings(activity: Activity) =
+            activity.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+
 }

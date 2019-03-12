@@ -505,6 +505,74 @@
             </RelativeLayout>
             <!-- End Administration -->
 
+
+            <!-- Enable High precision geolocation -->
+            <RelativeLayout
+                android:id="@+id/highPrecisionGeolocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- High Precision Geolocation Icon -->
+                <ImageView
+                    android:id="@+id/highPrecisionGeolocationIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/high_precision_geolocation"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- High Precision Geolocation Title -->
+                <TextView
+                    android:id="@+id/highPrecisionGeolocationTitle"
+                    style="@style/CommonStrongText.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="0dp"
+                    android:layout_toEndOf="@+id/highPrecisionGeolocationIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/highPrecisionGeolocationDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/seventh_page_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- High Precision Geolocation Description -->
+                <TextView
+                    android:id="@+id/highPrecisionGeolocationDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/highPrecisionGeolocationIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/seventh_page_description"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Admin Access Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/highPrecisionGeolocationSwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    android:layout_below="@id/highPrecisionGeolocationDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite"/>
+
+            </RelativeLayout>
+            <!-- End High precision geolocation -->
+
         </LinearLayout>
 
 

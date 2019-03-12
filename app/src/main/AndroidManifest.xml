@@ -4,6 +4,7 @@
     package="com.sanchez.sanchez.bullkeeper_kids">
 
     <!-- Permissions -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -86,6 +87,7 @@
         <activity
             android:name=".presentation.lockscreen.AppLockScreenActivity"
             android:launchMode="singleTop"
+            android:showOnLockScreen="true"
             android:theme="@style/AppTheme.Common"
             android:screenOrientation="portrait"/>
 

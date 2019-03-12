@@ -32,6 +32,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.Phone
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.GeofenceTransitionService
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivityFragment
+import com.sanchez.sanchez.bullkeeper_kids.services.IGeolocationService
 import com.sanchez.sanchez.bullkeeper_kids.services.ISystemPackageHelper
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import com.squareup.picasso.Picasso
@@ -154,4 +155,5 @@ interface ApplicationComponent {
     fun getTerminalDetailInteract(): GetTerminalDetailInteract
     fun saveTerminalInteract(): SaveTerminalInteract
     fun unlinkTerminalInteract(): UnlinkTerminalInteract
+    fun geolocationService(): IGeolocationService
 }

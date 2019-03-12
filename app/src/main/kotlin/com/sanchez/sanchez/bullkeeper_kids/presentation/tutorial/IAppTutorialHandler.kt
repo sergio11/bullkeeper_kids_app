@@ -37,4 +37,9 @@ interface IAppTutorialHandler: IBasicActivityHandler {
      * Show Device Admin Settings
      */
     fun showDeviceAdminSettings()
+
+    /**
+     * Show Location Source Settings
+     */
+    fun showLocationSourceSettings()
 }

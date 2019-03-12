@@ -142,4 +142,12 @@ interface INavigator {
      */
     fun showKidGuardians(activity: Activity, requestCode: Int)
 
+    /**
+     * Show Location Source Settings
+     * @param activity
+     * @param requestCode
+     */
+    fun showLocationSourceSettings(activity: Activity)
+
+
 }

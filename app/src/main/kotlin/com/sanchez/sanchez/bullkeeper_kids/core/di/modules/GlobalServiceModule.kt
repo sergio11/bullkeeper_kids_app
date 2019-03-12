@@ -7,8 +7,10 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.location.GetAddres
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.impl.PreferenceRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.utils.IAuthTokenAware
+import com.sanchez.sanchez.bullkeeper_kids.services.IGeolocationService
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
+import com.sanchez.sanchez.bullkeeper_kids.services.impl.GeolocationServiceImpl
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.LocalNotificationServiceImpl
 import com.sanchez.sanchez.bullkeeper_kids.services.impl.UsageStatsServiceImpl
 import dagger.Module
@@ -78,5 +80,14 @@ class GlobalServiceModule(private val context: Context)  {
             retrofit: Retrofit
     ): GetAddressFromCurrentLocationInteract =
             GetAddressFromCurrentLocationInteract(context, preferenceRepository, retrofit)
+
+    /**
+     * Provide GeoLocation Service
+     */
+    @Provides
+    @Singleton
+    fun provideGeolocationService(context: Context): IGeolocationService
+        = GeolocationServiceImpl(context)
+
 
 }

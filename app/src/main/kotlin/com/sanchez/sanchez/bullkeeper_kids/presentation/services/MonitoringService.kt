@@ -19,12 +19,19 @@ import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import android.app.PendingIntent
 import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageManager
+import android.graphics.PixelFormat
+import android.graphics.PixelFormat.RGBA_8888
 import android.location.Location
+import android.net.Uri
 import android.os.*
 import android.provider.ContactsContract
 import android.provider.Settings
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.view.WindowManager
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
@@ -500,6 +507,57 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         // Start Data Synchronization
                         startDataSynchronization()
                 }
+
+
+        try {
+
+            val mWindowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+
+            val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+            val mView = inflater.inflate(R.layout.test_service, null)
+
+
+            val params: WindowManager.LayoutParams
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                params = WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.TYPE_PHONE,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                                or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                                or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                                or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                        PixelFormat.TRANSLUCENT)
+
+                params.gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP
+                params.x = 0
+                params.y = 100
+
+            } else {
+                params = WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                                or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                                or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                                or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                        PixelFormat.TRANSLUCENT)
+
+
+                params.gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP;
+                params.x = 0
+                params.y = 100
+
+            }
+
+
+            mWindowManager.addView(mView, params)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Timber.d("Error Window Manager")
+        }
 
     }
 
@@ -1268,6 +1326,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 object: LocationCallback(){
                     override fun onLocationResult(locationResult: LocationResult?) {
                         locationResult?.let {
+                            Timber.d("BKA_67: on Location Result")
                             if(!it.locations.isNullOrEmpty()) {
                                 saveCurrentLocation(it.locations[it.locations.size - 1])
                             }
@@ -1290,14 +1349,16 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         fusedLocationClient.lastLocation
                 .addOnSuccessListener { location : Location? ->
                     location?.let {
+                        Timber.d("BKA_67: Save Last Location")
                         saveCurrentLocation(it) }
                 }
 
 
         val mLocationRequest = LocationRequest()
-        mLocationRequest.interval = 120000 // two minute interval
-        mLocationRequest.fastestInterval = 120000
-        mLocationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        mLocationRequest.smallestDisplacement = SMALLEST_DISPLACEMENT
+        mLocationRequest.interval = LOCATION_INTERVAL_MS // milliseconds
+        mLocationRequest.fastestInterval = LOCATION_FAST_INTERVAL_MS // the fastest rate in milliseconds at which your app can handle location updates
+        mLocationRequest.priority = PRIORITY
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
@@ -1306,6 +1367,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 requestLocationUpdates(mLocationRequest)
             } else {
                 //Request Location Permission
+                preferenceRepository.setAccessFineLocationEnabled(false)
             }
         }
         else {
@@ -2118,7 +2180,14 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
     companion object {
 
+        /**
+         * Config
+         */
         const val CHECK_TERMINAL_STATUS_MILLIS = 300000
+        const val SMALLEST_DISPLACEMENT = 10F
+        const val LOCATION_INTERVAL_MS = 1000L
+        const val LOCATION_FAST_INTERVAL_MS = 1000L
+        const val PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY
 
         /**
          * Events

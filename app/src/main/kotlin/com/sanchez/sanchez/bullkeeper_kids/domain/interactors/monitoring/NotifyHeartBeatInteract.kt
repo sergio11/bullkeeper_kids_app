@@ -58,7 +58,8 @@ class NotifyHeartBeatInteract
                         usageStatsAllowed = preferenceRepository.isUsageStatsAllowed(),
                         adminAccessEnabled = preferenceRepository.isAdminAccessEnabled(),
                         batteryLevel = preferenceRepository.getBatteryLevel(),
-                        isBatteryCharging = preferenceRepository.isBatteryChargingEnabled())).await()
+                        isBatteryCharging = preferenceRepository.isBatteryChargingEnabled(),
+                        highAccuraccyLocation = preferenceRepository.isHighAccuraccyLocationEnabled())).await()
 
         return response.data!!
     }

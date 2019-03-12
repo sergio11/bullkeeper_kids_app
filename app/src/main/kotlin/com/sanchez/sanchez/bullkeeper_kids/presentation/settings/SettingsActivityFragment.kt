@@ -11,6 +11,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.components.SettingsComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.permission.IPermissionManager
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.services.IGeolocationService
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.lang.IllegalArgumentException
@@ -51,6 +52,18 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
     internal lateinit var usageStatsService: IUsageStatsService
 
     /**
+     * Context
+     */
+    @Inject
+    internal lateinit var context: Context
+
+    /**
+     * Geolocation Service
+     */
+    @Inject
+    internal lateinit var geolocationService: IGeolocationService
+
+    /**
      * State
      * =============
      */
@@ -64,6 +77,11 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
      * Request Usage Stats In Progress
      */
     private var requestUsageStatsInProgress: Boolean = false
+
+    /**
+     * Request Hight Accuraccy Location In Progress
+     */
+    private var requestHighAccuraccyLocationInProgress: Boolean = false
 
     /**
      * Layout Id
@@ -102,6 +120,12 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
             deviceStatisticsSwitch.isEnabled =
                     !usageStatsService.isUsageStatsAllowed()
             preferenceRepository.setUsageStatsAllowed(usageStatsService.isUsageStatsAllowed())
+        }
+
+        if(requestHighAccuraccyLocationInProgress && geolocationService.isHighAccuraccyLocationEnabled()) {
+            activityHandler.showNoticeDialog(R.string.seventh_page_location_already_allowed)
+            highPrecisionGeolocationSwitch.isEnabled =
+                    !geolocationService.isHighAccuraccyLocationEnabled()
         }
     }
 
@@ -218,6 +242,22 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
             }
         }
 
+        // High Accuraccy Location Switch
+        highPrecisionGeolocationSwitch.isOn =
+                geolocationService.isHighAccuraccyLocationEnabled()
+
+        highPrecisionGeolocationSwitch.isEnabled =
+                !geolocationService.isHighAccuraccyLocationEnabled()
+
+        highPrecisionGeolocationSwitch.setOnToggledListener { toggleableView, isOn ->
+            if(isOn && !geolocationService.isHighAccuraccyLocationEnabled()) {
+                requestAdminCapabilitiesInProgress = true
+                activityHandler.showLocationSourceSettings()
+            } else {
+                activityHandler.showNoticeDialog(R.string.seventh_page_location_already_allowed)
+            }
+        }
+
     }
 
     /**
@@ -311,4 +351,5 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
 
         settingsComponent?.inject(this)
     }
+
 }

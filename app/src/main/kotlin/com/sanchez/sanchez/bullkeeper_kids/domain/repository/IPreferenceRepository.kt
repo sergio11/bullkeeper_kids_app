@@ -119,6 +119,10 @@ interface IPreferenceRepository: IAuthTokenAware {
         // Pref Battery Level
         const val PREF_BATTERY_LEVEL = "battery_level"
         const val BATTERY_LEVEL_DEFAULT_VALUE = 0
+
+        // Pref High Accuraccy Location
+        const val PREF_HIGH_ACCURACCY_LOCATION_ENABLED = "high_accuraccy_location"
+        const val HIGH_ACCURACCY_LOCATION_ENABLED_DEFAULT_VALUE = false
     }
 
     /**
@@ -433,6 +437,18 @@ interface IPreferenceRepository: IAuthTokenAware {
      * Get Battery Level
      */
     fun getBatteryLevel(): Int
+
+    /**
+     * Is High Accuraccy Location Enabled
+     * @return
+     */
+    fun isHighAccuraccyLocationEnabled(): Boolean
+
+    /**
+     * Set High Accuraccy Location Enabled
+     * @param is Enabled
+     */
+    fun setHighAccuraccyLocationEnabled(isEnabled: Boolean)
 
 
 }
