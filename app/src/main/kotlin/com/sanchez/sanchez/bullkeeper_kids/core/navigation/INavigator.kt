@@ -149,5 +149,11 @@ interface INavigator {
      */
     fun showLocationSourceSettings(activity: Activity)
 
+    /**
+     * Show Manage
+     * @param
+     */
+    fun showManageOverlaySettings(activity: Activity, packageName: String)
+
 
 }

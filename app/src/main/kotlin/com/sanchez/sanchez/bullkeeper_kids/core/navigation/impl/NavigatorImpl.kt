@@ -5,6 +5,7 @@ import android.app.Service
 import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.provider.Settings
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
@@ -32,6 +33,7 @@ import javax.inject.Inject
  */
 class NavigatorImpl
     @Inject constructor(private val preferenceRepository: IPreferenceRepository): INavigator {
+
 
     /**
      * Show Usage Access Settings
@@ -232,5 +234,12 @@ class NavigatorImpl
      */
     override fun showLocationSourceSettings(activity: Activity) =
             activity.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+
+    /**
+     * Show Manage Overlay Settings
+     */
+    override fun showManageOverlaySettings(activity: Activity, packageName: String) =
+        activity.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            Uri.parse("package:$packageName")))
 
 }

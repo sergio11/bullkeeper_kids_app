@@ -2,7 +2,9 @@ package com.sanchez.sanchez.bullkeeper_kids.presentation.settings
 
 import android.Manifest
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.R
@@ -84,6 +86,11 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
     private var requestHighAccuraccyLocationInProgress: Boolean = false
 
     /**
+     * Request Apps Overlay In Progress
+     */
+    private var requestAppsOverlayInProgress: Boolean = false
+
+    /**
      * Layout Id
      */
     override fun layoutId(): Int = R.layout.fragment_settings
@@ -126,6 +133,12 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
             activityHandler.showNoticeDialog(R.string.seventh_page_location_already_allowed)
             highPrecisionGeolocationSwitch.isEnabled =
                     !geolocationService.isHighAccuraccyLocationEnabled()
+        }
+
+        if(requestAppsOverlayInProgress && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(context)) {
+            activityHandler.showNoticeDialog(R.string.eighth_page_overlap_already_allowed)
+            appsOverlaySwitch.isEnabled =
+                    !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(context))
         }
     }
 
@@ -255,6 +268,22 @@ class SettingsActivityFragment : BaseFragment(), IPermissionManager.OnCheckPermi
                 activityHandler.showLocationSourceSettings()
             } else {
                 activityHandler.showNoticeDialog(R.string.seventh_page_location_already_allowed)
+            }
+        }
+
+        // Apps Overlay
+        appsOverlaySwitch.isOn =
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(context)
+
+        appsOverlaySwitch.isEnabled =
+                !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(context))
+
+        appsOverlaySwitch.setOnToggledListener { toggleableView, isOn ->
+            if(isOn && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
+                requestAppsOverlayInProgress = true
+                activityHandler.showManageOverlaySettings()
+            } else {
+                activityHandler.showNoticeDialog(R.string.eighth_page_overlap_already_allowed)
             }
         }
 

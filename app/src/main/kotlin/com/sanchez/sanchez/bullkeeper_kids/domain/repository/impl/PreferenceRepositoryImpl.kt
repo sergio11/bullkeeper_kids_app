@@ -12,6 +12,7 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(context: Context): IPreferenceRepository {
 
+
     /**
      * Preferences
      */
@@ -456,6 +457,22 @@ class PreferenceRepositoryImpl
      */
     override fun setHighAccuraccyLocationEnabled(isEnabled: Boolean) {
         mPref.edit().putBoolean(IPreferenceRepository.PREF_HIGH_ACCURACCY_LOCATION_ENABLED,
+                isEnabled).apply()
+    }
+
+    /**
+     * IS App Overlay Enabled
+     */
+    override fun isAppsOverlayEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_APPS_OVERLAY_ENABLED,
+                IPreferenceRepository.APPS_OVERLAY_ENABLED_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Apps Overlay Enabled
+     */
+    override fun setAppsOverlayEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_APPS_OVERLAY_ENABLED,
                 isEnabled).apply()
     }
 }

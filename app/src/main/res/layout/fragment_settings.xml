@@ -573,6 +573,73 @@
             </RelativeLayout>
             <!-- End High precision geolocation -->
 
+            <!-- Enable Apps Overlay -->
+            <RelativeLayout
+                android:id="@+id/appsOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Apps Overlay Icon -->
+                <ImageView
+                    android:id="@+id/appsOverlayIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/content_not_be_loaded"
+                    android:src="@drawable/apps_overlay_icon"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"/>
+
+                <!-- Apps Overlay Title -->
+                <TextView
+                    android:id="@+id/appsOverlayTitle"
+                    style="@style/CommonStrongText.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="0dp"
+                    android:layout_toEndOf="@+id/appsOverlayIcon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_above="@id/appsOverlayDescription"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/eighth_page_title"
+                    android:textColor="@color/commonWhite" />
+
+
+                <!-- Apps Overlay Description -->
+                <TextView
+                    android:id="@+id/appsOverlayDescription"
+                    style="@style/CommonStrongText.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/appsOverlayIcon"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/eighth_page_description"
+                    android:textColor="@color/commonWhite" />
+
+                <!-- Apps Overlay Switch -->
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/appsOverlaySwitch"
+                    android:layout_width="@dimen/common_labeled_switch_width"
+                    android:layout_height="@dimen/common_labeled_switch_height"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
+                    android:layout_below="@id/appsOverlayDescription"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:on="false"
+                    app:textOn="@string/third_page_permission_enabled"
+                    app:textOff="@string/third_page_permission_disabled"
+                    app:colorOn="@color/greenSuccess"
+                    app:colorOff="@color/commonWhite"
+                    app:colorBorder="@color/commonWhite"/>
+
+            </RelativeLayout>
+            <!-- End Apps Overlay -->
+
         </LinearLayout>
 
 

@@ -28,6 +28,7 @@ import javax.inject.Inject
 class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
         HasComponent<AppTutorialComponent> {
 
+
     /**
      * Constants
      */
@@ -39,7 +40,8 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
     private val SIXTH_PAGE_POS = 5
     private val SEVENTH_PAGE_POS = 6
     private val EIGHTH_PAGE_POS = 7
-    private val TUTORIAL_PAGES_COUNT = 8
+    private val NINTH_PAGE_POS = 8
+    private val TUTORIAL_PAGES_COUNT = 9
 
     /**
      * App Tutorial Component
@@ -104,7 +106,8 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
 
             val phaseFragments = arrayOf(
                     FirstPageFragment(), SecondPageFragment(), ThirdPageFragment(), FourPageFragment(),
-                    FifthPageFragment(), SixthPageFragment(), SeventhPageFragment(), EighthPageFragment())
+                    FifthPageFragment(), SixthPageFragment(), SeventhPageFragment(), EighthPageFragment(),
+                    NinthPageFragment())
 
             val tutorialOptions = TutorialSupportFragment
                     .newTutorialOptionsBuilder(this)
@@ -119,6 +122,7 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
                             SIXTH_PAGE_POS -> phaseFragments[SIXTH_PAGE_POS]
                             SEVENTH_PAGE_POS -> phaseFragments[SEVENTH_PAGE_POS]
                             EIGHTH_PAGE_POS -> phaseFragments[EIGHTH_PAGE_POS]
+                            NINTH_PAGE_POS -> phaseFragments[NINTH_PAGE_POS]
                             else -> throw IllegalArgumentException("Unknown position: $position")
                         }
                     })
@@ -226,5 +230,12 @@ class AppTutorialActivity : SupportActivity(), IAppTutorialHandler,
      */
     override fun showLocationSourceSettings() {
         navigator.showLocationSourceSettings(this)
+    }
+
+    /**
+     * Show Manage Overlay Settings
+     */
+    override fun showManageOverlaySettings() {
+        navigator.showManageOverlaySettings(this, packageName)
     }
 }
