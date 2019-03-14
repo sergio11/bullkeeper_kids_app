@@ -99,7 +99,7 @@ class DeviceGeofenceServiceImpl
      * Delete Geofences
      */
     override fun deleteGeofences(ids: List<String>) {
-        Preconditions.checkNotNull(ids, "Ids can not be null");
+        Preconditions.checkNotNull(ids, "Ids can not be null")
         Preconditions.checkState(!ids.isEmpty(), "Ids can not be null or empty")
         getGeofencingClient().removeGeofences(ids)
     }

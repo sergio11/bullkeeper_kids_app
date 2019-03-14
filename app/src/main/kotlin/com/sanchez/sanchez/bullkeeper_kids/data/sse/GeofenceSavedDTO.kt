@@ -2,7 +2,6 @@ package com.sanchez.sanchez.bullkeeper_kids.data.sse
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.*
 
 /**
  * Geofence Saved DTO
@@ -56,7 +55,7 @@ data class GeofenceSavedDTO(
         /**
          * Kid
          */
-        @JsonProperty("id")
+        @JsonProperty("kid")
         var kid: String,
 
         /**
@@ -69,11 +68,11 @@ data class GeofenceSavedDTO(
          * Create At
          */
         @JsonProperty("create_at")
-        var createAt: Date,
+        var createAt: String,
 
         /**
          * Update At
          */
         @JsonProperty("update_at")
-        var updateAt: Date
+        var updateAt: String
 )
