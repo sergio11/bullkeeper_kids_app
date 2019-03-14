@@ -2,14 +2,11 @@ package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.sanchez.sanchez.bullkeeper_kids.R
-import com.sanchez.sanchez.bullkeeper_kids.core.extension.toStringFormat
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.GeofenceEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.IDeviceGeofenceService
 import retrofit2.Retrofit
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -41,12 +38,8 @@ class SaveGeofenceInteract
             geofenceSaved.transitionType = params.transitionType
             geofenceSaved.kid = params.kid
             geofenceSaved.isEnabled = params.isEnabled
-            geofenceSaved.createAt = params.createAt.toStringFormat(
-                    context.getString(R.string.date_time_format_2)
-            )
-            geofenceSaved.updateAt = params.updateAt.toStringFormat(
-                    context.getString(R.string.date_time_format_2)
-            )
+            geofenceSaved.createAt = params.createAt
+            geofenceSaved.updateAt = params.updateAt
 
         } else {
 
@@ -60,12 +53,8 @@ class SaveGeofenceInteract
                     kid = params.kid,
                     address = params.address,
                     isEnabled = params.isEnabled,
-                    createAt = params.createAt.toStringFormat(
-                            context.getString(R.string.date_time_format_2)
-                    ),
-                    updateAt = params.updateAt.toStringFormat(
-                            context.getString(R.string.date_time_format_2)
-                    )
+                    createAt = params.createAt,
+                    updateAt = params.updateAt
 
             )
         }
@@ -100,9 +89,9 @@ class SaveGeofenceInteract
             // Is Enabled
             var isEnabled: Boolean,
             // Create At
-            var createAt: Date,
+            var createAt: String,
             // Update At
-            var updateAt: Date
+            var updateAt: String
 
     )
 }

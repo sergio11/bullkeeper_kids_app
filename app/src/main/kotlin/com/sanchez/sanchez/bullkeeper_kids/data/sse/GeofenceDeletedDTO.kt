@@ -18,6 +18,6 @@ data class GeofenceDeletedDTO(
         /**
          * Kid
          */
-        @JsonProperty("id")
+        @JsonProperty("kid")
         var kid: String
 )

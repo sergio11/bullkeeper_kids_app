@@ -150,7 +150,7 @@ class GeofenceViolatedActivity : AppCompatActivity() {
         // Get Args
         val name = intent.getStringExtra(NAME_ARG)
         val type = intent.getStringExtra(TYPE_ARG)
-        val radius = intent.getDoubleExtra(RADIUS_ARG, 0.0)
+        val radius = intent.getFloatExtra(RADIUS_ARG, 0.0f)
 
 
         geofenceName.text = if(!name.isNullOrEmpty()) name else

@@ -125,10 +125,8 @@ class SyncGeofencesInteract
                     radius = it.radius,
                     transitionType = it.type,
                     kid = it.kid,
-                    createAt = it.createAt
-                            ?.toStringFormat(appContext.getString(R.string.date_time_format_2)),
-                    updateAt = it.updateAt
-                            ?.toStringFormat(appContext.getString(R.string.date_time_format_2)),
+                    createAt = it.createAt,
+                    updateAt = it.updateAt,
                     address = it.address,
                     isEnabled = it.isEnabled
             )
@@ -168,12 +166,14 @@ class SyncGeofencesInteract
 
         val geofencesSyncTotal = geofencesSync.first.size + geofencesSync.second.size
 
-        // Delete Geofences On Terminal
-        deviceGeofenceService.deleteGeofences(geofencesSync.second
-                .filter { !it.identity.isNullOrEmpty() }.map { it.identity!! })
+        if(geofencesSync.second.isNotEmpty())
+            // Delete Geofences On Terminal
+            deviceGeofenceService.deleteGeofences(geofencesSync.second
+                    .filter { !it.identity.isNullOrEmpty() }.map { it.identity!! })
 
-        // Configure Geofences on terminal
-        deviceGeofenceService.addGeofence(geofencesSync.first)
+        if(geofencesSync.first.isNotEmpty())
+            // Configure Geofences on terminal
+            deviceGeofenceService.addGeofence(geofencesSync.first)
 
         return geofencesSyncTotal
     }
