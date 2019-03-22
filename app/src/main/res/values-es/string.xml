@@ -68,6 +68,9 @@
     <string name="third_page_permission_enabled">On</string>
     <string name="third_page_permission_disabled">Off</string>
     <string name="third_page_review_permission_request">Debe revisar y habilitar todos los permisos para continuar</string>
+    <string name="terminal_phone_number_hint">Introduce el número de teléfono del dispositivo</string>
+    <string name="terminal_phone_number_required">Debes introducir el número de teléfono del dispositivo</string>
+    <string name="terminal_phone_number_prefix">+34 </string>
     <!-- Four page -->
     <string name="four_page_title">Debes considerar que Bull Keeper Kids:</string>
     <string name="four_run_on_startup_title">Se Ejecuta en el arranque</string>

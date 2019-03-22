@@ -144,7 +144,7 @@ class SignInFragment : BaseFragment(), FacebookCallback<LoginResult> {
         loginBtn.setOnClickListener {
             val email = emailInput.text.toString()
             val  password = passwordInput.text.toString()
-            if(!email.isNullOrEmpty() && !password.isNullOrEmpty()) {
+            if(!email.isEmpty() && !password.isEmpty()) {
                 signInViewModel.authenticate(email, password)
                 signInActivityHandler.showProgressDialog(R.string.authenticating_in_progress)
             } else {

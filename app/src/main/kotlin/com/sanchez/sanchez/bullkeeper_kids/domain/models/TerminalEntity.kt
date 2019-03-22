@@ -57,6 +57,7 @@ data class TerminalEntity(
          */
         var deviceId: String? = null,
 
+
         /**
          * Kid Id
          */

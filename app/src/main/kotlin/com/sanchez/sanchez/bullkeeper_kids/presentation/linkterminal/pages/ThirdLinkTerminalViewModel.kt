@@ -72,7 +72,8 @@ class ThirdLinkTerminalViewModel
      */
     fun saveTerminal(kidId: String, appVersionName: String, appVersionCode: String,
                      manufacturer: String, marketName: String, codeName: String, name: String,
-                     deviceName: String, deviceId: String, model: String, osVersion: String, sdkVersion: String) {
+                     deviceName: String, deviceId: String, model: String, osVersion: String,
+                     sdkVersion: String, carrierName: String?, phoneNumber: String?) {
 
         saveTerminalInteract(SaveTerminalInteract.Params(
                 kidId = kidId,
@@ -86,7 +87,9 @@ class ThirdLinkTerminalViewModel
                 deviceId = deviceId,
                 model = model,
                 osVersion = osVersion,
-                sdkVersion = sdkVersion
+                sdkVersion = sdkVersion,
+                carrierName = carrierName,
+                phoneNumber = phoneNumber
         )) {
             it.either(::onSaveTerminalFailed, ::onTerminalDetailSuccess)
         }

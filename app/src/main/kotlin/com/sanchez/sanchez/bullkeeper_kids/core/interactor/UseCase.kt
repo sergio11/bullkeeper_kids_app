@@ -55,7 +55,7 @@ abstract class UseCase<out Type, in Params> constructor(private val retrofit: Re
     open fun onApiExceptionOcurred(apiException: RetrofitException, response: APIResponse<*>?): Failure
        = apiException.response?.let {
             when(it.code()) {
-                401 -> Failure.UnauthorizedRequestError()
+                403 -> Failure.UnauthorizedRequestError()
                 400 -> Failure.BadRequestError()
                 else -> Failure.ApiError(response)
             }

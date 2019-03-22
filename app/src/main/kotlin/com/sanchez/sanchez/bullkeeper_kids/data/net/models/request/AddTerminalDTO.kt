@@ -72,6 +72,19 @@ data class AddTerminalDTO (
          * Kid Identity
          */
         @get:JsonProperty("kid")
-        var kid: String? = null
+        var kid: String? = null,
+
+        /**
+         * Carrier Name
+         */
+        @get:JsonProperty("carrier_name")
+        var carrierName: String? = null,
+
+        /**
+         * Phone Number
+         */
+        @get:JsonProperty("phone_number")
+        val phoneNumber: String?
+
 
 )
