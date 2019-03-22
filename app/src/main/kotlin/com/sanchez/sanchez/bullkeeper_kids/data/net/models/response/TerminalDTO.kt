@@ -104,5 +104,11 @@ data class TerminalDTO(
          * Settings Enabled
          */
         @JsonProperty("settings_enabled")
-        var settingsEnabled: Boolean = false
+        var settingsEnabled: Boolean = false,
+
+        /**
+         * Carrier Name
+         */
+        @JsonProperty("carrier_name")
+        var carrierName: String? = null
 )

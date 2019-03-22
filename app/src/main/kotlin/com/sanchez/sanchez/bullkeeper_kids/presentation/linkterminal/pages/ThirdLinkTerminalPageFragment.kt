@@ -26,6 +26,9 @@ import timber.log.Timber
 import java.lang.IllegalStateException
 import kotlinx.android.synthetic.main.third_link_terminal_page_fragment_layout.*
 import javax.inject.Inject
+import android.telephony.TelephonyManager
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.invisible
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.visible
 
 
 /**
@@ -67,6 +70,10 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
     @Inject
     lateinit var preferenceRepository: IPreferenceRepository
 
+    private val tm: TelephonyManager by lazy {
+        appContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+    }
+
 
     /**
      * Get Layout Res Id
@@ -104,7 +111,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
     /**
      * On View Create
      */
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -135,6 +142,15 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
         val noTerminalLinkedObserver = Observer<Failure> {
             linkDeviceTutorialHandler.hideProgressDialog()
             linkTerminal.isEnabled = true
+            if(isSimSupport()){
+                networkOperatorNameTextView.visible()
+                tfnoInputLayout.visible()
+                networkOperatorNameTextView.text = tm.networkOperatorName
+                tfnoInput.requestFocus()
+            } else {
+                networkOperatorNameTextView.invisible()
+                tfnoInputLayout.invisible()
+            }
         }
 
         thirdLinkTerminalViewModel.noTerminalLinked.observe(this, noTerminalLinkedObserver)
@@ -161,7 +177,7 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
     /**
      * When Phase Is Showed
      */
-    @SuppressLint("SetTextI18n", "HardwareIds")
+    @SuppressLint("SetTextI18n", "HardwareIds", "MissingPermission")
     override fun whenPhaseIsShowed() {
         Timber.d("Phase Is Showed")
 
@@ -184,32 +200,51 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                     .into(childImageImageView)
 
             linkTerminal.setOnClickListener {
-                linkDeviceTutorialHandler.showProgressDialog(R.string.link_device_in_progress)
 
-                val deviceInfo = thirdLinkTerminalViewModel.deviceInfo.value;
+                val isValid = isSimSupport() && !tfnoInput.text.isNullOrBlank()
+                        || !isSimSupport()
 
 
-                val deviceId = Settings.Secure.getString(appContext.contentResolver,
-                        Settings.Secure.ANDROID_ID)
-                // Save Terminal
-                thirdLinkTerminalViewModel.saveTerminal(
-                        kidId = currentKidEntity?.identity!!,
-                        appVersionName = BuildConfig.VERSION_NAME,
-                        appVersionCode = BuildConfig.VERSION_CODE.toString(),
-                        manufacturer = deviceInfo?.manufacturer!!,
-                        marketName = deviceInfo.marketName,
-                        codeName = deviceInfo.codename,
-                        name = deviceInfo.name,
-                        deviceName = deviceInfo.name,
-                        deviceId = deviceId,
+                if (isValid) {
 
-                        model = deviceInfo.model,
-                        osVersion = Build.VERSION.RELEASE,
-                        sdkVersion = Build.VERSION.SDK_INT.toString()
-                )
+                    tfnoInputLayout.error = null
+
+                    linkDeviceTutorialHandler.showProgressDialog(R.string.link_device_in_progress)
+
+                    val deviceInfo = thirdLinkTerminalViewModel.deviceInfo.value;
+
+                    val deviceId = Settings.Secure.getString(appContext.contentResolver,
+                            Settings.Secure.ANDROID_ID)
+
+                    // Get System TELEPHONY service reference
+                    val tManager =
+                            appContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+
+                    // Save Terminal
+                    thirdLinkTerminalViewModel.saveTerminal(
+                            kidId = currentKidEntity?.identity!!,
+                            appVersionName = BuildConfig.VERSION_NAME,
+                            appVersionCode = BuildConfig.VERSION_CODE.toString(),
+                            manufacturer = deviceInfo?.manufacturer!!,
+                            marketName = deviceInfo.marketName,
+                            codeName = deviceInfo.codename,
+                            name = deviceInfo.name,
+                            deviceName = deviceInfo.name,
+                            deviceId = deviceId,
+                            model = deviceInfo.model,
+                            osVersion = Build.VERSION.RELEASE,
+                            sdkVersion = Build.VERSION.SDK_INT.toString(),
+                            carrierName = tManager.networkOperatorName,
+                            phoneNumber = tfnoInput.text.toString()
+
+                    )
+
+                } else {
+                    tfnoInputLayout.error = getString(R.string.terminal_phone_number_required)
+                }
             }
 
-            currentKidEntity?.identity?.let{
+            currentKidEntity?.identity?.let {
                 // Check Terminal Status
                 linkDeviceTutorialHandler.showProgressDialog(R.string.generic_loading_text)
                 thirdLinkTerminalViewModel.checkTerminalStatus(it)
@@ -237,6 +272,13 @@ class ThirdLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                         0.7f)
 
         )
+    }
+
+    /**
+     * is Sim Support
+     */
+    private fun isSimSupport(): Boolean {
+        return tm.simState != TelephonyManager.SIM_STATE_ABSENT
     }
 
 }

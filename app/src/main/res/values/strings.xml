@@ -179,7 +179,9 @@
     <string name="terminal_successfully_linked">The terminal was successfully linked</string>
     <string name="terminal_linked_failed">There was an error linking the phone please try again later</string>
     <string name="confirm_linking_device_required">You must confirm the linking of the device</string>
-
+    <string name="terminal_phone_number_hint">Enter device phone number</string>
+    <string name="terminal_phone_number_required">You must enter the phone number of the device</string>
+    <string name="terminal_phone_number_prefix">+34 </string>
     <!-- Four Page -->
     <string name="link_terminal_four_page_title">Synchronizing Terminal Data</string>
     <string name="error_ocurred_during_synchronization">An error occurred during synchronization</string>

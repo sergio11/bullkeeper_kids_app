@@ -54,7 +54,7 @@ class SynchronizeTerminalContactsInteract
             while (cur != null && cur.moveToNext()) {
 
                 val id = cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts._ID))
+                        cur.getColumnIndex(ContactsContract.Contacts.NAME_RAW_CONTACT_ID))
 
                 val name = cur.getString(cur.getColumnIndex(
                         ContactsContract.Contacts.DISPLAY_NAME))
@@ -137,12 +137,18 @@ class SynchronizeTerminalContactsInteract
                         contactRegistered.serverId = contactSaved.serverId
                         contactRegistered.sync = 0
                         contactRegistered.remove = 0
+                        Timber.d("Contacts: Add Contact to save -> %s - %s - %s - %d ",
+                                contactRegistered.name, contactRegistered.serverId, contactRegistered.id,
+                                contactRegistered.sync)
                         contactsToSave.add(contactRegistered)
                     } else {
 
                         // Is Contact Save Sync?
                         if (contactSaved.sync == 0 || contactSaved.remove == 1) {
                             contactSaved.remove = 0
+                            Timber.d("Contacts: Add Contact to save -> %s - %s - %s - %d ",
+                                    contactSaved.name, contactSaved.serverId, contactSaved.id,
+                                    contactSaved.sync)
                             contactsToSave.add(contactSaved)
                         }
 
@@ -169,6 +175,9 @@ class SynchronizeTerminalContactsInteract
         for(contactSaved in contactsSaved) {
 
             if(contactSaved.remove == 1) {
+                Timber.d("Contacts: Contact to remove (contactSaved.remove == 1) -> %s - %s - %s - %d ",
+                        contactSaved.name, contactSaved.serverId, contactSaved.id,
+                        contactSaved.sync)
                 contactsToRemove.add(contactSaved)
                 continue
             }
@@ -182,6 +191,9 @@ class SynchronizeTerminalContactsInteract
             if(!isFound) {
                 if (contactSaved.sync == 1 && contactSaved.serverId != null) {
                     contactSaved.remove = 1
+                    Timber.d("Contacts: Add Contact to remove (!isFound && contactSaved.sync == 1 && contactSaved.serverId != null) -> %s - %s - %s - %d ",
+                            contactSaved.name, contactSaved.serverId, contactSaved.id,
+                            contactSaved.sync)
                     contactsToRemove.add(contactSaved)
                 } else {
                     contactRepositoryImpl.delete(contactSaved)
@@ -263,6 +275,8 @@ class SynchronizeTerminalContactsInteract
                             if(it.id == contactDTO.localId) {
                                 it.serverId = contactDTO.identity
                                 it.sync = 1
+                                Timber.d("Contacts: Contact Sync: %s - %s",
+                                        it.name, it.serverId)
                             }
                         }
                     }

@@ -33,7 +33,9 @@ class SaveTerminalInteract
                 model = params.model,
                 osVersion = params.osVersion,
                 sdkVersion = params.sdkVersion,
-                kid = params.kidId)
+                kid = params.kidId,
+                carrierName = params.carrierName,
+                phoneNumber = params.phoneNumber)
 
         val response = terminalService
                 .saveTerminal(params.kidId, saveTerminal).await()
@@ -81,7 +83,9 @@ class SaveTerminalInteract
             val marketName: String,
             val model: String,
             val osVersion: String,
-            val sdkVersion: String
+            val sdkVersion: String,
+            val carrierName: String?,
+            val phoneNumber: String?
 
     )
 
