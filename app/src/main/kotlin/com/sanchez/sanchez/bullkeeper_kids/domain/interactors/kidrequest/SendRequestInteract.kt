@@ -39,8 +39,8 @@ class SendRequestInteract
         val kid = preferenceRepository.getPrefKidIdentity()
         val terminal = preferenceRepository.getPrefTerminalIdentity()
 
-        var latitude = 0.0
-        var longitude = 0.0
+        var latitude: Double? = null
+        var longitude: Double? = null
 
         try {
 
@@ -60,8 +60,10 @@ class SendRequestInteract
         sosRequest.kid = kid
         sosRequest.terminal = terminal
         sosRequest.type = params.type
-        sosRequest.location = SaveCurrentLocationDTO(latitude, longitude)
-        sosRequest.address = params.address
+
+        if(latitude != null && longitude != null) {
+            sosRequest.location = SaveCurrentLocationDTO(latitude, longitude, params.address)
+        }
 
         val response =
                 kidRequestService.addRequestForKid(kid, sosRequest).await()
