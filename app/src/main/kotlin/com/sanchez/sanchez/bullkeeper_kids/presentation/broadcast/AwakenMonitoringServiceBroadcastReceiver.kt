@@ -7,14 +7,46 @@ import android.app.ActivityManager
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.support.v4.content.ContextCompat
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import timber.log.Timber
+import javax.inject.Inject
 
 
 /**
  * Awaken Monitoring Service Broadcast Receiver
  */
 class AwakenMonitoringServiceBroadcastReceiver : BroadcastReceiver() {
+
+    /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
+
+
+    /**
+     * On Receive
+     */
+    override fun onReceive(context: Context, intent: Intent) {
+        Timber.d("BKA_59: Awaken Monitoring Service launched")
+
+        if(preferenceRepository.getPrefKidIdentity()
+                != IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE &&
+                preferenceRepository.getPrefTerminalIdentity() !=
+                IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE) {
+
+            if (!isMonitoringServiceRunning(context)) {
+                Timber.d("BKA_59: Monitoring Service is not running")
+                ContextCompat.startForegroundService(context, Intent(context, MonitoringService::class.java))
+            }
+
+            AwakenMonitoringServiceBroadcastReceiver.scheduledAt(context)
+
+        }
+
+    }
+
 
     /**
      * Check Monitoring Service Status
@@ -28,23 +60,6 @@ class AwakenMonitoringServiceBroadcastReceiver : BroadcastReceiver() {
         }
         return false
     }
-
-    /**
-     * On Receive
-     */
-    override fun onReceive(context: Context, intent: Intent) {
-        Timber.d("BKA_59: Awaken Monitoring Service launched")
-        if(!isMonitoringServiceRunning(context)) {
-            Timber.d("BKA_59: Monitoring Service is not running")
-            ContextCompat.startForegroundService(context, Intent(context, MonitoringService::class.java))
-        } else {
-            Timber.d("BKA_59: Monitoring Service is running")
-        }
-
-        AwakenMonitoringServiceBroadcastReceiver.scheduledAt(context)
-
-    }
-
 
 
     companion object {
