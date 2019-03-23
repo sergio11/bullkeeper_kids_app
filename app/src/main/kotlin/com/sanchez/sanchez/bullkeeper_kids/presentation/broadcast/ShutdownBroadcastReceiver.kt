@@ -4,9 +4,7 @@ package com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.ContextCompat
 import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
-import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ActionBootCompletedReceiverComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ShutdownReceiverComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalStatusInteract
@@ -68,6 +66,7 @@ class ShutdownBroadcastReceiver : BroadcastReceiver()  {
                     Timber.d("Save Terminal Status Success")
                 })
             }
+
         }
     }
 }

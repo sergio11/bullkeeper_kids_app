@@ -7,6 +7,8 @@ import android.app.ActivityManager
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.support.v4.content.ContextCompat
+import com.sanchez.sanchez.bullkeeper_kids.AndroidApplication
+import com.sanchez.sanchez.bullkeeper_kids.core.di.components.AwakenMonitoringServiceReceiverComponent
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
 import timber.log.Timber
@@ -19,6 +21,13 @@ import javax.inject.Inject
 class AwakenMonitoringServiceBroadcastReceiver : BroadcastReceiver() {
 
     /**
+     * Awaken Monitoring Service Component
+     */
+    private val awakenMonitoringServiceComponent: AwakenMonitoringServiceReceiverComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        AndroidApplication.INSTANCE.awakenMonitoringServiceComponent
+    }
+
+    /**
      * Preference Repository
      */
     @Inject
@@ -29,6 +38,7 @@ class AwakenMonitoringServiceBroadcastReceiver : BroadcastReceiver() {
      * On Receive
      */
     override fun onReceive(context: Context, intent: Intent) {
+        awakenMonitoringServiceComponent.inject(this)
         Timber.d("BKA_59: Awaken Monitoring Service launched")
 
         if(preferenceRepository.getPrefKidIdentity()

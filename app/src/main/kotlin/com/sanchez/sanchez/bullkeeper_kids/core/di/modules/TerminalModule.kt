@@ -3,10 +3,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.ITerminalService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.*
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.SaveTerminalStatusInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.UnlinkTerminalInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import dagger.Module
 import dagger.Provides
@@ -78,5 +75,17 @@ class TerminalModule {
             packageUsageStatsRepository, phoneNumberRepository, scheduledBlocksRepository,
             smsRepository, preferencesRepository)
 
+
+    /**
+     * Provide Detach Terminal Interact
+     */
+    @Provides
+    @Singleton
+    fun provideDetachTerminalInteract(
+            retrofit: Retrofit,
+            terminalService: ITerminalService,
+            preferenceRepository: IPreferenceRepository
+    ): DetachTerminalInteract
+        = DetachTerminalInteract(retrofit, terminalService, preferenceRepository)
 
 }
