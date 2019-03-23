@@ -12,7 +12,6 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(context: Context): IPreferenceRepository {
 
-
     /**
      * Preferences
      */
@@ -297,6 +296,22 @@ class PreferenceRepositoryImpl
      */
     override fun setSettingsEnabled(isEnabled: Boolean) {
         mPref.edit().putBoolean(IPreferenceRepository.PREF_SETTINGS_ENABLED,
+                isEnabled).apply()
+    }
+
+    /**
+     * Is Phone Calls Enabled
+     */
+    override fun isPhoneCallsEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_PHONE_CALLS_ENABLED,
+                IPreferenceRepository.PHONE_CALLS_ENABLED_DEFAULT_VALUE)
+    }
+
+    /**
+     * Set Phone Calls Enabled
+     */
+    override fun setPhoneCallsEnabled(isEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_PHONE_CALLS_ENABLED,
                 isEnabled).apply()
     }
 

@@ -81,5 +81,11 @@ data class TerminalEntity(
         /**
          * Settings Enabled
          */
-        var settingsEnabled: Boolean = false
+        var settingsEnabled: Boolean = false,
+
+        /**
+         * Phone Calls Enabled
+         */
+        var phoneCallsEnabled: Boolean = true
+
 )

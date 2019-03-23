@@ -165,6 +165,12 @@ class NavigatorImpl
      * Show Phone Number Blocked Screen
      */
     override fun showPhoneNumberBlockedScreen(ctx: Context) =
+            ctx.startActivity(PhoneNumberBlockedActivity.callingIntent(ctx, true))
+
+    /**
+     * Show Phone Calls Not Allowed Screen
+     */
+    override fun showPhoneCallsNotAllowedScreen(ctx: Context) =
             ctx.startActivity(PhoneNumberBlockedActivity.callingIntent(ctx))
 
     /**

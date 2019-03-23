@@ -51,6 +51,7 @@ class UnlinkTerminalInteract
         preferencesRepository.setScreenEnabled(IPreferenceRepository.SCREEN_ENABLED_DEFAULT_VALUE)
         preferencesRepository.setBedTimeEnabled(IPreferenceRepository.BED_TIME_DEFAULT_VALUE)
         preferencesRepository.setSettingsEnabled(IPreferenceRepository.SETTINGS_ENABLED_DEFAULT_VALUE)
+        preferencesRepository.setPhoneCallsEnabled(IPreferenceRepository.PHONE_CALLS_ENABLED_DEFAULT_VALUE)
     }
 
 

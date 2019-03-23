@@ -108,6 +108,11 @@ interface INavigator {
     fun showPhoneNumberBlockedScreen(ctx: Context)
 
     /**
+     * Show Phone Calls Not Allowed Screen
+     */
+    fun showPhoneCallsNotAllowedScreen(ctx: Context)
+
+    /**
      * Show Settings Screen
      */
     fun showSettingsScreen(activity: Activity)

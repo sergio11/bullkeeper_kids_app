@@ -135,7 +135,7 @@ class ThirdLinkTerminalViewModel
         preferenceRepository.setScreenEnabled(terminalEntity.screenEnabled)
         preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
         preferenceRepository.setSettingsEnabled(terminalEntity.settingsEnabled)
-
+        preferenceRepository.setPhoneCallsEnabled(terminalEntity.phoneCallsEnabled)
         terminalSaved.value = terminalEntity
     }
 

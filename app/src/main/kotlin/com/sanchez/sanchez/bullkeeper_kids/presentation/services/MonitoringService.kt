@@ -683,6 +683,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 preferenceRepository.setScreenEnabled(terminalEntity.screenEnabled)
                 preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
                 preferenceRepository.setSettingsEnabled(terminalEntity.settingsEnabled)
+                preferenceRepository.setPhoneCallsEnabled(terminalEntity.phoneCallsEnabled)
 
                 syncPhoneNumbersBlocked()
                 syncTerminalApps()
@@ -1892,6 +1893,15 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Phone Calls Status Changed Event Handler
+     * @param phoneCallsStatusChangedDTO
+     */
+    private fun phoneCallsStatusChangedEventHandler(phoneCallsStatusChangedDTO: TerminalPhoneCallsStatusChangedDTO){
+        Timber.d("SSE: Phone Calls Status Changed Event Handler")
+        phoneCallsStatusChangedDTO.enabled?.let { preferenceRepository.setPhoneCallsEnabled(it) }
+    }
+
+    /**
      * Start Listen SSE
      */
     private fun startListenSse() {
@@ -2131,6 +2141,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         ServerEventTypeEnum.DELETE_CONTACT_EVENT -> {
                             contactDeletedEventHandler(objectMapper.readValue(eventMessage,
                                     ContactDeletedDTO::class.java))
+                        }
+
+                        // Terminal Phone Calls Status Changed
+                        ServerEventTypeEnum.TERMINAL_PHONE_CALLS_STATUS_CHANGED -> {
+                            phoneCallsStatusChangedEventHandler(objectMapper.readValue(eventMessage,
+                                    TerminalPhoneCallsStatusChangedDTO::class.java))
                         }
                         // Unknown Event
 
