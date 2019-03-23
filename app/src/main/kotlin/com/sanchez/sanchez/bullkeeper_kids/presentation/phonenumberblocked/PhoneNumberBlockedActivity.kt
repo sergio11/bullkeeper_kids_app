@@ -29,37 +29,51 @@ class PhoneNumberBlockedActivity : AppCompatActivity() {
         (application as AndroidApplication).appComponent
     }
 
+    /**
+     * Phone Blocks Type Enum
+     */
+    enum class PhoneBlocksTypeEnum {
+        NUMBER_BLOCKED,
+        UNKNOWN_EMITTER,
+        CALLS_NOT_ALLOWED
+    }
 
     companion object {
 
         /**
          * Args
          */
-        const val PHONE_NUMBER_BLOCKED = "PHONE_NUMBER_BLOCKED"
-        const val BLOCKED_AT = "BLOCKED_AT"
-        const val UNKNOWN_EMITTER = "UNKNOWN_EMITTER"
+        const val BLOCK_TYPE_ARG = "BLOCK_TYPE_ARG_ARG"
+        const val PHONE_NUMBER_BLOCKED_ARG = "PHONE_NUMBER_BLOCKED_ARG"
+        const val BLOCKED_AT_ARG = "BLOCKED_AT_ARG"
 
         /**
          * Calling Intent
+         * @param context
+         * @param phoneNumberBlocked
+         * @param blockedAt
          */
         fun callingIntent(context: Context, phoneNumberBlocked: String, blockedAt: String): Intent {
             val intent = Intent(context, PhoneNumberBlockedActivity::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra(PHONE_NUMBER_BLOCKED, phoneNumberBlocked)
-            intent.putExtra(BLOCKED_AT, blockedAt)
+            intent.putExtra(PHONE_NUMBER_BLOCKED_ARG, phoneNumberBlocked)
+            intent.putExtra(BLOCKED_AT_ARG, blockedAt)
+            intent.putExtra(BLOCK_TYPE_ARG, PhoneBlocksTypeEnum.NUMBER_BLOCKED)
             return intent
         }
 
         /**
          * Calling Intent
+         * @param context
+         * @param callsEnabled
          */
-        fun callingIntent(context: Context): Intent {
+        fun callingIntent(context: Context, callsEnabled: Boolean = false): Intent {
             val intent = Intent(context, PhoneNumberBlockedActivity::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra(UNKNOWN_EMITTER, true)
+            intent.putExtra(BLOCK_TYPE_ARG, if(callsEnabled)
+                    PhoneBlocksTypeEnum.UNKNOWN_EMITTER else PhoneBlocksTypeEnum.CALLS_NOT_ALLOWED)
             return intent
         }
-
     }
 
     /**
@@ -106,25 +120,39 @@ class PhoneNumberBlockedActivity : AppCompatActivity() {
      */
     private fun showPhoneNumberBlockedDetail(intent: Intent){
 
-        if(intent.hasExtra(UNKNOWN_EMITTER)) {
-            contentText.text = getString(R.string.phone_number_blocked_unknown_emitter)
-            phoneNumberBlockedAt.visibility = GONE
+        if(intent.hasExtra(BLOCK_TYPE_ARG)) {
 
-        } else {
+            val blockType = intent.extras?.get(BLOCK_TYPE_ARG) as PhoneBlocksTypeEnum
 
-            // Get Args
-            val phoneNumberBlocked = intent.getStringExtra(PHONE_NUMBER_BLOCKED)
-            val blockedAt = intent.getStringExtra(BLOCKED_AT)
+            when(blockType) {
 
-            // Phone Number Blocked
-            contentText.text = String.format(Locale.getDefault(),
-                    getString(R.string.phone_number_blocked_content), phoneNumberBlocked)
+                PhoneBlocksTypeEnum.NUMBER_BLOCKED -> {
+                    // Get Args
+                    val phoneNumberBlocked = intent.getStringExtra(PHONE_NUMBER_BLOCKED_ARG)
+                    val blockedAt = intent.getStringExtra(BLOCK_TYPE_ARG)
 
-            // Blocked At
-            phoneNumberBlockedAt.text = String.format(
-                    Locale.getDefault(), getString(R.string.phone_number_blocked_blocked_at),
-                    blockedAt
-            )
+                    // Phone Number Blocked
+                    contentText.text = String.format(Locale.getDefault(),
+                            getString(R.string.phone_number_blocked_content), phoneNumberBlocked)
+
+                    // Blocked At
+                    phoneNumberBlockedAt.text = String.format(
+                            Locale.getDefault(), getString(R.string.phone_number_blocked_blocked_at),
+                            blockedAt
+                    )
+                }
+
+                PhoneBlocksTypeEnum.CALLS_NOT_ALLOWED -> {
+                    contentText.text = getString(R.string.phone_calls_not_allowed)
+                    phoneNumberBlockedAt.visibility = GONE
+                }
+
+                PhoneBlocksTypeEnum.UNKNOWN_EMITTER -> {
+                    contentText.text = getString(R.string.phone_number_blocked_unknown_emitter)
+                    phoneNumberBlockedAt.visibility = GONE
+                }
+
+            }
 
         }
 

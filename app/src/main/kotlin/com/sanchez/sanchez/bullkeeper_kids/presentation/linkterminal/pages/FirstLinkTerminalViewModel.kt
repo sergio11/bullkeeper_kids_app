@@ -101,6 +101,7 @@ class FirstLinkTerminalViewModel
         preferenceRepository.setScreenEnabled(terminalEntity.screenEnabled)
         preferenceRepository.setBedTimeEnabled(terminalEntity.bedTimeEnabled)
         preferenceRepository.setSettingsEnabled(terminalEntity.settingsEnabled)
+        preferenceRepository.setPhoneCallsEnabled(terminalEntity.phoneCallsEnabled)
 
         terminalSuccess.value = terminalEntity
     }

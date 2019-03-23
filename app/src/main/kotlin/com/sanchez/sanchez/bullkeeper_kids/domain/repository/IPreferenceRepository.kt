@@ -60,6 +60,10 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_SETTINGS_ENABLED = "settings_enabled"
         const val SETTINGS_ENABLED_DEFAULT_VALUE = false
 
+        // Phone Calls Enabled
+        const val PREF_PHONE_CALLS_ENABLED = "phone_calls_enabled"
+        const val PHONE_CALLS_ENABLED_DEFAULT_VALUE = true
+
         // SOS Request Expired At
         const val PREF_SOS_REQUEST_EXPIRED_AT = "sos_request_expired_at"
         const val SOS_REQUEST_EXPIRED_AT_DEFAULT_VALUE = ""
@@ -264,6 +268,18 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param isEnabled
      */
     fun setSettingsEnabled(isEnabled: Boolean)
+
+    /**
+     * Is Phone Calls Enabled
+     * @return
+     */
+    fun isPhoneCallsEnabled(): Boolean
+
+    /**
+     * Set Phone Calls Enabled
+     * @param isEnabled
+     */
+    fun setPhoneCallsEnabled(isEnabled: Boolean)
 
     /**
      * Get SOS Request Expired At

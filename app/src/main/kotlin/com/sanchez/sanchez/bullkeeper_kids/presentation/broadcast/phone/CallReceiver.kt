@@ -11,6 +11,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IPhoneNumberRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IScheduledBlocksRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -50,6 +51,13 @@ class CallReceiver: PhoneCallReceiver() {
      */
     @Inject
     internal lateinit var navigator: INavigator
+
+
+    /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
 
 
     /**
@@ -110,15 +118,28 @@ class CallReceiver: PhoneCallReceiver() {
     }
 
     /**
+     * End Phone Call Not Allowed
+     */
+    private fun endPhoneCallsNotAllowed(ctx: Context){
+        // End Call
+        endCall(ctx)
+        // Show Phone Calls Not Allowed Screen
+        navigator.showPhoneCallsNotAllowedScreen(ctx)
+    }
+
+    /**
      * On Incoming Call Started
      */
     override fun onIncomingCallStarted(ctx: Context, number: String?, start: Date) {
         super.onIncomingCallStarted(ctx, number, start)
         Timber.d("CallReceiver: onIncomingCallStarted -> %s", number)
-        if(!number.isNullOrEmpty())
-            checkPhoneNumber(ctx, number)
+        if(preferenceRepository.isPhoneCallsEnabled())
+            if(!number.isNullOrEmpty())
+                checkPhoneNumber(ctx, number)
+            else
+                endCallForUnknownEmitter(ctx)
         else
-            endCallForUnknownEmitter(ctx)
+            endPhoneCallsNotAllowed(ctx)
     }
 
     /**
@@ -127,7 +148,10 @@ class CallReceiver: PhoneCallReceiver() {
     override fun onOutgoingCallStarted(ctx: Context, number: String?, start: Date) {
         super.onOutgoingCallStarted(ctx, number, start)
         Timber.d("CallReceiver: onOutgoingCallStarted -> %s", number)
-        number?.let { checkPhoneNumber(ctx, it) }
+        if(preferenceRepository.isPhoneCallsEnabled())
+            number?.let { checkPhoneNumber(ctx, it) }
+        else
+            endPhoneCallsNotAllowed(ctx)
     }
 
     /**

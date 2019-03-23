@@ -107,6 +107,12 @@ data class TerminalDTO(
         var settingsEnabled: Boolean = false,
 
         /**
+         * Phone Calls Enabled
+         */
+        @JsonProperty("phone_calls_enabled")
+        var phoneCallsEnabled: Boolean = true,
+
+        /**
          * Carrier Name
          */
         @JsonProperty("carrier_name")
