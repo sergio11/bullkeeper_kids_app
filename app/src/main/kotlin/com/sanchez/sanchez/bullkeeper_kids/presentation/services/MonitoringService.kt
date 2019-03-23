@@ -1169,6 +1169,10 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun saveCurrentLocation(location: Location) {
         Timber.d("LOC: New Location: %f - %f", location.latitude,
                 location.longitude)
+
+        localBroadcastManager.sendBroadcast(Intent(
+                NEW_LOCATION_AVAILABLE_ACTION))
+
         saveCurrentLocationInteract(SaveCurrentLocationInteract.Params(
                 latitude = location.latitude,
                 longitude = location.longitude
@@ -2241,6 +2245,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         const val FUN_TIME_CHANGED_ACTION = "com.sanchez.sergio.fun.time.changed"
         const val SETTINGS_STATUS_CHANGED_ACTION = "com.sanchez.sergio.settings.status.changed"
         const val CHECK_TERMINAL_STATUS_ACTION = "com.sanchez.sergio.check.terminal.status"
+        const val NEW_LOCATION_AVAILABLE_ACTION = "com.sanchez.sergio.new.location.available"
+
         /**
          * Schedule Check Terminal Status
          */

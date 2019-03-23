@@ -1,8 +1,12 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.pickmeup
 
 import android.arch.lifecycle.Observer
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
@@ -14,6 +18,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.kidrequest.SendRequestInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.NEW_LOCATION_AVAILABLE_ACTION
 import kotlinx.android.synthetic.main.fragment_pick_me_up.*
 import java.lang.IllegalArgumentException
 import java.util.*
@@ -48,6 +53,24 @@ class PickMeUpActivityFragment : BaseFragment() {
     @Inject
     internal lateinit var preferenceRepository: IPreferenceRepository
 
+    /**
+     * Context
+     */
+    @Inject
+    internal lateinit var context: Context
+
+    /**
+     * Fun Time Changed Event Handler
+     */
+    private var mLocalBroadcastManager: LocalBroadcastManager? = null
+    private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == NEW_LOCATION_AVAILABLE_ACTION) {
+                getAddressFromCurrentLocation()
+            }
+        }
+    }
+
 
     /**
      * Layout Id
@@ -79,6 +102,11 @@ class PickMeUpActivityFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeInjector()
+
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context)
+        val mIntentFilter = IntentFilter()
+        mIntentFilter.addAction(NEW_LOCATION_AVAILABLE_ACTION)
+        mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
 
         activatePickMeUp.setOnClickListener {
             pickMeUpStreamId = soundManager.playSound(ISoundManager.PICK_ME_UP_SOUND)
@@ -146,8 +174,7 @@ class PickMeUpActivityFragment : BaseFragment() {
      */
     override fun onStart() {
         super.onStart()
-        activityHandler.showProgressDialog(R.string.generic_loading_text)
-        pickMeUpViewModel.getAddressFromCurrentLocation()
+        getAddressFromCurrentLocation()
 
         val expiredAt = preferenceRepository.getPickMeUpRequestExpiredAt()
 
@@ -180,5 +207,13 @@ class PickMeUpActivityFragment : BaseFragment() {
                         .component)
 
         pickMeUpComponent.inject(this)
+    }
+
+    /**
+     * Get Address From Current Location
+     */
+    private fun getAddressFromCurrentLocation(){
+        activityHandler.showProgressDialog(R.string.generic_loading_text)
+        pickMeUpViewModel.getAddressFromCurrentLocation()
     }
 }

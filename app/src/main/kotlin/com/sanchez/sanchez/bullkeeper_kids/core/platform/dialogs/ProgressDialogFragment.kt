@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs
 
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
@@ -80,6 +81,15 @@ class ProgressDialogFragment: SupportDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         // Set Dialog Title Text View
         dialogTitle.text = title
+    }
+
+    /**
+     * Show
+     */
+    override fun show(manager: FragmentManager?, tag: String?) {
+        if (manager?.isDestroyed == false && !manager.isStateSaved) {
+            super.show(manager, tag)
+        }
     }
 
     /**
