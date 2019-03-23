@@ -117,6 +117,20 @@ class AndroidApplication : Application(){
                 .build()
     }
 
+
+    /**
+     * Awaken Monitoring Service Component
+     */
+    val awakenMonitoringServiceComponent: AwakenMonitoringServiceReceiverComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        DaggerAwakenMonitoringServiceReceiverComponent
+                .builder()
+                .applicationModule(ApplicationModule(this))
+                .globalServiceModule(GlobalServiceModule(this))
+                .build()
+    }
+
+
+
     companion object {
 
         @JvmStatic

@@ -5,6 +5,7 @@ import android.os.Handler
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IContactsService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IContactRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ContactRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.DeleteContactInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -57,5 +58,15 @@ class ContactsModule {
             handler: Handler,
             synchronizeTerminalContactsInteract: SynchronizeTerminalContactsInteract
     ) = ContactsObserver(handler, synchronizeTerminalContactsInteract)
+
+    /**
+     * Provide Delete Contact Interact
+     */
+    @Provides
+    @Singleton
+    fun provideDeleteContactInteract(
+            context: Context,
+            retrofit: Retrofit
+    ) = DeleteContactInteract(context, retrofit)
 
 }

@@ -45,4 +45,15 @@ interface ITerminalService {
             @Body status: SaveTerminalStatusDTO
     ): Deferred<APIResponse<String>>
 
+    /**
+     * Detach Terminal
+     * @param kid
+     * @param terminal
+     */
+    @POST("children/{kid}/terminal/{terminal}/detach")
+    fun detachTerminal(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String
+    ): Deferred<APIResponse<String>>
+    
 }

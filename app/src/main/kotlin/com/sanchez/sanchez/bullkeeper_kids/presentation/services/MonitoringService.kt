@@ -50,6 +50,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.*
 import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.DeleteContactInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.funtime.SyncFunTimeInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery.SynchronizeGalleryInteract
@@ -355,6 +356,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     @Inject
     internal lateinit var phoneNumberRepository: IPhoneNumberRepository
+
+    /**
+     * Delete Contact Interact
+     */
+    @Inject
+    internal lateinit var deleteContactInteract: DeleteContactInteract
 
 
     /**
@@ -1868,6 +1875,23 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Contact Deleted Event Handler
+     * @param contactDeletedDTO
+     */
+    private fun contactDeletedEventHandler(contactDeletedDTO: ContactDeletedDTO){
+        Timber.d("SSE: Contact Deleted Event Handler")
+        deleteContactInteract(DeleteContactInteract.Params(
+                contactId = contactDeletedDTO.contactId
+        )){
+            it.either(fun(_: Failure){
+                Timber.d("Contact Deleted Failed")
+            }, fun(_: Unit) {
+                Timber.d("Contact Deleted Success")
+            })
+        }
+    }
+
+    /**
      * Start Listen SSE
      */
     private fun startListenSse() {
@@ -2101,6 +2125,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             setMessagesAsViewedEventHandler(objectMapper.readValue(eventMessage,
                                     SetMessagesAsViewedDTO::class.java))
 
+                        }
+
+                        // Delete Contact Event
+                        ServerEventTypeEnum.DELETE_CONTACT_EVENT -> {
+                            contactDeletedEventHandler(objectMapper.readValue(eventMessage,
+                                    ContactDeletedDTO::class.java))
                         }
                         // Unknown Event
 

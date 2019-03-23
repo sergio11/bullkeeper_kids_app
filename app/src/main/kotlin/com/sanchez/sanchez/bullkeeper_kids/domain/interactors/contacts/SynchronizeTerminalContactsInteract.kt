@@ -20,6 +20,11 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.SaveContactDT
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IContactRepository
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
+import android.net.Uri
+import android.provider.ContactsContract.PhoneLookup
+
+
+
 
 /**
  * Synchronize Terminal Contacts Interact
@@ -39,6 +44,130 @@ class SynchronizeTerminalContactsInteract
         val BATCH_SIZE = 15
     }
 
+    inner class ContactItem {
+
+        var id: String? = null
+        var displayName: String? = null
+        var photoEncodedString: String? = null
+        var lastUpdateTimestamp: String? = null
+        var arrayListPhone: ArrayList<PhoneContact> = ArrayList()
+        var arrayListEmail: ArrayList<EmailContact> = ArrayList()
+        var arrayListAddress: ArrayList<PostalAddress> = ArrayList()
+    }
+
+    inner class EmailContact {
+        var email = ""
+    }
+
+    inner class PhoneContact {
+        var phone = ""
+    }
+
+
+    inner class PostalAddress {
+        var city = ""
+        var state = ""
+        var country = ""
+    }
+
+
+    private fun getReadContacts(): ArrayList<ContactItem> {
+        val contactList = ArrayList<ContactItem>()
+        val cr = context.contentResolver
+        val mainCursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
+        if (mainCursor != null) {
+            while (mainCursor.moveToNext()) {
+                val contactItem = ContactItem()
+                val id = mainCursor.getString(
+                        mainCursor.getColumnIndex(ContactsContract.Contacts._ID))
+                val displayName = mainCursor.getString(
+                        mainCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                val lastUpdateTimestamp =
+                        mainCursor.getString(
+                                mainCursor.getColumnIndex(
+                                        ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP)
+                        )
+
+                var photo: String? = null
+
+                try {
+                    val inputStream = ContactsContract.Contacts.openContactPhotoInputStream(context.contentResolver,
+                            ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id.toLong()))
+
+                    if (inputStream != null) {
+                        val bitmap = BitmapFactory.decodeStream(inputStream)
+                        val stream = ByteArrayOutputStream()
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                        val byteArray = stream.toByteArray()
+                        bitmap.recycle()
+                        photo = Base64.encodeToString(byteArray, Base64.DEFAULT)
+                        inputStream.close()
+                    }
+
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+                //ADD NAME AND CONTACT PHOTO DATA...
+                contactItem.displayName = displayName
+                contactItem.photoEncodedString = photo
+                contactItem.lastUpdateTimestamp = lastUpdateTimestamp
+                contactItem.id = id
+
+                if (Integer.parseInt(mainCursor.getString(mainCursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                    //ADD PHONE DATA...
+                    val arrayListPhone = ArrayList<PhoneContact>()
+                    val phoneCursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf<String>(id), null)
+                    if (phoneCursor != null) {
+                        while (phoneCursor.moveToNext()) {
+                            val phoneContact = PhoneContact()
+                            val phone = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                            phoneContact.phone = phone
+                            arrayListPhone.add(phoneContact)
+                        }
+                    }
+                    phoneCursor?.close()
+                    contactItem.arrayListPhone = arrayListPhone
+
+
+                    //ADD E-MAIL DATA...
+                    val arrayListEmail = ArrayList<EmailContact>()
+                    val emailCursor = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", arrayOf<String>(id), null)
+                    if (emailCursor != null) {
+                        while (emailCursor.moveToNext()) {
+                            val emailContact = EmailContact()
+                            val email = emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
+                            emailContact.email = email
+                            arrayListEmail.add(emailContact)
+                        }
+                    }
+                    emailCursor?.close()
+                    contactItem.arrayListEmail = arrayListEmail
+
+                    //ADD ADDRESS DATA...
+                    val arrayListAddress = ArrayList<PostalAddress>()
+                    val addrCursor = context.contentResolver.query(ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI, null, ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID + " = ?", arrayOf<String>(id), null)
+                    if (addrCursor != null) {
+                        while (addrCursor.moveToNext()) {
+                            val postalAddress = PostalAddress()
+                            val city = addrCursor.getString(addrCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.CITY))
+                            val state = addrCursor.getString(addrCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.REGION))
+                            val country = addrCursor.getString(addrCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.COUNTRY))
+                            postalAddress.city = city
+                            postalAddress.state = state
+                            postalAddress.country = country
+                            arrayListAddress.add(postalAddress)
+                        }
+                    }
+                    addrCursor?.close()
+                    contactItem.arrayListAddress = arrayListAddress
+                }
+                contactList.add(contactItem)
+            }
+        }
+        mainCursor?.close()
+        return contactList
+    }
+
     /**
      * Get Contact List
      */
@@ -54,7 +183,7 @@ class SynchronizeTerminalContactsInteract
             while (cur != null && cur.moveToNext()) {
 
                 val id = cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts.NAME_RAW_CONTACT_ID))
+                        cur.getColumnIndex(ContactsContract.Contacts._ID))
 
                 val name = cur.getString(cur.getColumnIndex(
                         ContactsContract.Contacts.DISPLAY_NAME))
@@ -330,6 +459,9 @@ class SynchronizeTerminalContactsInteract
      * On Execute
      */
     override suspend fun onExecuted(params: None): Int {
+
+        val newContactList = getReadContacts()
+        Timber.d("$TAG New Contact List size-> %d", newContactList.size)
 
         // Get Contact List
         val contactsToSync = getContactsToSynchronize()
