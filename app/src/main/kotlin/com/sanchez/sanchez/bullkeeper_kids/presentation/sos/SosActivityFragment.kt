@@ -1,8 +1,12 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.sos
 
 import android.arch.lifecycle.Observer
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.view.View
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
@@ -14,6 +18,8 @@ import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.kidrequest.SendRequestInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.NEW_LOCATION_AVAILABLE_ACTION
 import kotlinx.android.synthetic.main.fragment_sos.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
@@ -49,6 +55,12 @@ class SosActivityFragment : BaseFragment() {
     internal lateinit var preferenceRepository: IPreferenceRepository
 
     /**
+     * Context
+     */
+    @Inject
+    internal lateinit var context: Context
+
+    /**
      * Layout Id
      */
     override fun layoutId(): Int = R.layout.fragment_sos
@@ -57,6 +69,18 @@ class SosActivityFragment : BaseFragment() {
      * Sos Stream Id
      */
     var sosStreamId: Int = -1
+
+    /**
+     * Fun Time Changed Event Handler
+     */
+    private var mLocalBroadcastManager: LocalBroadcastManager? = null
+    private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == NEW_LOCATION_AVAILABLE_ACTION) {
+                getAddressFromCurrentLocation()
+            }
+        }
+    }
 
 
     /**
@@ -78,6 +102,11 @@ class SosActivityFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeInjector()
+
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context)
+        val mIntentFilter = IntentFilter()
+        mIntentFilter.addAction(NEW_LOCATION_AVAILABLE_ACTION)
+        mLocalBroadcastManager?.registerReceiver(mBroadcastReceiver, mIntentFilter)
 
         /**
          * Activate SOS
@@ -146,8 +175,8 @@ class SosActivityFragment : BaseFragment() {
      */
     override fun onStart() {
         super.onStart()
-        activityHandler.showProgressDialog(R.string.generic_loading_text)
-        sosViewModel.getAddressFromCurrentLocation()
+
+        getAddressFromCurrentLocation()
 
         val expiredAt = preferenceRepository.getSosRequestExpiredAt()
 
@@ -182,5 +211,13 @@ class SosActivityFragment : BaseFragment() {
                         .component)
 
         sosComponent?.inject(this)
+    }
+
+    /**
+     * Get Address From Current Location
+     */
+    private fun getAddressFromCurrentLocation(){
+        activityHandler.showProgressDialog(R.string.generic_loading_text)
+        sosViewModel.getAddressFromCurrentLocation()
     }
 }
