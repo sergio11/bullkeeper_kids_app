@@ -36,7 +36,6 @@ class SosActivityFragment : BaseFragment() {
      */
     @Inject
     internal lateinit var soundManager: ISoundManager
-
     /**
      * Sos View Model
      */

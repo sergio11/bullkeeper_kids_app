@@ -17,8 +17,12 @@ data class SaveCurrentLocationDTO (
          * Longitude
          */
         @get:JsonProperty("longitude")
-        var longitude: Double? = null
+        var longitude: Double? = null,
 
-
+        /**
+         * Address
+         */
+        @get:JsonProperty("address")
+        var address: String? = null
 
 )
