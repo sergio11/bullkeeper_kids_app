@@ -60,6 +60,10 @@ class GetTerminalDetailInteract
             terminalEntity.settingsEnabled = it
         }
 
+        response.data?.phoneCallsEnabled?.let {
+            terminalEntity.phoneCallsEnabled = it
+        }
+
         return terminalEntity
 
     }

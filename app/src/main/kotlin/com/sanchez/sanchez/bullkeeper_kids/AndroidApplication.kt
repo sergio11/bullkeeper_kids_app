@@ -6,10 +6,8 @@ import cat.ereza.customactivityoncrash.config.CaocConfig
 import com.facebook.stetho.Stetho
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.*
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.*
-import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import io.realm.Realm
 import timber.log.Timber
-import java.util.regex.Pattern
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
 
@@ -186,7 +184,7 @@ class AndroidApplication : Application(){
      */
     private fun onReleaseConfig(){
         // Reporting Tree
-        Timber.plant(CrashReportingTree())
+        Timber.plant(Timber.DebugTree())
     }
 
     /**
@@ -213,16 +211,6 @@ class AndroidApplication : Application(){
         if(BuildConfig.DEBUG) Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                        .enableWebKitInspector(
-                                RealmInspectorModulesProvider.builder(this)
-                                        .withFolder(getCacheDir())
-                                        .withMetaTables()
-                                        .withDescendingOrder()
-                                        .withLimit(1000)
-                                        .databaseNamePattern(Pattern.compile(".+\\.realm"))
-                                        .build()
-
-                        )
                         .build())
     }
 
