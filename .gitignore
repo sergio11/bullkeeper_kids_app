@@ -1,6 +1,6 @@
 # Windows thumbnail db
 Thumbs.db
-
+app/release/
 # OSX files
 .DS_Store
 

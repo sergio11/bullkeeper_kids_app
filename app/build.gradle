@@ -24,6 +24,9 @@ android {
         testInstrumentationRunner config["test_runner"]
     }
 
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+
     packagingOptions {
         exclude 'LICENSE.txt'
         exclude 'META-INF/DEPENDENCIES'
@@ -61,7 +64,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "BASE_URL", '"http://192.168.0.17:8080/api/v1/"'
+            buildConfigField "String", "BASE_URL", '"http://192.168.0.18:8080/api/v1/"'
         }
     }
 

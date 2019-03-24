@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
- * App Rules DTO
+ * Contact Disable DTO
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class ContactDeletedDTO(
+data class ContactDisabledDTO(
 
         /**
          * Identity
          */
-        @JsonProperty("id")
+        @JsonProperty("kid")
         val kid: String,
 
         /**
@@ -22,8 +22,14 @@ data class ContactDeletedDTO(
         val terminal: String,
 
         /**
-         * Contact Id
+         * Contact
          */
-        @JsonProperty("contact_id")
-        val contactId: String
+        @JsonProperty("contact")
+        val contact: String,
+
+        /**
+         * Local Id
+         */
+        @JsonProperty("local_id")
+        val localId: String
 )

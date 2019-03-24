@@ -20,9 +20,7 @@ import android.app.PendingIntent
 import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageManager
 import android.graphics.PixelFormat
-import android.graphics.PixelFormat.RGBA_8888
 import android.location.Location
-import android.net.Uri
 import android.os.*
 import android.provider.ContactsContract
 import android.provider.Settings
@@ -30,7 +28,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.view.WindowManager
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
@@ -1880,13 +1877,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
-     * Contact Deleted Event Handler
-     * @param contactDeletedDTO
+     * Contact Disabled Event Handler
+     * @param contactDisabledDTO
      */
-    private fun contactDeletedEventHandler(contactDeletedDTO: ContactDeletedDTO){
-        Timber.d("SSE: Contact Deleted Event Handler")
+    private fun contactDisabledEventHandler(contactDisabledDTO: ContactDisabledDTO){
+        Timber.d("SSE: Contact Disabled Event Handler")
         deleteContactInteract(DeleteContactInteract.Params(
-                contactId = contactDeletedDTO.contactId
+                contactId = contactDisabledDTO.localId
         )){
             it.either(fun(_: Failure){
                 Timber.d("Contact Deleted Failed")
@@ -2141,10 +2138,10 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
                         }
 
-                        // Delete Contact Event
-                        ServerEventTypeEnum.DELETE_CONTACT_EVENT -> {
-                            contactDeletedEventHandler(objectMapper.readValue(eventMessage,
-                                    ContactDeletedDTO::class.java))
+                        // Contact Disabled Event
+                        ServerEventTypeEnum.CONTACT_DISABLED_EVENT -> {
+                            contactDisabledEventHandler(objectMapper.readValue(eventMessage,
+                                    ContactDisabledDTO::class.java))
                         }
 
                         // Terminal Phone Calls Status Changed
