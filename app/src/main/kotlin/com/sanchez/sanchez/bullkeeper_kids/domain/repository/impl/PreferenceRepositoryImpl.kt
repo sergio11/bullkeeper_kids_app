@@ -12,6 +12,7 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl
     @Inject constructor(context: Context): IPreferenceRepository {
 
+
     /**
      * Preferences
      */
@@ -489,5 +490,21 @@ class PreferenceRepositoryImpl
     override fun setAppsOverlayEnabled(isEnabled: Boolean) {
         mPref.edit().putBoolean(IPreferenceRepository.PREF_APPS_OVERLAY_ENABLED,
                 isEnabled).apply()
+    }
+
+    /**
+     * Is Conversation Message Notification Enabled
+     */
+    override fun isConversationMessageOverlayNotificationEnabled(): Boolean {
+        return mPref.getBoolean(IPreferenceRepository.PREF_ENABLE_CONVERSATION_MESSAGE_OVERLAY_NOTIFICATION,
+                IPreferenceRepository.ENABLE_CONVERSATION_MESSAGE_OVERLAY_NOTIFICATION_DEFAULT_VALUE)
+    }
+
+    /**
+     * Conversation Message Overlay Notification Enabled
+     */
+    override fun setConversationMessageOverlayNotificationEnabled(overlayNotificationEnabled: Boolean) {
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_ENABLE_CONVERSATION_MESSAGE_OVERLAY_NOTIFICATION,
+                overlayNotificationEnabled).apply()
     }
 }

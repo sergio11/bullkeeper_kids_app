@@ -43,6 +43,7 @@
 
     <!-- Accept -->
     <string name="accept">I understood</string>
+    <string name="show_detail">Show Detail</string>
 
     <!-- App Tutorial -->
 
@@ -308,6 +309,8 @@
     <string name="error_deleting_messages">Error deleting messages</string>
 
     <string name="new_message_saved_notification_title">%s sent you a message</string>
+
+    <string name="conversation_new_message_title" formatted="false">%s has sent you a new message</string>
 
     <string name="conversation_was_deleted_dialog">The conversation was deleted</string>
     <string name="all_messages_was_deleted_dialog">All messages was deleted</string>

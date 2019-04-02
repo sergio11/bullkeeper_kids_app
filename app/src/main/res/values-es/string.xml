@@ -36,6 +36,7 @@
     <string name="password_hint">Contraseña</string>
     <!-- Accept -->
     <string name="accept">Entendido</string>
+    <string name="show_detail">Ver Detalle</string>
     <!-- App Tutorial -->
     <!-- First Page -->
     <string name="first_page_title">Bienvenido a BullKeeper Kids</string>
@@ -244,6 +245,8 @@
     <string name="delete_list_menu_item">Borrar</string>
     <string name="snackbar_undo_action">DESHACER</string>
     <string name="conversation_was_deleted">La conversación fue eliminada</string>
+    <string name="conversation_new_message_title" formatted="false">%s te ha enviado un nuevo mensaje</string>
+
     <!-- Conversation List -->
     <string name="no_conversation_found">No se encontraron conversaciones</string>
     <string name="error_loading_conversation">Error al cargar la conversación</string>

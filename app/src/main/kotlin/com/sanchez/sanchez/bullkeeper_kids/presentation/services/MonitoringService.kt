@@ -26,9 +26,8 @@ import android.provider.ContactsContract
 import android.provider.Settings
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.WindowManager
+import android.widget.Button
+import android.widget.TextView
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
@@ -76,6 +75,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreenActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.SettingsLockScreenActivity.Companion.UNLOCK_SETTINGS_SCREEN
+import com.sanchez.sanchez.bullkeeper_kids.services.IAppOverlayService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.LocalTime
@@ -202,7 +202,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var localNotificationService: ILocalNotificationService
 
-
+    /**
+     * App Overlay Service
+     */
+    @Inject
+    internal lateinit var appOverlayService: IAppOverlayService
 
     /**
      * Usage Stats Service
@@ -511,57 +515,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         // Start Data Synchronization
                         startDataSynchronization()
                 }
-
-
-        try {
-
-            val mWindowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-
-            val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-            val mView = inflater.inflate(R.layout.test_service, null)
-
-
-            val params: WindowManager.LayoutParams
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                params = WindowManager.LayoutParams(
-                        WindowManager.LayoutParams.WRAP_CONTENT,
-                        WindowManager.LayoutParams.WRAP_CONTENT,
-                        WindowManager.LayoutParams.TYPE_PHONE,
-                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                                or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                                or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                                or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                        PixelFormat.TRANSLUCENT)
-
-                params.gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP
-                params.x = 0
-                params.y = 100
-
-            } else {
-                params = WindowManager.LayoutParams(
-                        WindowManager.LayoutParams.WRAP_CONTENT,
-                        WindowManager.LayoutParams.WRAP_CONTENT,
-                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                                or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                                or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                                or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                        PixelFormat.TRANSLUCENT)
-
-
-                params.gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP
-                params.x = 0
-                params.y = 100
-
-            }
-
-            mWindowManager.addView(mView, params)
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            Timber.d("Error Window Manager")
-        }
-
     }
 
     /**
@@ -1806,6 +1759,32 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             putSerializable(ConversationMessageListActivity.MESSAGE_SAVED_ARG, messageSavedDTO)
                         })
                     })
+
+            if (preferenceRepository.isConversationMessageOverlayNotificationEnabled()) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && appOverlayService.canDrawOverlays()) {
+                    val newMessageLayoutView = appOverlayService.create(R.layout.new_conversation_message_app_overlay_layout)
+
+                    if (newMessageLayoutView != null) {
+
+                        val newMessageTitleView = newMessageLayoutView.findViewById<TextView>(R.id.newMessageText)
+                        if (newMessageTitleView != null)
+                            newMessageTitleView.text = String.format(Locale.getDefault(), getString(R.string.conversation_new_message_title),
+                                    messageSavedDTO.from.firstName)
+
+                        val showConversationButton = newMessageLayoutView.findViewById<Button>(R.id.showConversation)
+                        showConversationButton?.setOnClickListener {
+                            appOverlayService.hide(newMessageLayoutView)
+                            startActivity(ConversationMessageListActivity.callingIntent(this,
+                                    messageSavedDTO.conversation))
+                        }
+
+                        appOverlayService.show(newMessageLayoutView)
+                    }
+                }
+
+            }
+
         }
 
 
