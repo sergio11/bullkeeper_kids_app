@@ -208,10 +208,8 @@ class AndroidApplication : Application(){
      * Initialize Stetho
      */
     private fun initializeStetho() {
-        if(BuildConfig.DEBUG) Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                        .build())
+        if(BuildConfig.DEBUG)
+                Stetho.initializeWithDefaults(this)
     }
 
     /**

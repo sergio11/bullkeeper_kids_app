@@ -140,6 +140,7 @@
     <!-- Second Page -->
     <string name="link_terminal_second_page_title">Seleccione el niño al que desea vincular este dispositivo</string>
     <string name="link_terminal_second_page_description">Toda la información del dispositivo estará vinculada al niño seleccionado.</string>
+    <string name="link_terminal_second_page_error_permissions" formatted="false">No tienes suficientes permisos para vincular el dispositivo móvil a %s.</string>
     <string name="child_full_name_detail" formatted="false">%s %s (%d años)</string>
     <string name="child_has_terminals_linked" formatted="false">tiene %d dispositivos vinculados</string>
     <string name="child_has_not_terminals_linked">No hay dispositivos vinculados</string>
