@@ -442,7 +442,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         /**
          * Get Notification
          */
-        return localNotificationService.getNotification(getString(R.string.monitoring_service_notification_title),
+        return localNotificationService.getNotification(ILocalNotificationService.NotificationTypeEnum.IMPORTANT, getString(R.string.monitoring_service_notification_title),
                 getString(R.string.monitoring_service_notification_description), pendingIntent)
     }
 
@@ -1788,7 +1788,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
         if(preferenceRepository.getPrefKidIdentity() == messageSavedDTO.to.identity) {
 
-            val pendingIntent = PendingIntent.getService(
+            val pendingIntent = PendingIntent.getActivity(
                     this,
                     0,
                     ConversationMessageListActivity.callingIntent(this, messageSavedDTO.conversation),
@@ -1796,7 +1796,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
             val notificationId = 3435
 
-            localNotificationService.sendNotification(notificationId, String.format(
+            localNotificationService.sendNotification(ILocalNotificationService.NotificationTypeEnum.NORMAL, notificationId, String.format(
                     getString(R.string.new_message_saved_notification_title), messageSavedDTO.from.firstName),
                     messageSavedDTO.text, pendingIntent)
 

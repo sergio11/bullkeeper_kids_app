@@ -10,75 +10,88 @@ interface ILocalNotificationService {
 
     /**
      * Get Notification
+     * @param type
      * @param contentTitle
      * @param contentText
      */
-    fun getNotification(contentTitle: String, contentText: String): Notification
+    fun getNotification(type: NotificationTypeEnum, contentTitle: String, contentText: String): Notification
 
     /**
      * Get Notification
+     * @param type
      * @param contentTitle
      * @param contentText
      * @param channelId
      */
-    fun getNotification(contentTitle: String, contentText: String, channelId: String?): Notification
+    fun getNotification(type: NotificationTypeEnum, contentTitle: String, contentText: String, channelId: String?): Notification
 
     /**
      * Get Notification
+     * @param type
      * @param contentTitle
      * @param contentText
      * @param pendingIntent
      */
-    fun getNotification(contentTitle: String, contentText: String, pendingIntent: PendingIntent?): Notification
+    fun getNotification(type: NotificationTypeEnum, contentTitle: String, contentText: String, pendingIntent: PendingIntent?): Notification
 
     /**
      * Get Notification
+     * @parma type
      * @param contentTitle
      * @param contentText
      * @param channelId
      * @param pendingIntent
      */
-    fun getNotification(contentTitle: String, contentText: String,
+    fun getNotification(type: NotificationTypeEnum, contentTitle: String, contentText: String,
                         channelId: String?, pendingIntent: PendingIntent?): Notification
 
 
     /**
      * Send Notification
+     * @param type
      * @param notificationId
      * @param contentTitle
      * @param contentText
      */
-    fun sendNotification(notificationId: Int, contentTitle: String, contentText: String)
+    fun sendNotification(type: NotificationTypeEnum, notificationId: Int, contentTitle: String, contentText: String)
 
     /**
      * Send Notification
+     * @param type
      * @param notificationId
      * @param contentTitle
      * @param contentText
      * @param channelId
      */
-    fun sendNotification(notificationId: Int, contentTitle: String, contentText: String, channelId: String?)
+    fun sendNotification(type: NotificationTypeEnum, notificationId: Int, contentTitle: String, contentText: String, channelId: String?)
 
     /**
      * Send Notification
+     * @param type
      * @param notificationId
      * @param contentTitle
      * @param contentText
      * @param pendingIntent
      */
-    fun sendNotification(notificationId: Int, contentTitle: String, contentText: String, pendingIntent: PendingIntent?)
+    fun sendNotification(type: NotificationTypeEnum, notificationId: Int, contentTitle: String, contentText: String, pendingIntent: PendingIntent?)
 
     /**
      * Send Notification
+     * @param type
      * @param notificationId
      * @param contentTitle
      * @param contentText
      * @param channelId
      * @param pendingIntent
      */
-    fun sendNotification(notificationId: Int, contentTitle: String, contentText: String,
+    fun sendNotification(type: NotificationTypeEnum, notificationId: Int, contentTitle: String, contentText: String,
                         channelId: String?, pendingIntent: PendingIntent?)
 
+
+
+    enum class NotificationTypeEnum {
+        IMPORTANT, NORMAL
+    }
 
 
 }

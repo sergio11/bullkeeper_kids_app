@@ -1,5 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -133,8 +134,10 @@ class ConversationMessageListActivity : BaseActivity(),
          */
         @JvmStatic
         fun callingIntent(context: Context, conversation: String): Intent
-            = Intent(context, ConversationMessageListActivity::class.java).apply {
+                = Intent(context, ConversationMessageListActivity::class.java).apply {
             putExtra(CONVERSATION_ID_ARG, conversation)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
 
@@ -144,6 +147,28 @@ class ConversationMessageListActivity : BaseActivity(),
         @JvmStatic
         fun callingIntent(context: Context, memberOne: String, memberTwo: String): Intent
                 = Intent(context, ConversationMessageListActivity::class.java).apply {
+            putExtra(MEMBER_ONE_ARG, memberOne)
+            putExtra(MEMBER_TWO_ARG, memberTwo)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+
+        /**
+         * Calling Intent
+         */
+        @JvmStatic
+        fun callingIntent(activity: Activity, conversation: String): Intent
+            = Intent(activity, ConversationMessageListActivity::class.java).apply {
+            putExtra(CONVERSATION_ID_ARG, conversation)
+        }
+
+
+        /**
+         * Calling Intent
+         */
+        @JvmStatic
+        fun callingIntent(activity: Activity, memberOne: String, memberTwo: String): Intent
+                = Intent(activity, ConversationMessageListActivity::class.java).apply {
             putExtra(MEMBER_ONE_ARG, memberOne)
             putExtra(MEMBER_TWO_ARG, memberTwo)
         }

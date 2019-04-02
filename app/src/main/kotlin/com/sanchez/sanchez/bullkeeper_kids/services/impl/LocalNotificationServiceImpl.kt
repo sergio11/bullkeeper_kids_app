@@ -5,7 +5,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.media.RingtoneManager
 import android.os.Build
+import android.os.Vibrator
 import android.support.v4.app.NotificationCompat
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
@@ -23,10 +25,15 @@ class LocalNotificationServiceImpl
         createNotificationChannel()
     }
 
+
+
     /**
      * Notification Manager
      */
     private var mNotificationManager: NotificationManager? = null
+
+    // Get default ringtone
+    private val alertSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
     /**
      * Create Notification Channel
@@ -57,39 +64,81 @@ class LocalNotificationServiceImpl
         /**
          * Build Notification
          */
-        return NotificationCompat.Builder(context)
+        val notificationBuilder =  NotificationCompat.Builder(context)
+                .setContentText(contentText)
+                .setContentTitle(contentTitle)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setSound(alertSound)
+                .setWhen(System.currentTimeMillis())
+
+        if (Build.VERSION.SDK_INT >= 21) notificationBuilder.setVibrate(LongArray(0))
+
+        return notificationBuilder
+
+    }
+
+    /**
+     * Build Important Notification
+     */
+    private fun buildImportantNotification(contentTitle: String,
+                                       contentText: String): NotificationCompat.Builder {
+        /**
+         * Build Notification
+         */
+        val notificationBuilder = NotificationCompat.Builder(context)
                 .setContentText(contentText)
                 .setContentTitle(contentTitle)
                 .setOngoing(true)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setSmallIcon(R.drawable.ic_stat_name)
+                .setSound(alertSound)
                 .setWhen(System.currentTimeMillis())
+
+        if (Build.VERSION.SDK_INT >= 21) notificationBuilder.setVibrate(LongArray(0))
+
+        return notificationBuilder
+    }
+
+
+    /**
+     * Vibrate
+     * @param milliseconds
+     */
+    private fun vibrate(milliseconds: Long) {
+        val vibratorService = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibratorService?.vibrate(milliseconds)
     }
 
     /**
      * Get Notification
      */
-    override fun getNotification(contentTitle: String,
-                                 contentText: String): Notification = getNotification(contentTitle, contentText,
+    override fun getNotification(type: ILocalNotificationService.NotificationTypeEnum, contentTitle: String,
+                                 contentText: String): Notification = getNotification(type, contentTitle, contentText,
             context.getString(R.string.default_notification_channel_id))
 
     /**
      * Get Notification
      */
-    override fun getNotification(contentTitle: String, contentText: String,
-                                 channelId: String?): Notification = getNotification(contentTitle, contentText, channelId, null)
+    override fun getNotification(type: ILocalNotificationService.NotificationTypeEnum, contentTitle: String, contentText: String,
+                                 channelId: String?): Notification = getNotification(type, contentTitle, contentText, channelId, null)
 
 
     /**
      * Get Notification
      */
-    override fun getNotification(contentTitle: String, contentText: String, pendingIntent: PendingIntent?): Notification
-        = getNotification(contentTitle, contentText, context.getString(R.string.default_notification_channel_id), pendingIntent)
+    override fun getNotification(type: ILocalNotificationService.NotificationTypeEnum, contentTitle: String, contentText: String, pendingIntent: PendingIntent?): Notification
+        = getNotification(type, contentTitle, contentText, context.getString(R.string.default_notification_channel_id), pendingIntent)
 
     /**
      * Get Notification
      */
-    override fun getNotification(contentTitle: String, contentText: String, channelId: String?, pendingIntent: PendingIntent?): Notification {
-        val notificationBuilder = buildBasicNotification(contentTitle, contentText)
+    override fun getNotification(type: ILocalNotificationService.NotificationTypeEnum, contentTitle: String, contentText: String, channelId: String?, pendingIntent: PendingIntent?): Notification {
+        val notificationBuilder = if(type == ILocalNotificationService.NotificationTypeEnum.IMPORTANT)
+            buildImportantNotification(contentTitle, contentText)
+        else
+            buildBasicNotification(contentTitle, contentText)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             if(!channelId.isNullOrEmpty())
                 notificationBuilder.setChannelId(channelId.orEmpty())
@@ -99,26 +148,21 @@ class LocalNotificationServiceImpl
     }
 
     /**
-     * Send Notification
-     * @param notificationId
-     * @param contentTitle
-     * @param contentText
+     *
      */
-    override fun sendNotification(notificationId: Int, contentTitle: String, contentText: String) {
+    override fun sendNotification(type: ILocalNotificationService.NotificationTypeEnum, notificationId: Int, contentTitle: String, contentText: String) {
+        vibrate(1000)
         mNotificationManager?.notify(notificationId,
-                getNotification(contentTitle, contentText))
+                getNotification(type, contentTitle, contentText))
     }
 
     /**
-     * Send Notification
-     * @param notificationId
-     * @param contentTitle
-     * @param contentText
-     * @param channelId
+     *
      */
-    override fun sendNotification(notificationId: Int, contentTitle: String, contentText: String, channelId: String?) {
+    override fun sendNotification(type: ILocalNotificationService.NotificationTypeEnum, notificationId: Int, contentTitle: String, contentText: String, channelId: String?) {
+        vibrate(1000)
         mNotificationManager?.notify(notificationId,
-                getNotification(contentTitle, contentText, channelId))
+                getNotification(type, contentTitle, contentText, channelId))
     }
 
     /**
@@ -128,9 +172,10 @@ class LocalNotificationServiceImpl
      * @param contentText
      * @param pendingIntent
      */
-    override fun sendNotification(notificationId: Int, contentTitle: String, contentText: String, pendingIntent: PendingIntent?) {
+    override fun sendNotification(type: ILocalNotificationService.NotificationTypeEnum, notificationId: Int, contentTitle: String, contentText: String, pendingIntent: PendingIntent?) {
+        vibrate(1000)
         mNotificationManager?.notify(notificationId,
-                getNotification(contentTitle, contentText, pendingIntent))
+                getNotification(type, contentTitle, contentText, pendingIntent))
     }
 
     /**
@@ -141,9 +186,10 @@ class LocalNotificationServiceImpl
      * @param channelId
      * @param pendingIntent
      */
-    override fun sendNotification(notificationId: Int, contentTitle: String, contentText: String, channelId: String?, pendingIntent: PendingIntent?) {
+    override fun sendNotification(type: ILocalNotificationService.NotificationTypeEnum, notificationId: Int, contentTitle: String, contentText: String, channelId: String?, pendingIntent: PendingIntent?) {
+        vibrate(1000)
         mNotificationManager?.notify(notificationId,
-                getNotification(contentTitle, contentText, channelId, pendingIntent))
+                getNotification(type, contentTitle, contentText, channelId, pendingIntent))
     }
 
 }
