@@ -148,8 +148,8 @@ class ConversationMessageListActivityFragment : BaseFragment(),
                 if(it.hasExtra(MESSAGE_SAVED_ARG)) {
                     val messageSavedDTO = it.getSerializableExtra(MESSAGE_SAVED_ARG) as MessageSavedDTO
 
-                    if(messageSavedDTO.to.identity.equals(currentUserId))
-                        mapToConversationMessage(
+                    if(messageSavedDTO.to.identity.equals(currentUserId)) {
+                        messagesAdapter.addToStart(mapToConversationMessage(
                                 messageSavedDTO.identity,
                                 messageSavedDTO.text,
                                 messageSavedDTO.createAt.ToDateTime(getString(R.string.date_time_format_2)),
@@ -157,9 +157,13 @@ class ConversationMessageListActivityFragment : BaseFragment(),
                                 String.format(Locale.getDefault(), "%s %s",
                                         messageSavedDTO.from.firstName ?: String.empty(),
                                         messageSavedDTO.from.lastName
-                                        ?: String.empty()),
+                                                ?: String.empty()),
                                 messageSavedDTO.from.profileImage ?: String.empty()
-                        )
+                        ), true)
+
+                        viewModel.setMessagesAsViewed(messageSavedDTO.conversation,
+                                Arrays.asList(messageSavedDTO.identity))
+                    }
 
 
                 }
