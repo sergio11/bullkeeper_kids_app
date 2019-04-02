@@ -132,6 +132,9 @@ interface IPreferenceRepository: IAuthTokenAware {
         const val PREF_APPS_OVERLAY_ENABLED = "apps_overlay"
         const val APPS_OVERLAY_ENABLED_DEFAULT_VALUE = false
 
+        // Enable Conversation Message Overlay Notification
+        const val PREF_ENABLE_CONVERSATION_MESSAGE_OVERLAY_NOTIFICATION = "enable_conversation_message_overlay_notification"
+        const val ENABLE_CONVERSATION_MESSAGE_OVERLAY_NOTIFICATION_DEFAULT_VALUE = true
 
     }
 
@@ -483,5 +486,19 @@ interface IPreferenceRepository: IAuthTokenAware {
      * @param is Enabled
      */
     fun setAppsOverlayEnabled(isEnabled: Boolean)
+
+
+    /**
+     * Is Conversation Overlay Notification Enabled
+     * @return
+     */
+    fun isConversationMessageOverlayNotificationEnabled(): Boolean
+
+    /**
+     * Set Conversation Message Overlay Notification Enabled
+     * @param overlayNotificationEnabled
+     */
+    fun setConversationMessageOverlayNotificationEnabled(overlayNotificationEnabled: Boolean)
+
 
 }

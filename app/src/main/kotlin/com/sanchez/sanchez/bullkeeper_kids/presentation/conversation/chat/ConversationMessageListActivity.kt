@@ -15,6 +15,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseActivity
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.BaseFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import kotlinx.android.synthetic.main.app_translucent_toolbar_return.*
 import javax.inject.Inject
 
@@ -58,7 +59,11 @@ class ConversationMessageListActivity : BaseActivity(),
     @Inject
     internal lateinit var navigator: INavigator
 
-
+    /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
 
     /**
      * On Create
@@ -75,6 +80,22 @@ class ConversationMessageListActivity : BaseActivity(),
             navigator.showHome(this)
         }
 
+    }
+
+    /**
+     *
+    */
+    override fun onResume() {
+        super.onResume()
+        preferenceRepository.setConversationMessageOverlayNotificationEnabled(false)
+    }
+
+    /**
+     *
+     */
+    override fun onStop() {
+        super.onStop()
+        preferenceRepository.setConversationMessageOverlayNotificationEnabled(true)
     }
 
     /**
