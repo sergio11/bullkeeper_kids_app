@@ -61,7 +61,7 @@ class LocalNotificationServiceImpl
                 .setContentText(contentText)
                 .setContentTitle(contentTitle)
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_stat_name)
                 .setWhen(System.currentTimeMillis())
     }
 

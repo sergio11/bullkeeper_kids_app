@@ -550,12 +550,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         PixelFormat.TRANSLUCENT)
 
 
-                params.gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP;
+                params.gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP
                 params.x = 0
                 params.y = 100
 
             }
-
 
             mWindowManager.addView(mView, params)
         } catch (ex: Exception) {

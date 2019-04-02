@@ -222,7 +222,7 @@
     <string name="phone_calls_not_allowed">Este dispostivo no puede realizar ni recibir llamadas</string>
     <!-- App Disabled Screen -->
     <string name="app_disabled_uninstall_app">Desinstalar</string>
-    <string name="app_disabled_screen_content_screen" formatted="false">La aplicación %s ha sido deshabilitada, no puede ser usada bajo ninguna circunstancia. Por favor, complete el proceso de eliminación.</string>
+    <string name="app_disabled_screen_content_screen" formatted="false">La aplicación %s ha sido deshabilitada, no puede ser usada bajo ninguna circunstancia. Por favor, complete el proceso de desinstalación.</string>
     <string name="fun_time_avaliable_title">Tiempo de diversión disponible</string>
     <string name="fun_time_not_avaliable_title">Tiempo de diversión no disponible</string>
     <string name="fun_time_avaliable_description">Gestiona tus momentos de diversión como quieras.</string>
