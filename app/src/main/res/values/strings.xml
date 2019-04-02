@@ -163,7 +163,7 @@
     <!-- Second Page -->
     <string name="link_terminal_second_page_title">Select the child to whom you want to link this device</string>
     <string name="link_terminal_second_page_description">All device information will be linked to the selected child</string>
-
+    <string name="link_terminal_second_page_error_permissions" formatted="false">You do not have enough permissions to link the mobile device to %s.</string>
     <string name="child_full_name_detail" formatted="false">%s %s (%d years old)</string>
     <string name="child_has_terminals_linked" formatted="false">has %d devices linked</string>
     <string name="child_has_not_terminals_linked">No devices linked</string>

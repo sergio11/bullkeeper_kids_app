@@ -16,10 +16,12 @@ import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.LinkDeviceTutorialComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.empty
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.SupportRecyclerViewAdapter
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.adapter.decoration.ItemOffsetDecoration
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.GuardianRolesEnum
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.children.GetSelfChildrenInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.SupervisedChildrenEntity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.adapter.ChildrenAdapter
@@ -28,6 +30,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.second_link_terminal_page_fragment_layout.*
 import timber.log.Timber
 import java.lang.IllegalStateException
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -242,8 +245,16 @@ class SecondLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialComp
      */
     override fun onItemClick(item: SupervisedChildrenEntity) {
         Preconditions.checkNotNull(item, "Item can not be null")
-        linkDeviceTutorialHandler.setCurrentKidEntity(item.kid)
-        linkDeviceTutorialHandler.releaseFocus()
+
+        if(item.role?.equals(GuardianRolesEnum.ADMIN) == true) {
+            linkDeviceTutorialHandler.setCurrentKidEntity(item.kid)
+            linkDeviceTutorialHandler.releaseFocus()
+        } else {
+            linkDeviceTutorialHandler.showNoticeDialog(String.format(Locale.getDefault(),
+                    getString(R.string.link_terminal_second_page_error_permissions),
+                    item.kid?.firstName ?: String.empty()))
+        }
+
     }
 
 }
