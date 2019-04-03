@@ -172,7 +172,7 @@
     <string name="synchronizing_contacts">Sincronización de contactos …</string>
     <string name="successfully_synchronized_contacts" formatted="false">
         Un total de %d contactos fueron sincronizados exitosamente</string>
-    <string name="retry_synchronizing">Procesar de nuevo</string>
+    <string name="retry_synchronizing">Reintentar</string>
     <string name="synchronization_completed">La sincronización se ha completado con éxito.</string>
     <string name="synchronized_later_time">La información del terminal se sincronizará posteriormente.</string>
     <!-- Fifth Page -->

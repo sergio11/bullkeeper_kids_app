@@ -19,7 +19,6 @@ import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import android.app.PendingIntent
 import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageManager
-import android.graphics.PixelFormat
 import android.location.Location
 import android.os.*
 import android.provider.ContactsContract
