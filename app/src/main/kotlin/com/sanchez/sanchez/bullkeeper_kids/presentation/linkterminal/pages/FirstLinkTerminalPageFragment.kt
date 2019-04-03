@@ -11,9 +11,11 @@ import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.LinkDeviceTutorialComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
+import com.sanchez.sanchez.bullkeeper_kids.core.permission.IPermissionManager
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportPageFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.terminal.GetTerminalDetailInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.TerminalEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.ILinkDeviceTutorialHandler
 import kotlinx.android.synthetic.main.first_link_terminal_page_fragment_layout.*
 import timber.log.Timber
@@ -32,6 +34,9 @@ class FirstLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
 
     @Inject
     lateinit var firstLinkTerminalViewModel: FirstLinkTerminalViewModel
+
+    @Inject
+    lateinit var preferenceRepository: IPreferenceRepository
 
     /**
      * Link Device Tutorial Handler
@@ -90,9 +95,12 @@ class FirstLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                 titleText.text = getString(R.string.link_terminal_first_page_title)
                 contentText.visibility = VISIBLE
                 linkDeviceTutorialHandler.hideProgressDialog()
-            } else if (failure is Failure.UnauthorizedRequestError)
+            } else if (failure is Failure.UnauthorizedRequestError) {
+                preferenceRepository.setPrefKidIdentity(IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE)
+                preferenceRepository.setPrefTerminalIdentity(IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)
                 linkDeviceTutorialHandler.goToLogin()
-            else {
+
+            } else {
                 linkDeviceTutorialHandler.goToHome()
             }
 
