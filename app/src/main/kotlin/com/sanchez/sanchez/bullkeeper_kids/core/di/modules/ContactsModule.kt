@@ -5,7 +5,7 @@ import android.os.Handler
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IContactsService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IContactRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.ContactRepositoryImpl
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.DeleteContactInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.DeleteDisableContactInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -66,7 +66,9 @@ class ContactsModule {
     @Singleton
     fun provideDeleteContactInteract(
             context: Context,
+            contactsService: IContactsService,
+            preferenceRepository: IPreferenceRepository,
             retrofit: Retrofit
-    ) = DeleteContactInteract(context, retrofit)
+    ) = DeleteDisableContactInteract(context, contactsService, preferenceRepository, retrofit)
 
 }

@@ -15,6 +15,7 @@ import retrofit2.http.*
  * DELETE /api/v1/children/{id}/terminal/{terminal}/contacts/{contact} DELETE_SINGLE_CONTACT
  * GET /api/v1/children/{id}/terminal/{terminal}/contacts/{contact} GET_CONTACT_DETAIL
  * POST /api/v1/children/{id}/terminal/{terminal}/contacts/delete DELETE_CONTACTS_FROM_TERMINAL
+ * GET /api/v1/children/{kid}/terminal/{terminal}/contacts/disable GET_LIST_OF_DISABLED_CONTACTS_IN_THE_TERMINAL
  */
 interface IContactsService {
 
@@ -84,5 +85,18 @@ interface IContactsService {
             @Path("terminal") terminal: String,
             @Body contactsList: List<String>
     ): Deferred<APIResponse<String>>
+
+
+    /**
+     * Get List of Disabled Contacts In The Terminal
+     * @param kid
+     * @param terminal
+     */
+    @GET("children/{kid}/terminal/{terminal}/contacts/disable")
+    fun getListOfDisabledContactsInTheTerminal(
+            @Path("kid")  kid: String,
+            @Path("terminal") terminal: String
+    ) : Deferred<APIResponse<List<ContactDTO>>>
+
 
 }
