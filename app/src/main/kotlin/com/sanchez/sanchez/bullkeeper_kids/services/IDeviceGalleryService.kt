@@ -1,6 +1,7 @@
 package com.sanchez.sanchez.bullkeeper_kids.services
 
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.GalleryImageEntity
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.GalleryImageEntity
+
 
 /**
  * Device Gallery Service
