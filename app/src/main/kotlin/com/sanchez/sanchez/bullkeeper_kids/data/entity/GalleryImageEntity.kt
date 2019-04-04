@@ -27,5 +27,11 @@ open class GalleryImageEntity(
         // Orientation
         var orientation: Int? = 0,
         // Size
-        var size: Int? = 0
+        var size: Int? = 0,
+        // Sync
+        var sync: Int = 0,
+        // Server Id
+        var serverId: String? = "",
+        // Remove
+        var remove: Int = 0
 ): RealmObject(), Serializable

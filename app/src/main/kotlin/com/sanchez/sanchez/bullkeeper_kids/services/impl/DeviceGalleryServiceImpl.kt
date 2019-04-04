@@ -7,11 +7,11 @@ import com.sanchez.sanchez.bullkeeper_kids.services.IDeviceGalleryService
 import javax.inject.Inject
 import android.provider.MediaStore
 import android.provider.MediaStore.MediaColumns
-import com.sanchez.sanchez.bullkeeper_kids.domain.models.GalleryImageEntity
 import timber.log.Timber
 import java.io.File
 import android.media.MediaScannerConnection
 import android.os.Environment
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.GalleryImageEntity
 
 
 /**
