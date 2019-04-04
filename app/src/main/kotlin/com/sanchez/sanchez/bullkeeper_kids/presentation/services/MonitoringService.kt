@@ -45,7 +45,7 @@ import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.*
 import com.sanchez.sanchez.bullkeeper_kids.data.sse.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.DeleteContactInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.DeleteDisableContactInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.funtime.SyncFunTimeInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery.SynchronizeGalleryInteract
@@ -361,7 +361,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Delete Contact Interact
      */
     @Inject
-    internal lateinit var deleteContactInteract: DeleteContactInteract
+    internal lateinit var deleteDisableContactInteract: DeleteDisableContactInteract
 
 
     /**
@@ -429,8 +429,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
     // Last Connectivity
     private var lastConnectivity: Connectivity? = null
-
-
 
 
     /**
@@ -642,6 +640,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 syncGeofences()
                 syncFunTime()
                 syncGalleryImages()
+                deleteDisableContacts()
 
             })
         }
@@ -1259,6 +1258,21 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Delete Disable Contacts
+     */
+    private fun deleteDisableContacts(contactIds: List<String>? = null){
+        deleteDisableContactInteract(DeleteDisableContactInteract.Params(
+                contactIds = contactIds
+        )){
+            it.either(fun(_: Failure){
+                Timber.d("Contact Deleted Failed")
+            }, fun(_: Unit) {
+                Timber.d("Contact Deleted Success")
+            })
+        }
+    }
+
+    /**
      * Unlink Terminal
      */
     private fun unlinkTerminal(){
@@ -1859,15 +1873,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun contactDisabledEventHandler(contactDisabledDTO: ContactDisabledDTO){
         Timber.d("SSE: Contact Disabled Event Handler")
-        deleteContactInteract(DeleteContactInteract.Params(
-                contactId = contactDisabledDTO.localId
-        )){
-            it.either(fun(_: Failure){
-                Timber.d("Contact Deleted Failed")
-            }, fun(_: Unit) {
-                Timber.d("Contact Deleted Success")
-            })
-        }
+        deleteDisableContacts(Arrays.asList(contactDisabledDTO.localId))
     }
 
     /**
