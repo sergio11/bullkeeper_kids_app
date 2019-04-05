@@ -10,7 +10,7 @@ interface ISystemPackageHelper {
     /**
      * Get Packages
      */
-    fun getPackages(): ArrayList<SystemPackageInfo>
+    fun getPackages(): List<SystemPackageInfo>
 
     /**
      * Get Pacakage Info
@@ -21,6 +21,6 @@ interface ISystemPackageHelper {
     /**
      * Get Installed Apps
      */
-    fun getInstalledApps(getSysPackages: Boolean, discardAppPackage: Boolean = true): ArrayList<SystemPackageInfo>
+    fun getInstalledApps(getSysPackages: Boolean, discardAppPackage: Boolean = true): List<SystemPackageInfo>
 
 }
