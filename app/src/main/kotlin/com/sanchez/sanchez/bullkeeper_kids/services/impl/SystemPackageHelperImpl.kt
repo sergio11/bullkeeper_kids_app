@@ -11,8 +11,8 @@ import java.io.ByteArrayOutputStream
 import android.graphics.drawable.BitmapDrawable
 import android.util.Base64
 import android.graphics.drawable.Drawable
-import timber.log.Timber
 import android.content.pm.ApplicationInfo
+import com.sanchez.sanchez.bullkeeper_kids.core.extension.empty
 
 /**
  * System Package Helper Impl
@@ -25,41 +25,31 @@ class SystemPackageHelperImpl
     /**
      * Get Installed Apps
      */
-    override fun getInstalledApps(getSysPackages: Boolean, discardAppPackage: Boolean): ArrayList<SystemPackageInfo> {
-        val res = ArrayList<SystemPackageInfo>()
-        val apps = pm.getInstalledPackages(0)
-        for(app in apps) {
+    override fun getInstalledApps(getSysPackages: Boolean, discardAppPackage: Boolean): List<SystemPackageInfo>
+     = pm.getInstalledPackages(0).filter {
+        val applicationInfo = it.applicationInfo
+        val isSystemApp = applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+        pm.getLaunchIntentForPackage(it.packageName) != null &&
+                !((isSystemApp && !getSysPackages) ||
+                        (discardAppPackage && it.packageName == context.packageName) ||
+                        it.packageName.toLowerCase().contains("launcher") ||
+                        it.packageName.toLowerCase().contains("bullkeeper") ||
+                        it.packageName.toLowerCase() =="com.android.settings")
 
-            val applicationInfo = app.applicationInfo
-            val isSystemApp = applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
-
-            if((isSystemApp && !getSysPackages) ||
-                    (discardAppPackage && app.packageName == context.packageName) ||
-                    app.packageName.toLowerCase().contains("launcher") ||
-                    app.packageName.toLowerCase().contains("bullkeeper"))
-                continue
-
-            val newInfo = SystemPackageInfo()
-            newInfo.appName = app.applicationInfo.loadLabel(pm).toString()
-            newInfo.packageName = app.packageName
-            newInfo.versionName = app.versionName
-            newInfo.versionCode = app.versionCode.toString()
-            try {
-                newInfo.icon = getPackageIconAsEncodedString(app)
-            } catch (e: Exception) {
-                Timber.e(e.message)
-            }
-            newInfo.targetSdkVersion = app.applicationInfo.targetSdkVersion
-            app.permissions?.let {
-                newInfo.permissions = it.joinToString(separator = ",") { it.name }
-            }
-
-            res.add(newInfo)
-
-
+    }.map {
+        SystemPackageInfo().apply {
+            appName = it.applicationInfo.loadLabel(pm).toString()
+            packageName = it.packageName
+            firstInstallTime  = it.firstInstallTime
+            lastUpdateTime = it.lastUpdateTime
+            versionName = it.versionName
+            versionCode = it.versionCode.toString()
+            icon = getPackageIconAsEncodedString(it)
+            targetSdkVersion = it.applicationInfo.targetSdkVersion
+            permissions = it.permissions?.joinToString(separator = ",") { it.name } ?: String.empty()
         }
-        return res
-    }
+    }.toList()
+
 
     /**
      * Drawable To Bitmap
@@ -98,8 +88,8 @@ class SystemPackageHelperImpl
     /**
      * Get Packages
      */
-    override fun getPackages(): ArrayList<SystemPackageInfo> {
-        val apps = getInstalledApps(false) /* false = no system packages */
+    override fun getPackages(): List<SystemPackageInfo> {
+        val apps = getInstalledApps(true) /* false = no system packages */
         val max = apps.size
         for (i in 0 until max) {
             apps[i].prettyPrint()
