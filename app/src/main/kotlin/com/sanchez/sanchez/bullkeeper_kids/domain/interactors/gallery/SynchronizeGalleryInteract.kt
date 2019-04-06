@@ -1,11 +1,14 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery
 
 import android.content.Context
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fernandocejas.arrow.checks.Preconditions
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.empty
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.GalleryImageEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.AddDevicePhotoDTO
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.DevicePhotoDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IDevicePhotosService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGalleryRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -28,8 +31,13 @@ class SynchronizeGalleryInteract
             private val galleryRepository: IGalleryRepository,
             private val devicePhotosService: IDevicePhotosService,
             private val preferenceRepository: IPreferenceRepository,
+            private val objectMapper: ObjectMapper,
             retrofit: Retrofit): UseCase<Int, UseCase.None>(retrofit) {
 
+
+    private val MAX_IMAGES_TO_UPLOAD = 15
+    private val DEVICE_PHOTO_INFO_KEY = "devicePhoto"
+    private val DEVICE_PHOTO_IMAGE_KEY = "devicePhotoImage"
 
     val TAG = "SYNC_GALLERY"
 
@@ -145,63 +153,56 @@ class SynchronizeGalleryInteract
         Preconditions.checkNotNull(photosToUpload, "Photos To Upload can not be null")
         Preconditions.checkState(!photosToUpload.isEmpty(), "Photos To Upload can not be empty")
 
-        val kid = preferenceRepository.getPrefKidIdentity()
-        val terminal = preferenceRepository.getPrefTerminalIdentity()
+        return photosToUpload.shuffled().take(MAX_IMAGES_TO_UPLOAD).map { AddDevicePhotoDTO(
+                displayName = it.displayName,
+                path = it.path,
+                dateAdded = it.dateAdded,
+                dateModified = it.dateModified,
+                dateTaken = it.dateTaken,
+                height = it.height,
+                width = it.width,
+                orientation = it.orientation,
+                size = it.size,
+                localId = it.id.toString(),
+                kid = preferenceRepository.getPrefKidIdentity(),
+                terminal = preferenceRepository.getPrefTerminalIdentity()
+        ) }.filter {
+            !it.kid.isNullOrEmpty() && !it.terminal.isNullOrEmpty()
+        }.filter {
+            val galleryImageFile = File(it.path)
+            galleryImageFile.exists() && galleryImageFile.canRead()
+        }.mapNotNull { devicePhoto ->
 
-        val devicePhotosUploaded = arrayListOf<GalleryImageEntity>()
+            var response: APIResponse<DevicePhotoDTO>? = null
 
-        photosToUpload.forEach { galleryImageEntity ->
+            try {
 
-            val galleryImageFile = File(galleryImageEntity.path)
-
-            if(galleryImageFile.exists() && galleryImageFile.canRead()) {
-
-                val requestBody = MultipartBody.Builder().apply {
-                    setType(MultipartBody.FORM)
-                    addFormDataPart("display_name", galleryImageEntity.displayName ?: String.empty())
-                    addFormDataPart("path", galleryImageEntity.path ?: String.empty())
-                    addFormDataPart("date_added", galleryImageEntity.dateAdded?.toString() ?: String.empty())
-                    addFormDataPart("date_modified", galleryImageEntity.dateModified?.toString() ?: String.empty())
-                    addFormDataPart("date_taken", galleryImageEntity.dateTaken?.toString() ?: String.empty())
-                    addFormDataPart("height", galleryImageEntity.height?.toString() ?: String.empty())
-                    addFormDataPart("width", galleryImageEntity.width?.toString() ?: String.empty())
-                    addFormDataPart("orientation", galleryImageEntity.orientation?.toString() ?: String.empty())
-                    addFormDataPart("size", galleryImageEntity.size?.toString() ?: String.empty())
-                    addFormDataPart("local_id", galleryImageEntity.id?.toString() ?: String.empty())
-                    addFormDataPart("kid", kid)
-                    addFormDataPart("terminal", terminal)
-                    addFormDataPart("image", galleryImageEntity.displayName ?: String.empty(),
-                            RequestBody.create(MediaType.parse("multipart/form-data"), galleryImageFile))
-                }.build()
-
-                val response = devicePhotosService
-                        .saveDevicePhoto(kid, terminal, requestBody)
+                response = devicePhotosService
+                        .saveDevicePhoto(devicePhoto.kid!!, devicePhoto.terminal!!, MultipartBody.Builder().apply {
+                            setType(MultipartBody.FORM)
+                            addFormDataPart(DEVICE_PHOTO_INFO_KEY, devicePhoto.displayName, RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
+                                    objectMapper.writeValueAsString(devicePhoto)))
+                            addFormDataPart(DEVICE_PHOTO_IMAGE_KEY, devicePhoto.displayName
+                                    ?: String.empty(),
+                                    RequestBody.create(MediaType.parse("multipart/form-data"), File(devicePhoto.path)))
+                        }.build())
                         .await()
 
-                response.httpStatus?.let {
-                    if(it == "OK") {
-                        response.data?.let {devicePhotoDTO ->
-                            if(galleryImageEntity.id.toString() == devicePhotoDTO.localId) {
-                                galleryImageEntity.serverId = devicePhotoDTO.identity
-                                galleryImageEntity.sync = 1
-                                galleryImageEntity.remove = 0
-                            }
-                        }
-                        // Save Sync Photos
-                        galleryRepository.save(galleryImageEntity)
-                        // Add To List
-                        devicePhotosUploaded.add(galleryImageEntity)
-                    } else {
-                        Timber.d("No Success Sync Photos")
-                    }
-
-                }
-
+            } catch(ex: Exception){
+                Timber.d("Fail save gallery image")
             }
 
-        }
+            response
 
-        return devicePhotosUploaded.size
+        }.filter { it.httpStatus == "OK" }.mapNotNull { it.data }.mapNotNull {devicePhotoDTO ->
+            galleryRepository.findById(devicePhotoDTO.localId)?.also {
+                it.serverId = devicePhotoDTO.identity
+                it.sync = 1
+                it.remove = 0
+                galleryRepository.save(it)
+                Timber.d("%s - Gallery Image %s was sync successfully", TAG, it.id?.toString())
+            }
+        }.size
 
     }
 

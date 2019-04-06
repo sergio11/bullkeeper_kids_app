@@ -86,7 +86,7 @@ class DeviceGalleryServiceImpl
 
         while (cursor.moveToNext()) {
             listOfAllImages.add(GalleryImageEntity(
-                    id = cursor.getLong(columnIndexId),
+                    id = cursor.getString(columnIndexId),
                     path = cursor.getString(columnIndexData),
                     displayName = cursor.getString(columnIndexDisplayName),
                     dateAdded = cursor.getLong(columnIndexDateAdded),
