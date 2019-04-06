@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 
 import android.content.Context
 import android.os.Handler
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IDevicePhotosService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGalleryRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.GalleryRepositoryImpl
@@ -48,8 +49,9 @@ class GalleryModule {
                                           galleryRepository: IGalleryRepository,
                                           devicePhotosService: IDevicePhotosService,
                                           preferenceRepository: IPreferenceRepository,
+                                          objectMapper: ObjectMapper,
                                           retrofit: Retrofit): SynchronizeGalleryInteract
-        = SynchronizeGalleryInteract(context, deviceGalleryService, galleryRepository, devicePhotosService, preferenceRepository, retrofit)
+        = SynchronizeGalleryInteract(context, deviceGalleryService, galleryRepository, devicePhotosService, preferenceRepository, objectMapper, retrofit)
 
 
     /**

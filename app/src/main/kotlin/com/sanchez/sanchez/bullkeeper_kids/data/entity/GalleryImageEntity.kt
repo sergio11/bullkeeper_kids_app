@@ -9,7 +9,7 @@ import java.io.Serializable
  */
 open class GalleryImageEntity(
         // Id
-        @PrimaryKey var id: Long? = 0,
+        @PrimaryKey var id: String? = "",
         // Display Name
         var displayName: String? = "",
         // Path
