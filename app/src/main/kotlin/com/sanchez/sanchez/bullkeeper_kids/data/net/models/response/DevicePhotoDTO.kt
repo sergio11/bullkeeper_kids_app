@@ -19,5 +19,14 @@ data class DevicePhotoDTO(
          * Local Id
          */
         @JsonProperty("local_id")
-        val localId: String
+        val localId: String,
+
+        /**
+         * Path
+         */
+        @JsonProperty("path")
+        val path: String
+
 )
+
+

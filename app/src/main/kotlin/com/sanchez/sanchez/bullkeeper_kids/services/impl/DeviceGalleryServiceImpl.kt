@@ -7,11 +7,10 @@ import com.sanchez.sanchez.bullkeeper_kids.services.IDeviceGalleryService
 import javax.inject.Inject
 import android.provider.MediaStore
 import android.provider.MediaStore.MediaColumns
-import timber.log.Timber
-import java.io.File
-import android.media.MediaScannerConnection
-import android.os.Environment
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.GalleryImageEntity
+import timber.log.Timber
+import android.provider.MediaStore.Images
+import java.io.File
 
 
 /**
@@ -19,6 +18,9 @@ import com.sanchez.sanchez.bullkeeper_kids.data.entity.GalleryImageEntity
  */
 class DeviceGalleryServiceImpl
     @Inject constructor(private val context: Context): IDeviceGalleryService {
+
+
+    private val TAG = "DEVICE_GALLERY_SERVICE"
 
     /**
      * URI
@@ -103,27 +105,60 @@ class DeviceGalleryServiceImpl
 
     /**
      * Delete Image
+     * @param imageFile
      */
-    override fun deleteImage(imagePath: String) {
-        val fdelete = File(imagePath)
-        if (fdelete.exists()) {
-            if (fdelete.delete()) {
-                Timber.d("-->", "file Deleted :$imagePath")
-                refreshGallery()
-            } else {
-                Timber.d("-->", "file not Deleted :$imagePath")
+    override fun deleteImage(imageFile: String) {
+        Timber.d("%s Delete Image -> %s", TAG, imageFile)
+        // images
+        var count = 0
+        var imageCursor: Cursor? = null
+        try {
+            val select = Images.Media.DATA + "=?"
+            val selectArgs = arrayOf(imageFile)
+
+            val projection = arrayOf(Images.ImageColumns._ID)
+            imageCursor = context.contentResolver
+                    .query(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            projection, select, selectArgs, null)
+            if (imageCursor!!.count > 0) {
+                imageCursor.moveToFirst()
+                val imagesToDelete = ArrayList<Uri>()
+                do {
+                    val id = imageCursor.getString(imageCursor
+                            .getColumnIndex(Images.ImageColumns._ID))
+
+                    imagesToDelete
+                            .add(Uri.withAppendedPath(
+                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    id))
+                } while (imageCursor.moveToNext())
+
+                for (uri in imagesToDelete) {
+                    Timber.d("%s attempting to delete: %s", TAG, uri.toString())
+                    count += context.contentResolver
+                            .delete(uri, null, null)
+                }
             }
+        } catch (e: Exception) {
+            Timber.d(e, "%s Unable to delete image file from media provider", TAG)
+        } finally {
+            imageCursor?.close()
         }
+        val f = File(imageFile)
+        if (f.exists()) {
+            Timber.d("%s File Exists Deleted", TAG)
+            f.delete()
+        }
+        Timber.d("%s %d Files deleted for %s", TAG, count, imageFile)
+
     }
 
     /**
-     * Refresh Gallery
+     * Delete Image
+     * @param imageFileList
      */
-    private fun refreshGallery() {
-        Timber.d("-->", " >= 14")
-        MediaScannerConnection.scanFile(context, arrayOf(Environment.getExternalStorageDirectory().toString()), null, { path, uri ->
-            Timber.d("ExternalStorage", "Scanned $path:")
-            Timber.e("ExternalStorage", "-> uri=$uri")
-        })
+    override fun deleteImage(imageFileList: List<String>) {
+        imageFileList.forEach { deleteImage(it) }
     }
+
 }

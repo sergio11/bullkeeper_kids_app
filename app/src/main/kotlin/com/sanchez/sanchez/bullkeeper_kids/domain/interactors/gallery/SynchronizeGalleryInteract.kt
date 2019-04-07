@@ -35,7 +35,7 @@ class SynchronizeGalleryInteract
             retrofit: Retrofit): UseCase<Int, UseCase.None>(retrofit) {
 
 
-    private val MAX_IMAGES_TO_UPLOAD = 15
+    private val MAX_IMAGES_TO_UPLOAD = 20
     private val DEVICE_PHOTO_INFO_KEY = "devicePhoto"
     private val DEVICE_PHOTO_IMAGE_KEY = "devicePhotoImage"
 
