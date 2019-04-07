@@ -48,6 +48,10 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="0f86f04a7fbf03688e65ded3dbd67fef1d41294d" />
+
+        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 

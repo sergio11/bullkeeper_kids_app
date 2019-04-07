@@ -13,8 +13,8 @@ buildscript {
     ext.min_sdk = 21
 
     ext.application_id = 'com.sanchez.sanchez.bullkeeper_kids'
-    ext.version_name = '0.1.26'
-    ext.version_code = 126
+    ext.version_name = '0.1.27'
+    ext.version_code = 127
     ext.test_runner = 'android.support.test.runner.AndroidJUnitRunner'
 
     repositories {
@@ -22,6 +22,7 @@ buildscript {
         mavenLocal()
         jcenter()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
@@ -29,7 +30,8 @@ buildscript {
         //noinspection DifferentKotlinGradleVersion
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "io.realm:realm-gradle-plugin:$realm_gradle"
-     }
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
 }
 
 allprojects {
