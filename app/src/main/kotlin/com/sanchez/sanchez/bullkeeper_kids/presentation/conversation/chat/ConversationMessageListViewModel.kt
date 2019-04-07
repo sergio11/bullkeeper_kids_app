@@ -116,7 +116,6 @@ class ConversationMessageListViewModel
      * @param memberTwo
      */
     fun createConversation(memberOne: String, memberTwo: String) {
-        result.value = OperationResultEnum.LOADING
         createConversationForMembersInteract(CreateConversationForMembersInteract.Params(memberOne, memberTwo)) {
             it.either(fnR = fun(conversation: ConversationEntity) {
                 conversationDetail.value = conversation
