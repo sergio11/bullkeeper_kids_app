@@ -1816,6 +1816,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                     messageSavedDTO.conversation))
                         }
 
+                        val discardMessageButton = newMessageLayoutView.findViewById<Button>(R.id.discardMessage)
+                        discardMessageButton?.setOnClickListener {
+                            appOverlayService.hide(newMessageLayoutView)
+                        }
+
                         appOverlayService.show(newMessageLayoutView)
                     }
                 }

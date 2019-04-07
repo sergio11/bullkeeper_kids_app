@@ -44,7 +44,7 @@
     <!-- Accept -->
     <string name="accept">I understood</string>
     <string name="show_detail">Show Detail</string>
-
+    <string name="discard">Discard</string>
     <!-- App Tutorial -->
 
     <!-- First Page -->
