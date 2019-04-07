@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IDevicePhotosService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGalleryRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.GalleryRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery.DeleteDisableDevicePhotosInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery.SynchronizeGalleryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.MediaStoreImagesContentObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
@@ -72,4 +73,22 @@ class GalleryModule {
             synchronizeGalleryInteract: SynchronizeGalleryInteract
             ): MediaStoreImagesContentObserver
         = MediaStoreImagesContentObserver(handler, synchronizeGalleryInteract)
+
+    /**
+     * Provide Delete Disable Device Photos Interact
+     * @param devicePhotosService
+     * @param deviceGalleryService
+     * @param preferenceRepository
+     * @param retrofit
+     */
+    @Provides
+    @Singleton
+    fun provideDeleteDisableDevicePhotosInteract(
+            devicePhotosService: IDevicePhotosService,
+            deviceGalleryService: IDeviceGalleryService,
+            preferenceRepository: IPreferenceRepository,
+            retrofit: Retrofit
+    ) = DeleteDisableDevicePhotosInteract(devicePhotosService, deviceGalleryService,
+            preferenceRepository, retrofit)
+
 }

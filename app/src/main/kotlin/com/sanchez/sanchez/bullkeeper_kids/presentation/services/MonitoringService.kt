@@ -48,6 +48,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeT
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.DeleteDisableContactInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.SynchronizeTerminalContactsInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.funtime.SyncFunTimeInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery.DeleteDisableDevicePhotosInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery.SynchronizeGalleryInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.DeleteAllGeofenceInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceInteract
@@ -363,6 +364,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var deleteDisableContactInteract: DeleteDisableContactInteract
 
+    /**
+     * Delete Disable Photos Interact
+     */
+    @Inject
+    internal lateinit var deleteDisablePhotosInteract: DeleteDisableDevicePhotosInteract
+
 
     /**
      * Device Policy Manager
@@ -641,6 +648,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 syncFunTime()
                 syncGalleryImages()
                 deleteDisableContacts()
+                deleteDisablePhotos()
 
             })
         }
@@ -1272,6 +1280,22 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         }
     }
 
+
+    /**
+     * Delete Disable Photos
+     */
+    private fun deleteDisablePhotos(devicePhotosFile: List<String>? = null){
+        deleteDisablePhotosInteract(DeleteDisableDevicePhotosInteract.Params(
+                imageFileList = devicePhotosFile
+        )){
+            it.either(fun(_: Failure){
+                Timber.d("Photos Deleted Failed")
+            }, fun(_: Unit) {
+                Timber.d("Photos Deleted Success")
+            })
+        }
+    }
+
     /**
      * Unlink Terminal
      */
@@ -1877,6 +1901,15 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Device Photo Disabled Event Handler
+     * @param devicePhotoDisabledDTO
+     */
+    private fun photoDisabledEventHandler(devicePhotoDisabledDTO: DevicePhotoDisabledDTO){
+        Timber.d("SSE: Device Photo Disabled Event Handler")
+        deleteDisablePhotos(Arrays.asList(devicePhotoDisabledDTO.path))
+    }
+
+    /**
      * Phone Calls Status Changed Event Handler
      * @param phoneCallsStatusChangedDTO
      */
@@ -2132,6 +2165,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                             phoneCallsStatusChangedEventHandler(objectMapper.readValue(eventMessage,
                                     TerminalPhoneCallsStatusChangedDTO::class.java))
                         }
+
+                        // Device Photo Disabled Event
+                        ServerEventTypeEnum.DEVICE_PHOTO_DISABLED_EVENT -> {
+                            photoDisabledEventHandler(objectMapper.readValue(eventMessage,
+                                    DevicePhotoDisabledDTO::class.java))
+                        }
+
                         // Unknown Event
 
                     }

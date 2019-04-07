@@ -1,10 +1,8 @@
 package com.sanchez.sanchez.bullkeeper_kids.data.net.service
 
-import com.sanchez.sanchez.bullkeeper_kids.data.net.models.request.AddDevicePhotoDTO
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.APIResponse
 import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.DevicePhotoDTO
 import kotlinx.coroutines.Deferred
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.*
 
@@ -65,7 +63,7 @@ interface IDevicePhotosService {
     fun getListOfDisabledDevicePhotos(
             @Path("kid")  kid: String,
             @Path("terminal") terminal: String
-    ) : Deferred<APIResponse<DevicePhotoDTO>>
+    ) : Deferred<APIResponse<List<DevicePhotoDTO>>>
 
 
     /**

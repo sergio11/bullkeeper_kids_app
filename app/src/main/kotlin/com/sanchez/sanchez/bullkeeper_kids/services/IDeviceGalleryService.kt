@@ -20,7 +20,14 @@ interface IDeviceGalleryService {
 
     /**
      * Delete Image
+     * @param imageFile
      */
-    fun deleteImage(imagePath: String)
+    fun deleteImage(imageFile: String)
+
+    /**
+     * Delete Image
+     * @param imageFileList
+     */
+    fun deleteImage(imageFileList: List<String>)
 
 }
