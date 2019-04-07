@@ -3,9 +3,11 @@ package com.sanchez.sanchez.bullkeeper_kids
 import android.app.Application
 import android.util.Log
 import cat.ereza.customactivityoncrash.config.CaocConfig
+import com.crashlytics.android.Crashlytics
 import com.facebook.stetho.Stetho
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.*
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.*
+import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
@@ -165,6 +167,7 @@ class AndroidApplication : Application(){
         this.initializeRealm()
         this.initializeServices()
 
+        Fabric.with(this, Crashlytics())
         // Chrash Screen
         CaocConfig.Builder.create().apply()
     }
