@@ -37,6 +37,7 @@
     <!-- Accept -->
     <string name="accept">Entendido</string>
     <string name="show_detail">Ver Detalle</string>
+    <string name="discard">Descartar</string>
     <!-- App Tutorial -->
     <!-- First Page -->
     <string name="first_page_title">Bienvenido a BullKeeper Kids</string>
