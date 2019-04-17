@@ -129,7 +129,7 @@ class PhoneNumberBlockedActivity : AppCompatActivity() {
                 PhoneBlocksTypeEnum.NUMBER_BLOCKED -> {
                     // Get Args
                     val phoneNumberBlocked = intent.getStringExtra(PHONE_NUMBER_BLOCKED_ARG)
-                    val blockedAt = intent.getStringExtra(BLOCK_TYPE_ARG)
+                    val blockedAt = intent.getStringExtra(BLOCKED_AT_ARG)
 
                     // Phone Number Blocked
                     contentText.text = String.format(Locale.getDefault(),

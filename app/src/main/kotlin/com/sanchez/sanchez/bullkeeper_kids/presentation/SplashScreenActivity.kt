@@ -18,7 +18,7 @@ class SplashScreenActivity : AppCompatActivity() {
     private val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as AndroidApplication).appComponent
     }
-
+// 644384296
     /**
      * Navigator
      */
