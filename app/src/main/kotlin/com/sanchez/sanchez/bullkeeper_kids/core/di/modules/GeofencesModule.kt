@@ -111,4 +111,13 @@ class GeofencesModule {
             retrofit: Retrofit
     ): SaveGeofenceAlertInteract
         = SaveGeofenceAlertInteract(geofencesService, retrofit)
+
+    /**
+     * Provide Update Geofence Status Interact
+     */
+    @Provides
+    @Singleton
+    fun provideUpdateGeofenceStatusInteract(geofenceRepository: IGeofenceRepository,
+                                            retrofit: Retrofit): UpdateGeofenceStatusInteract
+        = UpdateGeofenceStatusInteract(geofenceRepository, retrofit)
 }

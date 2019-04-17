@@ -50,10 +50,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.contacts.Synchroni
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.funtime.SyncFunTimeInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery.DeleteDisableDevicePhotosInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.gallery.SynchronizeGalleryInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.DeleteAllGeofenceInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.DeleteGeofenceInteract
-import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SyncGeofencesInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.NotifyHeartBeatInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.monitoring.SaveCurrentLocationInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.packages.*
@@ -321,6 +318,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     @Inject
     internal lateinit var saveGeofenceInteract: SaveGeofenceInteract
+
+    /**
+     * Update Geofence Status Interact
+     */
+    @Inject
+    internal lateinit var updateGeofenceStatusInteract: UpdateGeofenceStatusInteract
 
     /**
      * Delete Geofence Interact
@@ -946,20 +949,14 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         val endBedTime = LocalTime(END_BED_TIME_HOUR, 0)
                         val currentTime = LocalTime.now()
 
-                        if (currentTime.isAfter(startBedTime)
-                                && currentTime.isBefore(endBedTime)) {
+                        if ((currentTime.isAfter(startBedTime)
+                                || currentTime.isBefore(endBedTime)) && preferenceRepository.isBedTimeEnabled()) {
                             Timber.d("CFAT: Bet Time active")
                             sendUnLockAppAction()
                             sendEnableAppAction()
-                            if (preferenceRepository.isBedTimeEnabled()) {
-                                Timber.d("CFAT: Bet Time enabled")
-                                isBedTimeEnabled = true
-                                navigator.showBedTimeScreen(this)
-                            } else {
-                                Timber.d("CFAT: Bet Time disabled")
-                                // Disable Bed Time is needed
-                                sendDisableBedTimeAction()
-                            }
+                            Timber.d("CFAT: Bet Time enabled")
+                            isBedTimeEnabled = true
+                            navigator.showBedTimeScreen(this)
                         } else {
 
                             // Disable Bed Time is needed
@@ -1915,6 +1912,25 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Geofence Status Changed Event Handler
+     * @param geofenceStatusChangedDTO
+     */
+    private fun geofenceStatusChangedEventHandler(geofenceStatusChangedDTO: GeofenceStatusChangedDTO){
+        Timber.d("SSE: Geofence Status Changed Event Handler")
+        updateGeofenceStatusInteract(UpdateGeofenceStatusInteract.Params(
+                identity = geofenceStatusChangedDTO.geofence,
+                kid = geofenceStatusChangedDTO.kid,
+                isEnabled = geofenceStatusChangedDTO.isEnabled
+        )){
+            it.either(fun(_: Failure){
+                Timber.d("Change Geofence Status Failed ")
+            }, fun(_: Unit) {
+                Timber.d("Change Geofence Status Success")
+            })
+        }
+    }
+
+    /**
      * Phone Calls Status Changed Event Handler
      * @param phoneCallsStatusChangedDTO
      */
@@ -2175,6 +2191,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         ServerEventTypeEnum.DEVICE_PHOTO_DISABLED_EVENT -> {
                             photoDisabledEventHandler(objectMapper.readValue(eventMessage,
                                     DevicePhotoDisabledDTO::class.java))
+                        }
+
+                        // Geofence Status Changed Event
+                        ServerEventTypeEnum.GEOFENCE_STATUS_CHANGED_EVENT -> {
+                            geofenceStatusChangedEventHandler(objectMapper.readValue(eventMessage,
+                                    GeofenceStatusChangedDTO::class.java))
                         }
 
                         // Unknown Event

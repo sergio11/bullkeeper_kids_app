@@ -28,7 +28,7 @@
             android:id="@+id/introText"
             style="@style/CommonStrongText"
             android:layout_width="match_parent"
-            android:layout_height="77dp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_margin"
             android:padding="@dimen/common_padding"
             android:gravity="center"

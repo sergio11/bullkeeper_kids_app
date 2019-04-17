@@ -154,7 +154,7 @@ class PreferenceRepositoryImpl
      * Set Bed Time Enabled
      */
     override fun setBedTimeEnabled(isEnabled: Boolean) {
-        mPref.edit().putBoolean(IPreferenceRepository.PREF_CURRENT_LONGITUDE,
+        mPref.edit().putBoolean(IPreferenceRepository.PREF_BED_TIME,
                 isEnabled).apply()
     }
 
