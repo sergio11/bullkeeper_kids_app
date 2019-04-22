@@ -11,6 +11,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceAlertInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import timber.log.Timber
 import javax.inject.Inject
@@ -52,6 +53,12 @@ class GeofenceTransitionService: IntentService("GeofenceTransitionService") {
     internal lateinit var navigator: INavigator
 
     /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
+
+    /**
      * On Handle Intent
      */
     override fun onHandleIntent(intent: Intent?) {
@@ -59,7 +66,6 @@ class GeofenceTransitionService: IntentService("GeofenceTransitionService") {
         Timber.d("GTS: Geofence Transition Service executed")
         // Retrieve the Geofencing intent
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
-
         // Handling errors
         if (geofencingEvent.hasError()) {
             val errorMsg = getErrorString(geofencingEvent.errorCode)
@@ -101,7 +107,7 @@ class GeofenceTransitionService: IntentService("GeofenceTransitionService") {
                         it.radius)
 
                 saveGeofenceAlertInteract(SaveGeofenceAlertInteract.Params(it.kid!!,
-                        it.identity!!, it.transitionType!!)){
+                        it.identity!!, it.transitionType!!, preferenceRepository.getPrefTerminalIdentity())){
                     it.either(fun(_: Failure){
                         Timber.d("Save Geofence Alert Failed")
                     }, fun(_: Unit){

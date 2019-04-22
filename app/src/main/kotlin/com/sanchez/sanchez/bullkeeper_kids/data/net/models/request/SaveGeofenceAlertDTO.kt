@@ -23,6 +23,12 @@ data class SaveGeofenceAlertDTO (
          * Transition Type
          */
         @get:JsonProperty("type")
-        var type: String? = null
+        var type: String? = null,
+
+        /**
+         * Terminal
+         */
+        @get:JsonProperty("terminal")
+        var terminal: String? = null
 
 )
