@@ -8,6 +8,9 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import at.grabner.circleprogress.CircleProgressView
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ApplicationComponent
@@ -17,8 +20,6 @@ import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IFunTimeDayScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.FUN_TIME_CHANGED_ACTION
-import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.SETTINGS_STATUS_CHANGED_ACTION
-import kotlinx.android.synthetic.main.fragment_home.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
@@ -58,6 +59,21 @@ class HomeActivityFragment : BaseFragment() {
      */
     @Inject
     internal lateinit var soundManager: ISoundManager
+
+    /**
+     * Views
+     */
+
+
+    private lateinit var pickMeUpAction: View
+    private lateinit var timeBankAction: View
+    private lateinit var sosAction: View
+    private lateinit var chatAction: View
+    private lateinit var funTimeTitle: TextView
+    private lateinit var remainingFunTimeTextView: TextView
+    private lateinit var funTimeIcon: ImageView
+    private lateinit var funTimeDescription: TextView
+    private lateinit var funTimeProgress: CircleProgressView
 
 
     /**
@@ -105,6 +121,16 @@ class HomeActivityFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeInjector()
 
+        pickMeUpAction = view.findViewById(R.id.pickMeUpAction)
+        timeBankAction = view.findViewById(R.id.timeBankAction)
+        sosAction = view.findViewById(R.id.sosAction)
+        chatAction = view.findViewById(R.id.chatAction)
+        funTimeTitle = view.findViewById(R.id.funTimeTitle)
+        remainingFunTimeTextView = view.findViewById(R.id.remainingFunTimeTextView)
+        funTimeIcon = view.findViewById(R.id.funTimeIcon)
+        funTimeDescription = view.findViewById(R.id.funTimeDescription)
+        funTimeProgress = view.findViewById(R.id.funTimeProgress)
+
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(context)
         val mIntentFilter = IntentFilter()
         mIntentFilter.addAction(FUN_TIME_CHANGED_ACTION)
@@ -140,7 +166,9 @@ class HomeActivityFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
 
-        showFunTimeStatus()
+        if(isAdded) {
+            showFunTimeStatus()
+        }
     }
 
     /**
@@ -187,6 +215,8 @@ class HomeActivityFragment : BaseFragment() {
                         } else {
                             funTimeProgress.setBarColor(ContextCompat.getColor(context, R.color.redDanger))
                         }
+                    } else {
+                        showFunTimeNotAvaliable()
                     }
 
                 } else {

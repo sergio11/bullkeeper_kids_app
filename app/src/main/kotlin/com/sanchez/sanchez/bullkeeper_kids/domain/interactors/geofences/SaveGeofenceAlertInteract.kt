@@ -24,7 +24,7 @@ class SaveGeofenceAlertInteract
 
         geofencesService.saveGeofenceAlert(params.kid, params.geofence,
                 SaveGeofenceAlertDTO(params.kid, params.geofence,
-                        params.transitionType)).await()
+                        params.transitionType, params.terminal)).await()
     }
 
     /**
@@ -36,6 +36,8 @@ class SaveGeofenceAlertInteract
             // Identity
             var geofence: String,
             // Transition Type
-            var transitionType: String
+            var transitionType: String,
+            // Terminal
+            var terminal: String
     )
 }

@@ -158,7 +158,7 @@ class TimeBankActivityFragment : BaseFragment() {
                                 saveOnTimeBank.isEnabled = false
                                 saveOnTimeBank.text = getString(R.string.time_bank_button_saved_successfully_text)
                                 timeBankStreamId = soundManager.playSound(ISoundManager.TIME_BANK_SOUND)
-                                preferenceRepository.setRemainingFunTime(IPreferenceRepository.TIME_BANK_DEFAUL_VALUE)
+                                preferenceRepository.setRemainingFunTime(IPreferenceRepository.REMAINING_FUN_TIME_DEFAULT_VALUE)
                                 preferenceRepository.setTimeBank(timeBankSaved + remainingFunTime)
                             }
 
