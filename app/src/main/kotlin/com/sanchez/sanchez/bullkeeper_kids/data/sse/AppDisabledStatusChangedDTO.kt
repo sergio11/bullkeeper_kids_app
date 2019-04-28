@@ -12,26 +12,26 @@ data class AppDisabledStatusChangedDTO(
         /**
          * Identity
          */
-        @JsonProperty("id")
-        var kid: String? = null,
+        @JsonProperty("kid")
+        var kid: String,
 
         /**
          * Terminal
          */
         @JsonProperty("terminal")
-        var terminal: String? = null,
+        var terminal: String,
 
 
         /**
          * App
          */
         @JsonProperty("app")
-        var app: String? = null,
+        var app: String,
 
 
         /**
          * Disabled
          */
         @JsonProperty("disabled")
-        var disabled: Boolean? = null
+        var disabled: Boolean
 )

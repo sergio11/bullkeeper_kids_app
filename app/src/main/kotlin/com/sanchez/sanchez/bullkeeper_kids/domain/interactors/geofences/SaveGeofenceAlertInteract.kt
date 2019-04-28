@@ -27,6 +27,7 @@ class SaveGeofenceAlertInteract
                         it.transitionType, it.terminal) }).await()
     }
 
+
     /**
      * Params
      */

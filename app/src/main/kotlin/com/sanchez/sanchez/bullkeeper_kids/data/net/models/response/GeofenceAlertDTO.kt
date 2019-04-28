@@ -2,7 +2,6 @@ package com.sanchez.sanchez.bullkeeper_kids.data.net.models.response
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.*
 
 /**
  * Geofence Alert DTO
@@ -14,7 +13,7 @@ data class GeofenceAlertDTO(
          * Date
          */
         @JsonProperty("date")
-        var date: Date,
+        var date: String,
 
         /**
          * Type
@@ -31,7 +30,7 @@ data class GeofenceAlertDTO(
         /**
          * Message
          */
-        @JsonProperty("message")
+        @JsonProperty("description")
         var message: String
 
 )

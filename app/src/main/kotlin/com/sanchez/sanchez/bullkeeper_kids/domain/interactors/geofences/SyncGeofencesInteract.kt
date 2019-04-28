@@ -150,6 +150,7 @@ class SyncGeofencesInteract
                     getGeofencesToCreate(localGeofencesSavedList, serverGeofenceList))
 
             geofencesRepository.save(geofencesToSave)
+
         }
 
         return Pair(geofencesToSave, geofencesToRemove)

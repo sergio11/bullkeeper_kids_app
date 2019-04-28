@@ -12,14 +12,14 @@ data class AppRulesListSavedDTO(
         /**
          * Identity
          */
-        @JsonProperty("id")
-        var kid: String? = null,
+        @JsonProperty("kid")
+        var kid: String,
 
         /**
          * Terminal
          */
         @JsonProperty("terminal")
-        var terminal: String? = null,
+        var terminal: String,
 
 
         /**

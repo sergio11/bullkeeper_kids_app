@@ -3,7 +3,9 @@ package com.sanchez.sanchez.bullkeeper_kids.core.di.modules
 import android.content.Context
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IGeofencesService
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceViolatedAlertRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.GeofenceRepositoryImpl
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.impl.GeofenceViolatedAlertRepositoryImpl
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.*
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.IDeviceGeofenceService
@@ -35,6 +37,14 @@ class GeofencesModule {
     @Singleton
     fun provideGeofencesRepository(): IGeofenceRepository
         = GeofenceRepositoryImpl()
+
+    /**
+     * Provide Geofence Violated Alert Repository
+     */
+    @Provides
+    @Singleton
+    fun provideGeofenceViolatedAlertRepository(): IGeofenceViolatedAlertRepository
+            = GeofenceViolatedAlertRepositoryImpl()
 
     /**
      * Provide Geofence Service
@@ -120,4 +130,25 @@ class GeofencesModule {
     fun provideUpdateGeofenceStatusInteract(geofenceRepository: IGeofenceRepository,
                                             retrofit: Retrofit): UpdateGeofenceStatusInteract
         = UpdateGeofenceStatusInteract(geofenceRepository, retrofit)
+
+
+    /**
+     * Provide Notify Pending Geofence
+     */
+    @Provides
+    @Singleton
+    fun provideNotifyPendingGeofenceAlertsInteract(geofencesService: IGeofencesService,
+                                                   geoViolatedAlertRepository: IGeofenceViolatedAlertRepository,
+                                                   retrofit: Retrofit): NotifyPendingGeofenceAlertsInteract
+        = NotifyPendingGeofenceAlertsInteract(geofencesService, geoViolatedAlertRepository, retrofit)
+
+    /**
+     * Provide Active Geofences Interact
+     */
+    @Provides
+    @Singleton
+    fun provideActiveGeofencesInteract(retrofit: Retrofit,
+                                       geofenceRepository: IGeofenceRepository,
+                                       deviceGeofenceService: IDeviceGeofenceService)
+        = ActiveGeofencesInteract(retrofit, geofenceRepository, deviceGeofenceService)
 }

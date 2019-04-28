@@ -14,13 +14,19 @@ data class ScheduledBlockSavedDTO(
          * Identity
          */
         @JsonProperty("identity")
-        var identity: String? = null,
+        var identity: String,
 
         /**
          * Name
          */
         @JsonProperty("name")
-        var name: String? = null,
+        var name: String,
+
+        /**
+         * Create At
+         */
+        @JsonProperty("create_at")
+        var createAt: String,
 
         /**
          * Enable
@@ -44,7 +50,7 @@ data class ScheduledBlockSavedDTO(
          * Description
          */
         @JsonProperty("description")
-        var description: String? = null,
+        var description: String,
 
         /**
          * Image
@@ -55,24 +61,24 @@ data class ScheduledBlockSavedDTO(
         /**
          * Kid
          */
-        @JsonProperty("id")
-        var kid: String? = null,
+        @JsonProperty("kid")
+        var kid: String,
 
         /**
          * Start At
          */
         @JsonProperty("start_at")
-        var startAt: LocalTime? = null,
+        var startAt: LocalTime,
 
         /**
          * End At
          */
         @JsonProperty("end_at")
-        var endAt: LocalTime? = null,
+        var endAt: LocalTime,
 
         /**
          * Weekly Frequency
          */
         @JsonProperty("weekly_frequency")
-        var weeklyFrequency: IntArray? = null)
+        var weeklyFrequency: IntArray)
 {}

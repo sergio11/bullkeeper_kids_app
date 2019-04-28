@@ -12,18 +12,18 @@ data class ChangeLockScreenStatusDTO(
         /**
          * Identity
          */
-        @JsonProperty("id")
-        var kid: String? = null,
+        @JsonProperty("kid")
+        var kid: String,
 
         /**
          * Terminal
          */
         @JsonProperty("terminal")
-        var terminal: String? = null,
+        var terminal: String,
 
         /**
          * Is Enabled
          */
         @JsonProperty("is_enabled")
-        var enabled: Boolean? = null
+        var enabled: Boolean
 )

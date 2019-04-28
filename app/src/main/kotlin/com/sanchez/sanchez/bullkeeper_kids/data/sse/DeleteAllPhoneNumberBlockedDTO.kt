@@ -12,7 +12,7 @@ data class DeleteAllPhoneNumberBlockedDTO(
         /**
          * Identity
          */
-        @JsonProperty("id")
+        @JsonProperty("kid")
         var kid: String? = null,
 
         /**

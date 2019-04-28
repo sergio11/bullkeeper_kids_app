@@ -13,11 +13,11 @@ data class ScheduledBlockStatusDTO(
          * Identity
          */
         @JsonProperty("identity")
-        var identity: String? = null,
+        var identity: String,
 
         /**
          * Enable
          */
         @JsonProperty("enable")
-        var enable: Boolean? = null
+        var enable: Boolean
 )

@@ -13,13 +13,13 @@ data class AddPhoneNumberBlockedDTO(
          * Identity
          */
         @JsonProperty("identity")
-        var identity: String? = null,
+        var identity: String,
 
         /**
          * Blocked At
          */
         @JsonProperty("blocked_at")
-        var blockedAt: String? = null,
+        var blockedAt: String,
 
         /**
          * Phone Number
@@ -32,24 +32,24 @@ data class AddPhoneNumberBlockedDTO(
          * Number
          */
         @JsonProperty("number")
-        var number: String? = null,
+        var number: String,
 
         /**
          * Phone Number
          */
         @JsonProperty("phone_number")
-        var phoneNumber: String? = null,
+        var phoneNumber: String,
 
         /**
          * Terminal
          */
         @JsonProperty("terminal")
-        var terminal: String? = null,
+        var terminal: String,
 
         /**
          * Kid
          */
-        @JsonProperty("id")
-        var kid: String? = null
+        @JsonProperty("kid")
+        var kid: String
 
 )

@@ -12,19 +12,20 @@ data class TerminalBedTimeStatusChangedDTO(
         /**
          * Kid
          */
-        @JsonProperty("id")
-        var kid: String? = null,
+        @JsonProperty("kid")
+        var kid: String,
 
         /**
          * Terminal
          */
         @JsonProperty("terminal")
-        var terminal: String? = null,
+        var terminal: String,
 
         /**
          * Enabled
          */
         @JsonProperty("enabled")
-        var enabled: Boolean? = null
+        var enabled: Boolean
+
 
 )
