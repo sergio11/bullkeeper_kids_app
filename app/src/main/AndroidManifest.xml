@@ -86,9 +86,6 @@
         <!-- Monitoring Service -->
         <service android:name=".presentation.services.MonitoringService" />
 
-        <!-- Geofence Transition Service -->
-        <service android:name=".presentation.services.GeofenceTransitionService" />
-
         <!-- Lock Screen Activity -->
         <activity
             android:name=".presentation.lockscreen.AppLockScreenActivity"
@@ -188,6 +185,7 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF" />
             </intent-filter>
         </receiver>
+
 
         <!-- App Tutorial Activity -->
         <activity

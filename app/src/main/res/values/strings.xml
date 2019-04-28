@@ -324,11 +324,18 @@
     <string name="kid_guardian_parental_control_rule_editor_role">He can edit and apply parental control rules</string>
     <string name="kid_guardian_admin_role">He can manage your profile</string>
 
-
-
     <string name="monitoring_service_notification_title">Bullkeeper kids is working</string>
     <string name="monitoring_service_notification_description">Will monitor the use of the device</string>
 
     <string name="connectivity_not_available">Check your connection, this functionality is not available without an internet connection</string>
+
+    <!-- Geofence Error Strings -->
+    <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>
+    <string name="geofence_not_available">Geofence service is not available now</string>
+    <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
+    <string name="geofence_too_many_pending_intents">You have provided too many PendingIntents to the addGeofences() call</string>
+    <string name="unknown_geofence_error">Unknown error: the Geofence service is not available now</string>
+    <string name="geofence_transition_invalid_type">Geofence transition error: invalid transition type %1$d</string>
+
 
 </resources>

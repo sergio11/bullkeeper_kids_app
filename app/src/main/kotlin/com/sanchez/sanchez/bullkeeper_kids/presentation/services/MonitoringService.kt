@@ -14,7 +14,6 @@ import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import javax.inject.Inject
-import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AppStatusChangedReceiver
 import com.sanchez.sanchez.bullkeeper_kids.services.IUsageStatsService
 import android.app.PendingIntent
 import android.app.admin.DevicePolicyManager
@@ -30,7 +29,6 @@ import android.widget.TextView
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
-import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver
 import com.google.android.gms.location.*
 import com.here.oksse.ServerSentEvent
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
@@ -65,8 +63,7 @@ import com.sanchez.sanchez.bullkeeper_kids.domain.observers.ContactsObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.observers.MediaStoreImagesContentObserver
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.bedtime.BedTimeActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.BatteryStatusBroadcastReceiver
-import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.MonitoringDeviceAdminReceiver
+import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.*
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.DisabledAppScreenActivity
@@ -406,6 +403,11 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private lateinit var checkTerminalStatusReceiver: CheckTerminalStatusBroadcastReceiver
 
     /**
+     * Geofence Broadcast Receiver
+     */
+    private lateinit var geofenceBroadcastReceiver: GeofenceBroadcastReceiver
+
+    /**
      * Fused Location Provider Service
      */
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -465,6 +467,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         unregisterReceiver(screenStatusReceiver)
         unregisterReceiver(batteryStatusReceiver)
         unregisterReceiver(checkTerminalStatusReceiver)
+        unregisterReceiver(geofenceBroadcastReceiver)
         application.contentResolver
                 .unregisterContentObserver(contactsObserver)
         application.contentResolver
@@ -587,6 +590,13 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         val checkTerminalStatusFilter = IntentFilter()
         checkTerminalStatusFilter.addAction(CHECK_TERMINAL_STATUS_ACTION)
         registerReceiver(checkTerminalStatusReceiver, checkTerminalStatusFilter)
+
+        // Geofence Receiver
+        geofenceBroadcastReceiver = GeofenceBroadcastReceiver()
+        val geofenceBroadcastReceiverFilter = IntentFilter()
+        geofenceBroadcastReceiverFilter.addAction(RECEIVE_GEOFENCE_ACTION)
+        registerReceiver(geofenceBroadcastReceiver, geofenceBroadcastReceiverFilter)
+
     }
 
     /**
@@ -2318,6 +2328,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         const val SETTINGS_STATUS_CHANGED_ACTION = "com.sanchez.sergio.settings.status.changed"
         const val CHECK_TERMINAL_STATUS_ACTION = "com.sanchez.sergio.check.terminal.status"
         const val NEW_LOCATION_AVAILABLE_ACTION = "com.sanchez.sergio.new.location.available"
+        const val RECEIVE_GEOFENCE_ACTION = "com.sanchez.sergio.receive.geofence"
 
         /**
          * Schedule Check Terminal Status
