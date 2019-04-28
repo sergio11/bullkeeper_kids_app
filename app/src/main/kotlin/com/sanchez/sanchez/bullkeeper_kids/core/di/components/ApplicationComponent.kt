@@ -9,7 +9,6 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.sounds.ISoundManager
 import com.sanchez.sanchez.bullkeeper_kids.data.net.service.IAppsService
 import com.sanchez.sanchez.bullkeeper_kids.data.net.utils.ApiEndPointsHelper
-import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppAllowedByScheduledRepository
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IAppsInstalledRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.AddCallDetailsFromTerminalInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.calls.SynchronizeTerminalCallHistoryInteract
@@ -29,7 +28,6 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.home.HomeActivityFragmen
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.*
 import com.sanchez.sanchez.bullkeeper_kids.presentation.login.SignInActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.phonenumberblocked.PhoneNumberBlockedActivity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.services.GeofenceTransitionService
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivity
 import com.sanchez.sanchez.bullkeeper_kids.presentation.timebank.TimeBankActivityFragment
 import com.sanchez.sanchez.bullkeeper_kids.services.IGeolocationService

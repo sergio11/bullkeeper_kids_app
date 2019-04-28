@@ -28,16 +28,14 @@ interface IGeofencesService {
 
 
     /**
-     * Save Geofence Alert
+     * Save Geofence Alerts
      * @param kid
-     * @param geofence
      * @param geofenceAlert
      * @return
      */
-    @POST("children/{id}/geofences/{geofence}/alerts")
-    fun saveGeofenceAlert(
+    @POST("children/{id}/geofences/alerts")
+    fun saveGeofenceAlerts(
             @Path("id") kid: String,
-            @Path("geofence") geofence: String,
-            @Body geofenceAlert: SaveGeofenceAlertDTO
-    ): Deferred<APIResponse<GeofenceAlertDTO>>
+            @Body geofenceAlert: List<SaveGeofenceAlertDTO>
+    ): Deferred<APIResponse<List<GeofenceAlertDTO>>>
 }

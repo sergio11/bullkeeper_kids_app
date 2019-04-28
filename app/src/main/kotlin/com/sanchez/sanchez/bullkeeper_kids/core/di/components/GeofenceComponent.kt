@@ -5,7 +5,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ApplicationModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GeofencesModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GlobalServiceModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.NetModule
-import com.sanchez.sanchez.bullkeeper_kids.presentation.services.GeofenceTransitionService
+import com.sanchez.sanchez.bullkeeper_kids.presentation.broadcast.GeofenceBroadcastReceiver
 import dagger.Component
 import javax.inject.Singleton
 
@@ -18,8 +18,9 @@ import javax.inject.Singleton
             NetModule::class])
 interface GeofenceComponent {
 
+
     /**
-     * Inject into Geofence Transition Service
+     * Inject into Geofence Broadcast Receiver
      */
-    fun inject(geofenceTransitionService: GeofenceTransitionService)
+    fun inject(geofenceBroadcastReceiver: GeofenceBroadcastReceiver)
 }

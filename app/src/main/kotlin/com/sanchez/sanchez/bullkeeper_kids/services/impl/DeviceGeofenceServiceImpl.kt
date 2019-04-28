@@ -11,7 +11,7 @@ import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Tasks
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.GeofenceEntity
-import com.sanchez.sanchez.bullkeeper_kids.presentation.services.GeofenceTransitionService
+import com.sanchez.sanchez.bullkeeper_kids.presentation.services.MonitoringService.Companion.RECEIVE_GEOFENCE_ACTION
 import com.sanchez.sanchez.bullkeeper_kids.services.IDeviceGeofenceService
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,8 +29,8 @@ class DeviceGeofenceServiceImpl
      * Geofence Event Handler PI
      */
     private val geofenceEventHandlerPi: PendingIntent =
-            PendingIntent.getService(appContext, 0,
-                    Intent(appContext, GeofenceTransitionService::class.java),
+            PendingIntent.getBroadcast(appContext, 0,
+                    Intent(RECEIVE_GEOFENCE_ACTION),
                     PendingIntent.FLAG_UPDATE_CURRENT)
 
 
@@ -55,29 +55,24 @@ class DeviceGeofenceServiceImpl
     @SuppressLint("MissingPermission")
     override fun addGeofence(geofenceEntity: GeofenceEntity) {
 
-        val geoBuilder = Geofence.Builder()
-        geoBuilder.setRequestId(geofenceEntity.identity)
-        geoBuilder.setCircularRegion(geofenceEntity.lat!!,
-                geofenceEntity.log!!, geofenceEntity.radius!!)
-        geoBuilder.setExpirationDuration(Geofence.NEVER_EXPIRE)
-        geoBuilder.setTransitionTypes(when(geofenceEntity.transitionType) {
-            "TRANSITION_ENTER" -> Geofence.GEOFENCE_TRANSITION_ENTER
-            "TRANSITION_EXIT" -> Geofence.GEOFENCE_TRANSITION_EXIT
-            "TRANSITION_DWELL" -> Geofence.GEOFENCE_TRANSITION_DWELL
-            else -> Geofence.GEOFENCE_TRANSITION_EXIT
-        })
-
-        // Request Builder
-        val reqBuilder = GeofencingRequest.Builder()
-        reqBuilder.setInitialTrigger(0)
-        reqBuilder.addGeofence(geoBuilder.build())
-
-        // Add Geofences
-        val task  = getGeofencingClient().addGeofences(reqBuilder.build(),
-                geofenceEventHandlerPi).addOnSuccessListener {
+        val task = getGeofencingClient().addGeofences(
+                GeofencingRequest.Builder().apply {
+                    setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                    addGeofence(Geofence.Builder().apply {
+                        setRequestId(geofenceEntity.identity)
+                        setCircularRegion(geofenceEntity.lat!!, geofenceEntity.log!!, geofenceEntity.radius!!)
+                        setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        setNotificationResponsiveness(5000)
+                        setTransitionTypes(when(geofenceEntity.transitionType) {
+                            "TRANSITION_ENTER" -> Geofence.GEOFENCE_TRANSITION_ENTER
+                            "TRANSITION_EXIT" -> Geofence.GEOFENCE_TRANSITION_EXIT
+                            "TRANSITION_DWELL" -> Geofence.GEOFENCE_TRANSITION_DWELL
+                            else -> Geofence.GEOFENCE_TRANSITION_EXIT
+                        })
+                    }.build())
+                }.build(), geofenceEventHandlerPi).addOnSuccessListener {
                     Timber.d("GeofenceService: Geofence Created successfully")
                 }
-                // 4
                 .addOnFailureListener {
                     Timber.d("GeofenceService: Exception -> %s", it.message)
                 }

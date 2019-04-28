@@ -22,15 +22,25 @@ class SaveGeofenceAlertInteract
     @SuppressLint("MissingPermission")
     override suspend fun onExecuted(params: Params) {
 
-        geofencesService.saveGeofenceAlert(params.kid, params.geofence,
-                SaveGeofenceAlertDTO(params.kid, params.geofence,
-                        params.transitionType, params.terminal)).await()
+        geofencesService.saveGeofenceAlerts(params.kid,
+                params.geofenceViolatedAlertList.map { SaveGeofenceAlertDTO(it.kid, it.geofence,
+                        it.transitionType, it.terminal) }).await()
     }
 
     /**
      * Params
      */
     data class Params(
+            // Kid
+            var kid: String,
+            // Alert List
+            val geofenceViolatedAlertList:  List<GeofenceViolatedAlert>
+    )
+
+    /**
+     * Geofence Violated Alert
+     */
+    data class GeofenceViolatedAlert(
             // Kid
             var kid: String,
             // Identity
