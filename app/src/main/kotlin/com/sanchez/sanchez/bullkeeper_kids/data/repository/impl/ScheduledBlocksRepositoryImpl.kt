@@ -67,7 +67,7 @@ class ScheduledBlocksRepositoryImpl: SupportRepositoryImpl<ScheduledBlockEntity>
         val realm = Realm.getDefaultInstance()
         val scheduledBlockByKid =
                 realm.where(ScheduledBlockEntity::class.java)
-                .equalTo("id", kid)
+                .equalTo("kid", kid)
                 .findAll()
         realm.executeTransaction {
             scheduledBlockByKid?.deleteAllFromRealm()
@@ -82,7 +82,7 @@ class ScheduledBlocksRepositoryImpl: SupportRepositoryImpl<ScheduledBlockEntity>
         val realm = Realm.getDefaultInstance()
         val scheduledBlockByKid =
                 realm.where(ScheduledBlockEntity::class.java)
-                        .equalTo("id", kid)
+                        .equalTo("kid", kid)
                         .equalTo("id", block)
                         .findAll()
         realm.executeTransaction {

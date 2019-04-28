@@ -12,8 +12,8 @@ data class ScheduledBlockStatusChangedDTO(
         /**
          * Kid
          */
-        @JsonProperty("id")
-        var kid: String? = null,
+        @JsonProperty("kid")
+        var kid: String,
 
         /**
          * Scheduled Block Status

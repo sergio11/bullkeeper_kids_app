@@ -13,7 +13,7 @@ data class FunTimeDayScheduledChangedDTO(
          * Day
          */
         @JsonProperty("day")
-        var day: String? = null,
+        var day: String,
 
         /**
          * Enabled

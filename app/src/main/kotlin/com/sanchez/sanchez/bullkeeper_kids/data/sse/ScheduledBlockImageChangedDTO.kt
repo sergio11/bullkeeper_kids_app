@@ -12,18 +12,18 @@ data class ScheduledBlockImageChangedDTO(
         /**
          * Kid
          */
-        @JsonProperty("id")
-        var kid: String? = null,
+        @JsonProperty("kid")
+        var kid: String,
 
         /**
          * Block
          */
         @JsonProperty("block")
-        var block: String? = null,
+        var block: String,
 
         /**
          * Image
          */
         @JsonProperty("image")
-        var image: String? = null
+        var image: String
 )

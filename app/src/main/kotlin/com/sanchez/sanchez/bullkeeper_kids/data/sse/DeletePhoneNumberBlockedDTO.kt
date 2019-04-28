@@ -12,19 +12,19 @@ data class DeletePhoneNumberBlockedDTO(
         /**
          * Identity
          */
-        @JsonProperty("id")
-        var kid: String? = null,
+        @JsonProperty("kid")
+        var kid: String,
 
         /**
          * Terminal
          */
         @JsonProperty("terminal")
-        var terminal: String? = null,
+        var terminal: String,
 
         /**
          * Id Or Phone Number
          */
         @JsonProperty("id_or_phonenumber")
-        var idOrPhonenumber: String? = null
+        var idOrPhonenumber: String
 
 )

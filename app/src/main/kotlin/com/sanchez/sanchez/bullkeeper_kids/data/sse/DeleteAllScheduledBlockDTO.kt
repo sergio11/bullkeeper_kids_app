@@ -12,6 +12,6 @@ data class DeleteAllScheduledBlockDTO(
         /**
          * Kid
          */
-        @JsonProperty("id")
+        @JsonProperty("kid")
         var kid: String? = null
 )

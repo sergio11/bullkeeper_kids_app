@@ -11,11 +11,15 @@ import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.Geofence
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
+import com.sanchez.sanchez.bullkeeper_kids.core.functional.map
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
+import com.sanchez.sanchez.bullkeeper_kids.data.entity.GeofenceViolatedAlertEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceViolatedAlertRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceAlertInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
+import java.util.*
 import javax.inject.Inject
 
 
@@ -48,6 +52,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver()  {
      */
     @Inject
     internal lateinit var saveGeofenceAlertInteract: SaveGeofenceAlertInteract
+
+    /**
+     * Geofence Violated Alert Repository
+     */
+    @Inject
+    internal lateinit var geofenceViolatedAlertRepository: IGeofenceViolatedAlertRepository
 
     /**
      * Navigator
@@ -132,11 +142,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver()  {
 
             geofenceRepository
                     .findByIds(triggeringGeofences.map { it.requestId })
-                    .filter { it.isEnabled!! }.let {
+                    .filter { it.isEnabled!! }.let { triggeringGeofencesList ->
 
-                        if(it.isNotEmpty()) {
+                        if(triggeringGeofencesList.isNotEmpty()) {
 
-                            it.last().let { lastGeofence ->
+                            triggeringGeofencesList.last().let { lastGeofence ->
 
                                 navigator.showGeofenceViolatedActivity(context, lastGeofence.name, lastGeofence.transitionType,
                                         lastGeofence.radius)
@@ -149,11 +159,33 @@ class GeofenceBroadcastReceiver : BroadcastReceiver()  {
                                         })
                             }
 
+                            geofenceViolatedAlertRepository.save(triggeringGeofencesList.map {
+                                GeofenceViolatedAlertEntity(
+                                        timestamp = Date().time,
+                                        kid = it.kid,
+                                        geofence = it.identity,
+                                        transitionType = it.transitionType,
+                                        terminal = preferenceRepository.getPrefTerminalIdentity()
+                                )
+                            }.toList())
+
+
                             saveGeofenceAlertInteract(SaveGeofenceAlertInteract.Params(preferenceRepository.getPrefKidIdentity(),
-                                    it.map { geofenceEntity ->  SaveGeofenceAlertInteract.GeofenceViolatedAlert(geofenceEntity.kid!!, geofenceEntity.identity!!,
+                                    triggeringGeofencesList.map { geofenceEntity ->  SaveGeofenceAlertInteract.GeofenceViolatedAlert(geofenceEntity.kid!!, geofenceEntity.identity!!,
                                             geofenceEntity.transitionType!!, preferenceRepository.getPrefTerminalIdentity()) })){
                                 it.either(fun(_: Failure){
                                     Timber.d("Save Geofence Alert Failed")
+
+                                    geofenceViolatedAlertRepository.save(triggeringGeofencesList.map {
+                                        GeofenceViolatedAlertEntity(
+                                                timestamp = Date().time,
+                                                kid = it.kid,
+                                                geofence = it.identity,
+                                                transitionType = it.transitionType,
+                                                terminal = preferenceRepository.getPrefTerminalIdentity()
+                                        )
+                                    }.toList())
+
                                 }, fun(_: Unit){
                                     Timber.d("Save Geofence Alert Success")
                                 })

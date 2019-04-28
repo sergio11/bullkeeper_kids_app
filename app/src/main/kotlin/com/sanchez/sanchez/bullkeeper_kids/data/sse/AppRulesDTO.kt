@@ -13,12 +13,12 @@ data class AppRulesDTO(
          * Identity
          */
         @JsonProperty("identity")
-        var identity: String? = null,
+        var identity: String,
 
 
         /**
          * Type
          */
         @JsonProperty("type")
-        var type: String? = null
+        var type: String
 )

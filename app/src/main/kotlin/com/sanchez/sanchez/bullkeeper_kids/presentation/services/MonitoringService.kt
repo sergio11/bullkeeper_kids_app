@@ -370,6 +370,17 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     @Inject
     internal lateinit var deleteDisablePhotosInteract: DeleteDisableDevicePhotosInteract
 
+    /**
+     * Notify Pending Geofence ALerts Interact
+     */
+    @Inject
+    internal lateinit var notifyPendingGeofenceAlertsInteract: NotifyPendingGeofenceAlertsInteract
+
+    /**
+     * Active Geofences Interact
+     */
+    @Inject
+    internal lateinit var activeGeofencesInteract: ActiveGeofencesInteract
 
     /**
      * Device Policy Manager
@@ -611,6 +622,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      * Start Basic Services
      */
     private fun startBasicServices(){
+        // Active Geofences
+        activeGeofences()
         // Start Listen events
         startListenSse()
         // Enable HeartBeat Monitoring
@@ -619,6 +632,19 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         startLocationTracking()
         // Enable App Foreground Monitoring
         enableAppForegroundMonitoring()
+    }
+
+    /**
+     * Active Geofences
+     */
+    private fun activeGeofences(){
+        activeGeofencesInteract(UseCase.None()){
+            it.either(fnL = fun(failure) {
+                Timber.d("Active Geofences Failed")
+            }, fnR = fun(_: Unit) {
+                Timber.d("Active Geofences Success")
+            })
+        }
     }
 
     /**
@@ -658,6 +684,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 syncTerminalSMS()
                 syncScheduledBlocks()
                 syncGeofences()
+                notifyPendingGeofenceAlerts()
                 syncFunTime()
                 syncGalleryImages()
                 deleteDisableContacts()
@@ -1246,6 +1273,21 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         }
     }
 
+    /**
+     * Notify Pending Geofence Alerts
+     */
+    private fun notifyPendingGeofenceAlerts(){
+        notifyPendingGeofenceAlertsInteract(NotifyPendingGeofenceAlertsInteract.Params(
+                preferenceRepository.getPrefKidIdentity()
+        )){
+            it.either(fnL = fun(_: Failure){
+                Timber.d("Pending Geofences Alerts Failed")
+            }, fnR = fun(_: Unit){
+                Timber.d("Pending Geofences Alerts notified")
+            })
+        }
+    }
+
 
     /**
      * Sync Fun Time
@@ -1403,8 +1445,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun deleteScheduledBlockEventHandler(event: DeleteScheduledBlockDTO){
         Timber.d("SSE: Delete Scheduled Block Event Handler")
-        if(event.kid != null && event.block != null)
-            scheduledBlocksRepositoryImpl.deleteByKidAndBlock(event.kid!!, event.block!!)
+        scheduledBlocksRepositoryImpl.deleteByKidAndBlock(event.kid, event.block)
+
     }
 
     /**
@@ -1412,8 +1454,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun scheduledBlockImageChangeEventHandler(event: ScheduledBlockImageChangedDTO) {
         Timber.d("SSE: Scheduled Block Image Change Event Handler")
-        if(event.block != null && event.image != null)
-            scheduledBlocksRepositoryImpl.updateImage(event.block!!, event.image!!)
+        scheduledBlocksRepositoryImpl.updateImage(event.block, event.image)
+
     }
 
     /**
@@ -1426,13 +1468,15 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         scheduledBlocksRepositoryImpl.save(ScheduledBlockEntity(
                 id = event.identity,
                 name = event.name,
+                allowCalls = event.allowCalls,
+                createAt = event.createAt,
                 enable = event.enable,
                 repeatable = event.repeatable,
                 image = event.image, kid = event.kid,
-                startAt = event.startAt?.toString(fmt),
-                endAt = event.endAt?.toString(fmt),
+                startAt = event.startAt.toString(fmt),
+                endAt = event.endAt.toString(fmt),
                 description = event.description,
-                weeklyFrequency = event.weeklyFrequency?.joinToString(",")))
+                weeklyFrequency = event.weeklyFrequency.joinToString(",")))
     }
 
     /**
@@ -1441,8 +1485,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun scheduledBlockStatusChangedEventHandler(event: ScheduledBlockStatusChangedDTO){
         Timber.d("SSE: Scheduled Block Status Changed Event")
         event.scheduledBlockStatusList.forEach {
-            if(it.identity != null && it.enable != null)
-            scheduledBlocksRepositoryImpl.updateStatus(it.identity!!, it.enable!!)
+            scheduledBlocksRepositoryImpl.updateStatus(it.identity, it.enable)
         }
 
     }
@@ -1453,10 +1496,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun  appRulesListSavedEventHandler(event: AppRulesListSavedDTO){
         Timber.d("SSE: App Rules List Saved")
         event.appRulesList.forEach {
-            if(it.identity != null && it.type != null) {
-                Timber.d("SSE: Update App Rules: app: %s, type : %s", it.identity!!, it.type!!)
-                appsInstalledRepository.updateAppRule(it.identity!!, it.type!!)
-            }
+            Timber.d("SSE: Update App Rules: app: %s, type : %s", it.identity, it.type)
+            appsInstalledRepository.updateAppRule(it.identity, it.type)
         }
     }
 
@@ -1465,8 +1506,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun appRulesSavedEventHandler(event: AppRulesSavedDTO) {
         Timber.d("SSE: App Rules Saved Event Handler")
-        if(event.app != null && event.type != null)
-            appsInstalledRepository.updateAppRule(event.app!!, event.type!!)
+        appsInstalledRepository.updateAppRule(event.app, event.type)
     }
 
 
@@ -1475,7 +1515,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun bedTimeStatusChangedHandler(event: TerminalBedTimeStatusChangedDTO) {
         Timber.d("SSE: Bed Time Status Changed Handler")
-        event.enabled?.let { preferenceRepository.setBedTimeEnabled(it) }
+        event.enabled.let { preferenceRepository.setBedTimeEnabled(it) }
     }
 
     /**
@@ -1483,7 +1523,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun terminalCameraStatusChangedHandler(event: TerminalCameraStatusChangedDTO) {
         Timber.d("SSE: Terminal Camera Status Changed Handler")
-        event.enabled?.let {
+        event.enabled.let {
             // Set camera status on preferences
             preferenceRepository.setCameraEnabled(it)
             // Configure camera
@@ -1497,7 +1537,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun terminalScreenStatusChangedHandler(event: TerminalScreenStatusChangedDTO) {
         Timber.d("SSE: Terminal Screen status Changed Handler")
-        event.enabled?.let { preferenceRepository.setScreenEnabled(it) }
+        event.enabled.let { preferenceRepository.setScreenEnabled(it) }
     }
 
     /**
@@ -1505,7 +1545,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun terminalSettingsStatusChangedHandler(event: TerminalSettingsStatusChangedDTO) {
         Timber.d("SSE: Terminal Settings status Changed Handler")
-        event.enabled?.let { preferenceRepository.setSettingsEnabled(it) }
+        event.enabled.let { preferenceRepository.setSettingsEnabled(it) }
 
         localBroadcastManager.sendBroadcast(Intent(
                 SETTINGS_STATUS_CHANGED_ACTION))
@@ -1520,9 +1560,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun appDisabledStatusChangedHandler(event: AppDisabledStatusChangedDTO) {
         Timber.d("SSE: App Disabled Status Changed Handler")
-        if(event.app != null && event.disabled != null)
-            appsInstalledRepository.updateAppDisabledStatus(event.app!!,
-                    event.disabled!!)
+        appsInstalledRepository.updateAppDisabledStatus(event.app,
+                event.disabled)
+
     }
 
     /**
@@ -1555,7 +1595,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun deletePhoneNumberBlockedEventHandler(event: DeletePhoneNumberBlockedDTO){
         Timber.d("SSE: Delete Phone Number Blocked Event Handler")
-        event.idOrPhonenumber?.let { phoneNumberRepository.deleteByPhoneNumberOrId(it) }
+        event.idOrPhonenumber.let { phoneNumberRepository.deleteByPhoneNumberOrId(it) }
     }
 
     /**
@@ -1732,7 +1772,14 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun checkCurrentFunTimeDayScheduledFor(day: String, totalHours: Long, enable: Boolean) {
 
-        val currentFunTimeDayScheduled = preferenceRepository.getCurrentFunTimeDayScheduled()
+        var currentFunTimeDayScheduled = preferenceRepository.getCurrentFunTimeDayScheduled()
+
+        if(currentFunTimeDayScheduled.isEmpty()) {
+            val format = SimpleDateFormat("EEEE", Locale.US)
+            currentFunTimeDayScheduled = format.format(Calendar.getInstance().time)
+                    .toUpperCase()
+            preferenceRepository.setCurrentFunTimeDayScheduled(currentFunTimeDayScheduled)
+        }
 
         if (currentFunTimeDayScheduled == day) {
 
@@ -1786,7 +1833,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
 
 
         checkCurrentFunTimeDayScheduledFor(
-                day = funTimeDayScheduledChangedDTO.day!!,
+                day = funTimeDayScheduledChangedDTO.day,
                 totalHours = funTimeDayScheduledChangedDTO.totalHours,
                 enable = funTimeDayScheduledChangedDTO.enabled)
 
@@ -1971,7 +2018,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun phoneCallsStatusChangedEventHandler(phoneCallsStatusChangedDTO: TerminalPhoneCallsStatusChangedDTO){
         Timber.d("SSE: Phone Calls Status Changed Event Handler")
-        phoneCallsStatusChangedDTO.enabled?.let { preferenceRepository.setPhoneCallsEnabled(it) }
+        phoneCallsStatusChangedDTO.enabled.let { preferenceRepository.setPhoneCallsEnabled(it) }
     }
 
     /**
