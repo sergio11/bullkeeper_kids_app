@@ -15,6 +15,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.data.repository.IGeofenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.geofences.SaveGeofenceAlertInteract
 import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
+import com.sanchez.sanchez.bullkeeper_kids.services.ILocalNotificationService
 import javax.inject.Inject
 
 
@@ -60,6 +61,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver()  {
     @Inject
     internal lateinit var preferenceRepository: IPreferenceRepository
 
+    /**
+     * Local Notification Service
+     */
+    @Inject
+    internal lateinit var localNotificationService: ILocalNotificationService
+
 
     /**
      * State
@@ -68,6 +75,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver()  {
      */
 
     private lateinit var context: Context
+
+    private val notificationId: Int = 12357
 
 
     /**
@@ -128,9 +137,16 @@ class GeofenceBroadcastReceiver : BroadcastReceiver()  {
                         if(it.isNotEmpty()) {
 
                             it.last().let { lastGeofence ->
+
                                 navigator.showGeofenceViolatedActivity(context, lastGeofence.name, lastGeofence.transitionType,
                                         lastGeofence.radius)
 
+                                localNotificationService.sendNotification(ILocalNotificationService.NotificationTypeEnum.IMPORTANT, notificationId,
+                                        lastGeofence.name!!, when(lastGeofence.transitionType) {
+                                            "TRANSITION_ENTER" -> context.getString(R.string.geofence_transition_enter_description)
+                                            "TRANSITION_EXIT" -> context.getString(R.string.geofence_transition_exit_description)
+                                            else -> context.getString(R.string.geofence_transition_exit_description)
+                                        })
                             }
 
                             saveGeofenceAlertInteract(SaveGeofenceAlertInteract.Params(preferenceRepository.getPrefKidIdentity(),
