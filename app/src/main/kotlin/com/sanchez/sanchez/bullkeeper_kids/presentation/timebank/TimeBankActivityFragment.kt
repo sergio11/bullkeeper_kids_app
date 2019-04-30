@@ -102,6 +102,7 @@ class TimeBankActivityFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         soundManager.stopSound(timeBankStreamId)
+        mLocalBroadcastManager?.unregisterReceiver(mBroadcastReceiver)
     }
 
 

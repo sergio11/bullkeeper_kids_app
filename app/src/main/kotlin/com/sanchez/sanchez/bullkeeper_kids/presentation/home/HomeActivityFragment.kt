@@ -165,10 +165,15 @@ class HomeActivityFragment : BaseFragment() {
      */
     override fun onResume() {
         super.onResume()
+        showFunTimeStatus()
+    }
 
-        if(isAdded) {
-            showFunTimeStatus()
-        }
+    /**
+     *
+     */
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mLocalBroadcastManager?.unregisterReceiver(mBroadcastReceiver)
     }
 
     /**
