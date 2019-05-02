@@ -1359,7 +1359,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 Timber.d("Unlink Terminal Failed")
             }, fnR = fun(_){
                 Timber.d("Unlink Terminal Success")
-                preferenceRepository.setAuthToken(IPreferenceRepository.AUTH_TOKEN_DEFAULT_VALUE)
                 navigator.showLogin(this)
                 stopSelf()
             })

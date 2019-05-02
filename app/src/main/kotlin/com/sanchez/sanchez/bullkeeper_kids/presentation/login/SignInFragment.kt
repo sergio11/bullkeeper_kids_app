@@ -18,6 +18,7 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.components.SignInComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.exception.Failure
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.dialogs.NoticeDialogFragment
 import com.sanchez.sanchez.bullkeeper_kids.domain.interactors.account.AuthenticateInteract
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import kotlinx.android.synthetic.main.fragment_login.*
 import timber.log.Timber
 import java.lang.IllegalStateException
@@ -44,6 +45,12 @@ class SignInFragment : BaseFragment(), FacebookCallback<LoginResult> {
     lateinit var signInViewModel: SignInViewModel
 
     /**
+     * Preferences Repository
+     */
+    @Inject
+    lateinit var preferencesRepository: IPreferenceRepository
+
+    /**
      * CallBack Manager
      */
     private lateinit var callbackManager: CallbackManager
@@ -63,6 +70,7 @@ class SignInFragment : BaseFragment(), FacebookCallback<LoginResult> {
             throw IllegalStateException("Context is not an instance of ISignInActivityHandler")
 
         signInActivityHandler = context
+
     }
 
     /**
@@ -72,6 +80,12 @@ class SignInFragment : BaseFragment(), FacebookCallback<LoginResult> {
         super.onCreate(savedInstanceState)
         initializeInjector()
 
+        // Reset Session Data
+        preferencesRepository.setPrefKidIdentity(IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE)
+        preferencesRepository.setPrefTerminalIdentity(IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)
+        preferencesRepository.setPrefDeviceId(IPreferenceRepository.CURRENT_DEVICE_ID_DEFAULT_VALUE)
+        preferencesRepository.setPrefCurrentUserIdentity(IPreferenceRepository.CURRENT_USER_IDENTITY_DEFAULT_VALUE)
+        preferencesRepository.setAuthToken(IPreferenceRepository.AUTH_TOKEN_DEFAULT_VALUE)
         // Create the observer which updates the UI.
         val signInSuccessObserver = Observer<SignInSuccessView> { signInSuccessView ->
             signInActivityHandler.hideProgressDialog()

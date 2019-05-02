@@ -96,10 +96,7 @@ class FirstLinkTerminalPageFragment: SupportPageFragment<LinkDeviceTutorialCompo
                 contentText.visibility = VISIBLE
                 linkDeviceTutorialHandler.hideProgressDialog()
             } else if (failure is Failure.UnauthorizedRequestError) {
-                preferenceRepository.setPrefKidIdentity(IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE)
-                preferenceRepository.setPrefTerminalIdentity(IPreferenceRepository.TERMINAL_IDENTITY_DEFAULT_VALUE)
                 linkDeviceTutorialHandler.goToLogin()
-
             } else {
                 linkDeviceTutorialHandler.goToHome()
             }
