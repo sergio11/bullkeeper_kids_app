@@ -8,7 +8,8 @@ import timber.log.Timber
 /**
     Geofence Violated Alert Repository
  **/
-class GeofenceViolatedAlertRepositoryImpl: SupportRepositoryImpl<GeofenceViolatedAlertEntity>(), IGeofenceViolatedAlertRepository {
+class GeofenceViolatedAlertRepositoryImpl: SupportRepositoryImpl<GeofenceViolatedAlertEntity>(),
+        IGeofenceViolatedAlertRepository {
 
     /**
      * Delete Model

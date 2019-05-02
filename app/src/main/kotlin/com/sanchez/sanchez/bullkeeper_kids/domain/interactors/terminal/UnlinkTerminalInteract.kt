@@ -22,7 +22,9 @@ class UnlinkTerminalInteract
             private val phoneNumberRepository: IPhoneNumberRepository,
             private val scheduledBlocksRepository: IScheduledBlocksRepository,
             private val smsRepository: ISmsRepository,
-            private val preferencesRepository: IPreferenceRepository):
+            private val preferencesRepository: IPreferenceRepository,
+            private val galleryRepository: IGalleryRepository,
+            private val geofenceViolatedAlertRepository: IGeofenceViolatedAlertRepository):
             UseCase<Unit, UseCase.None>(retrofit){
 
 
@@ -31,6 +33,9 @@ class UnlinkTerminalInteract
      */
     override suspend fun onExecuted(params: None) {
 
+        /**
+         * preferenceRepository.setAuthToken(IPreferenceRepository.AUTH_TOKEN_DEFAULT_VALUE)
+         */
         appAllowedByScheduledRepository.deleteAll()
         appsInstalledRepository.deleteAll()
         callsRepository.deleteAll()
@@ -41,6 +46,8 @@ class UnlinkTerminalInteract
         phoneNumberRepository.deleteAll()
         scheduledBlocksRepository.deleteAll()
         smsRepository.deleteAll()
+        galleryRepository.deleteAll()
+        geofenceViolatedAlertRepository.deleteAll()
 
         // Reset Preferences
         preferencesRepository.setPrefKidIdentity(IPreferenceRepository.KID_IDENTITY_DEFAULT_VALUE)
