@@ -13,8 +13,8 @@ buildscript {
     ext.min_sdk = 21
 
     ext.application_id = 'com.sanchez.sanchez.bullkeeper_kids'
-    ext.version_name = '0.1.35'
-    ext.version_code = 135
+    ext.version_name = '0.1.36'
+    ext.version_code = 136
     ext.test_runner = 'android.support.test.runner.AndroidJUnitRunner'
 
     repositories {

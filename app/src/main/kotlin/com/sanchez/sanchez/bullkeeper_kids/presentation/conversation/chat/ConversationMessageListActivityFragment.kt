@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.LocalBroadcastManager
 import android.view.View
+import com.sanchez.sanchez.bullkeeper_kids.BuildConfig
 import com.sanchez.sanchez.bullkeeper_kids.R
 import com.sanchez.sanchez.bullkeeper_kids.core.di.HasComponent
 import com.sanchez.sanchez.bullkeeper_kids.core.di.components.ConversationComponent
@@ -158,7 +159,9 @@ class ConversationMessageListActivityFragment : BaseFragment(),
                                         messageSavedDTO.from.firstName ?: String.empty(),
                                         messageSavedDTO.from.lastName
                                                 ?: String.empty()),
-                                messageSavedDTO.from.profileImage ?: String.empty()
+                                if(!messageSavedDTO.from.profileImage.isNullOrEmpty())
+                                    BuildConfig.BASE_URL + String.format("images/%s", messageSavedDTO.from.profileImage)
+                                 else String.empty()
                         ), true)
 
                         viewModel.setMessagesAsViewed(messageSavedDTO.conversation,
