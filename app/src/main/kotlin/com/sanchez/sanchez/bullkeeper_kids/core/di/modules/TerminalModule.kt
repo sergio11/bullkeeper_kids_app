@@ -68,12 +68,14 @@ class TerminalModule {
             phoneNumberRepository: IPhoneNumberRepository,
             scheduledBlocksRepository: IScheduledBlocksRepository,
             smsRepository: ISmsRepository,
-            preferencesRepository: IPreferenceRepository
+            preferencesRepository: IPreferenceRepository,
+            galleryRepository: IGalleryRepository,
+            geofenceViolatedAlertRepository: IGeofenceViolatedAlertRepository
     ): UnlinkTerminalInteract
             = UnlinkTerminalInteract(retrofit, appAllowedByScheduledRepository, appsInstalledRepository,
             callsRepository, contactsRepository, funTimeDayScheduledRepository, geofenceRepository,
             packageUsageStatsRepository, phoneNumberRepository, scheduledBlocksRepository,
-            smsRepository, preferencesRepository)
+            smsRepository, preferencesRepository, galleryRepository, geofenceViolatedAlertRepository)
 
 
     /**

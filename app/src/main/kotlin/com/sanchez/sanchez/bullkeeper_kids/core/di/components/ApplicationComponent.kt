@@ -46,7 +46,7 @@ import javax.inject.Singleton
     ApplicationModule::class, NetModule::class,
     GlobalServiceModule::class, PackagesModule::class,
     CallDetailsModule::class, SmsModule::class, ScheduledBlocksModule::class, PhoneNumberBlockedModule::class,
-    GeofencesModule::class, ContactsModule::class, FunTimeModule::class, TerminalModule::class])
+    GeofencesModule::class, ContactsModule::class, FunTimeModule::class, TerminalModule::class, GalleryModule::class])
 interface ApplicationComponent {
 
     /**
