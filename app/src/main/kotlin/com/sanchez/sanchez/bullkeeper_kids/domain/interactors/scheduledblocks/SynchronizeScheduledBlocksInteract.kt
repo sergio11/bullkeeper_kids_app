@@ -1,6 +1,6 @@
 package com.sanchez.sanchez.bullkeeper_kids.domain.interactors.scheduledblocks
 
-import android.content.Context
+
 import com.sanchez.sanchez.bullkeeper_kids.core.interactor.UseCase
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.AppAllowedByScheduledEntity
 import com.sanchez.sanchez.bullkeeper_kids.data.entity.ScheduledBlockEntity
@@ -33,7 +33,7 @@ class SynchronizeScheduledBlocksInteract
         val response = scheduledBlocksService.getAllScheduledBlocks(kid)
                 .await()
 
-        response.data?.map {scheduledBlock ->
+        val scheduledBlocksResponseList = response.data?.map {scheduledBlock ->
             Pair(ScheduledBlockEntity(
                     id = scheduledBlock.identity,
                     name = scheduledBlock.name,
@@ -53,11 +53,22 @@ class SynchronizeScheduledBlocksInteract
                                 app = it.app?.packageName,
                                 scheduledBlock = scheduledBlock.identity
                         ) })
-        }?.onEach {
-            scheduledBlocksRepository.save(it.first)
-            it.second?.let {
-                appAllowedByScheduledRepository.deleteAll()
-                appAllowedByScheduledRepository.save(it) }
+        }?.toList()
+
+        if(!scheduledBlocksResponseList.isNullOrEmpty()) {
+
+            scheduledBlocksResponseList.forEach {scheduledBlockResponse ->
+                scheduledBlocksRepository.save(scheduledBlockResponse.first)
+                scheduledBlockResponse.second?.let {
+                    appAllowedByScheduledRepository.deleteAll()
+                    appAllowedByScheduledRepository.save(it) }
+            }
+
+        }  else {
+
+            scheduledBlocksRepository.deleteAll()
+            appAllowedByScheduledRepository.deleteAll()
         }
+
     }
 }

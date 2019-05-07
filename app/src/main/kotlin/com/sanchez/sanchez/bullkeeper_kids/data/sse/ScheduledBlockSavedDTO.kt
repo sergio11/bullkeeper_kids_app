@@ -2,6 +2,7 @@ package com.sanchez.sanchez.bullkeeper_kids.data.sse
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sanchez.sanchez.bullkeeper_kids.data.net.models.response.AppAllowedByScheduledDTO
 import org.joda.time.LocalTime
 
 /**
@@ -75,6 +76,12 @@ data class ScheduledBlockSavedDTO(
          */
         @JsonProperty("end_at")
         var endAt: LocalTime,
+
+        /**
+         * Apps Allowed
+         */
+        @JsonProperty("apps_allowed")
+        var appsAllowed: List<AppAllowedByScheduledDTO>? = null,
 
         /**
          * Weekly Frequency

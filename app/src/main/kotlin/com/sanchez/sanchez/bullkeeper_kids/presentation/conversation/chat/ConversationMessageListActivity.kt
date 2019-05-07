@@ -138,6 +138,7 @@ class ConversationMessageListActivity : BaseActivity(),
         const val ALL_MESSAGES_DELETED_EVENT = "com.sanchez.sanchez.sergio.bullkeeper.all.messages.deleted"
         const val DELETED_MESSAGES_EVENT = "com.sanchez.sanchez.sergio.bullkeeper.deleted_messages"
         const val SET_MESSAGES_AS_VIEWED_EVENT = "com.sanchez.sanchez.sergio.bullkeeper.messages.viewed"
+        const val DELETE_CONVERSATION_EVENT = "com.sanchez.sanchez.sergio.bullkeeper.delete.conversation"
         /**
          * Args
          */

@@ -27,8 +27,10 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.Conver
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.ALL_CONVERSATION_DELETED_EVENT
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.ALL_MESSAGES_DELETED_ARG
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.ALL_MESSAGES_DELETED_EVENT
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.CONVERSATION_ID_ARG
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.DELETED_MESSAGES_ARG
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.DELETED_MESSAGES_EVENT
+import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.DELETE_CONVERSATION_EVENT
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.MESSAGE_SAVED_ARG
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.MESSAGE_SAVED_EVENT
 import com.sanchez.sanchez.bullkeeper_kids.presentation.conversation.chat.ConversationMessageListActivity.Companion.SET_MESSAGES_AS_VIEWED_ARG
@@ -173,6 +175,34 @@ class ConversationMessageListActivityFragment : BaseFragment(),
             }
         }
     }
+
+    /**
+     * Delete Conversation Event Broadcast Receiver
+     */
+    private var deleteConversationEventBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Timber.d("SSE: Delete Conversation Event")
+            intent?.let {
+                if(it.hasExtra(CONVERSATION_ID_ARG)) {
+
+                    if(it.getStringExtra(CONVERSATION_ID_ARG) == conversation) {
+
+                        activityHandler.showNoticeDialog(R.string.conversation_was_deleted_dialog, object: NoticeDialogFragment.NoticeDialogListener {
+                            /**
+                             * On Accepted
+                             */
+                            override fun onAccepted(dialog: DialogFragment) {
+                                activityHandler.closeActivity()
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
+
+
+
 
     /**
      * All Conversation Event Broadcast Receiver
@@ -342,6 +372,10 @@ class ConversationMessageListActivityFragment : BaseFragment(),
             viewModel.loadConversationDetail(memberOne!!, memberTwo!!)
         }
 
+        mLocalBroadcastManager.registerReceiver(deleteConversationEventBroadcastReceiver, IntentFilter().apply {
+            addAction(DELETE_CONVERSATION_EVENT)
+        })
+
         mLocalBroadcastManager.registerReceiver(messageSavedEventBroadcastReceiver, IntentFilter().apply {
             addAction(MESSAGE_SAVED_EVENT)
         })
@@ -369,6 +403,7 @@ class ConversationMessageListActivityFragment : BaseFragment(),
     override fun onStop() {
         super.onStop()
 
+        mLocalBroadcastManager.unregisterReceiver(deleteConversationEventBroadcastReceiver)
         mLocalBroadcastManager.unregisterReceiver(messageSavedEventBroadcastReceiver)
         mLocalBroadcastManager.unregisterReceiver(allConversationEventBroadcastReceiver)
         mLocalBroadcastManager.unregisterReceiver(allMessagesDeletedEventBroadcastReceiver)

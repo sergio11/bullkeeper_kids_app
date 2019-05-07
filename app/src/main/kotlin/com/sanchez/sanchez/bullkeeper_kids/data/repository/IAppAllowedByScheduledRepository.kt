@@ -18,4 +18,9 @@ interface IAppAllowedByScheduledRepository: ISupportRepository<AppAllowedBySched
      * Any App Allowed
      */
     fun anyAppAllowed( scheduledBlock: String): Boolean
+
+    /**
+     * Delete By Scheduled Block Id
+     */
+    fun deleteByScheduledBlockId(id: String)
 }
