@@ -74,6 +74,7 @@ class SaveAppInstalledInteract
                         val appInstalledSaved = appsInstalledRepository.findByPackageName(appDTO.packageName!!)
                         appInstalledSaved?.let {appSaved ->
                             appSaved.serverId = appDTO.identity
+                            appSaved.appRule = appDTO.appRule
                             appSaved.sync = 1
                             appSaved.removed = false
                             appsInstalledRepository.save(appSaved)

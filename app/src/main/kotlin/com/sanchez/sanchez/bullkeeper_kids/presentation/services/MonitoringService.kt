@@ -1435,7 +1435,10 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
      */
     private fun deleteAllScheduledBlockEventHandler(event: DeleteAllScheduledBlockDTO){
         Timber.d("SSE: Delete All Scheduled Block Event Handler")
-        event.kid?.let { scheduledBlocksRepositoryImpl.deleteByKid(it) }
+        event.kid?.let {
+            scheduledBlocksRepositoryImpl.deleteByKid(it)
+            appsAllowedByScheduledRepository.deleteAll()
+        }
 
     }
 
@@ -1445,6 +1448,8 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     private fun deleteScheduledBlockEventHandler(event: DeleteScheduledBlockDTO){
         Timber.d("SSE: Delete Scheduled Block Event Handler")
         scheduledBlocksRepositoryImpl.deleteByKidAndBlock(event.kid, event.block)
+
+        appsAllowedByScheduledRepository.deleteByScheduledBlockId(event.block)
 
     }
 
@@ -1464,6 +1469,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         Timber.d("SSE: Scheduled Block Saved Event Handler")
         val fmt = DateTimeFormat.forPattern(
                 getString(R.string.joda_local_time_format_server_response))
+
         scheduledBlocksRepositoryImpl.save(ScheduledBlockEntity(
                 id = event.identity,
                 name = event.name,
@@ -1476,6 +1482,18 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 endAt = event.endAt.toString(fmt),
                 description = event.description,
                 weeklyFrequency = event.weeklyFrequency.joinToString(",")))
+
+        appsAllowedByScheduledRepository.deleteByScheduledBlockId(event.identity)
+
+        event.appsAllowed?.filter { it.terminal != null && it.terminal?.identity.equals(preferenceRepository.getPrefTerminalIdentity()) }
+                ?.map { AppAllowedByScheduledEntity(
+                        identity = String.format("%s_%s", it.app?.packageName, event.identity),
+                        app = it.app?.packageName,
+                        scheduledBlock = event.identity
+                ) }?.let {
+                    appsAllowedByScheduledRepository.save(it)
+                }
+
     }
 
     /**
@@ -1975,6 +1993,23 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     }
 
     /**
+     * Delete Conversation Event Handler
+     * @param deletedConversationDTO
+     */
+    private fun deleteConversationEventHandler(deletedConversationDTO: DeletedConversationDTO){
+        Timber.d("SSE: Delete Conversation DTO")
+
+        localBroadcastManager.sendBroadcast(
+                Intent(ConversationMessageListActivity.DELETE_CONVERSATION_EVENT).apply {
+                    putExtras(Bundle().apply {
+                        putSerializable(ConversationMessageListActivity.CONVERSATION_ID_ARG, deletedConversationDTO.conversation)
+                        putSerializable(ConversationMessageListActivity.MEMBER_ONE_ARG, deletedConversationDTO.memberOne)
+                        putSerializable(ConversationMessageListActivity.MEMBER_TWO_ARG, deletedConversationDTO.memberTwo)
+                    })
+                })
+    }
+
+    /**
      * Contact Disabled Event Handler
      * @param contactDisabledDTO
      */
@@ -2125,7 +2160,6 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                                 objectMapper.readValue(eventMessage,
                                         ScheduledBlockStatusChangedDTO::class.java)
                         )
-
                         // Add Phone Number Blocked Event
                         ServerEventTypeEnum.ADD_PHONE_NUMBER_BLOCKED_EVENT ->
                             addPhoneNumberBlockedEventHandler(
@@ -2278,6 +2312,12 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                         ServerEventTypeEnum.GEOFENCE_STATUS_CHANGED_EVENT -> {
                             geofenceStatusChangedEventHandler(objectMapper.readValue(eventMessage,
                                     GeofenceStatusChangedDTO::class.java))
+                        }
+
+                        // Deleted Conversation Event
+                        ServerEventTypeEnum.DELETED_CONVERSATION_EVENT -> {
+                            deleteConversationEventHandler(objectMapper.readValue(eventMessage,
+                                    DeletedConversationDTO::class.java))
                         }
 
                         // Unknown Event

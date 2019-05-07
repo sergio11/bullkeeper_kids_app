@@ -11,7 +11,6 @@ import timber.log.Timber
 class AppAllowedByScheduledRepositoryImpl: SupportRepositoryImpl<AppAllowedByScheduledEntity>(),
     IAppAllowedByScheduledRepository{
 
-
     /**
      * Delete
      */
@@ -82,4 +81,19 @@ class AppAllowedByScheduledRepositoryImpl: SupportRepositoryImpl<AppAllowedBySch
         realm.close()
         return totalAppsAllowed > 0
     }
+
+    /**
+     * Delete By Scheduled Block Id
+     */
+    override fun deleteByScheduledBlockId(id: String) {
+        val realm = Realm.getDefaultInstance()
+        val appAllowedList = realm.where(AppAllowedByScheduledEntity::class.java)
+                .equalTo("scheduledBlock", id)
+                .findAll()
+        realm.executeTransaction {
+            appAllowedList?.deleteAllFromRealm()
+        }
+        realm.close()
+    }
+
 }

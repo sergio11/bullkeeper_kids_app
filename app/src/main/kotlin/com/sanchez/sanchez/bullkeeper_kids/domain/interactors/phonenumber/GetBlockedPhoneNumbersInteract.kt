@@ -31,15 +31,20 @@ class GetBlockedPhoneNumbersInteract
         // Get Phone Number Blocked
         val response = phoneNumberService.getPhoneNumberBlocked(kid, terminal).await()
 
-        response.data?.map {
+        val phoneNumberList = response.data?.map {
             PhoneNumberBlockedEntity(
                     identity = it.identity,
                     blockedAt = it.blockedAt,
                     prefix = it.prefix,
                     number = it.number,
                     phoneNumber = it.phoneNumber)
-        }?.let { phoneNumbersBlockedToSave ->
-            phoneNumberRepository.save(phoneNumbersBlockedToSave)
+        }?.toList()
+
+        if(!phoneNumberList.isNullOrEmpty()) {
+            phoneNumberRepository.save(phoneNumberList)
+        } else {
+            phoneNumberRepository.deleteAll()
         }
+
     }
 }
