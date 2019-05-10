@@ -74,7 +74,8 @@
         </activity>
 
         <!-- Sign In Activity -->
-        <activity android:name=".presentation.login.SignInActivity" />
+        <activity android:name=".presentation.login.SignInActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- Home Activity -->
         <activity
