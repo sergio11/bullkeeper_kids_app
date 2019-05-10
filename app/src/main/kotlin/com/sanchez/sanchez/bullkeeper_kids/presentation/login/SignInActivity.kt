@@ -21,7 +21,6 @@ class SignInActivity : BaseActivity(), ISignInActivityHandler,
     HasComponent<SignInComponent>{
 
 
-
     /**
      * Sign In Component
      */
