@@ -17,11 +17,11 @@ import com.sanchez.sanchez.bullkeeper_kids.core.di.components.LinkDeviceTutorial
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.ActivityModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.LinkTerminalModule
 import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.GuardianModule
-import com.sanchez.sanchez.bullkeeper_kids.core.di.modules.TerminalModule
 import com.sanchez.sanchez.bullkeeper_kids.core.extension.addFragment
 import com.sanchez.sanchez.bullkeeper_kids.core.navigation.INavigator
 import com.sanchez.sanchez.bullkeeper_kids.core.platform.SupportActivity
 import com.sanchez.sanchez.bullkeeper_kids.domain.models.KidEntity
+import com.sanchez.sanchez.bullkeeper_kids.domain.repository.IPreferenceRepository
 import com.sanchez.sanchez.bullkeeper_kids.presentation.linkterminal.pages.*
 import com.sanchez.sanchez.bullkeeper_kids.presentation.tutorial.ILinkDeviceTutorialHandler
 import timber.log.Timber
@@ -77,6 +77,12 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
      */
     @Inject
     internal lateinit var navigator: INavigator
+
+    /**
+     * Preference Repository
+     */
+    @Inject
+    internal lateinit var preferenceRepository: IPreferenceRepository
 
     /**
      * Tutorial Support Fragment
@@ -191,8 +197,7 @@ class LinkDeviceTutorialActivity : SupportActivity(), ILinkDeviceTutorialHandler
                     }
                 })
                 .setOnSkipClickListener {
-                    finishAndRemoveTask()
-                    System.exit(0)
+                    goToLogin()
                 }
                 .setPagesCount(TUTORIAL_PAGES_COUNT)
                 .build()

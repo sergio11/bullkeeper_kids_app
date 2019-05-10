@@ -205,7 +205,7 @@ class DisabledAppScreenActivity : AppCompatActivity() {
     /**
      * On Activity Result
      */
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_UNINSTALL_PACKAGE && resultCode == Activity.RESULT_OK) {
             finish()

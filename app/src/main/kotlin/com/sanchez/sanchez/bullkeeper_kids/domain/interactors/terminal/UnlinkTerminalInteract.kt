@@ -33,9 +33,7 @@ class UnlinkTerminalInteract
      */
     override suspend fun onExecuted(params: None) {
 
-        /**
-         * preferenceRepository.setAuthToken(IPreferenceRepository.AUTH_TOKEN_DEFAULT_VALUE)
-         */
+
         appAllowedByScheduledRepository.deleteAll()
         appsInstalledRepository.deleteAll()
         callsRepository.deleteAll()
