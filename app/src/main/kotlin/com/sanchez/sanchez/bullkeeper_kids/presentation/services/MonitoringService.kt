@@ -71,6 +71,7 @@ import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.AppLockScreen
 import com.sanchez.sanchez.bullkeeper_kids.presentation.lockscreen.SettingsLockScreenActivity.Companion.UNLOCK_SETTINGS_SCREEN
 import com.sanchez.sanchez.bullkeeper_kids.services.IAppOverlayService
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
@@ -453,6 +454,9 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
     // Last Connectivity
     private var lastConnectivity: Connectivity? = null
 
+    // Disposable
+    private lateinit var reactiveNetworkDisposable: Disposable
+
 
     /**
      * Get Notification
@@ -485,6 +489,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
                 .unregisterContentObserver(mediaStoreImagesContentObserver)
         disableAppForegroundMonitoring()
         disableHeartBeatMonitoring()
+        reactiveNetworkDisposable.dispose()
         stopListenSse()
     }
 
@@ -525,7 +530,7 @@ class MonitoringService : Service(), ServerSentEvent.Listener {
         // Scheduled Check Terminal Status
         scheduleCheckTerminalStatus(this)
 
-        ReactiveNetwork
+        reactiveNetworkDisposable = ReactiveNetwork
                 .observeNetworkConnectivity(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
