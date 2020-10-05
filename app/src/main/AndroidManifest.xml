@@ -119,11 +119,7 @@
         <receiver
             android:name=".presentation.broadcast.AwakenMonitoringServiceBroadcastReceiver"
             android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="bisite.usal.es.encelocalizacion.TrackingServiceDestroyed" />
-            </intent-filter>
-        </receiver>
+            android:exported="true" />
 
         <!-- Scheduling Monitoring Broadcast Receiver -->
         <receiver
