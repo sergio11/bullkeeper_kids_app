@@ -147,7 +147,7 @@
     <string name="authenticating_error_ocurred">An error occurred while authenticating, please try again</string>
     <string name="you_must_provide_email_and_password">You must provide an email and password</string>
     <!-- Sign in facebook -->
-    <string name="facebook_app_id">296606527738358</string>
+    <string name="facebook_app_id">your_api_key_here</string>
     <string name="authenticating_with_facebook">Log in through Facebook</string>
     <string name="authenticating_with_facebook_canceled">The login was canceled by the user</string>
     <string name="authenticating_with_facebook_error">There was an error when logging in through Facebook</string>
