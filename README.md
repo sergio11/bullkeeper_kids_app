@@ -34,3 +34,6 @@ It has an integrated messaging system that will allow the child / adolescent to 
 The application will control the use of the device at all times.
 
 <img width="250px" align="left" src="./screenshots/imagen_13.png" />
+
+
+<img width="auto" src="https://profile-counter.glitch.me/bullkeeper_kids_app/count.svg" />
