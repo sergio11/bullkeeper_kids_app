@@ -38,3 +38,11 @@ The application will control the use of the device at all times.
 ## Visitors Count
 <img width="auto" src="https://profile-counter.glitch.me/bullkeeper_kids_app/count.svg" />
 
+## Please Share & Star the repository to keep me motivated.
+  <a href = "https://github.com/sergio11/bullkeeper_kids_app/stargazers">
+     <img src = "https://img.shields.io/github/stars/sergio11/bullkeeper_kids_app" />
+  </a>
+  <a href = "https://twitter.com/SergioReact418">
+     <img src = "https://img.shields.io/twitter/url?label=follow&style=social&url=https%3A%2F%2Ftwitter.com%2FSergioReact418" />
+  </a>
+
