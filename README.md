@@ -3,6 +3,12 @@
 
 Introducing the **BullKeeper Kids Android App**, a dynamic and engaging tool tailored for children and adolescents to responsibly manage their recreational time while adhering to parental control rules. 📱👦👧
 
+## ⚠️ Disclaimer  
+
+**BullKeeper Kids** is a project designed **solely for advanced learning purposes** on the Android platform. Its development explores the implementation of **time management and parental control tools**, providing insights into permission handling, device synchronization, and communication in mobile applications.  
+
+This project is **experimental** and is not intended for production use or as a commercial solution. Its functionality is not guaranteed outside the scope of testing and learning.  
+
 ## Fun Time Management 🌟
 
 **BullKeeper Kids** empowers young digital enthusiasts to find the perfect balance between fun and responsibility. It's all about creating a safe and enjoyable digital adventure where kids can learn, play, and grow, all while respecting the rules set by their caring guardians. 🎮🕹️
@@ -79,8 +85,5 @@ Join the **BullKeeper Kids** community, where young digital explorers embark on 
 ## Please Share & Star the repository to keep me motivated.
   <a href = "https://github.com/sergio11/bullkeeper_kids_app/stargazers">
      <img src = "https://img.shields.io/github/stars/sergio11/bullkeeper_kids_app" />
-  </a>
-  <a href = "https://twitter.com/SergioReact418">
-     <img src = "https://img.shields.io/twitter/url?label=follow&style=social&url=https%3A%2F%2Ftwitter.com%2FSergioReact418" />
   </a>
 
