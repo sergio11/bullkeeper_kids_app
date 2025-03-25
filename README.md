@@ -58,9 +58,6 @@ Must be linked to a child / teen account created from the BullKeeper application
 
 The application will synchronize all device resources and ensure that any changes in them are notified.
 
-<img width="250px" align="left" src="./screenshots/imagen_7.png" />
-<img width="250px"  src="./screenshots/imagen_8.png" />
-
 The adolescent child can send help and pick me up notices from the application.
 
 <img width="250px" align="left" src="./screenshots/imagen_9.png" />
