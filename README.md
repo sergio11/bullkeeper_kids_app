@@ -79,8 +79,4 @@ Join the **BullKeeper Kids** community, where young digital explorers embark on 
 ## Visitors Count
 <img width="auto" src="https://profile-counter.glitch.me/bullkeeper_kids_app/count.svg" />
 
-## Please Share & Star the repository to keep me motivated.
-  <a href = "https://github.com/sergio11/bullkeeper_kids_app/stargazers">
-     <img src = "https://img.shields.io/github/stars/sergio11/bullkeeper_kids_app" />
-  </a>
 
